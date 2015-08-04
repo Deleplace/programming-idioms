@@ -14,7 +14,7 @@ import (
 // Ex : "C++", "Cpp", "cpp"
 //
 
-var mainStreamLangs = [...]string{"C", "Cpp", "Csharp", "Go", "Java", "JS", "PHP", "Python"}
+var mainStreamLangs = [...]string{"SQL", "PL/SQL"}
 
 // Return alpha codes for each language (no encoding problems).
 // See printNiceLang to display them more fancy.
@@ -22,17 +22,14 @@ func mainStreamLanguages() []string {
 	return mainStreamLangs[:]
 }
 
-var moreLangs = [...]string{"Ada", "Caml", "Clojure", "Cobol", "D", "Dart", "Delphi", "Erlang", "Fortran", "Groovy", "Haskell", "Lisp", "Pascal", "Perl", "Prolog", "Ruby", "Rust", "Scala", "Scheme", "Smalltalk", "Obj-C", "VB"}
+var moreLangs = [...]string{}
 
 func moreLanguages() []string {
 	// These do *not* include the mainStreamLanguages()
 	return moreLangs[:]
 }
 
-var synonymLangs = map[string]string{
-	"Javascript":  "JS",
-	"Objective C": "Obj-C",
-}
+var synonymLangs = map[string]string{}
 
 var allLangs []string
 var allNiceLangs []string

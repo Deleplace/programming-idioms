@@ -44,7 +44,7 @@ func about(w http.ResponseWriter, r *http.Request) error {
 
 	data := AboutFacade{
 		PageMeta: PageMeta{
-			PageTitle: "About Programming-Idioms",
+			PageTitle: "About Database-Idioms",
 			Toggles:   aboutToggles,
 			ExtraCss:  []string{hostPrefix() + themeDirectory() + "/css/docs.css"},
 			ExtraJs:   []string{hostPrefix() + themeDirectory() + "/js/pages/about.js"},

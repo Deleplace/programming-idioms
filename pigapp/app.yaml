@@ -1,4 +1,4 @@
-application: programming-idioms
+application: database-idioms
 version: 1-0
 runtime: go
 api_version: go1
