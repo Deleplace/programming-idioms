@@ -14,7 +14,7 @@ import (
 // Ex : "C++", "Cpp", "cpp"
 //
 
-var mainStreamLangs = [...]string{"SQL", "PL/SQL"}
+var mainStreamLangs = [...]string{"bash", "ksh", "zsh"}
 
 // Return alpha codes for each language (no encoding problems).
 // See printNiceLang to display them more fancy.
