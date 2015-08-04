@@ -1,0 +1,33 @@
+{{define "page-list-results"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>  
+<div class="page-holder">
+	{{template "header-small" .}}  
+	<div class="page-content container-fluid">
+
+		{{template "language-bar" .}}
+
+		<div class="alert alert-info">
+		  This list is filtered with keywords : <strong>{{.Q}}</strong>
+		  {{if not .UserProfile.SeeNonFavorite}}
+		  	<br/>Showing only idioms having languages : <strong>{{.UserProfile.FavoriteLanguages}}</strong>
+		  {{end}}
+		</div>
+
+		<div class="results results-idioms">
+			{{if .Results}}
+				{{range .Results}}
+					{{template "idiom-summary-medium" decorate . $.UserProfile}}
+				{{end}}
+			{{else}}
+				<i class="icon-meh"> No idioms found !</i>
+			{{end}}
+		</div>
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}
+</div>  
+</body>
+{{template "close-html"}}
+{{end}}

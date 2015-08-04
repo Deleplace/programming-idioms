@@ -1,0 +1,81 @@
+{{define "page-idiom-edit"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}
+<body>  
+<div class="page-holder">
+	{{template "header-small" .}}  
+	<div class="page-content container-fluid">
+	
+		<div class="row-fluid">
+			<div class="span6">
+				<form class="form-horizontal" action="{{hostPrefix}}/idiom-save" method="POST">
+					<fieldset>
+						<legend>Idiom</legend>
+						<div class="control-group">
+							<label class="control-label" for="idiom_id">Id</label>
+							<div class="controls">
+								<input type="hidden" name="idiom_id" value="{{.Idiom.Id}}" readonly="readonly"  class="input-small" />
+								<input type="hidden" name="idiom_version" value="{{.Idiom.Version}}" readonly="readonly"  class="input-small" />
+								<span class="idiom_id label label-larger"># {{.Idiom.Id}}</span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Created by</label>
+							<div class="controls">
+								<input type="text" value="{{.Idiom.Author}}" readonly="readonly"  class="input-xlarge" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Last updated by</label>
+							<div class="controls">
+								<input type="text" value="{{.Idiom.LastEditor}}" readonly="readonly"  class="input-xlarge" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="idiom_title">Title</label>
+							<div class="controls">
+								<input type="text" name="idiom_title" class="input-xlarge"
+									value="{{.Idiom.Title}}" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="idiom_lead">Lead paragraph</label>
+							<div class="controls">
+								<textarea name="idiom_lead" rows="3" class="input-xxlarge"
+									placeholder="Describe this idiom purpose (if needed)"
+									maxlength="500">{{.Idiom.LeadParagraph}}</textarea>
+							</div>
+						</div>
+						{{/*
+						<div class="control-group">
+							<label class="control-label" for="idiom_picture">Picture</label>
+							<div class="controls">
+								{{.Idiom.Picture}}
+								<input type="file" name="idiom_picture" class="input-xlarge" />
+							</div>
+						</div>
+						*/}}
+						{{template "input-username" .UserProfile.Nickname}}
+						<div class="control-group">
+							<div class="controls">
+								{{template "save-button-with-notice"}}
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="span2">
+				{{/* Empty space for form popovers */}}
+			</div>		
+			<div class="span3">
+				{{template "contribution-rules-small-info"}}
+			</div>
+		</div>
+	
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}
+</div>  
+</body>
+{{template "close-html"}}
+{{end}}

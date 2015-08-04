@@ -1,0 +1,36 @@
+{{define "language-bar"}}
+{{if .PageMeta.Toggles.languageBar}} 
+<div class="well language-list">
+	<div class="row-fluid">
+		<div class="span3">
+			<div class="btn-group actions">
+              <button class="btn btn-inverse btn-see-non-favorite {{if .UserProfile.SeeNonFavorite}}active{{else}}{{end}} {{if not .UserProfile.FavoriteLanguages}}hidden{{end}}" title="See implementations in other languages as well (recommended)"><i class="icon-asterisk"></i></button>
+              {{/* <button class="btn btn-inverse togglabe btn-favorite-language-remove {{if not .UserProfile.FavoriteLanguages}}hidden{{end}}" title="Remove some language"><i class="icon-minus"></i></button> */}}
+              <button class="btn btn-inverse show-languages-pool" title="Add your favorite language"><i class="icon-plus"></i></button>
+            </div>
+        </div>
+		<div class="span9">
+			{{if .PageMeta.Toggles.showLanguageBarHintBubble}} 
+				<div class="language-bar-hint">
+					This language bar is your friend. Select your favorite languages!
+				</div>
+			{{end}}
+			<ul class="favorite-languages sortable-lang">
+				{{range .UserProfile.FavoriteLanguages}}
+					<li class="active" data-language="{{.}}"><span class="badge badge-fav-lang">{{. | printNiceLang}} <a href="#" class="favorite-language-remove icon-remove"></a></span></li>
+				{{end}}
+			</ul>
+		</div>
+		<div class="span12 addible-languages-pool" style="display: none;">
+			Select your favorite languages :
+			<ul>
+			    {{range filterOut mainStreamLanguages .UserProfile.FavoriteLanguages}}
+			    	<li data-language="{{.}}"><button class="btn btn-primary btn-mini active togglabe">{{. | printNiceLang}}</button></li>
+				{{end}}
+				<li>Or search : {{template "language-input-suggest" "language-bar-add"}}</li>
+			</ul>
+		</div>
+	</div>
+</div>
+{{end}}
+{{end}}

@@ -1,0 +1,19 @@
+{{define "right-column"}}
+<div class="right_column">
+	<div class="created_by">
+		<h4>Idiom created by</h4>
+		{{.Author}}
+	</div>
+	
+	{{if .RelatedIdiomIds}}
+		<h4>Related idioms</h4>
+		<ul>
+			{{range $i,$rid := .RelatedIdiomIds}}
+				{{$title := index $.RelatedIdiomTitles $i}}
+				<li><a href="{{NiceIdiomIDTitleURL $rid $title}}">{{$title}}</a></li>
+			{{end}} 
+		</ul>
+	{{end}} 
+
+</div>
+{{end}}

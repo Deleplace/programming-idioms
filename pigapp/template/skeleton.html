@@ -1,0 +1,119 @@
+{{define "prologue"}}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr"> <!--<![endif]-->
+{{end}}
+
+{{define "head"}}
+	<head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>			
+			{{.PageTitle}}
+		</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="SHORTCUT ICON" href="{{hostPrefix}}{{themeDir}}/img/favicon_32x32.png" />
+		{{if .Toggles.useCDN}} 
+			<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+			<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+			{{if .Toggles.useMinifiedCss}} 
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.min.css" media="screen" />
+			{{else}}
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/prettify.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.css" media="screen" />
+			{{end}}
+		{{else}}
+			{{if .Toggles.useMinifiedCss}} 
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.nocdn.min.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/font-awesome/css/font-awesome.min.css" media="screen" />
+			{{else}}
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/bootstrap-combined.no-icons.min.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/font-awesome/css/font-awesome.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/prettify.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.css" media="screen" />
+			{{end}}
+		{{end}}
+		{{range .ExtraCss}}
+			<link rel="stylesheet" href="{{.}}" media="screen" />
+		{{end}}
+		{{if .Toggles.isDev}}
+			{{/* This green header, as a reminder this is DEV (not PROD) */}}
+			<style>
+				.header .navbar-inner,.header-small .navbar-inner{
+					background-color:#004400;
+					background-image:-moz-linear-gradient(top, #004400, #227722);
+					background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#004400), to(#227722));
+					background-image:-webkit-linear-gradient(top, #004400, #227722);
+					background-image:-o-linear-gradient(top, #004400, #227722);
+					background-image:linear-gradient(to bottom, #004400, #227722);
+				}
+				.blue-to-white{
+					background-color: #070;
+					background-image: linear-gradient(to bottom, #227722, #ffffff);
+				}
+			</style>
+		{{end}}
+		<link rel="search" type="application/opensearchdescription+xml" title="Programming Idioms" href="{{hostPrefix}}{{themeDir}}/xml/search-idioms.xml">
+        <link rel="alternate" type="application/rss+xml" title="New idioms" href="/rss-recently-created"/>
+        <link rel="alternate" type="application/rss+xml" title="Recent updates" href="/rss-recently-updated"/>
+	</head>
+{{end}}
+
+{{define "message-zone"}}
+	<div class="message-zone">
+		<div class="pimessage alert-error"></div>
+		<div class="pimessage alert-success"></div>
+		<div class="pimessage alert-info"></div>
+	</div>
+{{end}}
+
+{{define "include-js"}}
+		{{if .PageMeta.Toggles.useCDN}} 
+   			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+   			<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+	    	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+			{{if .PageMeta.Toggles.useMinifiedJs}} 
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/programming-idioms.min.js"></script>
+	    	{{else}}
+		    	<script src="{{hostPrefix}}{{themeDir}}/js/jquery.cookie.js"></script>
+		    	<script src="{{hostPrefix}}{{themeDir}}/js/prettify.js"></script>
+		    	<script src="{{hostPrefix}}{{themeDir}}/js/prettify-extra-languages.min.js"></script>
+		    	<script src="{{hostPrefix}}{{themeDir}}/js/programming-idioms.js"></script>
+	    	{{end}}
+	    {{else}}
+			{{if .PageMeta.Toggles.useMinifiedJs}} 
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/programming-idioms.nocdn.min.js"></script>
+	    	{{else}}
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/jquery-1.9.1.js"></script>
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/jquery-ui-1.10.3.min.js"></script>
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/bootstrap-2.3.2.min.js"></script>
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/jquery.cookie.js"></script>
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/prettify.js"></script>
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/prettify-extra-languages.js"></script>
+	    		<script src="{{hostPrefix}}{{themeDir}}/js/programming-idioms.js"></script>
+	    	{{end}}
+	    {{end}}
+		{{range .PageMeta.ExtraJs}}
+			<script src="{{.}}"></script>
+		{{end}}
+		{{if .PageMeta.Toggles.syntaxColoring}} 
+   			<script>$(function() { prettyPrint(); });</script>
+   		{{end}}
+	    {{template "traffic-analyze" .}}
+{{end}}
+
+{{define "user-favlang-prettify-extensions"}}
+	{{/* Not used anymore, see prettify-extra-languages.min.js */}}
+	{{range .UserProfile.FavoriteLanguages}}
+		{{$extension := prettifyExtension .}}
+		{{if $extension}}
+   			<script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/{{$extension}}"></script>
+   		{{end}}
+   	{{end}}
+{{end}}
+
+{{define "close-html"}}
+</html>
+{{end}}

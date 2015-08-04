@@ -1,0 +1,89 @@
+{{define "page-admin"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>
+<div class="page-holder">
+	{{template "header" .}}
+	<div class="page-content container-fluid">
+			
+		<div class="row-fluid">
+		
+			<div class="span4">
+				<form method="POST">
+				  <fieldset>
+				    <legend>Toggles</legend>
+					<button type="button" class="btn btn-primary" id="refresh-toggles">Refresh from datastore</button>
+					<div class="toggles-list">
+						<table>
+					    	{{range allToggleNames}}
+					    	<tr><td>
+					    		<button type="button" class="btn btn-primary admin-toggle {{if index $.PageMeta.Toggles .}}active{{end}}" data-toggle="button">{{.}}</button>
+					    	</td></tr>
+					    	{{end}}
+						</table>
+				    </div>
+				  </fieldset>
+				</form>
+			</div>
+			
+			<div class="span4">
+				<form action="{{hostPrefix}}/admin-data-export">
+				  <fieldset>
+				    <legend>Export to file</legend>
+				    <label>Format</label>
+					<div class="btn-group" data-toggle="buttons-radio">
+						<button type="button" class="btn btn-primary">JSON</button>
+						{{/*
+						<button type="button" class="btn btn-primary">XML</button>
+						<button type="button" class="btn btn-primary">ODS</button>
+						*/}}
+					</div>
+					<button type="submit" class="btn">Export</button>
+				  </fieldset>
+				</form>
+			</div>
+				
+			<div class="span4">
+				<form id="import-form" enctype="multipart/form-data" method="POST">
+				  <fieldset>
+				    <legend>Import from file</legend>
+				    <input type="file" name="importData" required="required" />
+				    <label class="checkbox">
+      					<input type="checkbox" name="purge"> Purge
+    				</label>
+					<input type="button" class="btn upload" value="Import" />
+				  </fieldset>
+				</form>
+			</div>
+				
+			<div class="span4">
+				<form id="reindex-form" enctype="multipart/form-data" method="POST">
+				  <fieldset>
+				    <legend>Full Text Index</legend>
+					<input type="button" class="btn upload" value="Reindex all idioms" />
+				  </fieldset>
+				</form>
+			</div>
+			
+			<div class="span4">
+				<form id="relation-form" enctype="multipart/form-data">
+				  <fieldset>
+				    <legend>Add relation</legend>
+				    <label for="idiomAId">Idiom Id A</label>
+				    <input type="text" name="idiomAId" class="idiomA input-small" required="required" value="" />
+				    <label for="idiomBId">Idiom Id B</label>
+				    <input type="text" name="idiomBId" class="idiomB input-small" required="required" value="" />
+					<input type="button" class="btn create-relation" value="Associate" />
+				  </fieldset>
+				</form>
+			</div>
+			
+		</div>
+		
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}  
+</div>
+</body>
+{{template "close-html"}}
+{{end}}

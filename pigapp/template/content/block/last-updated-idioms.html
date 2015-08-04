@@ -1,0 +1,31 @@
+{{define "last-updated-idioms"}}
+{{$favlangs := .Deco.FavoriteLanguages}}
+{{with .Data}}
+<section class="well idioms_nav_list">
+	<h3>Last updated</h3>
+	
+    {{range .}}
+		<div class="well idiom-summary-small">
+			{{template "small-id-and-rating" .}}
+			<div class="idiom_title">
+				<a href="{{NiceIdiomURL .}}">{{.Title}}</a>
+			</div>
+			<div class="idiom_cover">
+				<button class="btn count">
+					<i class="icon-chevron-right"></i> {{len .Implementations}} lang
+				</button>
+				<div class="full">
+					<ul class="inline">
+						{{$idiom := .}}
+						{{range .Implementations}}
+							<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $idiom .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+						{{end}}
+					</ul>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	{{end}}
+</section>
+{{end}}
+{{end}}

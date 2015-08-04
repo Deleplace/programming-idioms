@@ -1,0 +1,68 @@
+{{define "page-idiom-add-picture"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>  
+<div class="page-holder">
+	{{template "header-small" .}}  
+	<div class="page-content container-fluid">
+	
+		<div class="row-fluid">
+			<div class="span6">
+				<form class="form-horizontal" action="{{.UploadURL}}" method="POST" enctype="multipart/form-data">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label" for="idiom_id">Id</label>
+							<div class="controls">
+								<input type="hidden" name="idiom_id" value="{{.Idiom.Id}}" readonly="readonly" class="input-small" />
+								<span class="idiom_id label label-larger"># {{.Idiom.Id}}</span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Title</label>
+							<div class="controls">
+								<input type="text" class="input-xlarge" readonly="readonly"
+									value="{{.Idiom.Title}}" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Lead paragraph</label>
+							<div class="controls">
+								<textarea rows="3" class="input-xlarge" readonly="readonly">{{.Idiom.LeadParagraph}}</textarea>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="idiom_picture">Picture</label>
+							<div class="controls">
+								{{.Idiom.Picture}}
+								<input type="file" name="idiom_picture" class="input-xlarge" />
+							</div>
+						</div>
+						{{template "input-username" .UserProfile.Nickname}}
+						<div class="control-group">
+							<div class="controls">
+								{{template "save-button-with-notice"}}
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="span3">
+				<p>
+					100 kB max.
+				</p>
+				<p>
+					Preferably PNG.
+				</p>
+				<p>
+					<strong>Warning</strong> display height will be fixed to 160px.
+				</p>
+			</div>
+		</div>
+	
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}
+</div>  
+</body>
+{{template "close-html"}}
+{{end}}

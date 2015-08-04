@@ -1,0 +1,44 @@
+{{define "project-language-coverage"}}
+	{{$favlangs := .UserProfile.FavoriteLanguages}}
+	{{with .Coverage}}
+		<table class="language-coverage">
+    		<colgroup></colgroup>
+    		<colgroup></colgroup>
+			{{range .Languages}}
+    			<colgroup></colgroup>
+    		{{end}}
+    		<thead>
+				<tr>
+					<th></th>
+					<th></th>
+					{{range $j, $lang := .Languages}}
+						{{$class := hiddenizeExtraColumns $j "" "hidden"}}
+						<th data-lang="{{$lang}}" class="{{$class}}"><a href="/list-by-language/{{$lang}}">{{printNiceLang $lang}}</a></th>
+					{{end}}
+					<th class="fold-unfold"><i class="icon-double-angle-right icon-large"></i></th>
+				</tr>
+			</thead>
+			<tbody>
+			{{$cover := .}}
+			{{range $i, $idiomId := .IdiomIds}}
+				<tr class="highlightable">
+					<th data-idiom-id="{{$idiomId}}"><span class="idiom_id label"># {{$idiomId}}</span></th>
+					<th class="idiom-title"><a href="idiom/{{$idiomId}}">{{index $cover.IdiomTitles $i}}</a></th>
+					{{range $j, $lang := $cover.Languages}}
+						{{$class := hiddenizeExtraColumns $j "" "hidden"}}
+						<td class="{{$class}}">
+							{{$implId := index $cover.Checked $idiomId $lang}}
+							{{if $implId}}
+								<a href="{{hostPrefix}}/idiom/{{$idiomId}}/impl/{{$implId}}"><span class="icon-stack {{langCoverageClass $lang $favlangs}}"><i class="icon-check-sign icon-stack-base"></i></span></a>
+							{{else}}
+								<a href="{{hostPrefix}}/impl-create/{{$idiomId}}/{{$lang}}"><span class="icon-stack"><i class="icon-circle-blank {{langCoverageClass $lang $favlangs}} icon-stack-base"></i></span></a>
+							{{end}}
+						</td>
+					{{end}}
+					<td class="fold-unfold"><i class="icon-double-angle-right"></i></td>
+				</tr>
+			{{end}}
+			</tbody>
+		</table>
+	{{end}}
+{{end}}

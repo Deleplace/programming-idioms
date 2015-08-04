@@ -1,0 +1,30 @@
+application: programming-idioms
+version: 1-0
+runtime: go
+api_version: go1
+
+handlers:
+- url: /favicon\.ico
+  static_files: static/default/img/favicon.ico
+  upload: static/default/img/favicon_32x32\.ico
+  expiration: "364d"
+- url: /sitemap\.xml
+  static_files: static/default/xml/sitemap.xml
+  upload: static/default/xml/sitemap\.xml
+- url: /default/img
+  static_dir: static/default/img
+  expiration: "15d"
+- url: /default/css
+  static_dir: static/default/css
+  expiration: "1h"
+- url: /default
+  static_dir: static/default
+  expiration: "1h"
+- url: /default_.*_
+  static_dir: static/default
+  expiration: "364d"
+- url: /admin.*
+  script: _go_app
+  login: admin
+- url: /.*
+  script: _go_app

@@ -1,0 +1,10 @@
+{{define "block-about-all-idioms"}}
+	<div id="all-idioms" class="all-idioms">
+		<h2>All idioms</h2>
+		<table>
+			{{range .AllIdioms}}
+				{{template "idiom-table-line" decorate . $.UserProfile}}
+			{{end}}
+		</table>
+	</div>
+{{end}}

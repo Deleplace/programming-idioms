@@ -1,0 +1,54 @@
+{{define "footer"}}
+<footer>
+	<div class="well">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				{{if .PageMeta.Toggles.licenseDisclaimer}}
+				<div class="show-on-desktop">
+					<div class="span5">
+						Idioms are available under the <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">Creative Commons Attribution-ShareAlike License</a>.
+						<div class="hide-on-mobile hide-on-tablets">
+							Please do not paste any copyright violating resource to this website.
+						</div> 
+					</div>
+				</div>
+				<div class="hide-on-desktop">
+					<div class="span3">
+						All content <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">CC-BY-SA</a> 
+					</div>
+				</div> 
+				{{end}}
+				{{if not .PageMeta.Toggles.editing}}
+				{{if .PageMeta.Toggles.poweredBy}}
+				<div class="show-on-desktop">
+					<div class="span5">
+						{{template "powered-by"}}
+					</div>
+				</div>
+				{{end}}
+				<div class="span2">
+					<a href="{{hostPrefix}}/about" class="about-link"><i class="icon-question-sign icon-4x"></i></a>
+				</div>
+				{{end}}
+			</div>
+		</div>
+	</div>
+</footer>
+{{end}}
+
+{{define "powered-by"}}
+<div class="powered-by">
+	<ul class="inline">
+		<li><i class="icon-rocket"></i></li> 
+		<li>Powered by</li> 
+		<li><a href="https://developers.google.com/appengine/">App Engine</a></li>
+		<li><a href="http://golang.org/">Go</a></li>
+		<li><a href="http://getbootstrap.com/2.3.2/">Bootstrap</a></li>
+		<li><a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a></li>
+		<li><a href="https://github.com/Smile-SA/fast-maven-plugin">Maven FAST</a></li>
+		<li><a href="http://jquery.com/">jQuery</a></li>
+		<li><a href="http://www.gorillatoolkit.org/">Gorilla</a></li>
+		<li><a href="http://code.google.com/p/google-code-prettify/">Prettify</a></li>
+	</ul>
+</div>
+{{end}}

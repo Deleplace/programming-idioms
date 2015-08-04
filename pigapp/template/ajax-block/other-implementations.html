@@ -1,0 +1,23 @@
+{{define "block-other-implementations"}}
+			<div class="implementations-tabs">
+				<ul class="nav nav-tabs">
+					{{$tabclass := ""}}
+					{{range .Idiom.Implementations}}
+							<li class="{{$tabclass}}">
+								<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
+							</li>
+					{{end}}
+				</ul>
+				{{range .Idiom.Implementations}}
+						<div id="impl{{.Id}}">
+							<div class="">
+								{{template "impl-code-ro" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
+							</div>
+							<div class="impl-external-links">
+								{{if .DemoURL}}<a href="{{.DemoURL}}" target="_blank">Demo <i class="icon-external-link"></i></a>{{end}}
+								{{if .OriginalAttributionURL}}<a href="{{.OriginalAttributionURL}}" target="_blank">Origin <i class="icon-external-link"></i></a>{{end}}
+							</div>
+						</div>
+				{{end}}
+			</div>
+{{end}}

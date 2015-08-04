@@ -1,0 +1,348 @@
+{{define "search-input"}}
+	{{if .PageMeta.Toggles.searchable}}
+		{{if not .PageMeta.Toggles.editing}}
+			<form class="form-search" action="{{hostPrefix}}/search">
+				<div class="input-append">
+					<input type="text" class="search-query input-medium" placeholder="Keywords..." name="q" value="{{.PageMeta.SearchQuery}}" required="required">
+					<button type="submit" class="btn"><i class="icon-search"></i></button>
+				</div>
+			</form>
+		{{end}}
+	{{end}}
+{{end}}
+
+{{define "actions-button"}}
+	{{if .PageMeta.Toggles.writable}}
+		{{if not .PageMeta.Toggles.editing}}
+			<div class="actions-dropdown">
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						<i class="icon-fixed-width icon-bolt"></i> Actions <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu pull-right">
+						{{if .PageMeta.Toggles.idiomCreation}}
+							<li><a href="{{hostPrefix}}/idiom-create"><i class="icon-fixed-width icon-plus"></i> New idiom</a></li>
+						{{end}}
+						<li><a href="{{hostPrefix}}/random-idiom"><i class="icon-fixed-width icon-share-alt"></i> Go to a random idiom</a></li>
+						{{if and .PageMeta.Toggles.idiomEditing .PageMeta.Toggles.actionEditIdiom}}
+							<li class="divider"></li>
+							<li><a href="{{hostPrefix}}/idiom-edit/{{.Idiom.Id}}"><i class="icon-fixed-width icon-edit"></i> Edit idiom statement</a></li>
+							{{if or .PageMeta.Toggles.pictureEditing .UserProfile.IsAdmin}}
+								<li><a href="{{hostPrefix}}/idiom-add-picture/{{.Idiom.Id}}"><i class="icon-fixed-width icon-camera"></i> Add picture</a></li>
+							{{end}}
+						{{end}}
+						{{if and .PageMeta.Toggles.implEditing .PageMeta.Toggles.actionEditIdiom}}
+							{{range .Idiom.Implementations}}
+								<li><a href="{{hostPrefix}}/impl-edit/{{$.Idiom.Id}}/{{.Id}}"><i class="icon-fixed-width icon-pencil"></i> Edit {{.LanguageName | printNiceLang}} implementation</a></li>
+							{{end}}
+						{{end}}
+						{{if and .PageMeta.Toggles.implAddition .PageMeta.Toggles.actionAddImpl}} 
+							<li class="divider"></li>
+							<li><a href="{{hostPrefix}}/impl-create/{{.Idiom.Id}}"><i class="icon-fixed-width icon-plus-sign"></i> Add an implementation to this idiom</a></li>
+						{{end}}
+					</ul>
+				</div>
+			</div>
+		{{end}}
+	{{end}}
+{{end}}
+
+{{define "greetings"}}
+	<p class="greetings">
+	{{if .PageMeta.Toggles.greetings}}
+		{{if .UserProfile.Nickname}}
+			<i class="icon-user"> <a href="{{host}}/my/{{.UserProfile.Nickname}}/_{{join .UserProfile.FavoriteLanguages "_"}}">{{.UserProfile.Nickname}}</a></i> <a href="#" class="remove-nickname"><i class="icon-remove"></i></a>
+		{{end}}
+	{{end}}
+	</p>
+{{end}}
+
+{{define "save-button-with-notice"}}
+	<button class="btn btn-primary show-popover"
+			data-toggle="popover"
+			data-content="You agree to publish under the CC-BY-SA License"
+	>Save</button>
+{{end}}
+
+{{define "language-single-select"}}
+	<div class="input-append language-single-select"
+		data-toggle="popover" data-content="Type ahead, or select one">
+	  <input type="text" class="span4 typeahead" autocomplete="off" name="{{.LanguageSingleSelector.FieldName}}" 
+	  	value="{{.LanguageSingleSelector.Selected}}" required="required" data-provide="typeahead"  placeholder="Name..." />
+	  <div class="btn-group">
+	    <button class="btn dropdown-toggle" data-toggle="dropdown">
+	      <span class="caret"></span>
+	    </button>
+	    <ul class="dropdown-menu inline language-choices">
+	    {{if .UserProfile.FavoriteLanguages}}
+		    {{range .UserProfile.FavoriteLanguages}}
+		      <li data-language="{{.}}"><a href="#" class="selector-language"><span class="badge badge-success badge-larger">{{. | printNiceLang}}</span></a></li>
+			{{end}}
+	    {{else}}
+		    {{range mainStreamLanguages}}
+		      <li data-language="{{.}}"><a href="#" class="btn selector-language">{{. | printNiceLang}}</a></li>
+			{{end}}
+		{{end}}
+	    </ul>
+	  </div>
+	</div>
+{{end}}
+
+{{define "language-input-suggest"}}
+	  <input type="text" class="input-suggest-language input-small" data-provide="typeahead" placeholder="Other..." />
+{{end}}
+
+{{define "idiom-summary-large"}}
+	{{$favlangs := .Deco.FavoriteLanguages}}
+	{{$isAdmin := .Deco.IsAdmin}}
+	{{with .Data}}
+			<div class="well idiom-summary-large">
+				<div class="row-fluid">
+					<div class="span6">
+						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}">{{.Title}}</a></h1>
+						<p class="idiom-lead-paragraph identifier-emphasize">{{.LeadParagraph}}</p>
+						{{if .Picture}}<div class="idiom-picture"><img src="{{hostPrefix}}/idiom-picture?blobKey={{.Picture}}" alt="Illustration"/></div>{{end}}
+					</div>
+					<div class="span4">
+						<div class="language-list">
+							<ul class="inline">
+								{{range .Implementations}}
+									<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+								{{end}}
+							</ul>
+						</div>
+					</div>
+					<div class="span1">
+						{{template "voting-idiom" .}}
+					</div>
+					<div class="span1">
+						<div class="show-on-desktop">
+							{{template "idiom-edit-button" .}}
+							{{if $isAdmin}}
+								{{template "idiom-delete-button" .}}
+							{{end}}
+						</div>
+					</div>
+				</div>
+			</div>
+	{{end}}
+{{end}}
+
+{{define "idiom-summary-medium"}}
+	{{$favlangs := .Deco.FavoriteLanguages}}
+	{{with .Data}}
+			<div class="well idiom-summary-medium">
+				<div class="row-fluid">
+					<div class="span7">
+						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}">{{.Title}}</a></h1>
+						<p class="idiom-lead-paragraph identifier-emphasize">{{.LeadParagraph}}</p>
+					</div>
+					<div class="span1">
+						{{if .Picture}}<div class="idiom-picture"><img src="{{hostPrefix}}/idiom-picture?blobKey={{.Picture}}" alt="Illustration"/></div>{{end}}
+					</div>
+					<div class="span4">
+						<div class="language-list">
+							<ul class="inline">
+								{{range .Implementations}}
+									<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+								{{end}}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+	{{end}}
+{{end}}
+
+{{define "idiom-link"}}
+	Idiom #{{.Id}} : <a href="{{NiceIdiomURL .}}">{{.Title}}</a>
+{{end}}
+
+{{define "idiom-table-line"}}
+	{{$favlangs := .Deco.FavoriteLanguages}}
+	{{with .Data}}
+	<tr>
+		<td>Idiom <span class="idiom_id label"># {{.Id}}</span></td>
+		<td><a href="{{NiceIdiomURL .}}">{{.Title}}</a></td>
+		<td>{{if toggled "showIdiomRating"}}{{if .Rating}}{{template "small-rating" .Rating}}{{end}}{{end}}</td>
+		<td>{{range .Implementations}}<span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span>{{end}}</td>
+	</tr>
+	{{end}}
+{{end}}
+
+{{define "impl-code-and-comments"}}
+	<div class="row-fluid">
+		<div class="span7">
+			{{template "implementation-code" .Impl}}
+		</div>
+		<div class="span3">
+			<!-- Comments ? -->
+		</div>
+		<div class="span1">
+			<div class="show-on-desktop">
+				{{template "impl-edit-button" decorate .Impl .Idiom}}
+				{{if .UserProfile.IsAdmin}}
+					{{template "impl-delete-button" decorate .Impl .Idiom}}
+				{{end}}
+			</div>
+		</div>
+		<div class="span1">
+			{{template "voting-implementation" .Impl}}
+		</div>
+	</div>
+{{end}}
+
+{{define "impl-code-ro"}}
+	<div class="row-fluid">
+		<div class="span7">
+			{{template "implementation-code" .Impl}}
+		</div>
+		<div class="span3">
+			<!-- Comments ? -->
+		</div>
+	</div>
+{{end}}
+
+{{define "voting-idiom"}}
+	<div class="btn-group btn-group-vertical voting">
+	  {{if toggled "idiomVotingUp"}}
+	  <button data-idiom-id="{{.Id}}" data-vote-choice="up" class="btn popover-on-hover voting-idiom {{if .Deco.UpVoted}}active{{end}}" data-toggle="popover" data-content="This idiom statement is promising" data-placement="top" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-plus"></i></button>
+	  {{end}}
+	  {{if toggled "idiomVotingDown"}}
+	  <button data-idiom-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-idiom {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This idiom is useless"  data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-minus"></i></button>
+	  {{end}}
+	</div>
+	{{if toggled "showIdiomRating"}}		
+		<span class="voting_score {{if not .Rating}}hidden{{end}}"><i class="icon-star icon-small"> {{.Rating}}</i></span>
+	{{end}}
+{{end}}
+
+
+{{define "voting-implementation"}}
+	<div class="btn-group btn-group-vertical voting">
+	  {{if toggled "implVotingUp"}}
+	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="up"  class="btn popover-on-hover voting-impl {{if .Deco.UpVoted}}active{{end}}" data-toggle="popover" data-content="This implementation is useful" data-placement="top" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-plus"></i></button>
+	  {{end}}
+	  {{if toggled "implVotingDown"}}
+	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-impl {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This implementation is useless" data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-minus"></i></button>
+	  {{end}}
+	</div>
+	{{if toggled "showImplRating"}}
+		<span class="voting_score {{if not .Rating}}hidden{{end}}"><i class="icon-star icon-small"> {{.Rating}}</i></span>
+	{{end}}
+{{end}}
+
+{{define "implementation-code"}}
+	{{if .ImportsBlock}}
+		<div class="piimports">
+			<pre>{{.ImportsBlock}}</pre>
+		</div>
+	{{end}}
+	<div class="picode">
+		<pre data-toggle="popover" data-content="{{.AuthorComment}}" class="prettyprint {{.LanguageName | prettifyCSSClass}}">{{.CodeBlock}}</pre>
+	</div>
+{{end}}
+
+{{define "small-rating"}}
+	<span class="small-rating"><i class="icon-star icon-small"></i> {{.}}</span>
+{{end}}
+
+{{define "small-id-and-rating"}}
+	<table class="left">
+		<tr>
+			<td>
+				<span class="idiom_id label"># {{.Id}}</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{{if toggled "showIdiomRating"}}
+					{{if .Rating}}
+						{{template "small-rating" .Rating}}
+					{{end}}
+				{{end}}
+			</td>
+		</tr>
+	</table>
+{{end}}
+
+{{define "idiom-edit-button"}}
+	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info" {{/* TODO title="Edit this idiom statement"*/}} ><i class="icon-edit"></i></a>
+{{end}}
+
+{{define "idiom-delete-button"}}
+	<a href="#" data-url="{{hostPrefix}}/admin-idiom-delete?idiomId={{.Id}}" class="btn btn-danger ajax-generic-action confirm-needed"><i class="icon-remove-sign"></i></a>
+{{end}}
+
+{{define "impl-edit-button"}}
+	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info" {{/* TODO title="Edit this implementation"*/}} ><i class="icon-pencil"></i></a>
+{{end}}
+
+{{define "impl-delete-button"}}
+	<a href="#" data-url="{{hostPrefix}}/admin-impl-delete?idiomId={{.Deco.Id}}&implId={{.Data.Id}}" class="btn btn-danger ajax-generic-action confirm-needed"><i class="icon-remove-sign"></i></a>
+{{end}}
+
+{{define "input-username"}}
+	<div class="control-group">
+		<label class="control-label" for="user_nickname">Username</label>
+		<div class="controls">
+			<input type="text" name="user_nickname" class="input-xlarge"
+				placeholder="Your nickname here" required="required" value="{{.}}" />
+		</div>
+	</div>
+{{end}}
+
+{{define "contribution-rules-small-info"}}
+	<div class="well contribution-rules-small">
+		<p>
+			Be concise.
+		</p>
+		<p>
+			Be useful.
+		</p>
+		<p>
+			All contributions dictatorially edited by webmaster to match personal tastes.
+		</p>
+		<p>
+			<strong>Please do not paste any copyright violating resource.</strong>
+		</p>
+		<p>
+			Please try to avoid dependencies to third-party libraries and frameworks.
+		</p>
+	</div>
+{{end}}
+
+{{define "modal-nickname"}}
+	<div class="modal hide fade" id="modal-nickname">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	    <h3>Please choose a nickname before doing this</h3>
+	  </div>
+	  <form class="form-nickname">
+		  <div class="modal-body">
+		    <input type="text" class="nickname" placeholder="Nickname..." />
+		    
+		    <p>No security, no password. Other people may choose the same nickname.</p>
+		  </div>
+		  <div class="modal-footer">
+		    <button type="submit" class="btn btn-primary btn-ok">OK</button>
+		  </div>
+	  </form>
+	</div>
+{{end}}
+
+{{define "admin-lmgtfy"}}
+	<div>
+		<a href="http://google.com/search?q={{.LanguageSingleSelector.Selected}}+{{.Idiom.Title}}" target="_blank"><strong>LMGTFY {{.LanguageSingleSelector.Selected}} {{.Idiom.Title}}</strong></a>
+		<br/>
+		<br/>
+		<br/>
+		{{/*  Not possible because of "X-Frame-Options: SAMEORIGIN" response header
+		<iframe width="100%" height="800px" src="http://google.com/search?q={{.LanguageSingleSelector.Selected}}+{{.Idiom.Title}}"></iframe>
+		*/}}
+	</div>
+{{end}}
+
+{{define ""}}
+{{end}}
+
