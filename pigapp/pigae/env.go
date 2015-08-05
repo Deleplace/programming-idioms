@@ -20,9 +20,9 @@ type Env struct {
 var envProd = Env{
 	IsDev:           false,
 	Host:            "http://scripting-idioms.appspot.com",
-	UseAbsoluteUrls: true,
-	UseMinifiedCss:  true,
-	UseMinifiedJs:   true,
+	UseAbsoluteUrls: false,
+	UseMinifiedCss:  false,
+	UseMinifiedJs:   false,
 }
 
 //
@@ -32,7 +32,7 @@ var envProd = Env{
 var envDev = Env{
 	IsDev:           true,
 	Host:            "http://localhost:8080",
-	UseAbsoluteUrls: true,
+	UseAbsoluteUrls: false,
 	UseMinifiedCss:  false,
 	UseMinifiedJs:   false,
 }
