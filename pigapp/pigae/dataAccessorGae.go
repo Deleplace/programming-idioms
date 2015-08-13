@@ -528,3 +528,11 @@ func (a *GaeDatastoreAccessor) saveAppConfig(c appengine.Context, appConfig Appl
 	_, err := datastore.PutMulti(c, keys, properties)
 	return err
 }
+
+func (a *GaeDatastoreAccessor) getIdiomHistory(c appengine.Context, idiomId int, version int) (*IdiomHistory, error) {
+	var historyItem IdiomHistory
+	var err error
+	// TODO...
+	// err = datastore.Get(c, newHistoryKey(c), &historyItem)
+	return &historyItem, err
+}

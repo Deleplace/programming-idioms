@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"net/url"
 
-	"appengine"
-
 	"github.com/gorilla/mux"
+
+	"appengine"
 )
 
 // ThemeVersion is the version of the current CSS-JS theme.
@@ -39,6 +39,7 @@ func initRoutes() {
 		handle("/idiom/{idiomId}", idiomDetail)
 		handle("/idiom/{idiomId}/impl/{implId}", idiomDetail)
 		handle("/idiom/{idiomId}/{idiomTitle}", idiomDetail)
+		handle("/idiom/{idiomId}/diff/{v1}/{v2}", versionDiff)
 		handle("/idiom/{idiomId}/{idiomTitle}/{implId}/{implLang}", idiomDetail)
 		handle("/all-idioms", allIdioms)
 		handle("/random-idiom", randomIdiom)

@@ -148,6 +148,10 @@ type IdiomHistory struct {
 	// If needed, add specific history fields
 }
 
+func (ih *IdiomHistory) AsIdiomPtr() *Idiom {
+	return &(ih.Idiom)
+}
+
 /* ---- */
 
 // FindImplInIdiom is a (unoptimized) iteration to retrieve an Impl by its ID,
