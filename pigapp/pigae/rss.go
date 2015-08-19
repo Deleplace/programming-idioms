@@ -43,6 +43,9 @@ const rssTemplateString = `<?xml version="1.0" encoding="UTF-8"?>
 
 const rssPubDatelayout = "Mon, 2 Jan 2006 15:04:05 GMT"
 
+const nbItemsCreated = 10
+const nbItemsUpdated = 25
+
 var rssTemplate, _ = template.New("rss").Parse(rssTemplateString)
 
 // RssFacade is the Facade for the RSS news feeds.
@@ -56,7 +59,7 @@ type RssFacade struct {
 
 func rssRecentlyUpdated(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
-	_, idioms, _ := dao.getAllIdioms(c, 10, "-VersionDate")
+	_, idioms, _ := dao.getAllIdioms(c, nbItemsUpdated, "-VersionDate")
 	dateUpdate := func(idiom *Idiom) string { return idiom.VersionDate.Format(rssPubDatelayout) }
 	idiomVersionGuidation := func(idiom *Idiom) string {
 		return fmt.Sprintf("%v/guid/idiom/%v/version/%v", env.Host, idiom.Id, idiom.Version)
@@ -66,7 +69,7 @@ func rssRecentlyUpdated(w http.ResponseWriter, r *http.Request) error {
 
 func rssRecentlyCreated(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
-	_, idioms, _ := dao.getAllIdioms(c, 10, "-Id")
+	_, idioms, _ := dao.getAllIdioms(c, nbItemsCreated, "-Id")
 	dateCreation := func(idiom *Idiom) string { return idiom.CreationDate.Format(rssPubDatelayout) }
 	idiomGuidation := func(idiom *Idiom) string { return fmt.Sprintf("%v/guid/idiom/%v", env.Host, idiom.Id) }
 	return rss(w, c, r, idioms, dateCreation, idiomGuidation, "/rss-recently-created", "Programming Idioms recently created idioms", "Idioms recently created", "<br/><br/>Implemented in ")
