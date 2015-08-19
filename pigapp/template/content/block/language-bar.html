@@ -10,7 +10,7 @@
             </div>
         </div>
 		<div class="span9">
-			{{if .PageMeta.Toggles.showLanguageBarHintBubble}} 
+			{{if empty .UserProfile.FavoriteLanguages}} 
 				<div class="language-bar-hint">
 					This language bar is your friend. Select your favorite languages!
 				</div>

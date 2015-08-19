@@ -2,6 +2,7 @@ package pigae
 
 import (
 	"html/template"
+	"reflect"
 	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
@@ -37,6 +38,8 @@ func initTemplates() (*template.Template, error) {
 		"join":                  strings.Join,
 		"dict":                  dict,
 		"hiddenizeExtraColumns": hiddenizeExtraColumns,
+		"empty":                 empty,
+		"notEmpty":              notEmpty,
 	}
 	t = t.Funcs(funcMap)
 	folders := []string{
@@ -64,6 +67,16 @@ func isInStringList(lang string, favlangs []string) bool {
 
 func idEqual(a int, b int) bool {
 	return a == b
+}
+
+func empty(x interface{}) bool {
+	v := reflect.ValueOf(x)
+	return v.Len() == 0
+}
+
+func notEmpty(x interface{}) bool {
+	v := reflect.ValueOf(x)
+	return v.Len() > 0
 }
 
 // Directory containing CSS, JS, and pictures.

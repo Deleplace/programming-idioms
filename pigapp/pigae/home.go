@@ -35,7 +35,6 @@ func homeView(w http.ResponseWriter, c appengine.Context, userProfile UserProfil
 	}
 
 	homeToggles := copyToggles(toggles)
-	homeToggles["showLanguageBarHintBubble"] = true
 
 	data := &HomeFacade{
 		PageMeta: PageMeta{

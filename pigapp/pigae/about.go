@@ -40,7 +40,6 @@ func about(w http.ResponseWriter, r *http.Request) error {
 	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount)
 
 	aboutToggles := copyToggles(toggles)
-	aboutToggles["showLanguageBarHintBubble"] = true
 
 	data := AboutFacade{
 		PageMeta: PageMeta{
