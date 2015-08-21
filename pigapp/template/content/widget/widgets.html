@@ -209,7 +209,7 @@
 	  <button data-idiom-id="{{.Id}}" data-vote-choice="up" class="btn popover-on-hover voting-idiom {{if .Deco.UpVoted}}active{{end}}" data-toggle="popover" data-content="This idiom statement is promising" data-placement="top" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-plus"></i></button>
 	  {{end}}
 	  {{if toggled "idiomVotingDown"}}
-	  <button data-idiom-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-idiom {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This idiom is useless"  data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-minus"></i></button>
+	  <button data-idiom-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-idiom {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This idiom has problems"  data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-minus"></i></button>
 	  {{end}}
 	</div>
 	{{if toggled "showIdiomRating"}}		
@@ -224,7 +224,7 @@
 	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="up"  class="btn popover-on-hover voting-impl {{if .Deco.UpVoted}}active{{end}}" data-toggle="popover" data-content="This implementation is useful" data-placement="top" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-plus"></i></button>
 	  {{end}}
 	  {{if toggled "implVotingDown"}}
-	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-impl {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This implementation is useless" data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-minus"></i></button>
+	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-impl {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This implementation has problems" data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-minus"></i></button>
 	  {{end}}
 	</div>
 	{{if toggled "showImplRating"}}
