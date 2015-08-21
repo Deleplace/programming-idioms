@@ -14,9 +14,9 @@
 								{{template "impl-code-ro" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
 							</div>
 							<div class="impl-external-links">
-								{{if .DemoURL}}<a href="{{.DemoURL}}" target="_blank">Demo <i class="icon-external-link"></i></a>{{end}}
-								{{if .DocumentationURL}}<a href="{{.DocumentationURL}}" target="_blank">Doc <i class="icon-external-link"></i></a>{{end}}
-								{{if .OriginalAttributionURL}}<a href="{{.OriginalAttributionURL}}" target="_blank">Origin <i class="icon-external-link"></i></a>{{end}}
+								{{if .DemoURL}}<a href="{{.DemoURL}}" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a>{{end}}
+								{{if .DocumentationURL}}<a href="{{.DocumentationURL}}" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a>{{end}}
+								{{if .OriginalAttributionURL}}<a href="{{.OriginalAttributionURL}}" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a>{{end}}
 							</div>
 						</div>
 				{{end}}
