@@ -50,6 +50,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	comment := r.FormValue("impl_comment")
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
+	docURL := r.FormValue("impl_doc_url")
 
 	if !StringSliceContains(allLanguages(), language) {
 		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), allNiceLangs), http.StatusBadRequest}
@@ -77,6 +78,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 			AuthorComment:          comment,
 			OriginalAttributionURL: attributionURL,
 			DemoURL:                demoURL,
+			DocumentationURL:       docURL,
 			Version:                1,
 		},
 	}

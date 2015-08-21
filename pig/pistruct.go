@@ -82,9 +82,12 @@ type Impl struct {
 	// The snippet.
 	// Should contain only code, preferably no comments.
 	CodeBlock string
-	// Please acknowledge sources.
+	// OriginalAttributionURL: please acknowledge sources.
 	OriginalAttributionURL string
-	DemoURL                string
+	// DemoURL is an optional link to an online demo
+	DemoURL string
+	// DocumentationURL is an optional link to official doc
+	DocumentationURL string
 	// Editor comments
 	AuthorComment string
 	// Autoincremented at each update 1, 2, 3...
