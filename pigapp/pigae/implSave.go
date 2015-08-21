@@ -45,6 +45,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	comment := r.FormValue("impl_comment")
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
+	docURL := r.FormValue("impl_doc_url")
 
 	if !StringSliceContains(allLanguages(), language) {
 		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), allNiceLangs), http.StatusBadRequest}
@@ -85,6 +86,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		AuthorComment:          comment,
 		OriginalAttributionURL: attributionURL,
 		DemoURL:                demoURL,
+		DocumentationURL:       docURL,
 		Version:                1,
 		VersionDate:            now,
 	}
@@ -113,6 +115,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	comment := r.FormValue("impl_comment")
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
+	docURL := r.FormValue("impl_doc_url")
 
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
@@ -149,6 +152,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	impl.LastEditor = username
 	impl.OriginalAttributionURL = attributionURL
 	impl.DemoURL = demoURL
+	impl.DocumentationURL = docURL
 	impl.Version = impl.Version + 1
 	impl.VersionDate = time.Now()
 	idiom.Implementations[i] = impl
