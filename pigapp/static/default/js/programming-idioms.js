@@ -324,7 +324,7 @@ $(function() {
 		$(this).hide('normal');
 
 		/* $(".btn-favorite-language-remove").show().removeClass("hidden"); */
-		$(".btn-see-non-favorite").show().removeClass("hidden");
+		$(".btn-see-non-favorite").show().removeClass("disabled");
 	});
 	
 		

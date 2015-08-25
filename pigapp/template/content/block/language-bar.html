@@ -4,8 +4,7 @@
 	<div class="row-fluid">
 		<div class="span3">
 			<div class="btn-group actions">
-              <button class="btn btn-inverse btn-see-non-favorite {{if .UserProfile.SeeNonFavorite}}active{{else}}{{end}} {{if not .UserProfile.FavoriteLanguages}}hidden{{end}}" title="See implementations in other languages as well (recommended)"><i class="icon-asterisk"></i></button>
-              {{/* <button class="btn btn-inverse togglabe btn-favorite-language-remove {{if not .UserProfile.FavoriteLanguages}}hidden{{end}}" title="Remove some language"><i class="icon-minus"></i></button> */}}
+              <button class="btn btn-inverse btn-see-non-favorite {{if .UserProfile.SeeNonFavorite}}active{{else}}{{end}} {{if not .UserProfile.FavoriteLanguages}}disabled{{end}}" title="See implementations in other languages as well (recommended)"><i class="icon-asterisk"></i></button>
               <button class="btn btn-inverse show-languages-pool" title="Add your favorite language"><i class="icon-plus"></i></button>
             </div>
         </div>
