@@ -30,8 +30,9 @@ func moreLanguages() []string {
 }
 
 var synonymLangs = map[string]string{
-	"Javascript":  "JS",
-	"Objective C": "Obj-C",
+	"Javascript":   "JS",
+	"Objective C":  "Obj-C",
+	"Visual Basic": "VB",
 }
 
 var allLangs []string
