@@ -80,6 +80,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 			DemoURL:                demoURL,
 			DocumentationURL:       docURL,
 			Version:                1,
+			CreationDate:           time.Now(),
 		},
 	}
 	idiom := &Idiom{
