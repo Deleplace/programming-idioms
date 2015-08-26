@@ -421,6 +421,7 @@ pre.prettyprint {
     width: auto;
     overflow-x: scroll;
     */
+    margin-bottom: 1px;
 }
 
 /* Demo link, Origin link */
@@ -428,8 +429,18 @@ pre.prettyprint {
 	margin-bottom: 14px;
 }
 
+.impl-external-links.tabs-below > .nav-tabs {
+	border-top: 0px;
+}
+
 .impl-external-links a{
 	margin-right: 8px;
+}
+
+
+.impl-external-links a:hover{
+    font-weight:bold;
+    text-decoration:underline;
 }
 
 /* Create/Edit forms */
