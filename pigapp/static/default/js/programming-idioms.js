@@ -362,7 +362,7 @@ $(function() {
 			// _x -> <span class="variable">x</span>
 			//
 			var lead = $(this).html();
-			lead = lead.replace( /\b_(\w*)/gm, "<span class=\"variable\">$1</span>");
+			lead = lead.replace( /\b_([\w$]*)/gm, "<span class=\"variable\">$1</span>");
 			$(this).html(lead);
 		});
 	}
