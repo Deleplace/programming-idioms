@@ -9,16 +9,18 @@
 					{{end}}
 				</ul>
 				{{range .Idiom.Implementations}}
-						<div id="impl{{.Id}}">
-							<div class="">
-								{{template "impl-code-ro" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
-							</div>
-							<div class="impl-external-links">
-								{{if .DemoURL}}<a href="{{.DemoURL}}" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a>{{end}}
-								{{if .DocumentationURL}}<a href="{{.DocumentationURL}}" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a>{{end}}
-								{{if .OriginalAttributionURL}}<a href="{{.OriginalAttributionURL}}" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a>{{end}}
-							</div>
+					<div id="impl{{.Id}}">
+						<div class="">
+							{{template "impl-code-ro" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
 						</div>
+						<div class="impl-external-links tabbable tabs-below">
+							<ul class="nav nav-tabs">
+  								{{if .DemoURL}}<li class="active"><a href="{{.DemoURL}}" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a></li>{{end}}
+								{{if .DocumentationURL}}<li class="active"><a href="{{.DocumentationURL}}" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a></li>{{end}}
+								{{if .OriginalAttributionURL}}<li class="active"><a href="{{.OriginalAttributionURL}}" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a></li>{{end}}
+  							</ul>
+						</div>
+					</div>
 				{{end}}
 			</div>
 {{end}}
