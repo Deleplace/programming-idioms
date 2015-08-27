@@ -438,9 +438,9 @@ pre.prettyprint {
 }
 
 
-.impl-external-links a:hover{
-    font-weight:bold;
-    text-decoration:underline;
+.impl-external-links .nav-tabs > .active > a:hover{
+    font-weight:bolder;
+    cursor: pointer;
 }
 
 /* Create/Edit forms */
