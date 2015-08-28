@@ -27,12 +27,10 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		havingLang = normLang(havingLang)
 		c.Infof("Going to a random idiom having lang %v", havingLang)
 		_, idiom, err = dao.randomIdiomHaving(c, havingLang)
-		c.Infof("Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	case notHavingLang != "":
 		notHavingLang = normLang(notHavingLang)
 		c.Infof("Going to a random idiom not having lang %v", notHavingLang)
 		_, idiom, err = dao.randomIdiomNotHaving(c, notHavingLang)
-		c.Infof("Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	default:
 		_, idiom, err = dao.randomIdiom(c)
 	}
@@ -41,6 +39,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
+	c.Infof("Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	http.Redirect(w, r, NiceIdiomURL(idiom), http.StatusFound)
 	return nil
 }

@@ -498,7 +498,7 @@ func (a *GaeDatastoreAccessor) randomIdiomHaving(c appengine.Context, havingLang
 		return nil, nil, err
 	}
 	if len(keys) == 0 {
-		return nil, nil, fmt.Errorf("No idiom found for lang =", havingLang)
+		return nil, nil, fmt.Errorf("No idiom found for lang %s :|", havingLang)
 	}
 	return keys[0], idioms[0], err
 }
@@ -535,6 +535,14 @@ func (a *GaeDatastoreAccessor) randomIdiomNotHaving(c appengine.Context, notHavi
 		}
 	}
 	count := len(keys3)
+
+	if count == 0 {
+		msg := fmt.Sprintf("%v contributors are so effective, that no unimplemented idiom could be found :|", notHavingLang)
+		return nil, nil, PiError{
+			ErrorText: msg,
+			Code:      500,
+		}
+	}
 
 	k := rand.Intn(count)
 	key := keys3[k]
