@@ -27,6 +27,8 @@ type idiomGetter interface {
 	recentIdioms(c appengine.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error)
 	popularIdioms(c appengine.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error)
 	randomIdiom(c appengine.Context) (*datastore.Key, *Idiom, error)
+	randomIdiomHaving(c appengine.Context, havingLang string) (*datastore.Key, *Idiom, error)
+	randomIdiomNotHaving(c appengine.Context, notHavingLang string) (*datastore.Key, *Idiom, error)
 	idiomsFilterOrder(c appengine.Context, favoriteLangs []string, limitEachLang int, showOther bool, sortOrder string) ([]*Idiom, error)
 	languagesHavingImpl(c appengine.Context) []string
 }

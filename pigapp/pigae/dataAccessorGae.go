@@ -482,6 +482,68 @@ func (a *GaeDatastoreAccessor) randomIdiom(c appengine.Context) (*datastore.Key,
 	return keys[0], idioms[0], err
 }
 
+// Similar to randomIdiom, but with a lang filter.
+func (a *GaeDatastoreAccessor) randomIdiomHaving(c appengine.Context, havingLang string) (*datastore.Key, *Idiom, error) {
+	q := datastore.NewQuery("Idiom")
+	q = q.Filter("Implementations.LanguageName =", havingLang)
+	count, err := q.Count(c)
+	if err != nil {
+		return nil, nil, err
+	}
+	k := rand.Intn(count)
+	q = q.Offset(k).Limit(1)
+	idioms := make([]*Idiom, 0, 1)
+	keys, err := q.GetAll(c, &idioms)
+	if err != nil {
+		return nil, nil, err
+	}
+	if len(keys) == 0 {
+		return nil, nil, fmt.Errorf("No idiom found for lang =", havingLang)
+	}
+	return keys[0], idioms[0], err
+}
+
+// randomIdiomNotHaving uses big lists of keys, because the Datastore
+// doesn't handle natively the query "All idioms not having this language".
+func (a *GaeDatastoreAccessor) randomIdiomNotHaving(c appengine.Context, notHavingLang string) (*datastore.Key, *Idiom, error) {
+	// All keys
+	q1 := datastore.NewQuery("Idiom")
+	q1 = q1.KeysOnly()
+	keys1, err := q1.GetAll(c, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Keys of idioms having this lang
+	q2 := datastore.NewQuery("Idiom")
+	q2 = q2.Filter("Implementations.LanguageName =", notHavingLang)
+	q2 = q2.KeysOnly()
+	keys2, err := q2.GetAll(c, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	keySet2 := make(map[datastore.Key]bool, len(keys2))
+	for _, key2 := range keys2 {
+		keySet2[*key2] = true
+	}
+
+	// Difference = keys of idioms not having this lang
+	keys3 := make([]*datastore.Key, 0, len(keys1)-len(keys2))
+	for _, key1 := range keys1 {
+		if !keySet2[*key1] {
+			keys3 = append(keys3, key1)
+		}
+	}
+	count := len(keys3)
+
+	k := rand.Intn(count)
+	key := keys3[k]
+
+	var idiom Idiom
+	err = datastore.Get(c, key, &idiom)
+	return key, &idiom, err
+}
+
 // AppConfigProperty is a (global) application property
 type AppConfigProperty struct {
 	AppConfigId int
