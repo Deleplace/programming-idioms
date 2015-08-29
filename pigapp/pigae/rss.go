@@ -93,8 +93,8 @@ func rss(w http.ResponseWriter, c appengine.Context, r *http.Request, idioms []*
 		}
 		item := &RssItem{
 			Link:        itemLink,
-			Title:       idiom.Title,
-			Description: desc,
+			Title:       markup2HTML(idiom.Title),
+			Description: markup2HTML(desc),
 			PubDate:     datation(idiom),
 			GUID: GUID{
 				Value:       guidation(idiom),
