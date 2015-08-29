@@ -149,6 +149,8 @@ type IdiomHistory struct {
 	// Just embeds Idiom
 	Idiom
 	// If needed, add specific history fields
+	EditorSummary string
+	UpdatedImplId int
 }
 
 func (ih *IdiomHistory) AsIdiomPtr() *Idiom {

@@ -67,6 +67,26 @@ func (a *GaeDatastoreAccessor) getIdiomByImplID(c appengine.Context, implID int)
 	return keys[0], idioms[0], nil
 }
 
+func (a *GaeDatastoreAccessor) getIdiomHistory(c appengine.Context, idiomID int, version int) (*datastore.Key, *IdiomHistory, error) {
+	q := datastore.NewQuery("IdiomHistory").
+		Filter("Id =", idiomID).
+		Filter("Version =", version)
+	idioms := make([]*IdiomHistory, 0, 1)
+	keys, err := q.GetAll(c, &idioms)
+	if err != nil {
+		return nil, nil, err
+	}
+	if len(idioms) < 1 {
+		err = fmt.Errorf("History idiom %d, %d not found.", idiomID, version)
+		return nil, nil, err
+	}
+	if len(idioms) > 1 {
+		err = fmt.Errorf("Multiple history idioms match %d, %d !", idiomID, version)
+		return nil, nil, err
+	}
+	return keys[0], idioms[0], nil
+}
+
 // Delayers registered at init time
 
 var historyDelayer = delay.Func("save-history-item", func(c appengine.Context, idiomKey *datastore.Key) error {
@@ -597,12 +617,4 @@ func (a *GaeDatastoreAccessor) saveAppConfig(c appengine.Context, appConfig Appl
 	}
 	_, err := datastore.PutMulti(c, keys, properties)
 	return err
-}
-
-func (a *GaeDatastoreAccessor) getIdiomHistory(c appengine.Context, idiomId int, version int) (*IdiomHistory, error) {
-	var historyItem IdiomHistory
-	var err error
-	// TODO...
-	// err = datastore.Get(c, newHistoryKey(c), &historyItem)
-	return &historyItem, err
 }

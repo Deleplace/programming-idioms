@@ -24,25 +24,27 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
+	v1Str := vars["v1"]
+	v1 := String2Int(v1Str)
+	v2Str := vars["v2"]
+	v2 := String2Int(v2Str)
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, left, err := dao.getIdiomHistory(c, idiomID, v1)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiError{err.Error(), http.StatusNotFound}
 	}
-	left := &IdiomHistory{*idiom}
-	right := &IdiomHistory{*idiom}
-
-	// TODO fetch real versions...
-	left.Title = "The original Title"
-	right.Title = "The very modified Title"
+	_, right, err := dao.getIdiomHistory(c, idiomID, v2)
+	if err != nil {
+		return PiError{err.Error(), http.StatusNotFound}
+	}
 
 	userProfile := readUserProfile(r)
 	myToggles := copyToggles(toggles)
-	//	myToggles["actionEditIdiom"] = true
-	//	myToggles["actionAddImpl"] = true
+	myToggles["actionEditIdiom"] = false
+	myToggles["actionAddImpl"] = false
 	data := &VersionDiffFacade{
 		PageMeta: PageMeta{
-			PageTitle: idiom.Title,
+			PageTitle: right.Title,
 			Toggles:   myToggles,
 		},
 		UserProfile: userProfile,
