@@ -34,6 +34,13 @@ func NiceImplURL(idiom *Idiom, implID int, implLang string) string {
 	return fmt.Sprintf("%v/%v/%v", NiceIdiomURL(idiom), implID, uriNormalize(implLang))
 }
 
+// NiceImplRelativeURL produces a relative canonical URL for an Impl.
+func NiceImplRelativeURL(idiom *Idiom, implID int, implLang string) string {
+	// Note : cannot define new methods on non-local type pig.Idiom
+	// so idiom is first argument
+	return fmt.Sprintf("%v/%v/%v", NiceIdiomRelativeURL(idiom), implID, uriNormalize(implLang))
+}
+
 // NiceIdiomIDTitleURL produces an URL for an Idiom, with specified title.
 func NiceIdiomIDTitleURL(idiomID int, title string) string {
 	return fmt.Sprintf("%v/idiom/%v/%v", hostPrefix(), idiomID, uriNormalize(title))

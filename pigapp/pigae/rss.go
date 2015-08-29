@@ -81,15 +81,18 @@ func rss(w http.ResponseWriter, c appengine.Context, r *http.Request, idioms []*
 	for i, idiom := range idioms {
 		desc := idiom.LeadParagraph
 		sort.Sort(&implByVersionDateSorter{idiom.Implementations})
+		itemLink := env.Host + NiceIdiomRelativeURL(idiom)
 		if len(idiom.Implementations) > 0 {
-			desc += listIntro + printNiceLang(idiom.Implementations[0].LanguageName)
+			impl0 := idiom.Implementations[0]
+			itemLink = env.Host + NiceImplRelativeURL(idiom, impl0.Id, impl0.LanguageName)
+			desc += listIntro + printNiceLang(impl0.LanguageName)
 			for _, impl := range idiom.Implementations[1:] {
 				desc += ", " + impl.LanguageName
 			}
 			desc += "."
 		}
 		item := &RssItem{
-			Link:        env.Host + NiceIdiomRelativeURL(idiom),
+			Link:        itemLink,
 			Title:       idiom.Title,
 			Description: desc,
 			PubDate:     datation(idiom),
