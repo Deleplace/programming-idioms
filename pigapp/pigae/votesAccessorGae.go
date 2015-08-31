@@ -50,9 +50,8 @@ func (va GaeVotesAccessor) implVote(c appengine.Context, vote ImplVoteLog, nickn
 
 	if delta != 0 {
 		// TODO: more efficient way than iterating?
-		i, impl, _ := idiom.FindImplInIdiom(vote.ImplId)
+		_, impl, _ := idiom.FindImplInIdiom(vote.ImplId)
 		impl.Rating += delta
-		idiom.Implementations[i] = impl
 		err = dao.saveExistingIdiom(c, key, idiom)
 		if err == nil {
 			newRating = impl.Rating

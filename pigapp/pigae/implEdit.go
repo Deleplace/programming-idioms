@@ -16,7 +16,7 @@ type ImplEditFacade struct {
 	PageMeta    PageMeta
 	UserProfile UserProfile
 	Idiom       *Idiom
-	Impl        Impl
+	Impl        *Impl
 }
 
 func implEdit(w http.ResponseWriter, r *http.Request) error {

@@ -161,14 +161,16 @@ func (ih *IdiomHistory) AsIdiomPtr() *Idiom {
 
 // FindImplInIdiom is a (unoptimized) iteration to retrieve an Impl by its ID,
 // inside an Idiom.
-func (idiom *Idiom) FindImplInIdiom(implId int) (int, Impl, bool) {
-	impl := Impl{}
-	for i, impl := range idiom.Implementations {
+//
+// It returns a pointer to the Impl, not a copy.
+func (idiom *Idiom) FindImplInIdiom(implId int) (int, *Impl, bool) {
+	for i := range idiom.Implementations {
+		impl := &idiom.Implementations[i]
 		if impl.Id == implId {
 			return i, impl, true
 		}
 	}
-	return -1, impl, false
+	return -1, nil, false
 }
 
 // ExtractIndexableWords compute the list of words contained in an Idiom.

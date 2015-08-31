@@ -132,7 +132,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		return PiError{existingImplIDStr + " is not a valid implementation id.", http.StatusBadRequest}
 	}
 
-	i, impl, _ := idiom.FindImplInIdiom(implID)
+	_, impl, _ := idiom.FindImplInIdiom(implID)
 
 	if r.FormValue("impl_version") != strconv.Itoa(impl.Version) {
 		return PiError{fmt.Sprintf("Implementation has been concurrently modified (editing version %v, current version is %v)", r.FormValue("impl_version"), impl.Version), http.StatusConflict}
@@ -155,7 +155,6 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	impl.DocumentationURL = docURL
 	impl.Version = impl.Version + 1
 	impl.VersionDate = time.Now()
-	idiom.Implementations[i] = impl
 
 	err = dao.saveExistingIdiom(c, key, idiom)
 	if err != nil {
