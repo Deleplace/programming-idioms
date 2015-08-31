@@ -111,6 +111,7 @@
 			</div>
 		</div>
 
+		{{if ge (len .Idiom.Implementations) 2}}
 		<div class="row-fluid">
 			<div class="span12">
 				<fieldset>
@@ -122,6 +123,7 @@
 				></div>
 			</div>
 		</div>
+		{{end}}
 		
 	</div>
 {{template "footer" .}}
