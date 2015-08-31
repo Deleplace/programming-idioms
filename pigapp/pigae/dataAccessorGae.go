@@ -89,6 +89,7 @@ func (a *GaeDatastoreAccessor) getIdiomHistory(c appengine.Context, idiomID int,
 
 // Delayers registered at init time
 
+// TODO take real Idiom as parameter, not a Key or a pointer
 var historyDelayer = delay.Func("save-history-item", func(c appengine.Context, idiomKey *datastore.Key) error {
 	var historyItem IdiomHistory
 	// TODO check Memcache first
@@ -119,6 +120,12 @@ func (a *GaeDatastoreAccessor) saveNewIdiom(c appengine.Context, idiom *Idiom) (
 	idiom.Version = 1
 	idiom.VersionDate = now
 	idiom.ImplCount = len(idiom.Implementations)
+	for i := range idiom.Implementations {
+		idiom.Implementations[i].CreationDate = now
+		idiom.Implementations[i].Version = 1
+		idiom.Implementations[i].VersionDate = now
+	}
+
 	key, err := datastore.Put(c, datastore.NewKey(c, "Idiom", "", int64(idiom.Id), nil), idiom)
 	if err != nil {
 		return key, err
@@ -128,6 +135,7 @@ func (a *GaeDatastoreAccessor) saveNewIdiom(c appengine.Context, idiom *Idiom) (
 	indexDelayer.Call(c, key)
 
 	// Save an history item : asynchronously
+	// TODO give real Idiom as parameter, not a Key or a pointer
 	historyDelayer.Call(c, key)
 
 	return key, err
@@ -143,6 +151,7 @@ func (a *GaeDatastoreAccessor) saveExistingIdiom(c appengine.Context, key *datas
 	indexDelayer.Call(c, key)
 
 	// Save an history item : asynchronously
+	// TODO give real Idiom as parameter, not a Key or a pointer
 	historyDelayer.Call(c, key)
 
 	return err

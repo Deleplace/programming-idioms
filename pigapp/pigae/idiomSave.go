@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -79,8 +78,6 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 			OriginalAttributionURL: attributionURL,
 			DemoURL:                demoURL,
 			DocumentationURL:       docURL,
-			Version:                1,
-			CreationDate:           time.Now(),
 		},
 	}
 	idiom := &Idiom{
@@ -91,7 +88,6 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		Author:          username,
 		LastEditor:      username,
 		Rating:          0,
-		VersionDate:     time.Now(),
 		Implementations: implementations,
 	}
 	if u := user.Current(c); u != nil {
