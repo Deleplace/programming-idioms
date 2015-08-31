@@ -19,7 +19,42 @@
 		<div class="span6">
 			{{template "idiom-summary-large"  decorate .IdiomRight.AsIdiomPtr .UserProfile}}
 		</div>
+    </div>
+			
+	{{range $implId := .ImplIDs}}
+	<div class="row-fluid">
+		<div class="span6">
+			{{with index $.ImplLeft $implId}}
+				{{if eq .Id 0}}
+					(impl not created yet)
+				{{else}}
+					<div>{{.LanguageName}}</div>
+					<div>{{.CodeBlock}}</div>
+					<div>{{.AuthorComment}}</div>
+					<div>{{.OriginalAttributionURL}}</div>
+					<div>{{.DemoURL}}</div>
+					<div>{{.DocumentationURL}}</div>
+				{{end}}
+			{{end}}
+			<hr/>
+		</div>
+		<div class="span6">
+			{{with index $.ImplRight $implId}}
+				{{if eq .Id 0}}
+					(impl deleted)
+				{{else}}
+					<div>{{.LanguageName}}</div>
+					<div>{{.CodeBlock}}</div>
+					<div>{{.AuthorComment}}</div>
+					<div>{{.OriginalAttributionURL}}</div>
+					<div>{{.DemoURL}}</div>
+					<div>{{.DocumentationURL}}</div>
+				{{end}}
+			{{end}}
+			<hr/>
+		</div>
 	</div>
+	{{end}}
 	
 	</div>
 {{template "footer" .}}

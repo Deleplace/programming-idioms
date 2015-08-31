@@ -194,6 +194,7 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c appengine.Context, key *
 	c.Infof("Saving idiom #%v: %v\n", idiom.Id, idiom.Title)
 	err := a.dataAccessor.saveExistingIdiom(c, key, idiom)
 	if err == nil {
+		c.Infof("Saved idiom #%v, version %v\n", idiom.Id, idiom.Version)
 		a.recacheIdiom(c, key, idiom)
 	}
 	return err
