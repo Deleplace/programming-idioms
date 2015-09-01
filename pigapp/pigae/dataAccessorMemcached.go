@@ -30,7 +30,7 @@ func (a *MemcacheDatastoreAccessor) cacheValue(c appengine.Context, cacheKey str
 
 	err := enc.Encode(&data)
 	if err != nil {
-		c.Debugf("Failed encoding for cache[%v] : %v\n", cacheKey, err)
+		c.Debugf("Failed encoding for cache[%v] : %v", cacheKey, err)
 		return err
 	}
 	cacheItem := &memcache.Item{
@@ -41,9 +41,9 @@ func (a *MemcacheDatastoreAccessor) cacheValue(c appengine.Context, cacheKey str
 	// Set the item, unconditionally
 	err = memcache.Set(c, cacheItem)
 	if err != nil {
-		c.Debugf("Failed setting cache[%v] : %v\n", cacheKey, err)
+		c.Debugf("Failed setting cache[%v] : %v", cacheKey, err)
 	} else {
-		// c.Debugf("Successfully set cache[%v]\n", cacheKey)
+		// c.Debugf("Successfully set cache[%v]", cacheKey)
 	}
 	return err
 }
@@ -191,10 +191,10 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(c appengine.Context, idiom *Idi
 }
 
 func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c appengine.Context, key *datastore.Key, idiom *Idiom) error {
-	c.Infof("Saving idiom #%v: %v\n", idiom.Id, idiom.Title)
+	c.Infof("Saving idiom #%v: %v", idiom.Id, idiom.Title)
 	err := a.dataAccessor.saveExistingIdiom(c, key, idiom)
 	if err == nil {
-		c.Infof("Saved idiom #%v, version %v\n", idiom.Id, idiom.Version)
+		c.Infof("Saved idiom #%v, version %v", idiom.Id, idiom.Version)
 		a.recacheIdiom(c, key, idiom)
 	}
 	return err
@@ -313,7 +313,7 @@ func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(c appengine.Context, lan
 
 func (a *MemcacheDatastoreAccessor) languagesHavingImpl(c appengine.Context) (langs []string) {
 	cacheKey := "languagesHavingImpl()"
-	//c.Debugf("Getting cache[%v]\n", cacheKey)
+	//c.Debugf("Getting cache[%v]", cacheKey)
 	data, cacheerr := a.readCache(c, cacheKey)
 	if cacheerr != nil {
 		c.Errorf(cacheerr.Error())
@@ -398,7 +398,7 @@ func (a *MemcacheDatastoreAccessor) getAppConfig(c appengine.Context) (Applicati
 		appConfig, err := a.dataAccessor.getAppConfig(c)
 		if err == nil {
 			a.cacheValue(c, cacheKey, appConfig, 24*time.Hour)
-			c.Infof("Retrieved ApplicationConfig (Toggles) from Datastore\n")
+			c.Infof("Retrieved ApplicationConfig (Toggles) from Datastore")
 		}
 		return appConfig, err
 	}

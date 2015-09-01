@@ -59,7 +59,7 @@ func refreshToggles(c appengine.Context) error {
 		return err
 	}
 	if err != nil {
-		c.Errorf("Error while loading ApplicationConfig from datastore: %v\n", err)
+		c.Errorf("Error while loading ApplicationConfig from datastore: %v", err)
 		return err
 	}
 	toggles = appConfig.Toggles
