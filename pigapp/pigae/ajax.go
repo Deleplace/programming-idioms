@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strings"
+	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -55,6 +56,7 @@ func ajaxIdiomVote(w http.ResponseWriter, r *http.Request) error {
 		IdiomId: idiomID,
 		IpHash:  Sha1hash(r.RemoteAddr),
 		Value:   incr,
+		Date:    time.Now(),
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -98,6 +100,7 @@ func ajaxImplVote(w http.ResponseWriter, r *http.Request) error {
 		ImplId: implID,
 		IpHash: Sha1hash(r.RemoteAddr),
 		Value:  incr,
+		Date:   time.Now(),
 	}
 
 	w.Header().Set("Content-Type", "application/json")
