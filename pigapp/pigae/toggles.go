@@ -40,11 +40,24 @@ func (ac *ApplicationConfig) Save(ch chan<- datastore.Property) error {
 }
 
 // Before first request, toggles are "default" and are not loaded
-// from datastore yet
+// from datastore yet.
+// TODO: use this to estimate config freshness. Maybe use type time.Time instead.
 var configTime = "0" //time.Now().Format("2006-01-02_15-04")
 
 func refreshToggles(c appengine.Context) error {
 	appConfig, err := dao.getAppConfig(c)
+	if err == appConfigPropertyNotFound {
+		// Nothing in Memcache, nothing in Datastore!
+		// Then, init default (hard-coded) toggle values and persist them.
+		initToggles()
+		c.Infof("Saving default Toggles to Datastore...")
+		err := dao.saveAppConfig(c, ApplicationConfig{Id: 0, Toggles: toggles})
+		if err == nil {
+			c.Infof("Default Toggles saved to Datastore.")
+			configTime = time.Now().Format("2006-01-02_15-04")
+		}
+		return err
+	}
 	if err != nil {
 		c.Errorf("Error while loading ApplicationConfig from datastore: %v\n", err)
 		return err

@@ -42,6 +42,8 @@ type searchableDoc struct {
 	//...
 }
 
+var appConfigPropertyNotFound = fmt.Errorf("Found zero AppConfigProperty in the datastore.")
+
 func (a *GaeDatastoreAccessor) getIdiom(c appengine.Context, idiomID int) (*datastore.Key, *Idiom, error) {
 	var idiom Idiom
 	key := datastore.NewKey(c, "Idiom", "", int64(idiomID), nil)
@@ -596,11 +598,11 @@ func (a *GaeDatastoreAccessor) getAppConfig(c appengine.Context) (ApplicationCon
 		return ApplicationConfig{}, err
 	}
 	if len(properties) == 0 {
-		return ApplicationConfig{}, fmt.Errorf("Found zero AppConfigProperty in the datastore.")
+		return ApplicationConfig{}, appConfigPropertyNotFound
 	}
 
 	appConfig := ApplicationConfig{
-		Id:      0, // TODO appConfigId
+		Id:      0, // TODO meaningful appConfigId
 		Toggles: make(Toggles, len(properties)),
 	}
 	for _, prop := range properties {
@@ -610,20 +612,27 @@ func (a *GaeDatastoreAccessor) getAppConfig(c appengine.Context) (ApplicationCon
 }
 
 func (a *GaeDatastoreAccessor) saveAppConfig(c appengine.Context, appConfig ApplicationConfig) error {
-	keys := make([]*datastore.Key, 0, len(appConfig.Toggles))
+	keys := make([]*datastore.Key, len(appConfig.Toggles))
 	properties := make([]*AppConfigProperty, len(appConfig.Toggles))
 	i := 0
 	for name, value := range appConfig.Toggles {
-		key := datastore.NewIncompleteKey(c, "AppConfigProperty", nil)
-		keys = append(keys, key)
 		prop := AppConfigProperty{
-			AppConfigId: 0, // TODO: appConfigId
+			AppConfigId: 0, // TODO: meaningful appConfigId
 			Name:        name,
 			Value:       value,
 		}
+		keystr := fmt.Sprintf("%d_%s", prop.AppConfigId, prop.Name)
+		keys[i] = datastore.NewKey(c, "AppConfigProperty", keystr, 0, nil)
 		properties[i] = &prop
 		i++
 	}
 	_, err := datastore.PutMulti(c, keys, properties)
+	return err
+}
+
+func (a *GaeDatastoreAccessor) saveAppConfigProperty(c appengine.Context, prop AppConfigProperty) error {
+	keystr := fmt.Sprintf("%d_%s", prop.AppConfigId, prop.Name)
+	key := datastore.NewKey(c, "AppConfigProperty", keystr, 0, nil)
+	_, err := datastore.Put(c, key, &prop)
 	return err
 }

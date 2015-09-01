@@ -53,7 +53,11 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 	toggles[name] = value
 
 	// Save config in distributed Datastore and Memcached
-	err = dao.saveAppConfig(c, ApplicationConfig{Toggles: toggles})
+	err = dao.saveAppConfigProperty(c, AppConfigProperty{
+		AppConfigId: 0, // TODO meaningful AppConfigId
+		Name:        name,
+		Value:       value,
+	})
 	if err != nil {
 		return err
 	}

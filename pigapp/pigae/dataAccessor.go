@@ -55,4 +55,5 @@ type appConfigGetter interface {
 
 type appConfigSaver interface {
 	saveAppConfig(c appengine.Context, appConfig ApplicationConfig) error
+	saveAppConfigProperty(c appengine.Context, prop AppConfigProperty) error
 }

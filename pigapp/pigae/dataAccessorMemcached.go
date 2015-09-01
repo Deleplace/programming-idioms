@@ -398,7 +398,6 @@ func (a *MemcacheDatastoreAccessor) getAppConfig(c appengine.Context) (Applicati
 		appConfig, err := a.dataAccessor.getAppConfig(c)
 		if err == nil {
 			a.cacheValue(c, cacheKey, appConfig, 24*time.Hour)
-		} else {
 			c.Infof("Retrieved ApplicationConfig (Toggles) from Datastore\n")
 		}
 		return appConfig, err
@@ -411,6 +410,12 @@ func (a *MemcacheDatastoreAccessor) getAppConfig(c appengine.Context) (Applicati
 func (a *MemcacheDatastoreAccessor) saveAppConfig(c appengine.Context, appConfig ApplicationConfig) error {
 	memcache.Flush(c)
 	return a.dataAccessor.saveAppConfig(c, appConfig)
+	// TODO force toggles refresh for all instances, after memcache flush
+}
+
+func (a *MemcacheDatastoreAccessor) saveAppConfigProperty(c appengine.Context, prop AppConfigProperty) error {
+	memcache.Flush(c)
+	return a.dataAccessor.saveAppConfigProperty(c, prop)
 	// TODO force toggles refresh for all instances, after memcache flush
 }
 
