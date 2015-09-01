@@ -24,36 +24,52 @@
 	{{range $implId := .ImplIDs}}
 	<div class="row-fluid">
 		<div class="span6">
-			{{with index $.ImplLeft $implId}}
-				{{if eq .Id 0}}
-					(impl not created yet)
-				{{else}}
+			{{if index $.CreationImplIDs $implId}}
+				∅
+			{{else}}
+				{{with index $.ImplLeft $implId}}
 					<div>{{.LanguageName}}</div>
+				{{end}}
+			{{end}}
+		</div>
+		<div class="span6">
+			{{if index $.DeletionImplIDs $implId}}
+				∅  (deleted!)
+			{{else}}
+				{{with index $.ImplRight $implId}}
+					<div>{{.LanguageName}}</div>
+				{{end}}
+			{{end}}
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6">
+			{{if index $.CreationImplIDs $implId}}
+				∅
+			{{else}}
+				{{with index $.ImplLeft $implId}}
 					<div>{{.CodeBlock}}</div>
-					<div>{{.AuthorComment}}</div>
-					<div>{{.OriginalAttributionURL}}</div>
-					<div>{{.DemoURL}}</div>
-					<div>{{.DocumentationURL}}</div>
 				{{end}}
 			{{end}}
 			<hr/>
 		</div>
 		<div class="span6">
-			{{with index $.ImplRight $implId}}
-				{{if eq .Id 0}}
-					(impl deleted)
-				{{else}}
-					<div>{{.LanguageName}}</div>
+			{{if index $.DeletionImplIDs $implId}}
+				∅  (deleted!)
+			{{else}}
+				{{with index $.ImplRight $implId}}
 					<div>{{.CodeBlock}}</div>
-					<div>{{.AuthorComment}}</div>
-					<div>{{.OriginalAttributionURL}}</div>
-					<div>{{.DemoURL}}</div>
-					<div>{{.DocumentationURL}}</div>
 				{{end}}
 			{{end}}
 			<hr/>
 		</div>
 	</div>
+	{{/*
+					<div>{{.AuthorComment}}</div>
+					<div>{{.OriginalAttributionURL}}</div>
+					<div>{{.DemoURL}}</div>
+					<div>{{.DocumentationURL}}</div>
+	*/}}
 	{{end}}
 	
 	</div>

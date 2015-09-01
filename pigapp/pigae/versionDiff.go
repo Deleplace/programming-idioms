@@ -19,6 +19,8 @@ type VersionDiffFacade struct {
 	IdiomLeft, IdiomRight *IdiomHistory
 	ImplIDs               []int
 	ImplLeft, ImplRight   map[int]Impl
+	CreationImplIDs       map[int]bool
+	DeletionImplIDs       map[int]bool
 }
 
 func versionDiff(w http.ResponseWriter, r *http.Request) error {
@@ -53,6 +55,8 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	implIDs := make([]int, 0, len(right.Implementations)+1)
 	implLeft := map[int]Impl{}
 	implRight := map[int]Impl{}
+	creationImplIDs := map[int]bool{}
+	deletionImplIDs := map[int]bool{}
 	for _, impl := range left.Implementations {
 		implIDs = append(implIDs, impl.Id)
 		implLeft[impl.Id] = impl
@@ -60,8 +64,14 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	for _, impl := range right.Implementations {
 		if _, ok := implLeft[impl.Id]; !ok {
 			implIDs = append(implIDs, impl.Id)
+			creationImplIDs[impl.Id] = true
 		}
 		implRight[impl.Id] = impl
+	}
+	for _, impl := range left.Implementations {
+		if _, ok := implRight[impl.Id]; !ok {
+			deletionImplIDs[impl.Id] = true
+		}
 	}
 	// Recently created... first?
 	sort.Sort(sort.Reverse(sort.IntSlice(implIDs)))
@@ -75,12 +85,14 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 			PageTitle: right.Title,
 			Toggles:   myToggles,
 		},
-		UserProfile: userProfile,
-		IdiomLeft:   left,
-		IdiomRight:  right,
-		ImplIDs:     implIDs,
-		ImplLeft:    implLeft,
-		ImplRight:   implRight,
+		UserProfile:     userProfile,
+		IdiomLeft:       left,
+		IdiomRight:      right,
+		ImplIDs:         implIDs,
+		ImplLeft:        implLeft,
+		ImplRight:       implRight,
+		CreationImplIDs: creationImplIDs,
+		DeletionImplIDs: deletionImplIDs,
 	}
 	return templates.ExecuteTemplate(w, "page-idiom-version-diff", data)
 }
