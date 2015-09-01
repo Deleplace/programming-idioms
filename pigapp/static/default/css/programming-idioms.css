@@ -411,6 +411,7 @@ li > a.lang-tab {
     border-color: #D7D7D7;
 	margin-bottom: 0px;
     padding: 2px 4px 4px 15px;
+    font-size: 16px;
 }
 
 /* Code zone */
@@ -422,6 +423,9 @@ pre.prettyprint {
     overflow-x: scroll;
     */
     margin-bottom: 1px;
+
+    font-size: 16px;
+    font-weight: bold;
 }
 
 /* Demo link, Origin link */
