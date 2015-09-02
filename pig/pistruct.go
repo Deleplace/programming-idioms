@@ -127,8 +127,9 @@ type IdiomVoteLog struct {
 	IdiomId int
 	// Typicaly +1 or -1
 	Value int
-	// Stored only to prevent abusive multiple votes
+	// IpHash stored only to prevent abusive multiple votes
 	IpHash string
+	Date   time.Time
 }
 
 // ImplVoteLog is a history trace of an Impl vote, from a specific user.
@@ -140,8 +141,9 @@ type ImplVoteLog struct {
 	ImplId  int
 	// Typicaly +1 or -1
 	Value int
-	// Stored only to prevent abusive multiple votes
+	// IpHash stored only to prevent abusive multiple votes
 	IpHash string
+	Date   time.Time
 }
 
 // IdiomHistory stores all the history: old versions of Idioms.
