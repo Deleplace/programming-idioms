@@ -12,6 +12,10 @@ import (
 	"appengine"
 )
 
+//
+// This file is about full text search of idioms and implementations.
+//
+
 // SearchResultsFacade is the facade for the Search Results page.
 type SearchResultsFacade struct {
 	PageMeta    PageMeta

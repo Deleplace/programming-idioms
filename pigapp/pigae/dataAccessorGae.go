@@ -220,9 +220,27 @@ func (a *GaeDatastoreAccessor) deleteAllIdioms(c appengine.Context) error {
 	if err != nil {
 		return err
 	}
-	for _, key := range keys {
-		docID := key.Encode()
-		index.Delete(c, docID)
+	/*
+		// Not exactly what I need, what if index also contains garbage?
+		for _, key := range keys {
+			docID := key.Encode()
+			index.Delete(c, docID)
+			if err != nil {
+				return err
+			}
+		}
+	*/
+	it := index.List(c, &gaesearch.ListOptions{IDsOnly: true})
+	for {
+		docID, err := it.Next(nil)
+		if err == gaesearch.Done {
+			break
+		}
+		if err != nil {
+			c.Errorf("Error getting next indexed idiom to unindex: %v", err)
+			return err
+		}
+		err = index.Delete(c, docID)
 		if err != nil {
 			return err
 		}
