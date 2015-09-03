@@ -215,21 +215,21 @@ func (a *GaeDatastoreAccessor) deleteAllIdioms(c appengine.Context) error {
 		return err
 	}
 
+	err = a.unindexAll(c)
+	if err != nil {
+		return err
+	}
+
+	return datastore.DeleteMulti(c, keys)
+}
+
+func (a *GaeDatastoreAccessor) unindexAll(c appengine.Context) error {
 	// Must remove 1 by 1 (Index has no batch methods)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return err
 	}
-	/*
-		// Not exactly what I need, what if index also contains garbage?
-		for _, key := range keys {
-			docID := key.Encode()
-			index.Delete(c, docID)
-			if err != nil {
-				return err
-			}
-		}
-	*/
+
 	it := index.List(c, &gaesearch.ListOptions{IDsOnly: true})
 	for {
 		docID, err := it.Next(nil)
@@ -246,7 +246,7 @@ func (a *GaeDatastoreAccessor) deleteAllIdioms(c appengine.Context) error {
 		}
 	}
 
-	return datastore.DeleteMulti(c, keys)
+	return nil
 }
 
 func (a *GaeDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int) error {
