@@ -38,6 +38,7 @@ type idiomSaver interface {
 	saveNewIdiom(c appengine.Context, idiom *Idiom) (*datastore.Key, error)
 	saveExistingIdiom(c appengine.Context, key *datastore.Key, idiom *Idiom) error
 	deleteAllIdioms(c appengine.Context) error
+	unindexAll(c appengine.Context) error
 	deleteIdiom(c appengine.Context, idiomID int) error
 	deleteImpl(c appengine.Context, idiomID int, implID int) error
 	nextIdiomID(c appengine.Context) (int, error)

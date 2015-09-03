@@ -224,6 +224,8 @@ func (a *GaeDatastoreAccessor) deleteAllIdioms(c appengine.Context) error {
 }
 
 func (a *GaeDatastoreAccessor) unindexAll(c appengine.Context) error {
+	c.Infof("Unindexing everything (from the text search index)")
+
 	// Must remove 1 by 1 (Index has no batch methods)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {

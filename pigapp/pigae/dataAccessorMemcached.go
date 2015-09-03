@@ -233,6 +233,10 @@ func (a *MemcacheDatastoreAccessor) deleteAllIdioms(c appengine.Context) error {
 	return err
 }
 
+func (a *MemcacheDatastoreAccessor) unindexAll(c appengine.Context) error {
+	return a.dataAccessor.unindexAll(c)
+}
+
 func (a *MemcacheDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int) error {
 	// Clear cache entries
 	_, idiom, err := a.dataAccessor.getIdiom(c, idiomID)
