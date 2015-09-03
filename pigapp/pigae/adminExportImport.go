@@ -73,12 +73,30 @@ func importFile(c appengine.Context, file multipart.File, fileHeader *multipart.
 	}
 	n := 0
 	for _, idiom := range idioms {
+		if fixNewlines(idiom) {
+			c.Infof("Fixed newlines in idiom #%d", idiom.Id)
+		}
 		if _, err = dao.saveNewIdiom(c, idiom); err != nil {
 			return n, err
 		}
 		n++
 	}
 	return n, nil
+}
+
+// fixNewlines replaces "\r\n" with "\n", because expected newlines
+// are 1 char, and having 2 chars leads to
+// "API error 1 (datastore_v3: BAD_REQUEST): Property Implementations.CodeBlock is too long. Maximum length is 500.
+func fixNewlines(idiom *Idiom) bool {
+	touched := false
+	for i := range idiom.Implementations {
+		impl := &idiom.Implementations[i]
+		if strings.Contains(impl.CodeBlock, "\r\n") {
+			touched = true
+			impl.CodeBlock = strings.Replace(impl.CodeBlock, "\r\n", "\n", -1)
+		}
+	}
+	return touched
 }
 
 func importFromJSON(file multipart.File) ([]*Idiom, error) {
