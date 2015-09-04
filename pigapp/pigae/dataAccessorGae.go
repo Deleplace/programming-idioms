@@ -251,10 +251,26 @@ func (a *GaeDatastoreAccessor) unindexAll(c appengine.Context) error {
 	return nil
 }
 
+func (a *GaeDatastoreAccessor) unindex(c appengine.Context, idiomId int) error {
+	c.Infof("Unindexing idiom %d", idiomId)
+
+	docID := strconv.Itoa(idiomId)
+	index, err := gaesearch.Open("idioms")
+	if err != nil {
+		return err
+	}
+	return index.Delete(c, docID)
+}
+
 func (a *GaeDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int) error {
 	key, _, err := a.getIdiom(c, idiomID)
 	if err != nil {
 		return err
+	}
+	// Remove from text search index
+	err = a.unindex(c, idiomID)
+	if err != nil {
+		c.Errorf("Failed to unindex idiom %d: %v", idiomID, err)
 	}
 	return datastore.Delete(c, key)
 }

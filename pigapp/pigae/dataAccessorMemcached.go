@@ -237,11 +237,17 @@ func (a *MemcacheDatastoreAccessor) unindexAll(c appengine.Context) error {
 	return a.dataAccessor.unindexAll(c)
 }
 
+func (a *MemcacheDatastoreAccessor) unindex(c appengine.Context, idiomId int) error {
+	return a.dataAccessor.unindex(c, idiomId)
+}
+
 func (a *MemcacheDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int) error {
 	// Clear cache entries
 	_, idiom, err := a.dataAccessor.getIdiom(c, idiomID)
 	if err == nil {
 		a.uncacheIdiom(c, idiom)
+	} else {
+		c.Errorf("Failed to load idiom %d to uncache: %v", idiomID, err)
 	}
 
 	// Delete in datastore
