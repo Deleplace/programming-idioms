@@ -19,6 +19,7 @@ func initTemplates() (*template.Template, error) {
 		"moreLanguages":         moreLanguages,
 		"allToggleNames":        allToggleNames,
 		"printNiceLang":         printNiceLang,
+		"printNiceLangs":        printNiceLangs,
 		"prettifyCSSClass":      prettifyCSSClass,
 		"normLang":              normLang,
 		"langBadgeClass":        langBadgeClass,

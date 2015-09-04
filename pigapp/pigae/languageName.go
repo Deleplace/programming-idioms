@@ -80,6 +80,14 @@ func printNiceLang(lang string) string {
 	}
 }
 
+func printNiceLangs(langs []string) []string {
+	nice := make([]string, len(langs))
+	for i, lang := range langs {
+		nice[i] = printNiceLang(lang)
+	}
+	return nice
+}
+
 func indexByLowerCase(langs []string) map[string]string {
 	m := map[string]string{}
 	for _, lg := range langs {

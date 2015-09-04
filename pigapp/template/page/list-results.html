@@ -11,7 +11,7 @@
 		<div class="alert alert-info">
 		  This list is filtered with keywords : <strong>{{.Q}}</strong>
 		  {{if not .UserProfile.SeeNonFavorite}}
-		  	<br/>Showing only idioms having languages : <strong>{{.UserProfile.FavoriteLanguages}}</strong>
+		  	<br/>Showing only idioms having languages : <strong>{{printNiceLangs .UserProfile.FavoriteLanguages}}</strong>
 		  {{end}}
 		</div>
 
