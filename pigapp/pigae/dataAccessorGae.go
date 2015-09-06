@@ -557,6 +557,9 @@ func (a *GaeDatastoreAccessor) randomIdiomHaving(c appengine.Context, havingLang
 	if err != nil {
 		return nil, nil, err
 	}
+	if count == 0 {
+		return nil, nil, fmt.Errorf("No implementations found in language [%s]", havingLang)
+	}
 	k := rand.Intn(count)
 	q = q.Offset(k).Limit(1)
 	idioms := make([]*Idiom, 0, 1)
