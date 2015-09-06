@@ -14,6 +14,7 @@ type PrettyAdaptor struct {
 var Pretty = map[string]PrettyAdaptor{
 	"python": {"py", ""},
 	"ruby":   {"rb", ""},
+	"csharp": {"cs", ""},
 	"go":     {"go", "lang-go.js"},
 	"basic":  {"basic", "lang-basic.js"},
 	"dart":   {"dart", "lang-dart.js"},
