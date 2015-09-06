@@ -75,12 +75,25 @@ func rssRecentlyCreated(w http.ResponseWriter, r *http.Request) error {
 	return rss(w, c, r, idioms, dateCreation, idiomGuidation, "/rss-recently-created", "Programming Idioms recently created idioms", "Idioms recently created", "<br/><br/>Implemented in ")
 }
 
-func rss(w http.ResponseWriter, c appengine.Context, r *http.Request, idioms []*Idiom, datation func(*Idiom) string, guidation func(*Idiom) string, path string, feedTitle string, feedDescription string, listIntro string) error {
+func rss(w http.ResponseWriter,
+	c appengine.Context,
+	r *http.Request,
+	idioms []*Idiom,
+	datation func(*Idiom) string,
+	guidation func(*Idiom) string,
+	path string,
+	feedTitle string,
+	feedDescription string,
+	listIntro string) error {
 
 	itemsAsStrings := make([]string, len(idioms))
 	for i, idiom := range idioms {
 		desc := idiom.LeadParagraph
 		sort.Sort(&implByVersionDateSorter{idiom.Implementations})
+		// Not interested in full list of impls, just most recent
+		if len(idiom.Implementations) > 5 {
+			idiom.Implementations = idiom.Implementations[:5]
+		}
 		itemLink := env.Host + NiceIdiomRelativeURL(idiom)
 		if len(idiom.Implementations) > 0 {
 			impl0 := idiom.Implementations[0]
