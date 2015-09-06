@@ -20,6 +20,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	var idiom *Idiom
+	var url string
 	var err error
 
 	switch {
@@ -27,12 +28,20 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		havingLang = normLang(havingLang)
 		c.Infof("Going to a random idiom having lang %v", havingLang)
 		_, idiom, err = dao.randomIdiomHaving(c, havingLang)
+		url = NiceIdiomURL(idiom)
+		for _, impl := range idiom.Implementations {
+			if impl.LanguageName == havingLang {
+				url = NiceImplURL(idiom, impl.Id, havingLang)
+			}
+		}
 	case notHavingLang != "":
 		notHavingLang = normLang(notHavingLang)
 		c.Infof("Going to a random idiom not having lang %v", notHavingLang)
 		_, idiom, err = dao.randomIdiomNotHaving(c, notHavingLang)
+		url = NiceIdiomURL(idiom)
 	default:
 		_, idiom, err = dao.randomIdiom(c)
+		url = NiceIdiomURL(idiom)
 	}
 
 	if err != nil {
@@ -40,6 +49,6 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	c.Infof("Picked idiom #%v: %v", idiom.Id, idiom.Title)
-	http.Redirect(w, r, NiceIdiomURL(idiom), http.StatusFound)
+	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }
