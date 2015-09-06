@@ -41,12 +41,15 @@ func seeNonFavorite(r *http.Request) bool {
 }
 
 func readUserProfile(r *http.Request) UserProfile {
-	return UserProfile{
+	u := UserProfile{
 		Nickname:          lookForNickname(r),
 		FavoriteLanguages: lookForFavoriteLanguages(r),
 		SeeNonFavorite:    seeNonFavorite(r),
 		IsAdmin:           IsAdmin(r),
 	}
+	c := appengine.NewContext(r)
+	c.Infof("%v", u)
+	return u
 }
 
 func mustUserProfile(r *http.Request, w http.ResponseWriter) (UserProfile, error) {

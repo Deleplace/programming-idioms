@@ -1,5 +1,7 @@
 package pig
 
+import "fmt"
+
 // Those facades are intended to feed HTML templates with renderable data.
 // Slices of slices are allowed, but they must be programmaticaly constructed
 // out of the GAE Datastore structures.
@@ -20,8 +22,16 @@ type UserProfile struct {
 	Nickname          string
 	FavoriteLanguages []string
 	SeeNonFavorite    bool
-	// Field IsAdmin will never be set by user himself
+	// IsAdmin will never be set by user himself
 	IsAdmin bool
+}
+
+func (u UserProfile) String() string {
+	nonFav := ""
+	if !u.SeeNonFavorite {
+		nonFav = " (SeeNonFavorite OFF)"
+	}
+	return fmt.Sprintf("UserProfile[%s %v%s]", u.Nickname, u.FavoriteLanguages, nonFav)
 }
 
 // LanguageSingleSelector is used to specify the prefilled value
