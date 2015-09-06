@@ -414,7 +414,7 @@ li > a.lang-tab {
     font-size: 16px;
 }
 
-/* Code zone */
+/* Code zone (read-only, pretty-printed) */
 pre.prettyprint {
     padding: 4px 4px 10px 15px;
     border-color: #AAA;
@@ -426,6 +426,11 @@ pre.prettyprint {
 
     font-size: 16px;
     font-weight: bold;
+}
+
+/* Code zone (in forms) */
+textarea.impl-code{
+	font-family: monospace;
 }
 
 /* Demo link, Origin link */
