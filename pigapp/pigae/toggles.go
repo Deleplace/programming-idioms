@@ -8,7 +8,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"appengine"
-	"appengine/datastore"
 )
 
 // ApplicationConfig is a global configuration container.
@@ -19,10 +18,11 @@ type ApplicationConfig struct {
 	Toggles Toggles
 }
 
+/* Deprecated
 // Load reads properties into this ApplicationConfig.
 func (ac *ApplicationConfig) Load(ch <-chan datastore.Property) error {
 	ac.Toggles = Toggles{}
-	// Todo another modeling with less datastore columns?
+	// Another modeling with less datastore columns: use AppConfigProperty instead
 	for p := range ch {
 		ac.Toggles[p.Name] = (p.Value).(bool)
 	}
@@ -31,13 +31,14 @@ func (ac *ApplicationConfig) Load(ch <-chan datastore.Property) error {
 
 // Save writes properties from this ApplicationConfig.
 func (ac *ApplicationConfig) Save(ch chan<- datastore.Property) error {
-	// Todo another modeling with less datastore columns?
+	// Another modeling with less datastore columns: use AppConfigProperty instead
 	for n, v := range ac.Toggles {
 		ch <- datastore.Property{Name: n, Value: v, NoIndex: false, Multiple: false}
 	}
 	close(ch)
 	return nil
 }
+*/
 
 // Before first request, toggles are "default" and are not loaded
 // from datastore yet.
