@@ -30,14 +30,16 @@ func prettifyCSSClass(lang string) string {
 	lg := strings.TrimSpace(strings.ToLower(lang))
 	suff := lg
 	var p PrettyAdaptor
+	var ok bool
 	// See http://google-code-prettify.googlecode.com/svn/trunk/README.html
-	if p := Pretty[strings.ToLower(normLang(lang))]; p.CssClass == "" {
+	if p, ok = Pretty[strings.ToLower(normLang(lang))]; !ok {
 		return "lang-" + suff
 	}
 	return "lang-" + p.CssClass
 }
 
 // Just returns "" for no extension
+// Not used anymore, see prettify-extra-languages.min.js
 func prettifyExtension(lang string) string {
 	p := Pretty[strings.ToLower(normLang(lang))]
 	return p.JsExtension
