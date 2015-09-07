@@ -68,6 +68,7 @@ func searchRedirect(w http.ResponseWriter, r *http.Request) error {
 	if q == "" {
 		// Small hack for own convenience: empty search -> homepage
 		http.Redirect(w, r, "/", 301)
+		return nil
 	}
 	q = strings.Replace(q, " ", "+", -1)
 
