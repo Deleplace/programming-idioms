@@ -518,6 +518,17 @@ footer a.visited {
 	margin-left: 5px;
 }
 
+.all-idioms .idiom-cell .impl-count {
+	color: #777;
+	font-size: -1;
+}
+
+.all-idioms .idiom-cell a {
+	text-align: left;
+	padding-left: 8px;
+	padding-right: 5px;
+}
+
 /* About : language coverage */
 
 .language-coverage th {

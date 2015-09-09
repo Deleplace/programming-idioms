@@ -1,10 +1,25 @@
 {{define "block-about-all-idioms"}}
 	<div id="all-idioms" class="all-idioms">
 		<h2>All idioms</h2>
+		{{/*
 		<table>
 			{{range .AllIdioms}}
 				{{template "idiom-table-line" decorate . $.UserProfile}}
 			{{end}}
 		</table>
+		*/}}
+		<div class="container">
+		  <div class="row-fluid">
+		  	<div class="span" style="display: none;">
+		  	</div>
+			{{range .AllIdioms}}
+				{{template "idiom-cell-fluid" decorate . $.UserProfile}}
+			{{end}}
+		  </div>
+		</div>
+		 {{/*
+		<div class="container-fluid">
+		</div>
+		 */}}
 	</div>
 {{end}}
