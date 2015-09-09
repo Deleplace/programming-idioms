@@ -162,7 +162,7 @@
 	{{$favlangs := .Deco.FavoriteLanguages}}
 	{{with .Data}}
 	<tr>
-		<td>Idiom <span class="idiom_id label"># {{.Id}}</span></td>
+		<td><span class="idiom_id label"># {{.Id}}</span></td>
 		<td><a href="{{NiceIdiomURL .}}">{{.Title}}</a></td>
 		<td>{{if toggled "showIdiomRating"}}{{if .Rating}}{{template "small-rating" .Rating}}{{end}}{{end}}</td>
 		<td>{{range .Implementations}}<span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span>{{end}}</td>
