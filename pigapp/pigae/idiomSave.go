@@ -8,7 +8,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"appengine"
-	"appengine/user"
 )
 
 // Save an new idiom OR an existing idiom, depending on
@@ -90,12 +89,17 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		Rating:          0,
 		Implementations: implementations,
 	}
-	if u := user.Current(c); u != nil {
-		idiom.Author = u.String()
-		idiom.LastEditor = u.String()
-		implementations[0].Author = u.String()
-		implementations[0].LastEditor = u.String()
-	}
+	/*
+		Authenticated user name not needed here, as of 2015.
+		Espacially not for the Admin.
+
+		if u := user.Current(c); u != nil {
+			idiom.Author = u.String()
+			idiom.LastEditor = u.String()
+			implementations[0].Author = u.String()
+			implementations[0].LastEditor = u.String()
+		}
+	*/
 
 	_, err = dao.saveNewIdiom(c, idiom)
 	if err != nil {

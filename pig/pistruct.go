@@ -23,7 +23,7 @@ type Idiom struct {
 	Title string
 	// Idiom Description : 1 to 3 lines are fine
 	LeadParagraph string
-	// The name of the original creator of this idiom on this site
+	// The name of the original creator of this idiom on this website
 	Author string
 	// The date of creation of this idiom on this site
 	CreationDate time.Time
@@ -71,7 +71,7 @@ type Impl struct {
 	OrigId int
 	// The name of the original creator of this implementation on this site.
 	Author string
-	// The date of creation of this implementation on this site
+	// The date of creation of this implementation on this website
 	CreationDate time.Time
 	// The name of the last person who modified this impl.
 	LastEditor string
