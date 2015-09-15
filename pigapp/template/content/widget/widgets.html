@@ -170,6 +170,22 @@
 	{{end}}
 {{end}}
 
+{{define "idiom-cell-fluid"}}
+	{{with .Data}}
+	<div class="span4 idiom-cell">
+		<a class="btn btn-large btn-block" type="button" href="{{NiceIdiomURL .}}">
+			<span class="left">
+				<span class="idiom_id label"># {{.Id}}</span>
+				{{.Title}}
+				{{if toggled "showIdiomRating"}}{{if .Rating}}{{template "extra-small-rating" .Rating}}{{end}}{{end}}
+			</span>
+			<span class="impl-count right">{{len .Implementations}} impl.</span>
+			<span class="clearfix"></span> {{/* TODO is this last span the right solution...? */}}
+		</a>
+	</div>
+	{{end}}
+{{end}}
+
 {{define "impl-code-and-comments"}}
 	<div class="row-fluid">
 		<div class="span7">
@@ -261,6 +277,10 @@
 
 {{define "small-rating"}}
 	<span class="small-rating"><i class="icon-star icon-small"></i> {{.}}</span>
+{{end}}
+
+{{define "extra-small-rating"}}
+	<span class="small-rating" title="{{.}} votes"><i class="icon-star icon-small"></i></span>
 {{end}}
 
 {{define "small-id-and-rating"}}
