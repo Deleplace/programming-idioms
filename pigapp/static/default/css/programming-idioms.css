@@ -523,10 +523,11 @@ footer a.visited {
 	font-size: -1;
 }
 
-.all-idioms .idiom-cell a {
+.all-idioms .idiom-cell a.btn {
 	text-align: left;
 	padding-left: 8px;
 	padding-right: 5px;
+	margin: 3px;
 }
 
 /* About : language coverage */
