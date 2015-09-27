@@ -8,7 +8,7 @@
 	
 		<div class="row-fluid">
 			<div class="span6">
-				<form class="form-horizontal" action="{{hostPrefix}}/impl-save" method="POST">
+				<form class="form-horizontal form-impl form-edit" action="{{hostPrefix}}/impl-save" method="POST">
 					<fieldset>
 						<div class="control-group">
 							<label class="control-label" for="idiom_id">Idiom</label>
@@ -97,6 +97,7 @@
 						{{template "input-username" .UserProfile.Nickname}}
 						<div class="control-group">
 							<div class="controls">
+								<button class="btn btn-impl-edit-preview">Preview</button>
 								{{template "save-button-with-notice"}}
 							</div>
 						</div>
@@ -127,6 +128,7 @@
 		
 	</div>
 {{template "footer" .}}
+{{template "modal-impl-preview"}}
 {{template "include-js" .}}
 </div>  
 </body>

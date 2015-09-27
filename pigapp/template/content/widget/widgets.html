@@ -217,20 +217,51 @@
 	</div>
 {{end}}
 
+{{define "impl-preview-skeleton"}}
+	<div class="row impl-preview">
+		<div class="span7">
+			<div class="handle">
+			    <ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#" class="lang-tab"><span class="label badge-lang"></span></a>
+				    </li>
+				</ul>
+			</div>
+			<div class="piimports">
+				<pre></pre>
+			</div>
+			<div class="picode">
+				{{/* TODO activate proper syntax color for current language? */}}
+				<pre data-toggle="popover" data-content="" class="prettyprint"></pre>
+			</div>
+
+			<div class="impl-external-links tabbable tabs-below pull-right">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-demo">Demo <i class="icon-external-link"></i></a></li>
+					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-doc">Doc <i class="icon-external-link"></i></a></li>
+					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-attribution">Origin <i class="icon-external-link"></i></a></li>
+				</ul>
+			</div>
+
+		</div>
+		<div class="span3">
+			<!-- Comments ? -->
+		</div>
+		{{/* Don't really need buttons... edit, vote, etc. */}}
+	</div>
+{{end}}
+
 {{define "impl-code-ro"}}
 	<div class="row-fluid">
 		<div class="span7">
 			{{template "implementation-code" .Impl}}
 			<div class="impl-external-links tabbable tabs-below pull-right">
 				<ul class="nav nav-tabs">
-					{{if .Impl.DemoURL}}<li class="active"><a href="{{.Impl.DemoURL}}" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a></li>{{end}}
-					{{if .Impl.DocumentationURL}}<li class="active"><a href="{{.Impl.DocumentationURL}}" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a></li>{{end}}
-					{{if .Impl.OriginalAttributionURL}}<li class="active"><a href="{{.Impl.OriginalAttributionURL}}" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a></li>{{end}}
+					{{if .Impl.DemoURL}}<li class="active"><a href="{{.Impl.DemoURL}}" class="ext-demo" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a></li>{{end}}
+					{{if .Impl.DocumentationURL}}<li class="active"><a href="{{.Impl.DocumentationURL}}" class="ext-doc" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a></li>{{end}}
+					{{if .Impl.OriginalAttributionURL}}<li class="active"><a href="{{.Impl.OriginalAttributionURL}}" class="ext-origin" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a></li>{{end}}
 				</ul>
 			</div>
-		</div>
-		<div class="span3">
-			<!-- Comments ? -->
 		</div>
 	</div>
 {{end}}
@@ -364,6 +395,15 @@
 		    <button type="submit" class="btn btn-primary btn-ok">OK</button>
 		  </div>
 	  </form>
+	</div>
+{{end}}
+
+{{define "modal-impl-preview"}}
+	<div class="modal hide fade modal-impl-preview">
+	  <div class="modal-header">
+	    <h3>Preview</h3>
+	  </div>
+	  {{template "impl-preview-skeleton"}}
 	</div>
 {{end}}
 
