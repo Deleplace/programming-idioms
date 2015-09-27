@@ -462,6 +462,19 @@ textarea.impl-code{
 	color: #555;
 }
 
+.modal-idiom-preview, .modal-impl-preview {
+	width: 850px;
+	margin-left: -425px
+}
+
+.impl-preview {
+	padding-left: 10px;
+	padding-top: 20px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	margin-right: 10px;
+}
+
 /* Contribution rules bla bla bla */
 .contribution-rules-small {
   color: #555555;

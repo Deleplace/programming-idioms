@@ -453,4 +453,46 @@ $(function() {
 		// }, 3000 );
 	});
 	
+	// Impl create, impl edit : [Preview] button injects values
+	// in modal window.
+	function showPreview(){
+			$('pre').popover("hide"); // Hide (0,0) popovers of hidden tabs
+			var m = $('.modal-impl-preview');
+			var lang = $(".form-impl .badge").html();
+			m.find(".lang-tab span.label").html(lang);
+			var imports = $(".form-impl textarea.imports").val();
+			if( imports )
+				m.find(".piimports pre").html( imports ).show();
+			else
+				m.find(".piimports pre").html( imports ).hide();
+			m.find(".picode pre").html( $(".form-impl textarea.impl-code").val() );
+			var comment = $(".form-impl textarea[name=impl_comment]").val();
+			m.find(".picode pre").attr("data-content", comment);
+			var extDocURL = $(".form-impl input[name=impl_doc_url]").val();
+			if( extDocURL )
+				m.find("a.impl-doc").attr("href", extDocURL).show();
+			else
+				m.find("a.impl-doc").attr("href", "#").hide();
+			var extDemoURL = $(".form-impl input[name=impl_demo_url]").val();
+			if( extDemoURL )
+				m.find("a.impl-demo").attr("href", extDemoURL).show();
+			else
+				m.find("a.impl-demo").attr("href", "#").hide();
+			var extAttributionURL = $(".form-impl input[name=impl_attribution_url]").val();
+			if( extAttributionURL )
+				m.find("a.impl-attribution").attr("href", extAttributionURL).show();
+			else
+				m.find("a.impl-attribution").attr("href", "#").hide();
+			m.modal();
+			window.setTimeout(function(){
+				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
+				emphasize();
+			}, 800);
+	}
+
+	$(".btn-preview").on("click", function(){
+		showPreview();
+		return false;
+	})
+
 });
