@@ -453,9 +453,52 @@ $(function() {
 		// }, 3000 );
 	});
 	
+	//
 	// Impl create, impl edit : [Preview] button injects values
 	// in modal window.
-	function showPreview(){
+	//
+
+	function showImplCreatePreview(){
+			$('pre').popover("hide"); // Hide (0,0) popovers of hidden tabs
+			var m = $('.modal-impl-preview');
+			var lang = $(".form-impl-creation input[name=impl_language]").val();
+			m.find(".lang-tab span.label").html(lang);
+			var imports = $(".form-impl-creation textarea.imports").val();
+			if( imports )
+				m.find(".piimports pre").html( imports ).show();
+			else
+				m.find(".piimports pre").html( imports ).hide();
+			m.find(".picode pre").html( $(".form-impl-creation textarea.impl-code").val() );
+			var comment = $(".form-impl-creation textarea[name=impl_comment]").val();
+			m.find(".picode pre").attr("data-content", comment);
+			var extDocURL = $(".form-impl-creation input[name=impl_doc_url]").val();
+			if( extDocURL )
+				m.find("a.impl-doc").attr("href", extDocURL).show();
+			else
+				m.find("a.impl-doc").attr("href", "#").hide();
+			var extDemoURL = $(".form-impl-creation input[name=impl_demo_url]").val();
+			if( extDemoURL )
+				m.find("a.impl-demo").attr("href", extDemoURL).show();
+			else
+				m.find("a.impl-demo").attr("href", "#").hide();
+			var extAttributionURL = $(".form-impl-creation input[name=impl_attribution_url]").val();
+			if( extAttributionURL )
+				m.find("a.impl-attribution").attr("href", extAttributionURL).show();
+			else
+				m.find("a.impl-attribution").attr("href", "#").hide();
+			m.modal();
+			window.setTimeout(function(){
+				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
+				emphasize();
+			}, 800);
+	}
+
+	$(".btn-impl-create-preview").on("click", function(){
+		showImplCreatePreview();
+		return false;
+	})
+
+	function showImplEditPreview(){
 			$('pre').popover("hide"); // Hide (0,0) popovers of hidden tabs
 			var m = $('.modal-impl-preview');
 			var lang = $(".form-impl .badge").html();
@@ -490,8 +533,8 @@ $(function() {
 			}, 800);
 	}
 
-	$(".btn-preview").on("click", function(){
-		showPreview();
+	$(".btn-impl-edit-preview").on("click", function(){
+		showImplEditPreview();
 		return false;
 	})
 

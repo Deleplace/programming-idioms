@@ -88,6 +88,7 @@
 						{{template "input-username" .UserProfile.Nickname}}
 						<div class="control-group">
 							<div class="controls">
+								<button class="btn btn-impl-create-preview">Preview</button>
 								{{template "save-button-with-notice"}}
 							</div>
 						</div>
@@ -119,6 +120,7 @@
 		
 	</div>
 {{template "footer" .}}
+{{template "modal-impl-preview"}}
 {{template "include-js" .}}
 </div>  
 </body>
