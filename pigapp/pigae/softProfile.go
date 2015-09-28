@@ -47,8 +47,10 @@ func readUserProfile(r *http.Request) UserProfile {
 		SeeNonFavorite:    seeNonFavorite(r),
 		IsAdmin:           IsAdmin(r),
 	}
-	c := appengine.NewContext(r)
-	c.Infof("%v", u)
+	if u.Nickname != "" || len(u.FavoriteLanguages) > 0 {
+		c := appengine.NewContext(r)
+		c.Infof("%v", u)
+	}
 	return u
 }
 
