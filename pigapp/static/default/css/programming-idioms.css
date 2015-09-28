@@ -452,6 +452,21 @@ textarea.impl-code{
     cursor: pointer;
 }
 
+/* Impl grid */
+
+.modal-impl-grid {
+	width: 980px;
+	margin-left: -480px
+}
+
+.impl-grid {
+	padding-right: 20px;
+}
+
+.impl-cell {
+	min-height: 130px;
+}
+
 /* Create/Edit forms */
 
 .form-horizontal .idiom_title {

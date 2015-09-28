@@ -382,6 +382,16 @@ $(function() {
 		$(this).parent().children("li").removeClass("active"); 
 		$(this).addClass("active"); 
 	});
+
+	// Impl grid view (exposé-like) for current idiom.
+	function showImplGrid(){
+		$(".modal-impl-grid").modal();
+	}
+	$('.show-impl-grid').on('click', function(){
+		showImplGrid();
+	});
+	showImplGrid();
+
 	
 	//
 	// Forms : idiom creation, impl creation

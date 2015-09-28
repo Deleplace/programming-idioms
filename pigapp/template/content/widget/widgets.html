@@ -117,6 +117,7 @@
 					</div>
 					<div class="span1">
 						<div class="show-on-desktop">
+							{{template "idiom-impl-grid-button" .}}
 							{{template "idiom-edit-button" .}}
 							{{if $isAdmin}}
 								{{template "idiom-delete-button" .}}
@@ -333,6 +334,10 @@
 	</table>
 {{end}}
 
+{{define "idiom-impl-grid-button"}}
+	<a href="#" class="btn show-impl-grid"><i class="icon-th"></i></a>
+{{end}}
+
 {{define "idiom-edit-button"}}
 	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info" {{/* TODO title="Edit this idiom statement"*/}} ><i class="icon-edit"></i></a>
 {{end}}
@@ -404,6 +409,26 @@
 	    <h3>Preview</h3>
 	  </div>
 	  {{template "impl-preview-skeleton"}}
+	</div>
+{{end}}
+
+{{define "modal-impl-grid"}}
+	<div class="modal hide fade modal-impl-grid">
+	  <div class="impl-grid">
+	  	{{/* Implementation cells will go here. */}}
+	  	<i class='icon-spinner icon-spin'></i>
+
+		{{range .Idiom.Implementations}}
+			<div class="span4 impl-cell">
+				<ul class="nav nav-tabs">
+					<li class="">
+						<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
+					</li>
+				</ul>
+				<pre>{{.CodeBlock}}</pre>
+			</div>
+		{{end}}
+	  </div>
 	</div>
 {{end}}
 
