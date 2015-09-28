@@ -335,11 +335,11 @@
 {{end}}
 
 {{define "idiom-impl-grid-button"}}
-	<a href="#" class="btn show-impl-grid"><i class="icon-th"></i></a>
+	<a href="#" class="btn show-impl-grid" {{/* TODO title="View implementations in grid" */}}><i class="icon-th"></i></a>
 {{end}}
 
 {{define "idiom-edit-button"}}
-	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info" {{/* TODO title="Edit this idiom statement"*/}} ><i class="icon-edit"></i></a>
+	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info btn-edit" {{/* TODO title="Edit this idiom statement"*/}} ><i class="icon-edit"></i></a>
 {{end}}
 
 {{define "idiom-delete-button"}}
@@ -347,7 +347,7 @@
 {{end}}
 
 {{define "impl-edit-button"}}
-	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info" {{/* TODO title="Edit this implementation"*/}} ><i class="icon-pencil"></i></a>
+	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info btn-edit" {{/* TODO title="Edit this implementation"*/}} ><i class="icon-pencil"></i></a>
 {{end}}
 
 {{define "impl-delete-button"}}

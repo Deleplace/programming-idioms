@@ -199,7 +199,9 @@ $(function() {
 	
 	$('.voting-idiom').on('click', function() {
 		if( !logged() ){
-			$('#modal-nickname').modal();
+			$('#modal-nickname').modal({
+				keyboard: true
+			});
 			return;
 		}
 		
@@ -390,8 +392,6 @@ $(function() {
 	$('.show-impl-grid').on('click', function(){
 		showImplGrid();
 	});
-	showImplGrid();
-
 	
 	//
 	// Forms : idiom creation, impl creation

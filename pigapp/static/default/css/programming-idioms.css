@@ -452,6 +452,14 @@ textarea.impl-code{
     cursor: pointer;
 }
 
+.btn.btn-edit{
+	margin-bottom: 4px;
+}
+
+.btn.show-impl-grid{
+	margin-bottom: 4px;
+}
+
 /* Impl grid */
 
 .modal-impl-grid {
