@@ -414,16 +414,22 @@
 
 {{define "modal-impl-grid"}}
 	<div class="modal hide fade modal-impl-grid">
-	  <div class="impl-grid row-fluid">
-	  	{{/* Implementation cells go here. */}}
-	  	{{/* TODO: loading this stuff in ajax would save 7% of the page bytes, but would require server-side boilerplate. */}}
-	  	{{/* TODO: extracting this stuff from already-displayed tabs would save 7% of the page bytes. */}}
-		{{template "modal-impl-grid-content" .}}
-	  </div>
+		<div class="impl-grid">
+			<div class="container-fluid">
+				<div class="row-fluid">
+				  	{{/* Implementation cells go here. */}}
+				  	{{/* TODO: loading this stuff in ajax would save 7% of the page bytes, but would require server-side boilerplate. */}}
+				  	{{/* TODO: extracting this stuff from already-displayed tabs would save 7% of the page bytes. */}}
+					{{template "modal-impl-grid-content" .}}
+				</div>
+			</div>
+		</div>
 	</div>
 {{end}}
 
 {{define "modal-impl-grid-content"}}
+	<div>
+	</div>
 	{{range .Idiom.Implementations}}
 		<div class="span4 impl-cell">
 			<ul class="nav nav-tabs">

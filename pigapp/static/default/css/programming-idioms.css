@@ -463,16 +463,20 @@ textarea.impl-code{
 /* Impl grid */
 
 .modal-impl-grid {
-	width: 980px;
-	margin-left: -490px
+	width: 1000px;
+	margin-left: -500px;
+	max-height: 80%;
+	overflow-y:scroll;
 }
 
 .impl-grid {
-	padding-right: 20px;
+	padding: 0px;
+	margin: 0px;
 }
 
-.impl-cell {
+.row-fluid .impl-cell {
 	min-height: 130px;
+	margin-left: 1.418%;
 }
 
 /* Create/Edit forms */
