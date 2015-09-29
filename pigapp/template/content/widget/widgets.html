@@ -415,21 +415,25 @@
 {{define "modal-impl-grid"}}
 	<div class="modal hide fade modal-impl-grid">
 	  <div class="impl-grid">
-	  	{{/* Implementation cells will go here. */}}
-	  	<i class='icon-spinner icon-spin'></i>
-
-		{{range .Idiom.Implementations}}
-			<div class="span4 impl-cell">
-				<ul class="nav nav-tabs">
-					<li class="">
-						<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
-					</li>
-				</ul>
-				<pre>{{.CodeBlock}}</pre>
-			</div>
-		{{end}}
+	  	{{/* Implementation cells go here. */}}
+	  	{{/* TODO: loading this stuff in ajax would save 7% of the page bytes, but would require server-side boilerplate. */}}
+	  	{{/* TODO: extracting this stuff from already-displayed tabs would save 7% of the page bytes. */}}
+		{{template "modal-impl-grid-content" .}}
 	  </div>
 	</div>
+{{end}}
+
+{{define "modal-impl-grid-content"}}
+	{{range .Idiom.Implementations}}
+		<div class="span4 impl-cell">
+			<ul class="nav nav-tabs">
+				<li class="">
+					<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
+				</li>
+			</ul>
+			<pre>{{.CodeBlock}}</pre>
+		</div>
+	{{end}}
 {{end}}
 
 {{define "admin-lmgtfy"}}
