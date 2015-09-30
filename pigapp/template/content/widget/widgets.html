@@ -117,6 +117,7 @@
 					</div>
 					<div class="span1">
 						<div class="show-on-desktop">
+							{{template "idiom-impl-grid-button" .}}
 							{{template "idiom-edit-button" .}}
 							{{if $isAdmin}}
 								{{template "idiom-delete-button" .}}
@@ -333,8 +334,12 @@
 	</table>
 {{end}}
 
+{{define "idiom-impl-grid-button"}}
+	<button type="button" class="btn show-impl-grid popover-on-hover" data-toggle="popover" data-content="View implementations in grid" data-placement="top"><i class="icon-th"></i></button>
+{{end}}
+
 {{define "idiom-edit-button"}}
-	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info" {{/* TODO title="Edit this idiom statement"*/}} ><i class="icon-edit"></i></a>
+	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info btn-edit" {{/* TODO title="Edit this idiom statement"*/}} ><i class="icon-edit"></i></a>
 {{end}}
 
 {{define "idiom-delete-button"}}
@@ -342,7 +347,7 @@
 {{end}}
 
 {{define "impl-edit-button"}}
-	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info" {{/* TODO title="Edit this implementation"*/}} ><i class="icon-pencil"></i></a>
+	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info btn-edit" {{/* TODO title="Edit this implementation"*/}} ><i class="icon-pencil"></i></a>
 {{end}}
 
 {{define "impl-delete-button"}}
@@ -405,6 +410,36 @@
 	  </div>
 	  {{template "impl-preview-skeleton"}}
 	</div>
+{{end}}
+
+{{define "modal-impl-grid"}}
+	<div class="modal hide fade modal-impl-grid">
+		<div class="impl-grid">
+			<div class="container-fluid">
+				<div class="row-fluid">
+				  	{{/* Implementation cells go here. */}}
+				  	{{/* TODO: loading this stuff in ajax would save 7% of the page bytes, but would require server-side boilerplate. */}}
+				  	{{/* TODO: extracting this stuff from already-displayed tabs would save 7% of the page bytes. */}}
+					{{template "modal-impl-grid-content" .}}
+				</div>
+			</div>
+		</div>
+	</div>
+{{end}}
+
+{{define "modal-impl-grid-content"}}
+	<div>
+	</div>
+	{{range .Idiom.Implementations}}
+		<div class="span4 impl-cell">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
+				</li>
+			</ul>
+			<pre>{{.CodeBlock}}</pre>
+		</div>
+	{{end}}
 {{end}}
 
 {{define "admin-lmgtfy"}}

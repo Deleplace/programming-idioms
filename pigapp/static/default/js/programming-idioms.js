@@ -199,7 +199,9 @@ $(function() {
 	
 	$('.voting-idiom').on('click', function() {
 		if( !logged() ){
-			$('#modal-nickname').modal();
+			$('#modal-nickname').modal({
+				keyboard: true
+			});
 			return;
 		}
 		
@@ -381,6 +383,14 @@ $(function() {
 	$(".implementations-tabs li").on("click", function(){ 
 		$(this).parent().children("li").removeClass("active"); 
 		$(this).addClass("active"); 
+	});
+
+	// Impl grid view (exposé-like) for current idiom.
+	function showImplGrid(){
+		$(".modal-impl-grid").modal();
+	}
+	$('.show-impl-grid').on('click', function(){
+		showImplGrid();
 	});
 	
 	//
