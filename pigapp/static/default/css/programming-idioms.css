@@ -463,20 +463,32 @@ textarea.impl-code{
 /* Impl grid */
 
 .modal-impl-grid {
-	width: 1000px;
-	margin-left: -500px;
+	width: 1400px;
+	margin-left: -700px;
 	max-height: 80%;
 	overflow-y:scroll;
 }
 
 .impl-grid {
-	padding: 0px;
 	margin: 0px;
+	padding-top: 15px;
+	padding-left: 0px;
+	padding-right: 0px;
 }
 
 .row-fluid .impl-cell {
 	min-height: 130px;
 	margin-left: 1.418%;
+}
+.row-fluid .impl-cell .nav-tabs {
+	margin-bottom: -1px;
+	border-bottom: none;
+}
+.row-fluid .impl-cell .nav-tabs a {
+	background-color: #F5F5F5;
+}
+.row-fluid .impl-cell pre {
+	border-radius: 0px 4px 4px 4px;
 }
 
 /* Create/Edit forms */
