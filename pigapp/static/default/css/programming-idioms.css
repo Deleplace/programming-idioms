@@ -466,7 +466,7 @@ textarea.impl-code{
 	width: 1400px;
 	margin-left: -700px;
 	max-height: 80%;
-	overflow-y:scroll;
+	overflow-y:auto;
 }
 
 .impl-grid {
