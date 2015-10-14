@@ -45,7 +45,7 @@ func adminImportAjax(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 	}
-	dao.deleteCache(c)
+	_ = dao.deleteCache(c)
 	count, err := importFile(c, file, fileHeader)
 	if err != nil {
 		return err

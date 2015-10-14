@@ -459,7 +459,10 @@ func (a *GaeDatastoreAccessor) nextImplID(c appengine.Context) (int, error) {
 func (a *GaeDatastoreAccessor) languagesHavingImpl(c appengine.Context) []string {
 	q := datastore.NewQuery("Idiom").Project("Implementations.LanguageName").Distinct()
 	idioms := make([]*Idiom, 0, 40)
-	q.GetAll(c, &idioms)
+	_, err := q.GetAll(c, &idioms)
+	if err != nil {
+		c.Warningf("Error getting languages having impl: %v", err.Error())
+	}
 	languages := make([]string, len(idioms))
 	for i, idiom := range idioms {
 		languages[i] = idiom.Implementations[0].LanguageName

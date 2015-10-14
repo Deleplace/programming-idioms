@@ -291,3 +291,9 @@ func validateURLFormatOrEmpty(urlStr string) error {
 	}
 	return validateURLFormat(urlStr)
 }
+
+func logIf(err error, logfunc func(format string, args ...interface{}), when string) {
+	if err != nil {
+		logfunc("Problem on %v: %v", when, err.Error())
+	}
+}

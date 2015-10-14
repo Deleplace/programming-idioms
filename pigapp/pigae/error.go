@@ -56,7 +56,10 @@ func errorPage(w http.ResponseWriter, r *http.Request, err error) {
 	}
 
 	w.WriteHeader(code)
-	templates.ExecuteTemplate(w, "page-error", data)
+	errt := templates.ExecuteTemplate(w, "page-error", data)
+	if errt != nil {
+		c.Errorf("Problem rendering error page: %v", errt.Error())
+	}
 }
 
 func errorJSON(w http.ResponseWriter, r *http.Request, err error) {

@@ -118,9 +118,7 @@ func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 	userProfile.FavoriteLanguages = langsArray
 
 	// Display homepage, with updated profile
-	homeView(w, c, userProfile)
-
-	return nil
+	return homeView(w, c, userProfile)
 }
 
 // Hard profiles?

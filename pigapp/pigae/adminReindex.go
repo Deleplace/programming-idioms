@@ -9,8 +9,14 @@ import (
 
 func adminReindexAjax(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
-	dao.deleteCache(c)
-	dao.unindexAll(c)
+	err := dao.deleteCache(c)
+	if err != nil {
+		c.Warningf("Problem deleting cache: %v", err.Error())
+	}
+	err = dao.unindexAll(c)
+	if err != nil {
+		c.Warningf("Problem deleting cache: %v", err.Error())
+	}
 	limit := 10000 // TODO chunk that??
 	keys, idioms, err := dao.getAllIdioms(c, limit, "")
 	if err != nil {

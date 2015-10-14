@@ -37,7 +37,10 @@ func admin(w http.ResponseWriter, r *http.Request) error {
 
 func ajaxRefreshToggles(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
-	dao.deleteCache(c)
+	err := dao.deleteCache(c)
+	if err != nil {
+		return err
+	}
 	return refreshToggles(c)
 }
 
