@@ -173,6 +173,10 @@ type betterHandler func(w http.ResponseWriter, r *http.Request) error
 func handle(path string, h betterHandler) {
 	r.HandleFunc(path,
 		func(w http.ResponseWriter, r *http.Request) {
+			if isSpam(w, r) {
+				return
+			}
+
 			defer func() {
 				if msg := recover(); msg != nil {
 					msgStr := fmt.Sprintf("%v", msg)
@@ -208,6 +212,10 @@ func handle(path string, h betterHandler) {
 func handleAjax(path string, h betterHandler) {
 	r.HandleFunc(path,
 		func(w http.ResponseWriter, r *http.Request) {
+			if isSpam(w, r) {
+				return
+			}
+
 			defer func() {
 				if msg := recover(); msg != nil {
 					msgStr := fmt.Sprintf("%v", msg)
