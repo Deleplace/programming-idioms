@@ -49,6 +49,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
+	c.Infof("[%v] is creating new idiom [%v]", username, title)
 
 	if !StringSliceContains(allLanguages(), language) {
 		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), allNiceLangs), http.StatusBadRequest}
@@ -118,6 +119,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 		return err
 	}
 	c := appengine.NewContext(r)
+	c.Infof("[%v] is updating statement of idiom %v", username, existingIDStr)
 
 	idiomID := String2Int(existingIDStr)
 	if idiomID == -1 {
