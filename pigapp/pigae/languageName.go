@@ -22,7 +22,7 @@ func mainStreamLanguages() []string {
 	return mainStreamLangs[:]
 }
 
-var moreLangs = [...]string{"Ada", "Caml", "Clojure", "Cobol", "D", "Dart", "Elixir", "Erlang", "Fortran", "Groovy", "Haskell", "Lua", "Lisp", "Pascal", "Perl", "Prolog", "Rust", "Scala", "Scheme", "VB"}
+var moreLangs = [...]string{"Ada", "Caml", "Clojure", "Cobol", "D", "Dart", "Elixir", "Erlang", "Fortran", "Haskell", "Lua", "Lisp", "Pascal", "Perl", "Prolog", "Rust", "Scala", "Scheme", "VB"}
 
 func moreLanguages() []string {
 	// These do *not* include the mainStreamLanguages()
