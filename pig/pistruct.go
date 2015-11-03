@@ -15,48 +15,73 @@ import (
 // It is in theory independent from any framework, but has been used only in
 // Google App Engine so far.
 type Idiom struct {
-	// Auto-incremented 1, 2, 3...
+	// Id is auto-incremented 1, 2, 3...
+	// TODO name ID instead
 	Id int
+
 	// Reserved in case one idiom derived from another
+	// TODO name OrigID instead
 	OrigId int
-	// Title : the "idiom name"
+
+	// Title is like the "idiom name"
 	Title string
-	// Idiom Description : 1 to 3 lines are fine
+
+	// LeadParagraph is the idiom Description : 1 to 3 lines are fine
 	LeadParagraph string
-	// The name of the original creator of this idiom on this website
+
+	// Author is the name of the original creator of this idiom on this website
 	Author string
+
 	// The date of creation of this idiom on this site
 	CreationDate time.Time
+
 	// The name of the last person who modified this idiom
 	LastEditor string
+
+	// The name of the last person who modified this idiom
+	LastEditComment string
+
 	// Please acknowledge sources (idiom statement, not snippet).
 	OriginalAttributionURL string
+
 	// Picture representing the concept, if necessary
-	Picture  string
+	Picture string
+
 	ImageURL string
+
 	// Autoincremented at each update 1, 2, 3...
 	Version int
+
 	// Date of last update
 	VersionDate time.Time
+
 	// List of implementations of this idiom in specific languages
 	Implementations []Impl
+
 	// (Denormalized) number of contained implementation, for datastore querying
 	ImplCount int
+
 	// How many votes for the idiom itself  (votes up - votes down)
 	Rating int
+
 	// Index-like array of important words : those from the title
 	// DEPRECATED: use the new Text Search API instead.
 	WordsTitle []string
+
 	// Index-like array of words from title, description and implementation contents
 	// DEPRECATED: use the new Text Search API instead.
 	Words []string
+
 	// Did the admin validate this idiom statement ?
 	Checked bool
+
 	// Extra calculated data like "Has this idiom been upvoted by this user?"
 	// Ignored by the datastore.
 	Deco IdiomRenderingDecoration `datastore:"-" json:"-"`
+
 	// Related idioms ids "See also..."
 	RelatedIdiomIds []int
+
 	// NoSQL-style : store directly some data from other objects
 	RelatedIdiomTitles []string
 }
@@ -65,43 +90,63 @@ type Idiom struct {
 // It is in theory independent from any framework, but has been used only in
 // Google App Engine so far.
 type Impl struct {
-	// Internal Id. Not displayed (but present in URL).
+	// Id is Internal. Not displayed on screen (but present in URL).
+	// TODO name ID instead
 	Id int
-	// Reserved in case one impl derived from another
+
+	// OrigId is reserved in case one impl derived from another
+	// TODO name OrigID instead
 	OrigId int
-	// The name of the original creator of this implementation on this site.
+
+	// Author is the name of the original creator of this implementation on this site.
 	Author string
-	// The date of creation of this implementation on this website
+
+	// CreationDate of this implementation on this website
 	CreationDate time.Time
-	// The name of the last person who modified this impl.
+
+	// LastEditor is the name of the last person who modified this impl.
 	LastEditor string
-	// The programming language of this impl.
+
+	// LanguageName is the programming language of this impl.
 	// It is used to visualy identify the impl inside the idiom.
 	// But note that an idiom may have several implementations for same language.
 	LanguageName string
-	// The snippet.
-	// Should contain only code, preferably no comments.
+
+	// CodeBlock contains the snippet.
+	// It should contain only instructions code, not comments.
 	CodeBlock string
+
 	// OriginalAttributionURL: please acknowledge sources.
 	OriginalAttributionURL string
+
 	// DemoURL is an optional link to an online demo
 	DemoURL string
+
 	// DocumentationURL is an optional link to official doc
 	DocumentationURL string
-	// Editor comments
+
+	// AuthorComment comments about the CodeBlock.
+	// This comment is always displayed on the right of te code.
+	// TODO rename this to CodeBlockComment.
 	AuthorComment string
-	// Autoincremented at each update 1, 2, 3...
+
+	// Version is incremented at each update 1, 2, 3...
 	Version int
-	// Date of last update
+
+	// VersionDate of last update
 	VersionDate time.Time
-	// How many votes for this specific impl  (votes up - votes down)
+
+	// Rating is the votes count for this specific impl  (votes up - votes down)
 	Rating int
-	// Did the admin validate this implementation ?
+
+	// Checked is true if an admin has validated this implementation.
 	Checked bool
-	// Extra calculated data like "Has this implementation been upvoted by this user?"
+
+	// ImplRenderingDecoration is some extra calculated data like "Has this implementation been upvoted by this user?"
 	// Ignored by the datastore.
 	Deco ImplRenderingDecoration `datastore:"-" json:"-"`
-	// Prerequisites : appart from main code section
+
+	// ImportsBlock contains the import directives, appart from main code section.
 	ImportsBlock string
 }
 
