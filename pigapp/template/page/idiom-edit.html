@@ -46,7 +46,7 @@
 									maxlength="500">{{.Idiom.LeadParagraph}}</textarea>
 							</div>
 						</div>
-						{{/*
+						{{/* TODO manage picture, somehow
 						<div class="control-group">
 							<label class="control-label" for="idiom_picture">Picture</label>
 							<div class="controls">
@@ -55,6 +55,12 @@
 							</div>
 						</div>
 						*/}}
+						<div class="control-group">
+							<label class="control-label" for="edit_summary">Edit summary</label>
+							<div class="controls">
+								<input type="text" name="edit_summary" class="input-xlarge" value="" />
+							</div>
+						</div>
 						{{template "input-username" .UserProfile.Nickname}}
 						<div class="control-group">
 							<div class="controls">

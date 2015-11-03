@@ -38,8 +38,9 @@ type Idiom struct {
 	// The name of the last person who modified this idiom
 	LastEditor string
 
-	// The name of the last person who modified this idiom
-	LastEditComment string
+	// EditSummary is the comment explaining why LastEditor made the edit.
+	// It is not displayed except in history views.
+	EditSummary string
 
 	// Please acknowledge sources (idiom statement, not snippet).
 	OriginalAttributionURL string
@@ -196,7 +197,6 @@ type IdiomHistory struct {
 	// Just embeds Idiom
 	Idiom
 	// If needed, add specific history fields
-	EditorSummary string
 	UpdatedImplId int
 }
 

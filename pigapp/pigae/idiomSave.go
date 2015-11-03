@@ -49,6 +49,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
+	editSummary := fmt.Sprintf("Idiom creation by user [%v]", username)
 	c.Infof("[%v] is creating new idiom [%v]", username, title)
 
 	if !StringSliceContains(allLanguages(), language) {
@@ -87,6 +88,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		Picture:         picture, /* TODO upload file ?! */
 		Author:          username,
 		LastEditor:      username,
+		EditSummary:     editSummary,
 		Rating:          0,
 		Implementations: implementations,
 	}
@@ -137,6 +139,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	idiom.LastEditor = username
 	idiom.Title = title
 	idiom.LeadParagraph = r.FormValue("idiom_lead")
+	idiom.EditSummary = r.FormValue("edit_summary")
 	/* idiomPicture.go
 	idiom.Picture, err = processUploadFile(r, "idiom_picture")
 	if err != nil {

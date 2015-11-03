@@ -46,6 +46,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
+	editSummary := fmt.Sprintf("New %v implementation by user [%v]", language, username)
 	c.Infof("[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
 
 	if !StringSliceContains(allLanguages(), language) {
@@ -92,6 +93,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		VersionDate:            now,
 	}
 	idiom.Implementations = append(idiom.Implementations, newImpl)
+	idiom.EditSummary = editSummary
 
 	err = dao.saveExistingIdiom(c, key, idiom)
 	if err != nil {
@@ -148,6 +150,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		return PiError{"Can't accept URL [" + demoURL + "]", http.StatusBadRequest}
 	}
 
+	idiom.EditSummary = r.FormValue("edit_summary")
 	impl.ImportsBlock = imports
 	impl.CodeBlock = code
 	impl.AuthorComment = comment
