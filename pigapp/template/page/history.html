@@ -1,0 +1,20 @@
+{{define "page-history"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>  
+<div class="page-holder">
+	{{template "header-small" .}}  
+	<div class="page-content container-fluid">
+
+		{{template "language-bar" .}}
+
+		<div class="idiom-history">
+			TODO list here
+		</div>
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}
+</div>  
+</body>
+{{template "close-html"}}
+{{end}}

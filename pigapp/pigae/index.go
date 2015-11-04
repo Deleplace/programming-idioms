@@ -48,6 +48,7 @@ func initRoutes() {
 		handle("/idiom/{idiomId}/{idiomTitle}", idiomDetail)
 		handle("/idiom/{idiomId}/diff/{v1}/{v2}", versionDiff)
 		handle("/idiom/{idiomId}/{idiomTitle}/{implId}/{implLang}", idiomDetail)
+		handle("/history/{idiomId}", idiomHistory)
 		handle("/all-idioms", allIdioms)
 		handle("/random-idiom/having/{havingLang}", randomIdiom)
 		handle("/random-idiom/not-having/{notHavingLang}", randomIdiom)
