@@ -89,6 +89,46 @@ func (a *GaeDatastoreAccessor) getIdiomHistory(c appengine.Context, idiomID int,
 	return keys[0], idioms[0], nil
 }
 
+func (a *GaeDatastoreAccessor) getIdiomHistoryList(c appengine.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error) {
+	q := datastore.NewQuery("IdiomHistory").
+		Project("Version", "VersionDate", "EditSummary").
+		Filter("Id =", idiomID).
+		Order("-Version")
+	historyList := make([]*IdiomHistory, 0)
+	keys, err := q.GetAll(c, &historyList)
+	return keys, historyList, err
+}
+
+// revert modifies Idiom and deletes IdiomHistory, but not in a transaction (for now)
+func (a *GaeDatastoreAccessor) revert(c appengine.Context, idiomID int, version int) (*Idiom, error) {
+	q := datastore.NewQuery("IdiomHistory").
+		Filter("Id =", idiomID).
+		Order("-Version").
+		Limit(2)
+	histories := make([]*IdiomHistory, 0)
+	historyKeys, err := q.GetAll(c, &histories)
+	if err != nil {
+		return nil, err
+	}
+	if len(histories) == 0 {
+		return nil, PiError{ErrorText: fmt.Sprintf("No history found for idiom %v", idiomID), Code: 400}
+	}
+	if len(histories) == 1 {
+		return nil, PiError{ErrorText: fmt.Sprintf("Can't revert the only version of idiom %v", idiomID), Code: 400}
+	}
+	if histories[0].Version != version {
+		return nil, PiError{ErrorText: fmt.Sprintf("Can't revert idiom %v: last version is not %v", idiomID, version), Code: 400}
+	}
+	c.Infof("Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
+	idiomKey := datastore.NewKey(c, "Idiom", "", int64(idiomID), nil)
+	idiom := &histories[1].Idiom
+	_, err = datastore.Put(c, idiomKey, idiom)
+	if err != nil {
+		return nil, err
+	}
+	return idiom, datastore.Delete(c, historyKeys[0])
+}
+
 // Delayers registered at init time
 
 // TODO take real Idiom as parameter, not a Key or a pointer

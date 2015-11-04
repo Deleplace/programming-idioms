@@ -8,8 +8,23 @@
 
 		{{template "language-bar" .}}
 
-		<div class="idiom-history">
-			TODO list here
+		<div>
+		<table class="idiom-history">
+			<tr><th>Edit date</th><th>Edit Summary</th><th></th>
+			{{range $i, $h := .HistoryList}}
+				<tr>
+					<td>{{.VersionDate.Format "2006-01-02, 15:04"}}</td>
+					<td>{{.EditSummary}}</td>
+					<td>{{if and (eq $i 0) ($.UserProfile.IsAdmin)}}
+							<form method="POST" action="/revert">
+								<input type="hidden" name="idiomId" value="{{$.IdiomID}}" />
+								<input type="hidden" name="version" value="{{.Version}}" />
+								<input type="submit" value="Revert" /> 
+							</form>
+						{{end}}</td>
+				</tr>
+			{{end}}
+		</table>
 		</div>
 	</div>
 {{template "footer" .}}

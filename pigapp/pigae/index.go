@@ -49,6 +49,7 @@ func initRoutes() {
 		handle("/idiom/{idiomId}/diff/{v1}/{v2}", versionDiff)
 		handle("/idiom/{idiomId}/{idiomTitle}/{implId}/{implLang}", idiomDetail)
 		handle("/history/{idiomId}", idiomHistory)
+		handle("/revert", revertIdiomVersion)
 		handle("/all-idioms", allIdioms)
 		handle("/random-idiom/having/{havingLang}", randomIdiom)
 		handle("/random-idiom/not-having/{notHavingLang}", randomIdiom)
@@ -125,6 +126,7 @@ var neededParameters = map[string][]string{
 	"/idiom-save":                 {"idiom_title"},
 	"/picture-upload":             { /*todo*/ },
 	"/impl-save":                  {"idiom_id", "impl_code"},
+	"/revert":                     {"idiomId", "version"},
 	"/ajax-idiom-vote":            {"idiomId", "choice"},
 	"/ajax-impl-vote":             {"implId", "choice"},
 	"/ajax-demo-site-suggest":     { /*todo*/ },

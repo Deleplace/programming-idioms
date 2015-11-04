@@ -453,3 +453,13 @@ func (a *MemcacheDatastoreAccessor) saveAppConfigProperty(c appengine.Context, p
 func (a *MemcacheDatastoreAccessor) deleteCache(c appengine.Context) error {
 	return memcache.Flush(c)
 }
+
+func (a *MemcacheDatastoreAccessor) revert(c appengine.Context, idiomID int, version int) (*Idiom, error) {
+	idiom, err := a.dataAccessor.revert(c, idiomID, version)
+	if err != nil {
+		return idiom, err
+	}
+	err2 := a.uncacheIdiom(c, idiom)
+	logIf(err2, c.Errorf, "saving existing idiom")
+	return idiom, err
+}

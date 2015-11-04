@@ -45,3 +45,17 @@ indexes:
     direction: desc
   - name: Id
     direction: desc
+
+- kind: IdiomHistory
+  properties:
+  - name: Id
+  - name: Version
+    direction: desc
+
+- kind: IdiomHistory
+  properties:
+  - name: Id
+  - name: Version
+    direction: desc
+  - name: EditSummary
+  - name: VersionDate

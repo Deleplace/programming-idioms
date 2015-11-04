@@ -32,6 +32,7 @@ type idiomGetter interface {
 	idiomsFilterOrder(c appengine.Context, favoriteLangs []string, limitEachLang int, showOther bool, sortOrder string) ([]*Idiom, error)
 	languagesHavingImpl(c appengine.Context) []string
 	getIdiomHistory(c appengine.Context, idiomID int, version int) (*datastore.Key, *IdiomHistory, error)
+	getIdiomHistoryList(c appengine.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error)
 }
 
 type idiomSaver interface {
@@ -44,6 +45,7 @@ type idiomSaver interface {
 	deleteImpl(c appengine.Context, idiomID int, implID int) error
 	nextIdiomID(c appengine.Context) (int, error)
 	nextImplID(c appengine.Context) (int, error)
+	revert(c appengine.Context, idiomID int, version int) (*Idiom, error)
 }
 
 type uploadProcesser interface {

@@ -14,6 +14,9 @@ import (
 type IdiomHistoryFacade struct {
 	PageMeta    PageMeta
 	UserProfile UserProfile
+	IdiomID     int
+	// HistoryList contains incomplete IdiomHistory objects: just a few fields.
+	HistoryList []*IdiomHistory
 }
 
 func idiomHistory(w http.ResponseWriter, r *http.Request) error {
@@ -24,8 +27,10 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
 
-	// TODO
-	_, _ = c, idiomID
+	_, list, err := dao.getIdiomHistoryList(c, idiomID)
+	if err != nil {
+		return err
+	}
 
 	userProfile := readUserProfile(r)
 	myToggles := copyToggles(toggles)
@@ -37,6 +42,24 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 			Toggles:   myToggles,
 		},
 		UserProfile: userProfile,
+		IdiomID:     idiomID,
+		HistoryList: list,
 	}
 	return templates.ExecuteTemplate(w, "page-history", data)
+}
+
+func revertIdiomVersion(w http.ResponseWriter, r *http.Request) error {
+	idiomIDStr := r.FormValue("idiomId")
+	idiomID := String2Int(idiomIDStr)
+	versionStr := r.FormValue("version")
+	version := String2Int(versionStr)
+	c := appengine.NewContext(r)
+
+	_, err := dao.revert(c, idiomID, version)
+	if err != nil {
+		return err
+	}
+	http.Redirect(w, r, hostPrefix()+"/history/"+idiomIDStr, http.StatusFound)
+	return nil
+	// Unfortunately, the redirect page doesn't see the history deletion, yet.
 }
