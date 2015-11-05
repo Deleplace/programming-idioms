@@ -32,6 +32,14 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
+	revertedVersionStr := r.FormValue("reverted")
+	revertedVersion := String2Int(revertedVersionStr)
+	if revertedVersion == list[0].Version {
+		// Most often, the deletion has not been taken into
+		// account by the datastore yet, so we remove manually.
+		list = list[1:]
+	}
+
 	userProfile := readUserProfile(r)
 	myToggles := copyToggles(toggles)
 	myToggles["actionEditIdiom"] = false
@@ -59,7 +67,8 @@ func revertIdiomVersion(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	http.Redirect(w, r, hostPrefix()+"/history/"+idiomIDStr, http.StatusFound)
+	redirUrl := hostPrefix() + "/history/" + idiomIDStr + "?reverted=" + versionStr
+	http.Redirect(w, r, redirUrl, http.StatusFound)
 	return nil
 	// Unfortunately, the redirect page doesn't see the history deletion, yet.
 }
