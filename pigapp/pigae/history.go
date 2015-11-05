@@ -14,7 +14,7 @@ import (
 type IdiomHistoryFacade struct {
 	PageMeta    PageMeta
 	UserProfile UserProfile
-	IdiomID     int
+	Idiom       *Idiom
 	// HistoryList contains incomplete IdiomHistory objects: just a few fields.
 	HistoryList []*IdiomHistory
 }
@@ -40,6 +40,11 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 		list = list[1:]
 	}
 
+	_, idiom, err := dao.getIdiom(c, idiomID)
+	if err != nil {
+		return err
+	}
+
 	userProfile := readUserProfile(r)
 	myToggles := copyToggles(toggles)
 	myToggles["actionEditIdiom"] = false
@@ -51,7 +56,7 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 			Toggles:   myToggles,
 		},
 		UserProfile: userProfile,
-		IdiomID:     idiomID,
+		Idiom:       idiom,
 		HistoryList: list,
 	}
 	return templates.ExecuteTemplate(w, "page-history", data)

@@ -7,6 +7,7 @@
 	<div class="page-content container-fluid">
 
 		{{template "language-bar" .}}
+		{{template "idiom-summary-medium"  decorate .Idiom .UserProfile}}
 
 		<div>
 		<table class="idiom-history">
@@ -17,7 +18,7 @@
 					<td>{{.EditSummary}}</td>
 					<td>{{if and (eq $i 0) ($.UserProfile.IsAdmin)}}
 							<form method="POST" action="/revert">
-								<input type="hidden" name="idiomId" value="{{$.IdiomID}}" />
+								<input type="hidden" name="idiomId" value="{{$.Idiom.Id}}" />
 								<input type="hidden" name="version" value="{{.Version}}" />
 								<input type="submit" value="Revert" /> 
 							</form>
