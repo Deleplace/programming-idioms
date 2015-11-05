@@ -79,6 +79,7 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	userProfile := readUserProfile(r)
 	myToggles := copyToggles(toggles)
 	myToggles["actionEditIdiom"] = false
+	myToggles["actionIdiomHistory"] = false
 	myToggles["actionAddImpl"] = false
 	data := &VersionDiffFacade{
 		PageMeta: PageMeta{

@@ -31,6 +31,9 @@
 								<li><a href="{{hostPrefix}}/idiom-add-picture/{{.Idiom.Id}}"><i class="icon-fixed-width icon-camera"></i> Add picture</a></li>
 							{{end}}
 						{{end}}
+						{{if and  .PageMeta.Toggles.actionIdiomHistory .UserProfile.IsAdmin}}
+							<li><a href="{{hostPrefix}}/history/{{.Idiom.Id}}"><i class="icon-fixed-width icon-sort-by-attributes-alt"></i> Idiom history</a></li>
+						{{end}}
 						{{if and .PageMeta.Toggles.implEditing .PageMeta.Toggles.actionEditIdiom}}
 							{{range .Idiom.Implementations}}
 								<li><a href="{{hostPrefix}}/impl-edit/{{$.Idiom.Id}}/{{.Id}}"><i class="icon-fixed-width icon-pencil"></i> Edit {{.LanguageName | printNiceLang}} implementation</a></li>
