@@ -32,6 +32,10 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
+	if len(list) == 0 {
+		return PiError{ErrorText: "No history entries found for idiom " + idiomIDStr, Code: 500}
+	}
+
 	revertedVersionStr := r.FormValue("reverted")
 	revertedVersion := String2Int(revertedVersionStr)
 	if revertedVersion == list[0].Version {
