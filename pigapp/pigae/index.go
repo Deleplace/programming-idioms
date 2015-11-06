@@ -90,6 +90,7 @@ func initRoutes() {
 			handle("/admin", admin)
 			handle("/admin-data-export", adminExport)
 			handle("/admin-data-import", adminImport)
+			handle("/admin-resave-entities", adminResaveEntities)
 			handleAjax("/admin-data-import-ajax", adminImportAjax)
 			handleAjax("/admin-reindex-ajax", adminReindexAjax)
 			handleAjax("/admin-refresh-toggles-ajax", ajaxRefreshToggles)
