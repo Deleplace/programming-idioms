@@ -59,11 +59,11 @@ func isSpam(w http.ResponseWriter, r *http.Request) (busted bool) {
 
 	// By suspicious field values
 	if len(r.FormValue("impl_imports")) > 150 {
-		motive = "imports too long"
+		motive = "imports too long [" + r.FormValue("impl_imports")[0:20] + "...]"
 		return true
 	}
 	if len(r.FormValue("impl_imports")) > 10 && r.FormValue("impl_imports") == r.FormValue("impl_code") {
-		motive = "identical imports and codeblock"
+		motive = "identical imports and codeblock [" + r.FormValue("impl_imports")[0:10] + "...]"
 		return true
 	}
 
