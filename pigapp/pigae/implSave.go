@@ -94,6 +94,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	}
 	idiom.Implementations = append(idiom.Implementations, newImpl)
 	idiom.EditSummary = editSummary
+	idiom.LastEditedImplID = implID
 
 	err = dao.saveExistingIdiom(c, key, idiom)
 	if err != nil {
@@ -151,6 +152,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	}
 
 	idiom.EditSummary = r.FormValue("edit_summary")
+	idiom.LastEditedImplID = implID
 	impl.ImportsBlock = imports
 	impl.CodeBlock = code
 	impl.AuthorComment = comment

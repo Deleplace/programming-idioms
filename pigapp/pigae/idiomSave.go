@@ -82,15 +82,16 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		},
 	}
 	idiom := &Idiom{
-		Id:              idiomID,
-		Title:           title,
-		LeadParagraph:   lead,
-		Picture:         picture, /* TODO upload file ?! */
-		Author:          username,
-		LastEditor:      username,
-		EditSummary:     editSummary,
-		Rating:          0,
-		Implementations: implementations,
+		Id:               idiomID,
+		Title:            title,
+		LeadParagraph:    lead,
+		Picture:          picture, /* TODO upload file ?! */
+		Author:           username,
+		LastEditor:       username,
+		LastEditedImplID: implID,
+		EditSummary:      editSummary,
+		Rating:           0,
+		Implementations:  implementations,
 	}
 	/*
 		Authenticated user name not needed here, as of 2015.
@@ -137,6 +138,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	}
 
 	idiom.LastEditor = username
+	idiom.LastEditedImplID = 0
 	idiom.Title = title
 	idiom.LeadParagraph = r.FormValue("idiom_lead")
 	idiom.EditSummary = r.FormValue("edit_summary")

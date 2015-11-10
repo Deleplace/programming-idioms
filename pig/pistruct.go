@@ -32,15 +32,20 @@ type Idiom struct {
 	// Author is the name of the original creator of this idiom on this website
 	Author string
 
-	// The date of creation of this idiom on this site
+	// CreationDate is the date of creation of this idiom on this site
 	CreationDate time.Time
 
-	// The name of the last person who modified this idiom
+	// LastEditor is the name of the last person who modified this idiom
 	LastEditor string
 
 	// EditSummary is the comment explaining why LastEditor made the edit.
 	// It is not displayed except in history views.
 	EditSummary string
+
+	// LastEditedImplID is the ID of the only impl modified by
+	// last edit. LastEditedImplID should be 0 if last
+	// edit was on the idiom statement, not on an impl.
+	LastEditedImplID int
 
 	// Please acknowledge sources (idiom statement, not snippet).
 	OriginalAttributionURL string
