@@ -198,6 +198,9 @@ type IdiomHistory struct {
 	Idiom
 	// If needed, add specific history fields
 	UpdatedImplId int
+	// TODO: how to get rid properly?
+	// Got `datastore: cannot load field "EditorSummary" into a "pig.IdiomHistory": no such struct field`
+	EditorSummary string `deprecated`
 }
 
 func (ih *IdiomHistory) AsIdiomPtr() *Idiom {
