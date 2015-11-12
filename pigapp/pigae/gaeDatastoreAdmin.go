@@ -8,6 +8,7 @@ import (
 
 	"appengine"
 	"appengine/datastore"
+	"appengine/memcache"
 )
 
 // Low-level Datastore entities manipulation, outside
@@ -34,6 +35,7 @@ func adminResaveEntities(w http.ResponseWriter, r *http.Request) error {
 
 // 2015-11-06 to force field EditSummary (even if empty) on every IdiomHistory persisted entity.
 func resaveAllIdiomHistory(c appengine.Context) error {
+	defer memcache.Flush(c)
 	saved := 0
 	keys, err := datastore.NewQuery("IdiomHistory").KeysOnly().GetAll(c, nil)
 	if err != nil {
