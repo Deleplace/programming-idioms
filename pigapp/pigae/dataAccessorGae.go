@@ -718,3 +718,14 @@ func (a *GaeDatastoreAccessor) saveAppConfigProperty(c appengine.Context, prop A
 	_, err := datastore.Put(c, key, &prop)
 	return err
 }
+
+func (a *GaeDatastoreAccessor) saveNewMessage(c appengine.Context, message *MessageForUser) (*datastore.Key, error) {
+	return datastore.Put(c, datastore.NewIncompleteKey(c, "MessageForUser", nil), message)
+}
+
+func (a *GaeDatastoreAccessor) getMessagesForUser(c appengine.Context, username string) ([]*datastore.Key, []*MessageForUser, error) {
+	q := datastore.NewQuery("MessageForUser").Filter("Username =", username)
+	messages := make([]*MessageForUser, 0)
+	keys, err := q.GetAll(c, &messages)
+	return keys, messages, err
+}

@@ -463,3 +463,37 @@ func (a *MemcacheDatastoreAccessor) revert(c appengine.Context, idiomID int, ver
 	logIf(err2, c.Errorf, "saving existing idiom")
 	return idiom, err
 }
+
+func (a *MemcacheDatastoreAccessor) saveNewMessage(c appengine.Context, msg *MessageForUser) (*datastore.Key, error) {
+	key, err := a.dataAccessor.saveNewMessage(c, msg)
+	if err != nil {
+		return key, err
+	}
+
+	cacheKey := "getMessagesForUser(" + msg.Username + ")"
+	err = memcache.Delete(c, cacheKey)
+	return key, err
+}
+
+func (a *MemcacheDatastoreAccessor) getMessagesForUser(c appengine.Context, username string) ([]*datastore.Key, []*MessageForUser, error) {
+	cacheKey := "getMessagesForUser(" + username + ")"
+
+	data, cacheerr := a.readCache(c, cacheKey)
+	if cacheerr != nil {
+		// Ouch.
+		return nil, nil, cacheerr
+	}
+	if data == nil {
+		// Not in the cache. Then fetch the real datastore data. And cache it.
+		keys, messages, err := a.dataAccessor.getMessagesForUser(c, username)
+		if err == nil {
+			err2 := a.cachePair(c, cacheKey, keys, messages, 2*time.Hour)
+			logIf(err2, c.Errorf, "caching user messages")
+		}
+		return keys, messages, err
+	}
+	pair := data.(*pair)
+	keys := pair.First.([]*datastore.Key)
+	messages := pair.Second.([]*MessageForUser)
+	return keys, messages, nil
+}

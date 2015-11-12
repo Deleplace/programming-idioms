@@ -207,6 +207,12 @@ func (ih *IdiomHistory) AsIdiomPtr() *Idiom {
 	return &(ih.Idiom)
 }
 
+type MessageForUser struct {
+	CreationDate, ExpirationDate time.Time
+	Message                      string
+	Username                     string
+}
+
 /* ---- */
 
 // FindImplInIdiom is a (unoptimized) iteration to retrieve an Impl by its ID,
