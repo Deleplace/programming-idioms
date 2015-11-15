@@ -80,6 +80,8 @@ func initRoutes() {
 			handleAjax("/ajax-idiom-vote", ajaxIdiomVote)
 			handleAjax("/ajax-impl-vote", ajaxImplVote)
 			handleAjax("/ajax-demo-site-suggest", ajaxDemoSiteSuggest)
+			handleAjax("/ajax-user-message-box", userMessageBoxAjax)
+			handleAjax("/ajax-dismiss-user-message", dismissUserMessage)
 			handle("/about-block-project", ajaxAboutProject)
 			handle("/about-block-all-idioms", ajaxAboutAllIdioms)
 			handle("/about-block-language-coverage", ajaxAboutLanguageCoverage)
@@ -98,6 +100,7 @@ func initRoutes() {
 			handleAjax("/admin-create-relation-ajax", ajaxCreateRelation)
 			handleAjax("/admin-idiom-delete", idiomDelete)
 			handleAjax("/admin-impl-delete", implDelete)
+			handleAjax("/admin-send-message-for-user", sendMessageForUserAjax)
 		}
 
 		handle("/auth", handleAuth)
@@ -123,21 +126,23 @@ var neededPathVariables = map[string][]string{
 
 // Request will fail if it doesn't provide the required GET or POST parameters
 var neededParameters = map[string][]string{
-	"/typeahead-languages":        { /*todo*/ },
-	"/idiom-save":                 {"idiom_title"},
-	"/picture-upload":             { /*todo*/ },
-	"/impl-save":                  {"idiom_id", "impl_code"},
-	"/revert":                     {"idiomId", "version"},
-	"/ajax-idiom-vote":            {"idiomId", "choice"},
-	"/ajax-impl-vote":             {"implId", "choice"},
-	"/ajax-demo-site-suggest":     { /*todo*/ },
-	"/admin-data-export":          { /*todo*/ },
-	"/admin-data-import":          { /*todo*/ },
-	"/admin-data-import-ajax":     { /*todo*/ },
-	"/admin-set-toggle-ajax":      {"toggle", "value"},
-	"/admin-create-relation-ajax": {"idiomAId", "idiomBId"},
-	"/admin-idiom-delete":         {"idiomId"},
-	"/admin-impl-delete":          {"idiomId", "implId"},
+	"/typeahead-languages":         { /*todo*/ },
+	"/idiom-save":                  {"idiom_title"},
+	"/picture-upload":              { /*todo*/ },
+	"/impl-save":                   {"idiom_id", "impl_code"},
+	"/revert":                      {"idiomId", "version"},
+	"/ajax-idiom-vote":             {"idiomId", "choice"},
+	"/ajax-impl-vote":              {"implId", "choice"},
+	"/ajax-demo-site-suggest":      { /*todo*/ },
+	"/ajax-dismiss-user-message":   {"key"},
+	"/admin-data-export":           { /*todo*/ },
+	"/admin-data-import":           { /*todo*/ },
+	"/admin-data-import-ajax":      { /*todo*/ },
+	"/admin-set-toggle-ajax":       {"toggle", "value"},
+	"/admin-create-relation-ajax":  {"idiomAId", "idiomBId"},
+	"/admin-idiom-delete":          {"idiomId"},
+	"/admin-impl-delete":           {"idiomId", "implId"},
+	"/admin-send-message-for-user": {"username", "message"},
 }
 
 // Request will fail if corresponding toggle is off

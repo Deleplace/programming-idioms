@@ -88,6 +88,7 @@ func init() {
 	gob.Register(map[string]bool{})
 	gob.Register(Toggles{})
 	gob.Register(&ApplicationConfig{})
+	gob.Register([]*MessageForUser{})
 }
 
 // KeyAndEntity is a specific pair wrapper.
@@ -472,6 +473,10 @@ func (a *MemcacheDatastoreAccessor) saveNewMessage(c appengine.Context, msg *Mes
 
 	cacheKey := "getMessagesForUser(" + msg.Username + ")"
 	err = memcache.Delete(c, cacheKey)
+	if err == memcache.ErrCacheMiss {
+		// No problem if wasn't in cache anyway
+		err = nil
+	}
 	return key, err
 }
 
@@ -496,4 +501,19 @@ func (a *MemcacheDatastoreAccessor) getMessagesForUser(c appengine.Context, user
 	keys := pair.First.([]*datastore.Key)
 	messages := pair.Second.([]*MessageForUser)
 	return keys, messages, nil
+}
+
+func (a *MemcacheDatastoreAccessor) dismissMessage(c appengine.Context, key *datastore.Key) (*MessageForUser, error) {
+	msg, err := a.dataAccessor.dismissMessage(c, key)
+	if err != nil {
+		return nil, err
+	}
+
+	cacheKey := "getMessagesForUser(" + msg.Username + ")"
+	err = memcache.Delete(c, cacheKey)
+	if err == memcache.ErrCacheMiss {
+		// No problem if wasn't in cache anyway
+		err = nil
+	}
+	return msg, err
 }

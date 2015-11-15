@@ -548,4 +548,50 @@ $(function() {
 		return false;
 	})
 
+	//
+	// Messages sent from admin to user
+	//
+	setTimeout(function(){
+		if( logged() ){
+			$.get('/ajax-user-message-box', 
+				function(response) {
+					var messages = response.messages;
+					if(messages.length > 0){
+						var zone = $(".user-messages");
+						messages.forEach(function(message) {
+							var item = $("<div>").addClass("user-message");
+							item.append( $("<div>").addClass("date").html(message.creationDate) );
+							item.append( $("<div>").addClass("content").html(message.message) );
+							item.append( $("<div>").addClass("dismissal").html( $("<button>")
+								.html("Dismiss")
+								.attr("key", message.key)
+								.on("click", function(event){
+									console.log("Dismissing " + $(this).attr("key"));
+									var hideBtn = $(this);
+								    $.ajax({
+								        url: "/ajax-dismiss-user-message",
+								        type: 'POST',
+								        data: {key:hideBtn.attr("key")},
+								        xhr: function() {
+								            var myXhr = $.ajaxSettings.xhr();
+								            return myXhr;
+								        },
+								        success: function(response){
+								        	console.log("User message dismissed.");
+								        	hideBtn.closest(".user-message").hide("fast");
+								        },
+								        error: function(xhr, status, e){
+								        	$.fn.pierror( xhr.responseText );
+								        },
+	   								});
+								})
+							) );
+							zone.append(item);
+						});
+						zone.show("fast");
+					}
+			});
+		}
+	},300);
+
 });

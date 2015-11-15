@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -95,5 +96,23 @@ func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
 	if err := dao.saveExistingIdiom(c, keyB, idiomB); err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
 	}
+	w.WriteHeader(http.StatusNoContent)
+	return nil
+}
+
+func sendMessageForUserAjax(w http.ResponseWriter, r *http.Request) error {
+	c := appengine.NewContext(r)
+	msg := MessageForUser{
+		Username:     r.FormValue("username"),
+		Message:      r.FormValue("message"),
+		CreationDate: time.Now(),
+	}
+	c.Infof("Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
+	_, err := dao.saveNewMessage(c, &msg)
+	if err != nil {
+		return err
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 	return nil
 }

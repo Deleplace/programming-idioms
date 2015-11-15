@@ -686,4 +686,17 @@ footer a.visited {
 	overflow-y : scroll;
 }
 
+/* Messenger */
+
+.message-zone .user-messages {
+	background-color: #FFC;
+	padding: 3px 3px 3px 3px;
+}
+
+.message-zone .user-messages .user-message {
+	background-color: #FA3;
+	padding: 3px 3px 3px 6px;
+	margin-bottom: 3px;
+}
+
 /* Bootstrap theme customization */
