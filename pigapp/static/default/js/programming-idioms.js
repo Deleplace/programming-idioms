@@ -1,5 +1,24 @@
 $(function() {
 
+	var YYYYMMDD = function(dateStr) {
+		var date = new Date(dateStr);
+	    var d = date.getDate();
+	    var m = date.getMonth() + 1;
+	    var y = date.getFullYear();
+	    return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+	}
+
+	var HHmm = function(dateStr) {
+		var date = new Date(dateStr);
+	    var h = date.getHours();
+	    var m = date.getMinutes();
+	    return '' + (h <= 9 ? '0' + h : h) + ':' + (m<=9 ? '0' + m : m);
+	}
+
+	var YYYYMMDDHHmm = function(dateStr) {
+		return YYYYMMDD(dateStr) + ' ' + HHmm(dateStr);
+	}
+
 	//
 	// jQuery stuff activation
 	//
@@ -170,6 +189,10 @@ $(function() {
 			return true;
 		else
 			return false;
+	}
+
+	var username = function(){
+		return $.cookie("Nickname");
 	}
 	
 	$("#modal-nickname .form-nickname").on("submit", function(){
@@ -559,11 +582,11 @@ $(function() {
 					if(messages.length > 0){
 						var zone = $(".user-messages");
 						messages.forEach(function(message) {
-							var item = $("<div>").addClass("user-message");
-							item.append( $("<div>").addClass("date").html(message.creationDate) );
-							item.append( $("<div>").addClass("content").html(message.message) );
+							var item = $("<div>").addClass("user-message alert");
 							item.append( $("<div>").addClass("dismissal").html( $("<button>")
-								.html("Dismiss")
+								.attr("type", "button")
+								.addClass("close")
+								.html("&times; dismiss")
 								.attr("key", message.key)
 								.on("click", function(event){
 									console.log("Dismissing " + $(this).attr("key"));
@@ -586,6 +609,9 @@ $(function() {
 	   								});
 								})
 							) );
+							item.append( $("<h4>").html("Message for " + username()) );
+							item.append( $("<div>").addClass("date").append($("<small>").html(YYYYMMDDHHmm(message.creationDate))) );
+							item.append( $("<div>").addClass("content").html(message.message) );
 							zone.append(item);
 						});
 						zone.show("fast");

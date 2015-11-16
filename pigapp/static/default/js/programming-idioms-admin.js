@@ -118,7 +118,7 @@ $(function() {
 	    });
 	});
 
-	$('#message-for-user-form').on("click", function(){
+	$('#message-for-user-form .btn.send-message-for-user').on("click", function(){
 	    $.ajax({
 	        url: '/admin-send-message-for-user',
 	        type: 'POST',
