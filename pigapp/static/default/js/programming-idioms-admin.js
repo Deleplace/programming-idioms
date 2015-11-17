@@ -128,6 +128,7 @@ $(function() {
 	        },
 	        success: function(response){
 	        	$.fn.pisuccess( "Message has been sent." );
+	        	$('#message-for-user-form textarea[name=message]').val('');
 	        },
 	        error: function(xhr, status, e){
 	        	$.fn.pierror( "Message sending failed : " + xhr.responseText );
