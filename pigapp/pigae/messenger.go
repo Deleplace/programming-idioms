@@ -28,7 +28,6 @@ func userMessageBoxAjax(w http.ResponseWriter, r *http.Request) error {
 		jsonMessages[i] = jsonMessage
 	}
 	jsonResponse := Response{"messages": jsonMessages}
-	c.Infof("jsonResponse = %v", jsonResponse)
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprint(w, jsonResponse)
 	// TODO add a 3-mn browser cache header?
