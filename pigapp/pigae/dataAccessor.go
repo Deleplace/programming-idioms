@@ -15,6 +15,7 @@ type dataAccessor interface {
 	uploadProcesser
 	appConfigGetter
 	appConfigSaver
+	messenger
 }
 
 type idiomGetter interface {
@@ -60,4 +61,10 @@ type appConfigGetter interface {
 type appConfigSaver interface {
 	saveAppConfig(c appengine.Context, appConfig ApplicationConfig) error
 	saveAppConfigProperty(c appengine.Context, prop AppConfigProperty) error
+}
+
+type messenger interface {
+	saveNewMessage(c appengine.Context, msg *MessageForUser) (*datastore.Key, error)
+	getMessagesForUser(c appengine.Context, username string) ([]*datastore.Key, []*MessageForUser, error)
+	dismissMessage(c appengine.Context, key *datastore.Key) (*MessageForUser, error)
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
 )
 
 // StringSliceContains determines whether this slice contain this string?
@@ -110,9 +111,8 @@ func Sha1hash(s string) string {
 func String2Int(str string) int {
 	if number64, err := strconv.ParseInt(str, 10, 32); err == nil {
 		return int(number64)
-	} else {
-		return -1
 	}
+	return -1
 }
 
 // Min returns the minimum of a and b.
@@ -129,4 +129,21 @@ func Max(a, b int) int {
 		return a
 	}
 	return b
+}
+
+// Shorten keeps only the n first bytes, add appends "..." if needed.
+func Shorten(s string, n int) string {
+	// TODO better handle UTF-8
+	if len(s) > n {
+		return s[:n] + "..."
+	}
+	return s
+}
+
+// Flatten replaces newlines by spaces
+func Flatten(s string) string {
+	s = strings.Replace(s, "\r\n", " ", -1)
+	s = strings.Replace(s, "\n\r", " ", -1)
+	s = strings.Replace(s, "\n", " ", -1)
+	return s
 }

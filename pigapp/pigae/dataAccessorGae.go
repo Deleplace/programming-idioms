@@ -718,3 +718,28 @@ func (a *GaeDatastoreAccessor) saveAppConfigProperty(c appengine.Context, prop A
 	_, err := datastore.Put(c, key, &prop)
 	return err
 }
+
+func (a *GaeDatastoreAccessor) saveNewMessage(c appengine.Context, message *MessageForUser) (*datastore.Key, error) {
+	return datastore.Put(c, datastore.NewIncompleteKey(c, "MessageForUser", nil), message)
+}
+
+func (a *GaeDatastoreAccessor) getMessagesForUser(c appengine.Context, username string) ([]*datastore.Key, []*MessageForUser, error) {
+	var dateZero time.Time
+	q := datastore.NewQuery("MessageForUser").
+		Filter("Username =", username).
+		Filter("DismissalDate =", dateZero)
+	messages := make([]*MessageForUser, 0)
+	keys, err := q.GetAll(c, &messages)
+	return keys, messages, err
+}
+
+func (a *GaeDatastoreAccessor) dismissMessage(c appengine.Context, key *datastore.Key) (*MessageForUser, error) {
+	var userMessage MessageForUser
+	err := datastore.Get(c, key, &userMessage)
+	if err != nil {
+		return nil, err
+	}
+	userMessage.DismissalDate = time.Now()
+	_, err = datastore.Put(c, key, &userMessage)
+	return &userMessage, err
+}

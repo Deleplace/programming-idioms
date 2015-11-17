@@ -686,4 +686,12 @@ footer a.visited {
 	overflow-y : scroll;
 }
 
+/* Messenger */
+
+.message-zone .user-messages {
+}
+
+.message-zone .user-messages .user-message {
+}
+
 /* Bootstrap theme customization */

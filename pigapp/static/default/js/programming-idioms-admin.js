@@ -117,4 +117,22 @@ $(function() {
 	        processData: false
 	    });
 	});
+
+	$('#message-for-user-form .btn.send-message-for-user').on("click", function(){
+	    $.ajax({
+	        url: '/admin-send-message-for-user',
+	        type: 'POST',
+	        xhr: function() {
+	            var myXhr = $.ajaxSettings.xhr();
+	            return myXhr;
+	        },
+	        success: function(response){
+	        	$.fn.pisuccess( "Message has been sent." );
+	        },
+	        error: function(xhr, status, e){
+	        	$.fn.pierror( "Message sending failed : " + xhr.responseText );
+	        },
+	        data: $("#message-for-user-form").serialize(),
+	    });
+	});
 });

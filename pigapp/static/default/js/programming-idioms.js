@@ -1,5 +1,24 @@
 $(function() {
 
+	var YYYYMMDD = function(dateStr) {
+		var date = new Date(dateStr);
+	    var d = date.getDate();
+	    var m = date.getMonth() + 1;
+	    var y = date.getFullYear();
+	    return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+	}
+
+	var HHmm = function(dateStr) {
+		var date = new Date(dateStr);
+	    var h = date.getHours();
+	    var m = date.getMinutes();
+	    return '' + (h <= 9 ? '0' + h : h) + ':' + (m<=9 ? '0' + m : m);
+	}
+
+	var YYYYMMDDHHmm = function(dateStr) {
+		return YYYYMMDD(dateStr) + ' ' + HHmm(dateStr);
+	}
+
 	//
 	// jQuery stuff activation
 	//
@@ -170,6 +189,10 @@ $(function() {
 			return true;
 		else
 			return false;
+	}
+
+	var username = function(){
+		return $.cookie("Nickname");
 	}
 	
 	$("#modal-nickname .form-nickname").on("submit", function(){
@@ -547,5 +570,54 @@ $(function() {
 		showImplEditPreview();
 		return false;
 	})
+
+	//
+	// Messages sent from admin to user
+	//
+	setTimeout(function(){
+		if( logged() ){
+			$.get('/ajax-user-message-box', 
+				function(response) {
+					var messages = response.messages;
+					if(messages.length > 0){
+						var zone = $(".user-messages");
+						messages.forEach(function(message) {
+							var item = $("<div>").addClass("user-message alert");
+							item.append( $("<div>").addClass("dismissal").html( $("<button>")
+								.attr("type", "button")
+								.addClass("close")
+								.html("&times; dismiss")
+								.attr("key", message.key)
+								.on("click", function(event){
+									console.log("Dismissing " + $(this).attr("key"));
+									var hideBtn = $(this);
+								    $.ajax({
+								        url: "/ajax-dismiss-user-message",
+								        type: 'POST',
+								        data: {key:hideBtn.attr("key")},
+								        xhr: function() {
+								            var myXhr = $.ajaxSettings.xhr();
+								            return myXhr;
+								        },
+								        success: function(response){
+								        	console.log("User message dismissed.");
+								        	hideBtn.closest(".user-message").hide("fast");
+								        },
+								        error: function(xhr, status, e){
+								        	$.fn.pierror( xhr.responseText );
+								        },
+	   								});
+								})
+							) );
+							item.append( $("<h4>").html("Message for " + username()) );
+							item.append( $("<div>").addClass("date").append($("<small>").html(YYYYMMDDHHmm(message.creationDate))) );
+							item.append( $("<div>").addClass("content").html(message.message) );
+							zone.append(item);
+						});
+						zone.show("fast");
+					}
+			});
+		}
+	},300);
 
 });
