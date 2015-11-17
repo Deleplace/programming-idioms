@@ -23,7 +23,6 @@
 						{{if .PageMeta.Toggles.idiomCreation}}
 							<li><a href="{{hostPrefix}}/idiom-create"><i class="icon-fixed-width icon-plus"></i> New idiom</a></li>
 						{{end}}
-						<li><a href="{{hostPrefix}}/random-idiom"><i class="pi-icon-dice">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> Go to a random idiom</a></li>
 						{{if and .PageMeta.Toggles.idiomEditing .PageMeta.Toggles.actionEditIdiom}}
 							<li class="divider"></li>
 							<li><a href="{{hostPrefix}}/idiom-edit/{{.Idiom.Id}}"><i class="icon-fixed-width icon-edit"></i> Edit idiom statement</a></li>
