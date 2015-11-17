@@ -611,7 +611,8 @@ $(function() {
 							) );
 							item.append( $("<h4>").html("Message for " + username()) );
 							item.append( $("<div>").addClass("date").append($("<small>").html(YYYYMMDDHHmm(message.creationDate))) );
-							item.append( $("<div>").addClass("content").html(message.message) );
+							var content = message.message.replace(/\n/g, "<br/>");
+							item.append( $("<div>").addClass("content").html(content) );
 							zone.append(item);
 						});
 						zone.show("fast");
