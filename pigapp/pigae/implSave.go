@@ -151,7 +151,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		return PiError{"Can't accept URL [" + demoURL + "]", http.StatusBadRequest}
 	}
 
-	idiom.EditSummary = r.FormValue("edit_summary")
+	idiom.EditSummary = "[" + impl.LanguageName + "]" + r.FormValue("edit_summary")
 	idiom.LastEditedImplID = implID
 	impl.ImportsBlock = imports
 	impl.CodeBlock = code
