@@ -403,6 +403,33 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Cont
 	return idioms, nil
 }
 
+func (a *GaeDatastoreAccessor) searchImplIDs(c appengine.Context, words []string) (map[string]bool, error) {
+	index, err := gaesearch.Open("impls")
+	if err != nil {
+		return nil, err
+	}
+	hits := map[string]bool{}
+	query := "Bulk:(~" + strings.Join(words, " AND ~") + ")"
+	// No real limit for now, those are just IDs and we don't have 1M impls.
+	limit := 1000000
+	// This is an *IDsOnly* search, where docID == Impl.Id
+	it := index.Search(c, query, &gaesearch.SearchOptions{
+		Limit:   limit,
+		IDsOnly: true,
+	})
+	for {
+		implIDStr, err := it.Next(nil)
+		if err == gaesearch.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		hits[implIDStr] = true
+	}
+	return hits, nil
+}
+
 func executeIdiomTextSearchQuery(c appengine.Context, query string, limit int) ([]*Idiom, error) {
 	// c.Infof(query)
 	index, err := gaesearch.Open("idioms")

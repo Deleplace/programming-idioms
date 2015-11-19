@@ -325,6 +325,7 @@ header .form-search {
   display: none;
 }
 /* Result list */
+
 .idiom-summary-medium h1 {
 	font-size: 16px;
 	line-height: 20px;
@@ -349,6 +350,15 @@ header .form-search {
 .idiom-summary-medium .language-list {
   float: left;
   padding-left: 10px;
+}
+
+.matching {
+	background-color: #FF7;
+	/*
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color: #DD5;
+	*/
 }
 
 /* Idiom detail */

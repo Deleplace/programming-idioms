@@ -39,12 +39,24 @@ func search(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	normalizedQ := strings.Join(words, " ")
 
+	// Highlight matching impls :)
+	matchingImplIDs, err := dao.searchImplIDs(c, words)
+	if err != nil {
+		return err
+	}
 	for _, idiom := range hits {
 		implFavoriteLanguagesFirstWithOrder(idiom, userProfile.FavoriteLanguages, "", userProfile.SeeNonFavorite)
+		for i := range idiom.Implementations {
+			impl := &idiom.Implementations[i]
+			implIDStr := fmt.Sprintf("%d", impl.Id)
+			if matchingImplIDs[implIDStr] {
+				impl.Deco.Matching = true
+			}
+		}
 	}
 
+	normalizedQ := strings.Join(words, " ")
 	return listResults(w, r, normalizedQ, hits)
 }
 

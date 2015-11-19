@@ -168,6 +168,8 @@ type IdiomRenderingDecoration struct {
 type ImplRenderingDecoration struct {
 	UpVoted   bool
 	DownVoted bool
+	// Matching is set to true if current impl matches user text search query.
+	Matching bool
 }
 
 // IdiomVoteLog is a history trace of an Idiom vote, from a specific user.

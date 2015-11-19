@@ -147,7 +147,7 @@
 						<div class="language-list">
 							<ul class="inline">
 								{{range .Implementations}}
-									<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+									<li class="active {{if .Deco.Matching}}matching{{end}}"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
 								{{end}}
 							</ul>
 						</div>

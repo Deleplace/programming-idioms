@@ -309,6 +309,11 @@ func (a *MemcacheDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine
 	return a.dataAccessor.searchIdiomsByWordsWithFavorites(c, words, favoriteLangs, seeNonFavorite, limit)
 }
 
+func (a *MemcacheDatastoreAccessor) searchImplIDs(c appengine.Context, words []string) (map[string]bool, error) {
+	// TODO cache this... or not.
+	return a.dataAccessor.searchImplIDs(c, words)
+}
+
 func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(c appengine.Context, langs []string, limit int) ([]*Idiom, error) {
 	cacheKey := fmt.Sprintf("searchIdiomsByLangs(%v,%v)", langs, limit)
 	//c.Debugf(cacheKey)
