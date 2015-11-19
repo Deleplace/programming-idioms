@@ -301,27 +301,32 @@ func (a *GaeDatastoreAccessor) deleteAllIdioms(c appengine.Context) error {
 }
 
 func (a *GaeDatastoreAccessor) unindexAll(c appengine.Context) error {
-	c.Infof("Unindexing everything (from the text search index)")
+	c.Infof("Unindexing everything (from the text search indexes)")
 
 	// Must remove 1 by 1 (Index has no batch methods)
-	index, err := gaesearch.Open("idioms")
-	if err != nil {
-		return err
-	}
-
-	it := index.List(c, &gaesearch.ListOptions{IDsOnly: true})
-	for {
-		docID, err := it.Next(nil)
-		if err == gaesearch.Done {
-			break
-		}
-		if err != nil {
-			c.Errorf("Error getting next indexed idiom to unindex: %v", err)
-			return err
-		}
-		err = index.Delete(c, docID)
+	for _, indexName := range []string{
+		"idioms",
+		"impls",
+	} {
+		c.Infof("Unindexing items of [%v]", indexName)
+		index, err := gaesearch.Open(indexName)
 		if err != nil {
 			return err
+		}
+		it := index.List(c, &gaesearch.ListOptions{IDsOnly: true})
+		for {
+			docID, err := it.Next(nil)
+			if err == gaesearch.Done {
+				break
+			}
+			if err != nil {
+				c.Errorf("Error getting next indexed object to unindex: %v", err)
+				return err
+			}
+			err = index.Delete(c, docID)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
