@@ -91,7 +91,7 @@ func (a *GaeDatastoreAccessor) getIdiomHistory(c appengine.Context, idiomID int,
 
 func (a *GaeDatastoreAccessor) getIdiomHistoryList(c appengine.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error) {
 	q := datastore.NewQuery("IdiomHistory").
-		Project("Version", "VersionDate", "EditSummary").
+		Project("Version", "VersionDate", "LastEditor", "EditSummary").
 		Filter("Id =", idiomID).
 		Order("-Version")
 	historyList := make([]*IdiomHistory, 0)

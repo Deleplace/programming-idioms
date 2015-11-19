@@ -16,6 +16,7 @@
 				<tr>
 					<td>{{.VersionDate.Format "2006-01-02, 15:04"}}</td>
 					<td>{{.EditSummary}}</td>
+					<td>{{.LastEditor}}</td>
 					<td>{{if and (eq $i 0) ($.UserProfile.IsAdmin) (gt (len $.HistoryList) 1)}}
 							<form method="POST" action="/revert">
 								<input type="hidden" name="idiomId" value="{{$.Idiom.Id}}" />
