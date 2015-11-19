@@ -42,6 +42,16 @@ type searchableDoc struct {
 	//...
 }
 
+// We choose Implementation.Id as docID
+type searchableImplDoc struct {
+	// Lang is the language of this implementation
+	Lang string
+	// IdiomID is the ID of the idiom this impl belongs to.
+	IdiomID gaesearch.Atom
+	// Bulk is a simple concatenation of (normalized) words, space-separated
+	Bulk string
+}
+
 var appConfigPropertyNotFound = fmt.Errorf("Found zero AppConfigProperty in the datastore.")
 
 func (a *GaeDatastoreAccessor) getIdiom(c appengine.Context, idiomID int) (*datastore.Key, *Idiom, error) {
@@ -219,7 +229,34 @@ func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.K
 		Langs:          implementedLanguagesConcat(idiom),
 	}
 	_, err = index.Put(c, docID, doc)
-	return err
+	if err != nil {
+		return err
+	}
+
+	// Also index each impl individually,
+	// so we know what to highlight.
+	indexImpl, err := gaesearch.Open("impls")
+	if err != nil {
+		return err
+	}
+	for _, impl := range idiom.Implementations {
+		implDocID := fmt.Sprintf("%d", impl.Id)
+		w := impl.ExtractIndexableWords()
+		implDoc := &searchableImplDoc{
+			Lang:    impl.LanguageName,
+			IdiomID: gaesearch.Atom(fmt.Sprintf("%d", idiom.Id)),
+			Bulk:    strings.Join(w, " "),
+		}
+		// Weird that the search API doesn't have batch queries.
+		// TODO: index each impl concurrently?
+		// TODO: index only last edited impl?
+		_, err = indexImpl.Put(c, implDocID, implDoc)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // implementedLanguages may return duplicates, which is ok

@@ -242,15 +242,24 @@ func (idiom *Idiom) ExtractIndexableWords() ([]string, []string) {
 	w = append(w, fmt.Sprintf("%d", idiom.Id))
 	wTitle := w
 	w = append(w, SplitForIndexing(idiom.LeadParagraph, true)...)
-	for _, impl := range idiom.Implementations {
-		w = append(w, SplitForIndexing(impl.CodeBlock, true)...)
-		if len(impl.AuthorComment) >= 3 {
-			w = append(w, SplitForIndexing(impl.AuthorComment, true)...)
-		}
-		w = append(w, strings.ToLower(impl.LanguageName))
-		w = append(w, fmt.Sprintf("%d", impl.Id))
+	for i := range idiom.Implementations {
+		impl := &idiom.Implementations[i]
+		wImpl := impl.ExtractIndexableWords()
+		w = append(w, wImpl...)
 	}
 	return w, wTitle
+}
+
+// ExtractIndexableWords compute the list of words contained in an Impl.
+func (impl *Impl) ExtractIndexableWords() []string {
+	w := make([]string, 0, 20)
+	w = append(w, fmt.Sprintf("%d", impl.Id))
+	w = append(w, strings.ToLower(impl.LanguageName))
+	w = append(w, SplitForIndexing(impl.CodeBlock, true)...)
+	if len(impl.AuthorComment) >= 3 {
+		w = append(w, SplitForIndexing(impl.AuthorComment, true)...)
+	}
+	return w
 }
 
 var regexpWhiteSpace = regexp.MustCompile("[ \\t\\n]")
