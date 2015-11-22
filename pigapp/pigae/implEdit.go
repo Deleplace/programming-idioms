@@ -35,7 +35,10 @@ func implEdit(w http.ResponseWriter, r *http.Request) error {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}
 
-	_, impl, _ := idiom.FindImplInIdiom(implID)
+	_, impl, exists := idiom.FindImplInIdiom(implID)
+	if !exists {
+		return PiError{"Could not find implementation " + implIDStr + " in idiom " + idiomIDStr, http.StatusNotFound}
+	}
 
 	myToggles := copyToggles(toggles)
 	myToggles["editing"] = true
