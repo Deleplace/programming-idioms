@@ -799,6 +799,20 @@ func (a *GaeDatastoreAccessor) getMessagesForUser(c appengine.Context, username 
 		Filter("DismissalDate =", dateZero)
 	messages := make([]*MessageForUser, 0)
 	keys, err := q.GetAll(c, &messages)
+
+	// Mark as seen
+	now := time.Now()
+	for _, msg := range messages {
+		msg.LastViewDate = now
+		if msg.FirstViewDate == dateZero {
+			msg.FirstViewDate = now
+		}
+	}
+	_, err = datastore.PutMulti(c, keys, &messages)
+	if err != nil {
+		c.Warningf("Could not save messages view dates: %v", err)
+	}
+
 	return keys, messages, err
 }
 

@@ -215,9 +215,13 @@ func (ih *IdiomHistory) AsIdiomPtr() *Idiom {
 }
 
 type MessageForUser struct {
-	CreationDate, DismissalDate, ExpirationDate time.Time
-	Message                                     string
-	Username                                    string
+	CreationDate,
+	FirstViewDate,
+	LastViewDate,
+	DismissalDate,
+	ExpirationDate time.Time
+	Message  string
+	Username string
 }
 
 /* ---- */
