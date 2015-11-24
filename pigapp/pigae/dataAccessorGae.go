@@ -21,13 +21,13 @@ import (
 type GaeDatastoreAccessor struct {
 }
 
-// searchableDoc is the searchable unit for 1 idiom.
+// searchableIdiomDoc is the searchable unit for 1 idiom.
 // We keep only some references (id and key) in the indexed "documents", not
 // the whole idioms+implementations data.
 // Actually, by choosing a Key string as docID we don't need to retrieve
-// the searchableDoc contents when searching, because Keys suffice.
+// the searchableIdiomDoc contents when searching, because Keys suffice.
 // See https://cloud.google.com/appengine/docs/go/search/
-type searchableDoc struct {
+type searchableIdiomDoc struct {
 	IdiomKeyString gaesearch.Atom
 	IdiomId        gaesearch.Atom
 	// Bulk is a simple concatenation of (normalized) words, space-separated
@@ -222,7 +222,7 @@ func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.K
 	// we can leverage faster ID-only search later.
 	docID := idiomKey.Encode()
 	w, _ := idiom.ExtractIndexableWords()
-	doc := &searchableDoc{
+	doc := &searchableIdiomDoc{
 		IdiomKeyString: gaesearch.Atom(idiomKey.Encode()),
 		IdiomId:        gaesearch.Atom(strconv.Itoa(idiom.Id)),
 		Bulk:           strings.Join(w, " "),
