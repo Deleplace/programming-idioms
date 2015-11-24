@@ -275,36 +275,7 @@ func (a *MemcacheDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int,
 	return err
 }
 
-// Language filter lang is optional.
-func (a *MemcacheDatastoreAccessor) searchIdiomsByWords(c appengine.Context, words []string, lang string, limit int) ([]*Idiom, error) {
-	cacheKey := fmt.Sprintf("searchIdiomsByWords(%v,%v,%v)", words, lang, limit)
-	//c.Debugf(cacheKey)
-	data, cacheerr := a.readCache(c, cacheKey)
-	if cacheerr != nil {
-		c.Errorf(cacheerr.Error())
-		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.searchIdiomsByWords(c, words, lang, limit)
-	}
-	if data == nil {
-		// Not in the cache. Then fetch the real datastore data. And cache it.
-		idioms, err := a.dataAccessor.searchIdiomsByWords(c, words, lang, limit)
-		if err == nil {
-			// Search results will have a 10mn lag after an idiom/impl creation/update.
-			err2 := a.cacheValue(c, cacheKey, idioms, 10*time.Minute)
-			logIf(err2, c.Errorf, "caching search results")
-		}
-		return idioms, err
-	}
-	// Found in cache :)
-	idioms := data.([]*Idiom)
-	return idioms, nil
-}
-
 func (a *MemcacheDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, words []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
-	if len(favoriteLangs) == 0 {
-		// Searches without preferences are cached
-		return a.dataAccessor.searchIdiomsByWords(c, words, "", limit)
-	}
 	// Personalized searches not cached (yet)
 	return a.dataAccessor.searchIdiomsByWordsWithFavorites(c, words, favoriteLangs, seeNonFavorite, limit)
 }

@@ -383,15 +383,6 @@ func (a *GaeDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int, impl
 	return fmt.Errorf("Could not find impl %v in idiom %v", idiom.Id, implID)
 }
 
-// Language filter lang is optional.
-// DEPRECATED: this method should not be useful anymore.
-func (a *GaeDatastoreAccessor) searchIdiomsByWords(c appengine.Context, words []string, lang string, limit int) ([]*Idiom, error) {
-	if lang == "" {
-		return a.searchIdiomsByWordsWithFavorites(c, words, nil, true, limit)
-	}
-	return a.searchIdiomsByWordsWithFavorites(c, words, []string{lang}, false, limit)
-}
-
 // searchIdiomsByWordsWithFavorites must return idioms that contain *all* the searched words.
 // If seeNonFavorite==false, it must only return idioms that have at least 1 implementation in 1 of the user favoriteLangs.
 // If seeNonFavorite==true, it must return the same list but extended with idioms that contain all the searched words but no implementation in a user favoriteLang.
