@@ -41,11 +41,14 @@ type searchableIdiomDoc struct {
 	// Langs is a concatenation of implemented languages, for filtering
 	Langs string
 
-	// TitleWords is a concatenation of (normalized) words , space-separated
+	// TitleWords is a concatenation of (normalized) title words, space-separated
 	TitleWords string
 
-	// LeadParagraphWords is a concatenation of (normalized) words , space-separated
-	LeadParagraphWords string
+	// LeadWords is a concatenation of (normalized) lead paragraph words, space-separated
+	LeadWords string
+
+	// TitleOrLeadWords is a concatenation of (normalized) idiom description words, space-separated
+	TitleOrLeadWords string
 
 	// + displayable data for result list?
 	//idiomTitle
@@ -235,13 +238,14 @@ func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.K
 	docID := idiomKey.Encode()
 	w, wTitle, wLead := idiom.ExtractIndexableWords()
 	doc := &searchableIdiomDoc{
-		IdiomKeyString:     gaesearch.Atom(idiomKey.Encode()),
-		IdiomId:            gaesearch.Atom(strconv.Itoa(idiom.Id)),
-		Bulk:               strings.Join(w, " "),
-		Langs:              implementedLanguagesConcat(idiom),
-		TitleWords:         strings.Join(wTitle, " "),
-		LeadParagraphWords: strings.Join(wLead, " "),
+		IdiomKeyString: gaesearch.Atom(idiomKey.Encode()),
+		IdiomId:        gaesearch.Atom(strconv.Itoa(idiom.Id)),
+		Bulk:           strings.Join(w, " "),
+		Langs:          implementedLanguagesConcat(idiom),
+		TitleWords:     strings.Join(wTitle, " "),
+		LeadWords:      strings.Join(wLead, " "),
 	}
+	doc.TitleOrLeadWords = doc.TitleWords + " " + doc.LeadWords
 	_, err = index.Put(c, docID, doc)
 	if err != nil {
 		return err
@@ -383,34 +387,107 @@ func (a *GaeDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int, impl
 	return fmt.Errorf("Could not find impl %v in idiom %v", idiom.Id, implID)
 }
 
+func separateLangKeywords(terms []string) (words, langs []string) {
+	words = make([]string, 0, len(terms))
+	for _, term := range terms {
+		if normLang(term) == "" {
+			words = append(words, term)
+		} else {
+			langs = append(langs, term)
+		}
+	}
+	return words, langs
+}
+
 // searchIdiomsByWordsWithFavorites must return idioms that contain *all* the searched words.
 // If seeNonFavorite==false, it must only return idioms that have at least 1 implementation in 1 of the user favoriteLangs.
 // If seeNonFavorite==true, it must return the same list but extended with idioms that contain all the searched words but no implementation in a user favoriteLang.
-func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, words []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
-	// "~" is the stemming prefix, so "~dog" matches "dogs".
-	baseQuery := "Bulk:(~" + strings.Join(words, " AND ~") + ")"
-	if len(favoriteLangs) == 0 {
-		// No favlangs
-		c.Infof("Full text query: %v ", baseQuery)
-		return executeIdiomTextSearchQuery(c, baseQuery, limit)
-	}
-	langsClause := "Langs:(" + strings.Join(favoriteLangs, " OR ") + ")"
-	queryFav := baseQuery + " AND " + langsClause
-	// queryFav looks like "Bulk: string integer AND Langs:(Java OR Go OR Python)"
-	part1, err := executeIdiomTextSearchQuery(c, queryFav, limit)
-	if err != nil || len(part1) >= limit || !seeNonFavorite {
-		return part1, err
+func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, terms []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
+	words, langs := separateLangKeywords(terms)
+	if len(words) == 0 {
+		words, langs = langs, nil
 	}
 
-	queryNonFav := baseQuery + " AND NOT " + langsClause
-	// queryNonFav looks like "Bulk: string integer AND NOT Langs:(Java OR Go OR Python)"
-	part2, err := executeIdiomTextSearchQuery(c, queryNonFav, limit-len(part1))
-	if err != nil {
-		// Return the most important partial result: part1
-		return part1, err
+	var queries []string
+
+	if len(langs) == 1 {
+		// Exactly 1 term is a lang: assume user really wants this lang
+		lang := langs[0]
+		queries = []string{
+			// 1) Impls in lang, containing all words
+			// TODO
+			// 2) Idioms with words in title, having an impl in lang
+			"TitleWords:(~" + strings.Join(words, " AND ~") + ") AND Langs:(" + lang + ")",
+			// 3) Idioms with words in lead paragraph (or title), having an impl in lang
+			"TitleOrLeadWords:(~" + strings.Join(words, " AND ~") + ") AND Langs:(" + lang + ")",
+			// 4) Just all the terms
+			"Bulk:(~" + strings.Join(terms, " AND ~") + ")",
+		}
+		_ = lang
+
+	} else {
+		// Either 0 or many langs. Just make sure all terms are respected.
+		queries = []string{
+			// 1) Words in idiom title, having all the langs implemented
+			"TitleWords:(~" + strings.Join(words, " AND ~") + ") AND Bulk:(~" + strings.Join(terms, " AND ~") + ")",
+			// 2) Words in idiom lead paragraph (or title), having all the langs implemented
+			"TitleOrLeadWords:(~" + strings.Join(words, " AND ~") + ") AND Bulk:(~" + strings.Join(terms, " AND ~") + ")",
+			// 3) Terms (words and langs) somewhere in idiom
+			"Bulk:(~" + strings.Join(terms, " AND ~") + ")",
+		}
 	}
-	idioms := append(part1, part2...)
-	return idioms, nil
+
+	idiomKeyStrings := make([]string, 0, limit)
+	seenIdiomKeyStrings := make(map[string]bool, limit)
+
+queryloop:
+	for _, query := range queries {
+		// TODO measure that, then parallelize
+		keyStrings, err := executeIdiomKeyTextSearchQuery(c, query, limit)
+		if err != nil {
+			return nil, err
+		}
+		m := 0
+		dupes := 0
+		for _, kstr := range keyStrings {
+			if seenIdiomKeyStrings[kstr] {
+				dupes++
+			} else {
+				m++
+				idiomKeyStrings = append(idiomKeyStrings, kstr)
+				seenIdiomKeyStrings[kstr] = true
+				if len(idiomKeyStrings) == limit {
+					c.Infof("[%v] -> %d new results, %d dupes, stopping here.", query, m, dupes)
+					break queryloop
+				}
+			}
+		}
+		c.Infof("[%v] -> %d new results, %d dupes.", query, m, dupes)
+	}
+
+	// TODO use favoriteLangs
+	// TODO use seeNonFavorite (or not)
+
+	var err error
+	idiomKeys := make([]*datastore.Key, len(idiomKeyStrings))
+	for i, kstr := range idiomKeyStrings {
+		idiomKeys[i], err = datastore.DecodeKey(kstr)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// Fetch Idioms in a []Idiom
+	buffer := make([]Idiom, len(idiomKeys))
+	err = datastore.GetMulti(c, idiomKeys, buffer)
+	// Convert []Idiom to []*Idiom
+	idioms := make([]*Idiom, len(buffer))
+	for i := range buffer {
+		// Do not take the address of the 2nd range variable, it would make a copy.
+		// Better take the address in the existing buffer.
+		idioms[i] = &buffer[i]
+	}
+	return idioms, err
 }
 
 func (a *GaeDatastoreAccessor) searchImplIDs(c appengine.Context, words []string) (map[string]bool, error) {
@@ -438,6 +515,35 @@ func (a *GaeDatastoreAccessor) searchImplIDs(c appengine.Context, words []string
 		hits[implIDStr] = true
 	}
 	return hits, nil
+}
+
+func executeIdiomKeyTextSearchQuery(c appengine.Context, query string, limit int) (keystrings []string, err error) {
+	// c.Infof(query)
+	index, err := gaesearch.Open("idioms")
+	if err != nil {
+		return nil, err
+	}
+	if limit == 0 {
+		// Limit is not optional. 0 means zero result.
+		return nil, nil
+	}
+	idiomKeyStrings := make([]string, 0, limit)
+	// This is an *IDsOnly* search, where docID == Key
+	it := index.Search(c, query, &gaesearch.SearchOptions{
+		Limit:   limit,
+		IDsOnly: true,
+	})
+	for {
+		idiomKeyString, err := it.Next(nil)
+		if err == gaesearch.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		idiomKeyStrings = append(idiomKeyStrings, idiomKeyString)
+	}
+	return idiomKeyStrings, nil
 }
 
 func executeIdiomTextSearchQuery(c appengine.Context, query string, limit int) ([]*Idiom, error) {
