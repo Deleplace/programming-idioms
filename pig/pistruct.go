@@ -243,17 +243,18 @@ func (idiom *Idiom) FindImplInIdiom(implId int) (int, *Impl, bool) {
 // ExtractIndexableWords compute the list of words contained in an Idiom.
 // First return value is the list of all matchable words.
 // Second return value is the list of matchable words from title only.
-func (idiom *Idiom) ExtractIndexableWords() ([]string, []string) {
-	w := SplitForIndexing(idiom.Title, true)
+func (idiom *Idiom) ExtractIndexableWords() (w []string, wTitle []string, wLead []string) {
+	w = SplitForIndexing(idiom.Title, true)
 	w = append(w, fmt.Sprintf("%d", idiom.Id))
-	wTitle := w
-	w = append(w, SplitForIndexing(idiom.LeadParagraph, true)...)
+	wTitle = w
+	wLead = SplitForIndexing(idiom.LeadParagraph, true)
+	w = append(w, wLead...)
 	for i := range idiom.Implementations {
 		impl := &idiom.Implementations[i]
 		wImpl := impl.ExtractIndexableWords()
 		w = append(w, wImpl...)
 	}
-	return w, wTitle
+	return w, wTitle, wLead
 }
 
 // ExtractIndexableWords compute the list of words contained in an Impl.

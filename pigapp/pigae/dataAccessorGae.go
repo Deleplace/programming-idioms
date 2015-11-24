@@ -28,12 +28,24 @@ type GaeDatastoreAccessor struct {
 // the searchableIdiomDoc contents when searching, because Keys suffice.
 // See https://cloud.google.com/appengine/docs/go/search/
 type searchableIdiomDoc struct {
+
+	// IdiomKeyString is the idiom datastore key string.
 	IdiomKeyString gaesearch.Atom
-	IdiomId        gaesearch.Atom
+
+	// IdiomId is the idiom ID.
+	IdiomId gaesearch.Atom
+
 	// Bulk is a simple concatenation of (normalized) words, space-separated
 	Bulk string
+
 	// Langs is a concatenation of implemented languages, for filtering
 	Langs string
+
+	// TitleWords is a concatenation of (normalized) words , space-separated
+	TitleWords string
+
+	// LeadParagraphWords is a concatenation of (normalized) words , space-separated
+	LeadParagraphWords string
 
 	// + displayable data for result list?
 	//idiomTitle
@@ -221,12 +233,14 @@ func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.K
 	// By using directly the idiom Key as docID,
 	// we can leverage faster ID-only search later.
 	docID := idiomKey.Encode()
-	w, _ := idiom.ExtractIndexableWords()
+	w, wTitle, wLead := idiom.ExtractIndexableWords()
 	doc := &searchableIdiomDoc{
-		IdiomKeyString: gaesearch.Atom(idiomKey.Encode()),
-		IdiomId:        gaesearch.Atom(strconv.Itoa(idiom.Id)),
-		Bulk:           strings.Join(w, " "),
-		Langs:          implementedLanguagesConcat(idiom),
+		IdiomKeyString:     gaesearch.Atom(idiomKey.Encode()),
+		IdiomId:            gaesearch.Atom(strconv.Itoa(idiom.Id)),
+		Bulk:               strings.Join(w, " "),
+		Langs:              implementedLanguagesConcat(idiom),
+		TitleWords:         strings.Join(wTitle, " "),
+		LeadParagraphWords: strings.Join(wLead, " "),
 	}
 	_, err = index.Put(c, docID, doc)
 	if err != nil {
