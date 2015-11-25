@@ -20,9 +20,13 @@ type GaeDatastoreAccessor struct {
 
 var appConfigPropertyNotFound = fmt.Errorf("Found zero AppConfigProperty in the datastore.")
 
+func newIdiomKey(c appengine.Context, idiomID int) *datastore.Key {
+	return datastore.NewKey(c, "Idiom", "", int64(idiomID), nil)
+}
+
 func (a *GaeDatastoreAccessor) getIdiom(c appengine.Context, idiomID int) (*datastore.Key, *Idiom, error) {
 	var idiom Idiom
-	key := datastore.NewKey(c, "Idiom", "", int64(idiomID), nil)
+	key := newIdiomKey(c, idiomID)
 	err := datastore.Get(c, key, &idiom)
 	return key, &idiom, err
 }
@@ -96,7 +100,7 @@ func (a *GaeDatastoreAccessor) revert(c appengine.Context, idiomID int, version 
 		return nil, PiError{ErrorText: fmt.Sprintf("Can't revert idiom %v: last version is not %v", idiomID, version), Code: 400}
 	}
 	c.Infof("Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
-	idiomKey := datastore.NewKey(c, "Idiom", "", int64(idiomID), nil)
+	idiomKey := newIdiomKey(c, idiomID)
 	idiom := &histories[1].Idiom
 	_, err = datastore.Put(c, idiomKey, idiom)
 	if err != nil {
@@ -144,7 +148,7 @@ func (a *GaeDatastoreAccessor) saveNewIdiom(c appengine.Context, idiom *Idiom) (
 		idiom.Implementations[i].VersionDate = now
 	}
 
-	key, err := datastore.Put(c, datastore.NewKey(c, "Idiom", "", int64(idiom.Id), nil), idiom)
+	key, err := datastore.Put(c, newIdiomKey(c, idiom.Id), idiom)
 	if err != nil {
 		return key, err
 	}
