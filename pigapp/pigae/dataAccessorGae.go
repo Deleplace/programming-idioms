@@ -565,7 +565,7 @@ func (a *GaeDatastoreAccessor) getMessagesForUser(c appengine.Context, username 
 			msg.FirstViewDate = now
 		}
 	}
-	_, err = datastore.PutMulti(c, keys, &messages)
+	_, err = datastore.PutMulti(c, keys, messages)
 	if err != nil {
 		c.Warningf("Could not save messages view dates: %v", err)
 	}
