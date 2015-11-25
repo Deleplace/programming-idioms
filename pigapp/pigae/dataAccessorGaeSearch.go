@@ -15,8 +15,9 @@ import (
 // searchableIdiomDoc is the searchable unit for 1 idiom.
 // We keep only some references (id and key) in the indexed "documents", not
 // the whole idioms+implementations data.
-// Actually, by choosing a Key string as docID we don't need to retrieve
-// the searchableIdiomDoc contents when searching, because Keys suffice.
+// By choosing the idiom ID as docID we don't need to retrieve
+// the searchableIdiomDoc contents when searching, because IDs suffice
+// to constuct datastore Keys.
 // See https://cloud.google.com/appengine/docs/go/search/
 type searchableIdiomDoc struct {
 
@@ -48,7 +49,7 @@ type searchableIdiomDoc struct {
 	//...
 }
 
-// We choose Implementation.Id as docID
+// We choose "idiomID_implID" as docID
 type searchableImplDoc struct {
 	// Lang is the language of this implementation
 	Lang string
@@ -65,7 +66,7 @@ func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.K
 	}
 	// By using directly the idiom Key as docID,
 	// we can leverage faster ID-only search later.
-	docID := idiomKey.Encode()
+	docID := strconv.Itoa(idiom.Id)
 	w, wTitle, wLead := idiom.ExtractIndexableWords()
 	doc := &searchableIdiomDoc{
 		IdiomKeyString: gaesearch.Atom(idiomKey.Encode()),
@@ -88,11 +89,11 @@ func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.K
 		return err
 	}
 	for _, impl := range idiom.Implementations {
-		implDocID := fmt.Sprintf("%d", impl.Id)
+		implDocID := fmt.Sprintf("%d_%d", idiom.Id, impl.Id)
 		w := impl.ExtractIndexableWords()
 		implDoc := &searchableImplDoc{
 			Lang:    impl.LanguageName,
-			IdiomID: gaesearch.Atom(fmt.Sprintf("%d", idiom.Id)),
+			IdiomID: gaesearch.Atom(strconv.Itoa(idiom.Id)),
 			Bulk:    strings.Join(w, " "),
 		}
 		// Weird that the search API doesn't have batch queries.
@@ -247,19 +248,20 @@ func (a *GaeDatastoreAccessor) searchImplIDs(c appengine.Context, words []string
 	query := "Bulk:(~" + strings.Join(words, " AND ~") + ")"
 	// No real limit for now, those are just IDs and we don't have 1M impls.
 	limit := 1000000
-	// This is an *IDsOnly* search, where docID == Impl.Id
+	// This is an *IDsOnly* search, where docID == idiomID_implID
 	it := index.Search(c, query, &gaesearch.SearchOptions{
 		Limit:   limit,
 		IDsOnly: true,
 	})
 	for {
-		implIDStr, err := it.Next(nil)
+		docID, err := it.Next(nil)
 		if err == gaesearch.Done {
 			break
 		}
 		if err != nil {
 			return nil, err
 		}
+		implIDStr := strings.Split(docID, "_")[1]
 		hits[implIDStr] = true
 	}
 	return hits, nil
@@ -276,19 +278,24 @@ func executeIdiomKeyTextSearchQuery(c appengine.Context, query string, limit int
 		return nil, nil
 	}
 	idiomKeyStrings := make([]string, 0, limit)
-	// This is an *IDsOnly* search, where docID == Key
+	// This is an *IDsOnly* search, where docID == Idiom.Id
 	it := index.Search(c, query, &gaesearch.SearchOptions{
 		Limit:   limit,
 		IDsOnly: true,
 	})
 	for {
-		idiomKeyString, err := it.Next(nil)
+		docID, err := it.Next(nil)
 		if err == gaesearch.Done {
 			break
 		}
 		if err != nil {
 			return nil, err
 		}
+		idiomID, err := strconv.Atoi(docID)
+		if err != nil {
+			return nil, err
+		}
+		idiomKeyString := newIdiomKey(c, idiomID).Encode()
 		idiomKeyStrings = append(idiomKeyStrings, idiomKeyString)
 	}
 	return idiomKeyStrings, nil
@@ -305,23 +312,24 @@ func executeIdiomTextSearchQuery(c appengine.Context, query string, limit int) (
 		return nil, nil
 	}
 	idiomKeys := make([]*datastore.Key, 0, limit)
-	// This is an *IDsOnly* search, where docID == Key
+	// This is an *IDsOnly* search, where docID == Idiom.Id
 	it := index.Search(c, query, &gaesearch.SearchOptions{
 		Limit:   limit,
 		IDsOnly: true,
 	})
 	for {
-		idiomKeyString, err := it.Next(nil)
+		docID, err := it.Next(nil)
 		if err == gaesearch.Done {
 			break
 		}
 		if err != nil {
 			return nil, err
 		}
-		key, err := datastore.DecodeKey(idiomKeyString)
+		idiomID, err := strconv.Atoi(docID)
 		if err != nil {
 			return nil, err
 		}
+		key := newIdiomKey(c, idiomID)
 		idiomKeys = append(idiomKeys, key)
 	}
 	// Fetch Idioms in a []Idiom
