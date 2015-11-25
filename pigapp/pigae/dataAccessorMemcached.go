@@ -280,9 +280,9 @@ func (a *MemcacheDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine
 	return a.dataAccessor.searchIdiomsByWordsWithFavorites(c, typedWords, typedLangs, favoriteLangs, seeNonFavorite, limit)
 }
 
-func (a *MemcacheDatastoreAccessor) searchImplIDs(c appengine.Context, words []string) (map[string]bool, error) {
+func (a *MemcacheDatastoreAccessor) searchImplIDs(c appengine.Context, words, langs []string) (map[string]bool, error) {
 	// TODO cache this... or not.
-	return a.dataAccessor.searchImplIDs(c, words)
+	return a.dataAccessor.searchImplIDs(c, words, langs)
 }
 
 func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(c appengine.Context, langs []string, limit int) ([]*Idiom, error) {

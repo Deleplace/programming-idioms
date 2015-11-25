@@ -170,6 +170,8 @@ type ImplRenderingDecoration struct {
 	DownVoted bool
 	// Matching is set to true if current impl matches user text search query.
 	Matching bool
+	// SearchedLang is set to true if current impl lang is the user typed lang.
+	SearchedLang bool
 }
 
 // IdiomVoteLog is a history trace of an Idiom vote, from a specific user.

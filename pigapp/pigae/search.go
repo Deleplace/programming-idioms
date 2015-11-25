@@ -28,10 +28,11 @@ type SearchResultsFacade struct {
 func separateLangKeywords(terms []string) (words, langs []string) {
 	words = make([]string, 0, len(terms))
 	for _, term := range terms {
-		if normLang(term) == "" {
+		lang := normLang(term)
+		if lang == "" {
 			words = append(words, term)
 		} else {
-			langs = append(langs, term)
+			langs = append(langs, lang)
 		}
 	}
 	return words, langs
@@ -58,8 +59,13 @@ func search(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
+	typedLangsSet := make(map[string]bool, len(typedLangs))
+	for _, lang := range typedLangs {
+		typedLangsSet[lang] = true
+	}
+
 	// Highlight matching impls :)
-	matchingImplIDs, err := dao.searchImplIDs(c, words)
+	matchingImplIDs, err := dao.searchImplIDs(c, words, typedLangs)
 	if err != nil {
 		return err
 	}
@@ -71,10 +77,13 @@ func search(w http.ResponseWriter, r *http.Request) error {
 			if matchingImplIDs[implIDStr] {
 				impl.Deco.Matching = true
 			}
+			if typedLangsSet[impl.LanguageName] {
+				impl.Deco.SearchedLang = true
+			}
 		}
 	}
 
-	normalizedQ := strings.Join(words, " ")
+	normalizedQ := strings.Join(terms, " ")
 	return listResults(w, r, normalizedQ, hits)
 }
 

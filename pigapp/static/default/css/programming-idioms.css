@@ -359,6 +359,17 @@ header .form-search {
 	border-style: solid;
 	border-color: #DD5;
 	*/
+	border-radius: 9px;
+}
+
+.searched-lang {
+	/*
+	background-color: #F77;
+	*/
+	border-width: 1px 5px 1px 5px;
+	border-style: solid;
+	border-color: #F77;
+	border-radius: 9px;
 }
 
 /* Idiom detail */
