@@ -206,12 +206,12 @@ queryloop:
 				idiomKeyStrings = append(idiomKeyStrings, kstr)
 				seenIdiomKeyStrings[kstr] = true
 				if len(idiomKeyStrings) == limit {
-					c.Infof("[%v] -> %d new results, %d dupes, stopping here.", query, m, dupes)
+					c.Debugf("[%v] -> %d new results, %d dupes, stopping here.", query, m, dupes)
 					break queryloop
 				}
 			}
 		}
-		c.Infof("[%v] -> %d new results, %d dupes.", query, m, dupes)
+		c.Debugf("[%v] -> %d new results, %d dupes.", query, m, dupes)
 	}
 
 	// TODO use favoriteLangs
