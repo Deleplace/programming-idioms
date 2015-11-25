@@ -275,9 +275,9 @@ func (a *MemcacheDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int,
 	return err
 }
 
-func (a *MemcacheDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, words []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
+func (a *MemcacheDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
 	// Personalized searches not cached (yet)
-	return a.dataAccessor.searchIdiomsByWordsWithFavorites(c, words, favoriteLangs, seeNonFavorite, limit)
+	return a.dataAccessor.searchIdiomsByWordsWithFavorites(c, typedWords, typedLangs, favoriteLangs, seeNonFavorite, limit)
 }
 
 func (a *MemcacheDatastoreAccessor) searchImplIDs(c appengine.Context, words []string) (map[string]bool, error) {

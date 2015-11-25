@@ -23,8 +23,8 @@ type searchableIdiomDoc struct {
 	// IdiomKeyString is the idiom datastore key string.
 	IdiomKeyString gaesearch.Atom
 
-	// IdiomId is the idiom ID.
-	IdiomId gaesearch.Atom
+	// IdiomID is the idiom ID.
+	IdiomID gaesearch.Atom
 
 	// Bulk is a simple concatenation of (normalized) words, space-separated
 	Bulk string
@@ -69,7 +69,7 @@ func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.K
 	w, wTitle, wLead := idiom.ExtractIndexableWords()
 	doc := &searchableIdiomDoc{
 		IdiomKeyString: gaesearch.Atom(idiomKey.Encode()),
-		IdiomId:        gaesearch.Atom(strconv.Itoa(idiom.Id)),
+		IdiomID:        gaesearch.Atom(strconv.Itoa(idiom.Id)),
 		Bulk:           strings.Join(w, " "),
 		Langs:          implementedLanguagesConcat(idiom),
 		TitleWords:     strings.Join(wTitle, " "),
@@ -140,10 +140,10 @@ func (a *GaeDatastoreAccessor) unindexAll(c appengine.Context) error {
 	return nil
 }
 
-func (a *GaeDatastoreAccessor) unindex(c appengine.Context, idiomId int) error {
-	c.Infof("Unindexing idiom %d", idiomId)
+func (a *GaeDatastoreAccessor) unindex(c appengine.Context, idiomID int) error {
+	c.Infof("Unindexing idiom %d", idiomID)
 
-	docID := strconv.Itoa(idiomId)
+	docID := strconv.Itoa(idiomID)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return err
@@ -151,39 +151,23 @@ func (a *GaeDatastoreAccessor) unindex(c appengine.Context, idiomId int) error {
 	return index.Delete(c, docID)
 }
 
-func separateLangKeywords(terms []string) (words, langs []string) {
-	words = make([]string, 0, len(terms))
-	for _, term := range terms {
-		if normLang(term) == "" {
-			words = append(words, term)
-		} else {
-			langs = append(langs, term)
-		}
-	}
-	return words, langs
-}
-
 // searchIdiomsByWordsWithFavorites must return idioms that contain *all* the searched words.
 // If seeNonFavorite==false, it must only return idioms that have at least 1 implementation in 1 of the user favoriteLangs.
 // If seeNonFavorite==true, it must return the same list but extended with idioms that contain all the searched words but no implementation in a user favoriteLang.
-func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, terms []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
-	words, langs := separateLangKeywords(terms)
-	if len(words) == 0 {
-		words, langs = langs, nil
-	}
-
+func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
 	var queries []string
+	terms := append(append([]string(nil), typedWords...), typedLangs...)
 
-	if len(langs) == 1 {
+	if len(typedLangs) == 1 {
 		// Exactly 1 term is a lang: assume user really wants this lang
-		lang := langs[0]
+		lang := typedLangs[0]
 		queries = []string{
 			// 1) Impls in lang, containing all words
 			// TODO
 			// 2) Idioms with words in title, having an impl in lang
-			"TitleWords:(~" + strings.Join(words, " AND ~") + ") AND Langs:(" + lang + ")",
+			"TitleWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Langs:(" + lang + ")",
 			// 3) Idioms with words in lead paragraph (or title), having an impl in lang
-			"TitleOrLeadWords:(~" + strings.Join(words, " AND ~") + ") AND Langs:(" + lang + ")",
+			"TitleOrLeadWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Langs:(" + lang + ")",
 			// 4) Just all the terms
 			"Bulk:(~" + strings.Join(terms, " AND ~") + ")",
 		}
@@ -193,9 +177,9 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Cont
 		// Either 0 or many langs. Just make sure all terms are respected.
 		queries = []string{
 			// 1) Words in idiom title, having all the langs implemented
-			"TitleWords:(~" + strings.Join(words, " AND ~") + ") AND Bulk:(~" + strings.Join(terms, " AND ~") + ")",
+			"TitleWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Bulk:(~" + strings.Join(terms, " AND ~") + ")",
 			// 2) Words in idiom lead paragraph (or title), having all the langs implemented
-			"TitleOrLeadWords:(~" + strings.Join(words, " AND ~") + ") AND Bulk:(~" + strings.Join(terms, " AND ~") + ")",
+			"TitleOrLeadWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Bulk:(~" + strings.Join(terms, " AND ~") + ")",
 			// 3) Terms (words and langs) somewhere in idiom
 			"Bulk:(~" + strings.Join(terms, " AND ~") + ")",
 		}

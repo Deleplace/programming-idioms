@@ -24,6 +24,19 @@ type SearchResultsFacade struct {
 	Results     []*Idiom
 }
 
+// User types terms, but it's important to recognize when a term is a language name.
+func separateLangKeywords(terms []string) (words, langs []string) {
+	words = make([]string, 0, len(terms))
+	for _, term := range terms {
+		if normLang(term) == "" {
+			words = append(words, term)
+		} else {
+			langs = append(langs, term)
+		}
+	}
+	return words, langs
+}
+
 // This is a "word by word" search, not a rdbms "like" filter
 func search(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
@@ -32,10 +45,15 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	c := appengine.NewContext(r)
 	q := vars["q"]
-	words := SplitForSearching(q, true)
+	terms := SplitForSearching(q, true)
+
+	words, typedLangs := separateLangKeywords(terms)
+	if len(words) == 0 {
+		words, typedLangs = typedLangs, nil
+	}
 
 	numberMaxResults := 20
-	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
+	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
 	if err != nil {
 		return err
 	}
