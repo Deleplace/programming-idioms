@@ -320,12 +320,6 @@ $(function() {
 			return "Cpp";
 		case "C#":
 			return "Csharp";
-		case "javascript":
-			return "JS";
-		case "golang":
-			return "Go";
-		case "objective c":
-			return "Obj-C";
 		}
 		return lang;
 	}
