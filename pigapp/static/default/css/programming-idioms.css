@@ -353,7 +353,7 @@ header .form-search {
 }
 
 .matching {
-	background-color: #FF7;
+	background-color: #EE5;
 	/*
 	border-width: 1px 1px 1px 1px;
 	border-style: solid;
@@ -363,12 +363,12 @@ header .form-search {
 }
 
 .searched-lang {
+	background-color: #EA3;
 	/*
-	background-color: #F77;
-	*/
 	border-width: 1px 5px 1px 5px;
 	border-style: solid;
 	border-color: #F77;
+	*/
 	border-radius: 9px;
 }
 
