@@ -273,8 +273,8 @@ func (a *GaeDatastoreAccessor) searchImplIDs(c appengine.Context, words, langs [
 	if len(langs) > 0 {
 		query += " AND Lang:(" + strings.Join(langs, " OR ") + ")"
 	}
-	// No real limit for now, those are just IDs and we don't have 1M impls.
-	limit := 1000000
+	// Beware of INVALID_REQUEST: The limit 1000000 must be between 1 and 1000
+	limit := 1000
 	// This is an *IDsOnly* search, where docID == idiomID_implID
 	it := index.Search(c, query, &gaesearch.SearchOptions{
 		Limit:   limit,
