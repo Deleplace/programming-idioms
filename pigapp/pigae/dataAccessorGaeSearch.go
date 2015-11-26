@@ -152,59 +152,71 @@ func (a *GaeDatastoreAccessor) unindex(c appengine.Context, idiomID int) error {
 	return index.Delete(c, docID)
 }
 
+// retriever returns a list of Idiom Key strings
+type retriever func() ([]string, error)
+
 // searchIdiomsByWordsWithFavorites must return idioms that contain *all* the searched words.
 // If seeNonFavorite==false, it must only return idioms that have at least 1 implementation in 1 of the user favoriteLangs.
 // If seeNonFavorite==true, it must return the same list but extended with idioms that contain all the searched words but no implementation in a user favoriteLang.
 func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
 	terms := append(append([]string(nil), typedWords...), typedLangs...)
 
-	var queries []string
+	var retrievers []retriever
 	idiomKeyStrings := make([]string, 0, limit)
 	seenIdiomKeyStrings := make(map[string]bool, limit)
+
+	var idiomQueryRetriever = func(q string) retriever {
+		return func() ([]string, error) {
+			return executeIdiomKeyTextSearchQuery(c, q, limit)
+		}
+	}
 
 	if len(typedLangs) == 1 {
 		// Exactly 1 term is a lang: assume user really wants this lang
 		lang := typedLangs[0]
 		// 1) Impls in lang, containing all words
-		implQuery := "Bulk:(~" + strings.Join(terms, " AND ~") + ") AND Lang:" + lang
-		implIdiomIDs, _, err := executeImplTextSearchQuery(c, implQuery, limit)
-		if err != nil {
-			return nil, err
-		}
-		for _, idiomID := range implIdiomIDs {
-			idiomKey := newIdiomKey(c, idiomID)
-			idiomKeyString := idiomKey.Encode()
-			if !seenIdiomKeyStrings[idiomKeyString] {
-				idiomKeyStrings = append(idiomKeyStrings, idiomKeyString)
-				seenIdiomKeyStrings[idiomKeyString] = true
+		retrievers = append(retrievers, func() ([]string, error) {
+			var keystrings []string
+			implQuery := "Bulk:(~" + strings.Join(terms, " AND ~") + ") AND Lang:" + lang
+			implIdiomIDs, _, err := executeImplTextSearchQuery(c, implQuery, limit)
+			if err != nil {
+				return nil, err
 			}
-		}
-		queries = []string{
+			for _, idiomID := range implIdiomIDs {
+				idiomKey := newIdiomKey(c, idiomID)
+				idiomKeyString := idiomKey.Encode()
+				if !seenIdiomKeyStrings[idiomKeyString] {
+					keystrings = append(keystrings, idiomKeyString)
+					seenIdiomKeyStrings[idiomKeyString] = true
+				}
+			}
+			return keystrings, nil
+		})
+		retrievers = append(retrievers,
 			// 2) Idioms with words in title, having an impl in lang
-			"TitleWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Langs:(" + lang + ")",
+			idiomQueryRetriever("TitleWords:(~"+strings.Join(typedWords, " AND ~")+") AND Langs:("+lang+")"),
 			// 3) Idioms with words in lead paragraph (or title), having an impl in lang
-			"TitleOrLeadWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Langs:(" + lang + ")",
+			idiomQueryRetriever("TitleOrLeadWords:(~"+strings.Join(typedWords, " AND ~")+") AND Langs:("+lang+")"),
 			// 4) Just all the terms
-			"Bulk:(~" + strings.Join(terms, " AND ~") + ")",
-		}
-		_ = lang
+			idiomQueryRetriever("Bulk:(~"+strings.Join(terms, " AND ~")+")"),
+		)
 
 	} else {
 		// Either 0 or many langs. Just make sure all terms are respected.
-		queries = []string{
+		retrievers = append(retrievers,
 			// 1) Words in idiom title, having all the langs implemented
-			"TitleWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Bulk:(~" + strings.Join(terms, " AND ~") + ")",
+			idiomQueryRetriever("TitleWords:(~"+strings.Join(typedWords, " AND ~")+") AND Bulk:(~"+strings.Join(terms, " AND ~")+")"),
 			// 2) Words in idiom lead paragraph (or title), having all the langs implemented
-			"TitleOrLeadWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Bulk:(~" + strings.Join(terms, " AND ~") + ")",
+			idiomQueryRetriever("TitleOrLeadWords:(~"+strings.Join(typedWords, " AND ~")+") AND Bulk:(~"+strings.Join(terms, " AND ~")+")"),
 			// 3) Terms (words and langs) somewhere in idiom
-			"Bulk:(~" + strings.Join(terms, " AND ~") + ")",
-		}
+			idiomQueryRetriever("Bulk:(~"+strings.Join(terms, " AND ~")+")"),
+		)
 	}
 
 queryloop:
-	for _, query := range queries {
+	for r, retriever := range retrievers {
 		// TODO measure that, then parallelize
-		keyStrings, err := executeIdiomKeyTextSearchQuery(c, query, limit)
+		keyStrings, err := retriever()
 		if err != nil {
 			return nil, err
 		}
@@ -218,12 +230,12 @@ queryloop:
 				idiomKeyStrings = append(idiomKeyStrings, kstr)
 				seenIdiomKeyStrings[kstr] = true
 				if len(idiomKeyStrings) == limit {
-					c.Debugf("[%v] -> %d new results, %d dupes, stopping here.", query, m, dupes)
+					c.Debugf("[%d] -> %d new results, %d dupes, stopping here.", r, m, dupes)
 					break queryloop
 				}
 			}
 		}
-		c.Debugf("[%v] -> %d new results, %d dupes.", query, m, dupes)
+		c.Debugf("[%d] -> %d new results, %d dupes.", r, m, dupes)
 	}
 
 	// TODO use favoriteLangs
