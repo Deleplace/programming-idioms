@@ -31,7 +31,7 @@ func lookForFavoriteLanguages(r *http.Request) []string {
 }
 
 func seeNonFavorite(r *http.Request) bool {
-	if cookie, errkie := r.Cookie("my-languages"); errkie == nil {
+	if cookie, errkie := r.Cookie("my-languages"); errkie != nil || cookie.Value == "" {
 		// No favorite langs? Then you really need to see the other langs
 		return true
 	}
