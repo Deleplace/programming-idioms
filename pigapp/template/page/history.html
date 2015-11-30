@@ -11,17 +11,18 @@
 
 		<div>
 		<table class="idiom-history">
-			<tr><th>Edit date</th><th>Edit Summary</th><th></th>
+			<tr><th>#</th><th>Edit date</th><th>Edit Summary</th><th></th>
 			{{range $i, $h := .HistoryList}}
 				<tr>
+					<td>{{.Version}}</td>
 					<td>{{.VersionDate.Format "2006-01-02, 15:04"}}</td>
 					<td>{{.EditSummary}}</td>
 					<td>{{.LastEditor}}</td>
-					<td>{{if and (eq $i 0) ($.UserProfile.IsAdmin) (gt (len $.HistoryList) 1)}}
-							<form method="POST" action="/revert">
+					<td>{{if and ($.UserProfile.IsAdmin) (gt (len $.HistoryList) 1)}}
+							<form method="POST" action="/history-restore">
 								<input type="hidden" name="idiomId" value="{{$.Idiom.Id}}" />
 								<input type="hidden" name="version" value="{{.Version}}" />
-								<input type="submit" value="Revert" /> 
+								<input type="submit" value="Restore" /> 
 							</form>
 						{{end}}</td>
 				</tr>

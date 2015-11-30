@@ -82,3 +82,20 @@ func revertIdiomVersion(w http.ResponseWriter, r *http.Request) error {
 	return nil
 	// Unfortunately, the redirect page doesn't see the history deletion, yet.
 }
+
+func restoreIdiomVersion(w http.ResponseWriter, r *http.Request) error {
+	idiomIDStr := r.FormValue("idiomId")
+	idiomID := String2Int(idiomIDStr)
+	versionStr := r.FormValue("version")
+	version := String2Int(versionStr)
+	c := appengine.NewContext(r)
+
+	idiom, err := dao.historyRestore(c, idiomID, version)
+	if err != nil {
+		return err
+	}
+	redirUrl := NiceIdiomURL(idiom)
+	http.Redirect(w, r, redirUrl, http.StatusFound)
+	return nil
+	// Unfortunately, the redirect page doesn't see the history deletion, yet.
+}

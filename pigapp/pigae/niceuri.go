@@ -50,3 +50,13 @@ func NiceIdiomIDTitleURL(idiomID int, title string) string {
 func NiceIdiomRelativeURL(idiom *Idiom) string {
 	return fmt.Sprintf("/idiom/%v/%v", idiom.Id, uriNormalize(idiom.Title))
 }
+
+// UglyIdiomIDURL produces an URL for an Idiom ID.
+func UglyIdiomIDURL(idiomID int) string {
+	return fmt.Sprintf("%v/idiom/%v", hostPrefix(), idiomID)
+}
+
+// UglyIdiomIDURL produces an URL for an idiom ID and an impl ID.
+func UglyIdiomIDImplIDURL(idiomID, implID int) string {
+	return fmt.Sprintf("%v/idiom/%v/impl/%v", hostPrefix(), idiomID, implID)
+}

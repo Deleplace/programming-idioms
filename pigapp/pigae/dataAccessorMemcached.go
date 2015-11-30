@@ -437,7 +437,17 @@ func (a *MemcacheDatastoreAccessor) revert(c appengine.Context, idiomID int, ver
 		return idiom, err
 	}
 	err2 := a.uncacheIdiom(c, idiom)
-	logIf(err2, c.Errorf, "saving existing idiom")
+	logIf(err2, c.Errorf, "uncaching idiom")
+	return idiom, err
+}
+
+func (a *MemcacheDatastoreAccessor) historyRestore(c appengine.Context, idiomID int, version int) (*Idiom, error) {
+	idiom, err := a.dataAccessor.historyRestore(c, idiomID, version)
+	if err != nil {
+		return idiom, err
+	}
+	err2 := a.uncacheIdiom(c, idiom)
+	logIf(err2, c.Errorf, "uncaching idiom")
 	return idiom, err
 }
 

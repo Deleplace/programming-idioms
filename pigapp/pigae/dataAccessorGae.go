@@ -109,6 +109,44 @@ func (a *GaeDatastoreAccessor) revert(c appengine.Context, idiomID int, version 
 	return idiom, datastore.Delete(c, historyKeys[0])
 }
 
+func (a *GaeDatastoreAccessor) historyRestore(c appengine.Context, idiomID int, version int) (*Idiom, error) {
+	q := datastore.NewQuery("IdiomHistory").
+		Filter("Id =", idiomID).
+		Filter("Version =", version).
+		Limit(2)
+	histories := make([]*IdiomHistory, 0)
+	_, err := q.GetAll(c, &histories)
+	if err != nil {
+		return nil, err
+	}
+	if len(histories) == 0 {
+		return nil, PiError{ErrorText: fmt.Sprintf("No history found for idiom %v", idiomID), Code: 400}
+	}
+	if len(histories) == 2 {
+		return nil, PiError{ErrorText: fmt.Sprintf("Found many history items for idiom %v, version %v", idiomID, version), Code: 500}
+	}
+
+	idiomKey, idiom, err := a.getIdiom(c, idiomID)
+	if err != nil {
+		return nil, err
+	}
+	if idiom.Version == version {
+		return nil, PiError{ErrorText: fmt.Sprintf("Won't restore idiom %v, version %v to itself.", idiomID, version), Code: 400}
+	}
+	currentVersion := idiom.Version
+	newVersion := idiom.Version + 1
+	c.Infof("Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
+
+	historyIdiom := &histories[0].Idiom
+	historyIdiom.Version = currentVersion // will be incremented
+	historyIdiom.EditSummary = fmt.Sprintf("Restored version %v", version)
+	err = a.saveExistingIdiom(c, idiomKey, historyIdiom)
+	if err != nil {
+		return nil, err
+	}
+	return historyIdiom, nil
+}
+
 // Delayers registered at init time
 
 // TODO take real Idiom as parameter, not a Key or a pointer

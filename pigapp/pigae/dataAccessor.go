@@ -47,6 +47,7 @@ type idiomSaver interface {
 	nextIdiomID(c appengine.Context) (int, error)
 	nextImplID(c appengine.Context) (int, error)
 	revert(c appengine.Context, idiomID int, version int) (*Idiom, error)
+	historyRestore(c appengine.Context, idiomID int, version int) (*Idiom, error)
 }
 
 type uploadProcesser interface {
