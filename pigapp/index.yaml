@@ -68,3 +68,8 @@ indexes:
     direction: desc
   - name: EditSummary
   - name: VersionDate
+
+- kind: IdiomHistory
+  properties:
+  - name: Id
+  - name: VersionDate

@@ -94,6 +94,7 @@ func initRoutes() {
 			handle("/admin-data-export", adminExport)
 			handle("/admin-data-import", adminImport)
 			handle("/admin-resave-entities", adminResaveEntities)
+			handle("/admin-repair-history-versions", adminRepairHistoryVersions)
 			handleAjax("/admin-data-import-ajax", adminImportAjax)
 			handleAjax("/admin-reindex-ajax", adminReindexAjax)
 			handleAjax("/admin-refresh-toggles-ajax", ajaxRefreshToggles)

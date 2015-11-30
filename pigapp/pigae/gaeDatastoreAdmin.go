@@ -68,3 +68,62 @@ func resaveAllIdiomHistory(c appengine.Context) error {
 	}
 	return nil
 }
+
+func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
+	c := appengine.NewContext(r)
+	defer memcache.Flush(c)
+
+	idiomKeys, err := datastore.NewQuery("Idiom").KeysOnly().GetAll(c, nil)
+	if err != nil {
+		return err
+	}
+	for _, idiomKey := range idiomKeys {
+		// Warning: fetching the whole history of 1 idiom
+		// may have quite a big memory footprint
+		idiomID := idiomKey.IntID()
+		c.Infof("Repairing versions for idiom: %v", idiomID)
+
+		q := datastore.NewQuery("IdiomHistory").
+			Filter("Id =", idiomID).
+			Order("VersionDate")
+		histories := make([]*IdiomHistory, 0)
+		historyKeys, err := q.GetAll(c, &histories)
+		if err != nil {
+			return err
+		}
+		for i := range histories[1:] {
+			if histories[i].VersionDate.After(histories[i+1].VersionDate) {
+				return PiError{ErrorText: "History items not well sorted", Code: 500}
+			}
+		}
+
+		for i := range histories {
+			histories[i].Version = 1 + i
+		}
+		c.Infof("\tSaving %v history entities.", len(histories))
+		_, err = datastore.PutMulti(c, historyKeys, histories)
+		if err != nil {
+			return err
+		}
+
+		lastVersion := len(histories)
+		var idiom Idiom
+		err = datastore.Get(c, idiomKey, &idiom)
+		if err != nil {
+			return err
+		}
+		if idiom.Version == lastVersion {
+			c.Infof("\tIdiom version %v already clean", idiom.Version)
+		} else {
+			c.Infof("\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
+			idiom.Version = lastVersion
+			_, err = datastore.Put(c, idiomKey, &idiom)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	fmt.Fprintln(w, "Done.")
+	return nil
+}
