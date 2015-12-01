@@ -49,7 +49,7 @@ func resaveAllIdiomHistory(c appengine.Context) error {
 
 	for len(keys) > 0 {
 		bunch := 100
-		if len(keys) < 100 {
+		if len(keys) < bunch {
 			bunch = len(keys)
 		}
 		histories := make([]*IdiomHistory, bunch)
@@ -73,6 +73,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
 	defer memcache.Flush(c)
 
+	// TODO turn this into small delayed tasks!
 	idiomKeys, err := datastore.NewQuery("Idiom").KeysOnly().GetAll(c, nil)
 	if err != nil {
 		return err
@@ -100,13 +101,22 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		for i := range histories {
 			histories[i].Version = 1 + i
 		}
+		lastVersion := len(histories)
 		c.Infof("\tSaving %v history entities.", len(histories))
-		_, err = datastore.PutMulti(c, historyKeys, histories)
-		if err != nil {
-			return err
+		for len(historyKeys) > 0 {
+			bunch := 10
+			if len(historyKeys) < 10 {
+				bunch = len(historyKeys)
+			}
+			_, err = datastore.PutMulti(c, historyKeys[:bunch], histories[:bunch])
+			if err != nil {
+				return err
+			}
+			// Remove processed items
+			historyKeys = historyKeys[bunch:]
+			histories = histories[bunch:]
 		}
 
-		lastVersion := len(histories)
 		var idiom Idiom
 		err = datastore.Get(c, idiomKey, &idiom)
 		if err != nil {
