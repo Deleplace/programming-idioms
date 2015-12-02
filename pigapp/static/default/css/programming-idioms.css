@@ -715,4 +715,8 @@ footer a.visited {
 .message-zone .user-messages .user-message {
 }
 
-/* Bootstrap theme customization */
+/* History */
+
+.idiom-history form {
+	margin-bottom: 5px;
+}
