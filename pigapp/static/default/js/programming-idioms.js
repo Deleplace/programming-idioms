@@ -37,17 +37,20 @@ $(function() {
 	$(".implementations-tabs").tabs({
 		activate: function( event, ui ) {
 			$('pre').popover("show"); // Fix (0,0) popovers of hidden tabs
-			emphasize();
 		}
 	});
 
-	$("pre[data-toggle=popover]").each(function(){
-		// Newlines are allowed in Author Comments
-		var $this = $(this);
-		var content = $this.attr("data-content");
-		if(content)
-			$this.attr("data-content", "<div class='code-bubble'>" + content.replace(/</g,"&lt;").replace(/\n/g,"<br/>") + "</div>");
-	});
+	function displayCodeCommentBubble() {
+		$("pre[data-toggle=popover]").each(function(){
+			// Newlines are allowed in Author Comments
+			var $this = $(this);
+			var content = $this.attr("data-content");
+			if(content)
+				//$this.attr("data-content", "<div class='code-bubble'>" + content.replace(/</g,"&lt;").replace(/\n/g,"<br/>") + "</div>");
+				$this.attr("data-content", "<div class='code-bubble'>" + content.replace(/\n/g,"<br/>") + "</div>");
+		});
+	}
+
 	
 	$('.togglabe').on('click',function() {
 		$(this).toggleClass("active");
@@ -70,7 +73,7 @@ $(function() {
 	$('.popover-on-hover').popover({
 		trigger : 'hover focus'
 	});
-	
+
 
 	
 	$(".idiom-picture img").load(function() {
@@ -381,6 +384,7 @@ $(function() {
 	// Idiom detail
 	//
 	function emphasize(){
+		// Note: client-side formatting should be rarely used. Maybe in Previews.
 		$(".identifier-emphasize,.picode div.popover-content").each(function(){
 			// Emphasize the "underscored" identifier
 			//
@@ -391,7 +395,6 @@ $(function() {
 			$(this).html(lead);
 		});
 	}
-	emphasize();
 	
 	$('.selector-language').on('click', function(){
 		var lg = $(this).closest("li").attr("data-language");
@@ -473,7 +476,7 @@ $(function() {
 					otherImplDiv.tabs({
 						activate: function( event, ui ) {
 							$('pre').popover("show"); // Fix (0,0) popovers of hidden tabs
-							emphasize();
+							//emphasize();
 						}
 					});
 					otherImplDiv.find("li:first-child").addClass("active");
@@ -481,6 +484,7 @@ $(function() {
 						$(this).parent().children("li").removeClass("active"); 
 						$(this).addClass("active"); 
 					});
+					//displayCodeCommentBubble();
 					$('pre').popover("show");
 	        	});
 		// }, 3000 );
@@ -522,7 +526,7 @@ $(function() {
 			m.modal();
 			window.setTimeout(function(){
 				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
-				emphasize();
+				//emphasize();
 			}, 800);
 	}
 
@@ -562,7 +566,7 @@ $(function() {
 			m.modal();
 			window.setTimeout(function(){
 				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
-				emphasize();
+				//emphasize();
 			}, 800);
 	}
 

@@ -15,6 +15,7 @@ func initTemplates() (*template.Template, error) {
 	t := template.New("programming-idioms")
 
 	funcMap := template.FuncMap{
+		"markup2CSS":            markup2CSS,
 		"mainStreamLanguages":   mainStreamLanguages,
 		"moreLanguages":         moreLanguages,
 		"allToggleNames":        allToggleNames,

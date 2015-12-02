@@ -132,7 +132,7 @@ type Impl struct {
 	DocumentationURL string
 
 	// AuthorComment comments about the CodeBlock.
-	// This comment is always displayed on the right of te code.
+	// This comment is always displayed on the right of the code.
 	// TODO rename this to CodeBlockComment.
 	AuthorComment string
 

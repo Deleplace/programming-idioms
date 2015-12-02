@@ -102,7 +102,7 @@
 				<div class="row-fluid">
 					<div class="span6">
 						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}">{{.Title}}</a></h1>
-						<p class="idiom-lead-paragraph identifier-emphasize">{{.LeadParagraph}}</p>
+						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
 						{{if .Picture}}<div class="idiom-picture"><img src="{{hostPrefix}}/idiom-picture?blobKey={{.Picture}}" alt="Illustration"/></div>{{end}}
 					</div>
 					<div class="span4">
@@ -138,7 +138,7 @@
 				<div class="row-fluid">
 					<div class="span7">
 						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}">{{.Title}}</a></h1>
-						<p class="idiom-lead-paragraph identifier-emphasize">{{.LeadParagraph}}</p>
+						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
 					</div>
 					<div class="span1">
 						{{if .Picture}}<div class="idiom-picture"><img src="{{hostPrefix}}/idiom-picture?blobKey={{.Picture}}" alt="Illustration"/></div>{{end}}
@@ -305,7 +305,7 @@
 		</div>
 	{{end}}
 	<div class="picode">
-		<pre data-toggle="popover" data-content="{{.AuthorComment}}" class="prettyprint {{.LanguageName | prettifyCSSClass}}">{{.CodeBlock}}</pre>
+		<pre data-toggle="popover" data-content="{{markup2CSS .AuthorComment | html}}" class="prettyprint {{.LanguageName | prettifyCSSClass}}">{{.CodeBlock}}</pre>
 	</div>
 {{end}}
 
