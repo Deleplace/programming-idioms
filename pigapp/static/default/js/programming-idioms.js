@@ -39,7 +39,7 @@ $(function() {
 			$('pre').popover("show"); // Fix (0,0) popovers of hidden tabs
 			emphasize();
 		}
-	});
+	}); // TODO: don't hide tabs on mobile? or add swipe support?
 
 	$("pre[data-toggle=popover]").each(function(){
 		// Newlines are allowed in Author Comments
