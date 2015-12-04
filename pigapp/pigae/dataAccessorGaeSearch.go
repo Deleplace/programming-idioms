@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -213,16 +214,37 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Cont
 		)
 	}
 
+	type retrieved struct {
+		keyStrings []string
+		err        error
+	}
+	ch := make(chan retrieved, len(retrievers))
+	var wg sync.WaitGroup
+	wg.Add(len(retrievers))
+	for _, retriever := range retrievers {
+		go func() {
+			keyStrings, err := retriever()
+			ch <- retrieved{
+				keyStrings: keyStrings,
+				err:        err,
+			}
+			wg.Done()
+		}()
+	}
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+	r := 0
 queryloop:
-	for r, retriever := range retrievers {
+	for result := range ch {
 		// TODO measure that, then parallelize
-		keyStrings, err := retriever()
-		if err != nil {
-			return nil, err
+		if result.err != nil {
+			return nil, result.err
 		}
 		m := 0
 		dupes := 0
-		for _, kstr := range keyStrings {
+		for _, kstr := range result.keyStrings {
 			if seenIdiomKeyStrings[kstr] {
 				dupes++
 			} else {
