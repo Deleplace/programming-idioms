@@ -313,9 +313,15 @@ func SplitForSearching(s string, normalize bool) []string {
 		s = NormalizeRunes(s)
 	}
 	chunks := regexpWhiteSpaceDash.Split(s, -1)
-	chunks = FilterOut(chunks, []string{""})
-	// All typed chunk are considered acceptable search terms
-	return chunks
+	realChunks := make([]string, 0, len(chunks))
+	for _, chunk := range chunks {
+		// Small terms (1 or 2 chars) must be discarded,
+		// because they weren't indexed in the first place.
+		if len(chunk) >= 3 || regexpDigitsOnly.MatchString(chunk) {
+			realChunks = append(realChunks, NormalizeRunes(chunk))
+		}
+	}
+	return realChunks
 }
 
 // NormalizeRunes discard special characters from a string, for indexing and for searching.
