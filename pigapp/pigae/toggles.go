@@ -109,6 +109,12 @@ func initToggles() {
 	toggles["showImplRating"] = true
 	toggles["languageCreation"] = false
 
+	// Homepage
+	toggles["homeBlockCoverage"] = true
+	toggles["homeBlockAllIdioms"] = true
+	toggles["homeBlockLastUpdated"] = true
+	toggles["homeBlockPopular"] = false
+
 	// Admin
 	toggles["administrable"] = true
 

@@ -24,15 +24,6 @@ func home(w http.ResponseWriter, r *http.Request) error {
 
 // Possible controllers include : home(), bookmarkableUserURL()
 func homeView(w http.ResponseWriter, c appengine.Context, userProfile UserProfile) error {
-	idiomsRecent, err := dao.recentIdioms(c, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, 5)
-	if err != nil {
-		return err
-	}
-
-	idiomsPopular, err := dao.popularIdioms(c, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, 3)
-	if err != nil {
-		return err
-	}
 
 	homeToggles := copyToggles(toggles)
 
@@ -42,8 +33,23 @@ func homeView(w http.ResponseWriter, c appengine.Context, userProfile UserProfil
 			Toggles:   homeToggles,
 		},
 		UserProfile:       userProfile,
-		LastUpdatedIdioms: idiomsRecent,
-		PopularIdioms:     idiomsPopular,
+		LastUpdatedIdioms: nil,
+		PopularIdioms:     nil,
+	}
+
+	var err error
+	if homeToggles["homeBlockLastUpdated"] {
+		data.LastUpdatedIdioms, err = dao.recentIdioms(c, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, 5)
+		if err != nil {
+			return err
+		}
+	}
+
+	if homeToggles["homeBlockPopular"] {
+		data.PopularIdioms, err = dao.popularIdioms(c, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, 3)
+		if err != nil {
+			return err
+		}
 	}
 
 	return templates.ExecuteTemplate(w, "page-home", data)
