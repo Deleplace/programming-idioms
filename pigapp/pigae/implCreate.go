@@ -53,7 +53,10 @@ func implCreate(w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "page-impl-create", data)
 }
 
-// The block [Other implementations], read-only, at bottom of the page
+// The block [Other implementations], read-only, at bottom of the page.
+//
+// 2015-12-23  ajax fetch deactivated because doesn't play well with escaping 
+// of bubbles text.
 func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
 
 	c := appengine.NewContext(r)
