@@ -53,9 +53,20 @@ func implCreate(w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "page-impl-create", data)
 }
 
+func excludeImpl(idiom *Idiom, excludedImplID int) {
+	// This alters the idiom content in the Facade only
+	for i, impl := range idiom.Implementations {
+		if impl.Id == excludedImplID {
+			copy(idiom.Implementations[i:], idiom.Implementations[i+1:])
+			idiom.Implementations = idiom.Implementations[:len(idiom.Implementations)-1]
+			break
+		}
+	}
+}
+
 // The block [Other implementations], read-only, at bottom of the page.
 //
-// 2015-12-23  ajax fetch deactivated because doesn't play well with escaping 
+// 2015-12-23  ajax fetch deactivated because doesn't play well with escaping
 // of bubbles text.
 func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
 
@@ -80,14 +91,7 @@ func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
 	userProfile := readUserProfile(r)
 
 	if excludedImplID != -1 {
-		// This alters the idiom content in the Facade only
-		for i, impl := range idiom.Implementations {
-			if impl.Id == excludedImplID {
-				copy(idiom.Implementations[i:], idiom.Implementations[i+1:])
-				idiom.Implementations = idiom.Implementations[:len(idiom.Implementations)-1]
-				break
-			}
-		}
+		excludeImpl(idiom, excludedImplID)
 	}
 
 	// This alters the idiom content in the Facade only

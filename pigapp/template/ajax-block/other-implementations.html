@@ -1,9 +1,8 @@
 {{define "block-other-implementations"}}
 			<div class="implementations-tabs">
 				<ul class="nav nav-tabs">
-					{{$tabclass := ""}}
 					{{range .Idiom.Implementations}}
-							<li class="{{$tabclass}}">
+							<li>
 								<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
 							</li>
 					{{end}}

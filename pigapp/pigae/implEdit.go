@@ -39,9 +39,15 @@ func implEdit(w http.ResponseWriter, r *http.Request) error {
 	if !exists {
 		return PiError{"Could not find implementation " + implIDStr + " in idiom " + idiomIDStr, http.StatusNotFound}
 	}
+	implCopy := *impl
 
 	myToggles := copyToggles(toggles)
 	myToggles["editing"] = true
+
+	// Alter the idiom content, in the Facade only, to skip current impl in the
+	// [Other implementations] block.
+	// Warning: the facade idiom is now 1 impl shorter than reality.
+	excludeImpl(idiom, implID)
 
 	data := &ImplEditFacade{
 		PageMeta: PageMeta{
@@ -50,7 +56,7 @@ func implEdit(w http.ResponseWriter, r *http.Request) error {
 		},
 		UserProfile: readUserProfile(r),
 		Idiom:       idiom,
-		Impl:        impl,
+		Impl:        &implCopy,
 	}
 
 	return templates.ExecuteTemplate(w, "page-impl-edit", data)
