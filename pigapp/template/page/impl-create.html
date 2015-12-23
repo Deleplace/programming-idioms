@@ -111,10 +111,16 @@
 				<fieldset>
 					<legend>Other implementations</legend>
 				</fieldset>
+				{{/*  2015-12-23  ajax fetch deactivated because
+				doesn't play well with escaping of bubbles text
 				<div class="other-impl-placeholder"
 					data-idiom-id="{{.Idiom.Id}}"
 					data-excluded-impl-id=""
 				></div>
+				*/}}
+				<div>
+					{{template "block-other-implementations" .}}
+				</div>
 			</div>
 		</div>
 		
