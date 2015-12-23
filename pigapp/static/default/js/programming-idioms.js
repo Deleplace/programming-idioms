@@ -383,18 +383,6 @@ $(function() {
 	//
 	// Idiom detail
 	//
-	function emphasize(){
-		// Note: client-side formatting should be rarely used. Maybe in Previews.
-		$(".identifier-emphasize,.picode div.popover-content").each(function(){
-			// Emphasize the "underscored" identifier
-			//
-			// _x -> <span class="variable">x</span>
-			//
-			var lead = $(this).html();
-			lead = lead.replace( /\b_([\w$]*)/gm, "<span class=\"variable\">$1</span>");
-			$(this).html(lead);
-		});
-	}
 	
 	$('.selector-language').on('click', function(){
 		var lg = $(this).closest("li").attr("data-language");
@@ -461,6 +449,10 @@ $(function() {
 
 	// Impl create, impl edit : show other implementations below,
 	// read-only, in a defered ajax block
+	//
+	// 2015-12-23  ajax fetch deactivated because
+	// doesn't play well with escaping of bubbles text.
+	/*
 	$(".other-impl-placeholder").each(function(){
 		var otherImplDiv = $(this);
 		otherImplDiv.html("<i class='icon-spinner icon-spin'></i>");
@@ -476,7 +468,6 @@ $(function() {
 					otherImplDiv.tabs({
 						activate: function( event, ui ) {
 							$('pre').popover("show"); // Fix (0,0) popovers of hidden tabs
-							//emphasize();
 						}
 					});
 					otherImplDiv.find("li:first-child").addClass("active");
@@ -489,11 +480,22 @@ $(function() {
 	        	});
 		// }, 3000 );
 	});
+    */
 	
 	//
 	// Impl create, impl edit : [Preview] button injects values
 	// in modal window.
 	//
+
+	// This client-side formatting should be rarely used : only in Previews.
+	function emphasize(raw){
+		// Emphasize the "underscored" identifier
+		//
+		// _x -> <span class="variable">x</span>
+		//
+		var refined = raw.replace( /\b_([\w$]*)/gm, "<span class=\"variable\">$1</span>");
+		return refined;
+	}
 
 	function showImplCreatePreview(){
 			$('pre').popover("hide"); // Hide (0,0) popovers of hidden tabs
@@ -507,7 +509,9 @@ $(function() {
 				m.find(".piimports pre").html( imports ).hide();
 			m.find(".picode pre").html( $(".form-impl-creation textarea.impl-code").val() );
 			var comment = $(".form-impl-creation textarea[name=impl_comment]").val();
-			m.find(".picode pre").attr("data-content", comment);
+			var escapedComment = $("<div>").text(comment).html();
+			var refinedComment = emphasize(escapedComment);
+			m.find(".picode pre").attr("data-content", refinedComment);
 			var extDocURL = $(".form-impl-creation input[name=impl_doc_url]").val();
 			if( extDocURL )
 				m.find("a.impl-doc").attr("href", extDocURL).show();
@@ -526,7 +530,6 @@ $(function() {
 			m.modal();
 			window.setTimeout(function(){
 				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
-				//emphasize();
 			}, 800);
 	}
 
@@ -547,7 +550,9 @@ $(function() {
 				m.find(".piimports pre").html( imports ).hide();
 			m.find(".picode pre").html( $(".form-impl textarea.impl-code").val() );
 			var comment = $(".form-impl textarea[name=impl_comment]").val();
-			m.find(".picode pre").attr("data-content", comment);
+			var escapedComment = $("<div>").text(comment).html();
+			var refinedComment = emphasize(escapedComment);
+			m.find(".picode pre").attr("data-content", refinedComment);
 			var extDocURL = $(".form-impl input[name=impl_doc_url]").val();
 			if( extDocURL )
 				m.find("a.impl-doc").attr("href", extDocURL).show();
@@ -566,7 +571,6 @@ $(function() {
 			m.modal();
 			window.setTimeout(function(){
 				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
-				//emphasize();
 			}, 800);
 	}
 
