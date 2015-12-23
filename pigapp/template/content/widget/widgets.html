@@ -299,9 +299,9 @@
 {{end}}
 
 {{define "implementation-code"}}
-	{{if .ImportsBlock}}
+	{{with .ImportsBlock}}
 		<div class="piimports">
-			<pre>{{.ImportsBlock}}</pre>
+			<pre>{{.}}</pre>
 		</div>
 	{{end}}
 	<div class="picode">
