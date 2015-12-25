@@ -629,4 +629,20 @@ $(function() {
 		}
 	},300);
 
+	function preload(arrayOfImages) {
+    	$(arrayOfImages).each(function(){
+        	$('<img/>')[0].src = this;
+    	});
+	}
+
+	// Prefetch the highlight version of the
+	// dice icon "Go To Random Idiom".
+	$("img.dice").each(function(){
+		var src = $(this).attr('src');
+		var srcHighlight = src.replace('.png', '_highlight.png')
+		preload([
+			srcHighlight
+		]);
+	});
+
 });
