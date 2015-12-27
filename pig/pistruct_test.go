@@ -66,6 +66,8 @@ var splitForSearchingTests = []struct {
 	{" map  function ", true, []string{"map", "function"}},
 	{"map-function", true, []string{"map", "function"}},
 	{"map\t\tfunction", true, []string{"map", "function"}},
+	// Small words
+	{"replace js", true, []string{"replace", "js"}},
 	// Normalization
 	{"o'hara", false, []string{"o'hara"}},
 	{"o'hara", true, []string{"o", "hara"}},

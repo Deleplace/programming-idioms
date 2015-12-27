@@ -273,7 +273,7 @@ func (impl *Impl) ExtractIndexableWords() []string {
 
 var regexpWhiteSpace = regexp.MustCompile("[ \\t\\n]")
 var regexpWhiteSpaceDash = regexp.MustCompile("[ \\t\\n-]")
-var regexpDigitsOnly = regexp.MustCompile("^\\d+$")
+var RegexpDigitsOnly = regexp.MustCompile("^\\d+$")
 
 // SplitForIndexing cuts sentences or paragrahs into words.
 // Words of 2 letters of less are discarded.
@@ -288,7 +288,7 @@ func SplitForIndexing(s string, normalize bool) []string {
 		// Accepted :
 		// All words having at least 3 characters
 		// All 1-digits words and 2-digits words
-		if len(chunk) >= 3 || regexpDigitsOnly.MatchString(chunk) {
+		if len(chunk) >= 3 || RegexpDigitsOnly.MatchString(chunk) {
 			realChunks = append(realChunks, NormalizeRunes(chunk))
 		}
 	}
@@ -313,15 +313,12 @@ func SplitForSearching(s string, normalize bool) []string {
 		s = NormalizeRunes(s)
 	}
 	chunks := regexpWhiteSpaceDash.Split(s, -1)
-	realChunks := make([]string, 0, len(chunks))
-	for _, chunk := range chunks {
-		// Small terms (1 or 2 chars) must be discarded,
-		// because they weren't indexed in the first place.
-		if len(chunk) >= 3 || regexpDigitsOnly.MatchString(chunk) {
-			realChunks = append(realChunks, NormalizeRunes(chunk))
-		}
-	}
-	return realChunks
+	chunks = FilterStrings(chunks, func(chunk string) bool {
+		// Empty strings are no good.
+		return len(chunk) >= 1
+	})
+
+	return chunks
 }
 
 // NormalizeRunes discard special characters from a string, for indexing and for searching.

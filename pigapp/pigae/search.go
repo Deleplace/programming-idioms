@@ -53,6 +53,13 @@ func search(w http.ResponseWriter, r *http.Request) error {
 		words, typedLangs = typedLangs, nil
 	}
 
+	words = FilterStrings(words, func(chunk string) bool {
+		// Small terms (1 or 2 chars) must be discarded,
+		// because they weren't indexed in the first place.
+		// (Words only, not language names.)
+		return len(chunk) >= 3 || RegexpDigitsOnly.MatchString(chunk)
+	})
+
 	numberMaxResults := 20
 	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
 	if err != nil {
