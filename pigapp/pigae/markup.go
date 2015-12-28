@@ -3,6 +3,7 @@ package pigae
 import (
 	"html/template"
 	"regexp"
+	"strings"
 )
 
 // Markup in idioms comments is extremely lightweight: it only
@@ -19,7 +20,8 @@ func markup2CSS(paragraph string) template.HTML {
 	untrusted := paragraph
 	sanitized := template.HTMLEscapeString(untrusted)
 	emphasized := emphasizeCSS(sanitized)
-	return template.HTML(emphasized)
+	linebroken := linebreak(emphasized)
+	return template.HTML(linebroken)
 }
 
 // emphasize the "underscored" identifiers
@@ -42,4 +44,12 @@ func emphasizeCSS(sentence string) string {
 	// and then a group of valid identifier chars.
 	re := regexp.MustCompile("\\b_([\\w$]+)")
 	return re.ReplaceAllString(sentence, "<span class=\"variable\">${1}</span>")
+}
+
+// "a\nb" -> "a<br/>b"
+func linebreak(sentence string) string {
+	sentence = strings.Replace(sentence, "\r\n", "<br/>", -1)
+	sentence = strings.Replace(sentence, "\n\r", "<br/>", -1)
+	sentence = strings.Replace(sentence, "\n", "<br/>", -1)
+	return sentence
 }
