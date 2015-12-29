@@ -71,6 +71,7 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// For related idioms (i.e. linked idioms)
 func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
 

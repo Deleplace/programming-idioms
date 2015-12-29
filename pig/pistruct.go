@@ -378,9 +378,11 @@ func (idiom *Idiom) AddRelation(other *Idiom) {
 	if !containsInt(idiom.RelatedIdiomIds, other.Id) {
 		idiom.RelatedIdiomIds = append(idiom.RelatedIdiomIds, other.Id)
 		idiom.RelatedIdiomTitles = append(idiom.RelatedIdiomTitles, other.Title)
+		idiom.EditSummary = fmt.Sprintf("Linked to idiom #%d [%v]", other.Id, other.Title)
 	}
 	if !containsInt(other.RelatedIdiomIds, idiom.Id) {
 		other.RelatedIdiomIds = append(other.RelatedIdiomIds, idiom.Id)
 		other.RelatedIdiomTitles = append(other.RelatedIdiomTitles, idiom.Title)
+		other.EditSummary = fmt.Sprintf("Linked to idiom #%d [%v]", idiom.Id, idiom.Title)
 	}
 }
