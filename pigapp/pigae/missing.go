@@ -20,10 +20,31 @@ func missingList(w http.ResponseWriter, r *http.Request) error {
 	lang = normLang(lang)
 	langs := []string{lang}
 
-	numberMaxResults := 20
-	hits, err := dao.searchIdiomsByLangs(c, langs, numberMaxResults)
+	// Warning: manipulating a lot of idioms in memory can get expensive.
+	// TODO: get IDs only, then substract IDs of those having DemoURL + DocumentationURL,
+	// then get the idioms by IDs.
+	maxFetch := 200
+	hits, err := dao.searchIdiomsByLangs(c, langs, maxFetch)
 	if err != nil {
 		return err
+	}
+
+	maxShow := 25
+	results := make([]*Idiom, 0, maxShow)
+	for _, idiom := range hits {
+		keep := false
+		for _, impl := range implementationsFor(idiom, lang) {
+			if isBlank(impl.DemoURL) || isBlank(impl.DocumentationURL) {
+				keep = true
+				break
+			}
+		}
+		if keep {
+			results = append(results, idiom)
+			if len(results) >= maxShow {
+				break
+			}
+		}
 	}
 
 	data := &MissingFieldsFacade{
@@ -32,7 +53,8 @@ func missingList(w http.ResponseWriter, r *http.Request) error {
 			Toggles:   toggles,
 		},
 		UserProfile: readUserProfile(r),
-		Results:     hits,
+		Lang:        lang,
+		Results:     results,
 	}
 
 	return templates.ExecuteTemplate(w, "page-missing-list", data)
@@ -42,6 +64,7 @@ func missingList(w http.ResponseWriter, r *http.Request) error {
 type MissingFieldsFacade struct {
 	PageMeta    PageMeta
 	UserProfile UserProfile
+	Lang        string
 	Results     []*Idiom
 }
 

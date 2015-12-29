@@ -9,7 +9,7 @@
 		{{template "language-bar" .}}
 
 		<div class="alert alert-info">
-		  This list shows idioms having at least : 1 <strong>XXX</strong> implementation with some empty fields.
+		  This list shows some idioms having at least : 1 <strong>{{.Lang}}</strong> implementation with some empty fields.
 		</div>
 
 		<div class="idioms-missing-fields">
@@ -24,14 +24,14 @@
 					</tr>
 					{{range .Results}}
 						{{$idiom := .}}
-						{{range implementationsFor . "Go"}}
+						{{range implementationsFor . $.Lang}}
 							<tr>
 								<th><span class="idiom_id label"># {{$idiom.Id}} > {{.Id}}</span></th>
 								<td>
-									<a href="{{NiceImplURL $idiom .Id "Go"}}">{{$idiom.Title}}</a>
+									<a href="{{NiceImplURL $idiom .Id $.Lang}}">{{$idiom.Title}}</a>
 								</td>
-								<td>{{if blank .DemoURL}}✗{{else}}✓{{end}}</td>
-								<td>{{if blank .DocumentationURL}}✗{{else}}✓{{end}}</td>
+								<td class="mark">{{if blank .DemoURL}}✗{{else}}✓{{end}}</td>
+								<td class="mark">{{if blank .DocumentationURL}}✗{{else}}✓{{end}}</td>
 								<td class="code-fade">{{shorten .CodeBlock 40}}</td>
 							</tr>
 						{{end}}

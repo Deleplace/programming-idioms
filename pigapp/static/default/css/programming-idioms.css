@@ -722,6 +722,12 @@ footer a.visited {
 }
 
 /* Missing fields list */
+
+.idioms-missing-fields td.mark {
+	text-align: center;
+	font-size: 24px;
+}
+
 .code-fade {
 	color: #777;
 }
