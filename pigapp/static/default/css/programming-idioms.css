@@ -720,3 +720,8 @@ footer a.visited {
 .idiom-history form {
 	margin-bottom: 5px;
 }
+
+/* Missing fields list */
+.code-fade {
+	color: #777;
+}

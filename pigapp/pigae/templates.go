@@ -22,6 +22,7 @@ func initTemplates() (*template.Template, error) {
 		"printNiceLang":         printNiceLang,
 		"printNiceLangs":        printNiceLangs,
 		"prettifyCSSClass":      prettifyCSSClass,
+		"prettifyExtension":     prettifyExtension,
 		"normLang":              normLang,
 		"langBadgeClass":        langBadgeClass,
 		"isInStringList":        isInStringList,
@@ -36,12 +37,14 @@ func initTemplates() (*template.Template, error) {
 		"host":                  host,
 		"filterOut":             FilterOut,
 		"toggled":               isToggled,
-		"prettifyExtension":     prettifyExtension,
 		"join":                  strings.Join,
 		"dict":                  dict,
 		"hiddenizeExtraColumns": hiddenizeExtraColumns,
 		"empty":                 empty,
 		"notEmpty":              notEmpty,
+		"blank":                 isBlank,
+		"implementationsFor":    implementationsFor,
+		"shorten":               Shorten,
 	}
 	t = t.Funcs(funcMap)
 	folders := []string{
@@ -79,6 +82,10 @@ func empty(x interface{}) bool {
 func notEmpty(x interface{}) bool {
 	v := reflect.ValueOf(x)
 	return v.Len() > 0
+}
+
+func isBlank(s string) bool {
+	return strings.TrimSpace(s) == ""
 }
 
 // Directory containing CSS, JS, and pictures.

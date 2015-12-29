@@ -1,0 +1,50 @@
+{{define "page-missing-list"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>  
+<div class="page-holder">
+	{{template "header-small" .}}  
+	<div class="page-content container-fluid">
+
+		{{template "language-bar" .}}
+
+		<div class="alert alert-info">
+		  This list shows idioms having at least : 1 <strong>XXX</strong> implementation with some empty fields.
+		</div>
+
+		<div class="idioms-missing-fields">
+			{{if .Results}}
+				<table>
+					<tr>
+						<th></th>
+						<th></th>
+						<th>Demo URL</th>
+						<th>Doc URL</th>
+						<th></th>
+					</tr>
+					{{range .Results}}
+						{{$idiom := .}}
+						{{range implementationsFor . "Go"}}
+							<tr>
+								<th><span class="idiom_id label"># {{$idiom.Id}} > {{.Id}}</span></th>
+								<td>
+									<a href="{{NiceImplURL $idiom .Id "Go"}}">{{$idiom.Title}}</a>
+								</td>
+								<td>{{if blank .DemoURL}}✗{{else}}✓{{end}}</td>
+								<td>{{if blank .DocumentationURL}}✗{{else}}✓{{end}}</td>
+								<td class="code-fade">{{shorten .CodeBlock 40}}</td>
+							</tr>
+						{{end}}
+					{{end}}
+				</table>
+			{{else}}
+				<i class="icon-meh"> No idioms found !</i>
+			{{end}}
+		</div>
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}
+</div>  
+</body>
+{{template "close-html"}}
+{{end}}
