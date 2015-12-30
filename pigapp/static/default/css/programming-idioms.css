@@ -723,11 +723,19 @@ footer a.visited {
 
 /* Missing fields list */
 
-.idioms-missing-fields td.mark, .idioms-missing-fields td.mark>a {
+.idioms-missing-fields td.mark {
 	text-align: center;
+	font-size: 22px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+.idioms-missing-fields td.mark>a {
 	font-size: 22px;
 }
 
+
 .code-fade {
 	color: #777;
+	padding-left: 12px;
 }
