@@ -494,6 +494,7 @@ $(function() {
 		// _x -> <span class="variable">x</span>
 		//
 		var refined = raw.replace( /\b_([\w$]*)/gm, "<span class=\"variable\">$1</span>");
+		refined = refined.replace(/\n/g,"<br/>");
 		return refined;
 	}
 
