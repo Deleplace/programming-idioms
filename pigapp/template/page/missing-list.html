@@ -9,7 +9,12 @@
 		{{template "language-bar" .}}
 
 		<div class="alert alert-info">
-		  This list shows some idioms having at least : 1 <strong>{{.Lang}}</strong> implementation with some empty fields.
+			<p>
+			  This list shows some idioms having at least : 1 <strong>{{.Lang}}</strong> implementation with some empty fields.
+			</p>
+			<p>
+			  You may click on a missing field and fill the gap.
+			</p>
 		</div>
 
 		<div class="idioms-missing-fields">
@@ -18,20 +23,40 @@
 					<tr>
 						<th></th>
 						<th></th>
-						<th>Demo URL</th>
-						<th>Doc URL</th>
+						<th>Demo<br/>URL</th>
+						<th>Doc<br/>URL</th>
 						<th></th>
 					</tr>
 					{{range .Results}}
 						{{$idiom := .}}
 						{{range implementationsFor . $.Lang}}
 							<tr>
-								<th><span class="idiom_id label"># {{$idiom.Id}} > {{.Id}}</span></th>
+								<th><span class="idiom_id label"># {{$idiom.Id}}{{/* > {{.Id}} */}}</span></th>
 								<td>
 									<a href="{{NiceImplURL $idiom .Id $.Lang}}">{{$idiom.Title}}</a>
 								</td>
-								<td class="mark">{{if blank .DemoURL}}✗{{else}}✓{{end}}</td>
-								<td class="mark">{{if blank .DocumentationURL}}✗{{else}}✓{{end}}</td>
+								<td class="mark">
+									{{if blank .DemoURL}}
+										<a class="btn btn-warning" type="button" href="{{hostPrefix}}/impl-edit/{{$idiom.Id}}/{{.Id}}">
+											Ø
+										</a>
+									{{else}}
+										<a href="{{.DemoURL}}" target="_blank">
+											✓
+										</a>
+									{{end}}
+								</td>
+								<td class="mark">
+									{{if blank .DocumentationURL}}
+										<a class="btn btn-warning" type="button" href="{{hostPrefix}}/impl-edit/{{$idiom.Id}}/{{.Id}}">
+											Ø
+										</a>
+									{{else}}
+										<a href="{{.DocumentationURL}}" target="_blank">
+											✓
+										</a>
+									{{end}}
+								</td>
 								<td class="code-fade">{{shorten .CodeBlock 40}}</td>
 							</tr>
 						{{end}}

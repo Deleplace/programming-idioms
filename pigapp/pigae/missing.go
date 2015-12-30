@@ -1,6 +1,7 @@
 package pigae
 
 import (
+	"math/rand"
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
@@ -28,6 +29,9 @@ func missingList(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
+
+	// Better if the portion shown varies
+	shuffleIdioms(hits)
 
 	maxShow := 25
 	results := make([]*Idiom, 0, maxShow)
@@ -78,4 +82,11 @@ func implementationsFor(idiom *Idiom, lang string) []*Impl {
 		}
 	}
 	return impls
+}
+
+func shuffleIdioms(idioms []*Idiom) {
+	for i := range idioms {
+		j := rand.Intn(i + 1)
+		idioms[i], idioms[j] = idioms[j], idioms[i]
+	}
 }
