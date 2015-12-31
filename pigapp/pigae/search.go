@@ -51,6 +51,13 @@ func search(w http.ResponseWriter, r *http.Request) error {
 	q = strings.Replace(q, "c++", "cpp", -1)
 	terms := SplitForSearching(q, true)
 
+	if len(terms) == 0 {
+		// Search query is empty or illegible...
+		redirURL := hostPrefix() + "/about#about-block-all-idioms"
+		http.Redirect(w, r, redirURL, http.StatusFound)
+		return nil
+	}
+
 	words, typedLangs := separateLangKeywords(terms)
 
 	words = FilterStrings(words, func(chunk string) bool {
