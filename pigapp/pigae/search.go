@@ -46,12 +46,12 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	c := appengine.NewContext(r)
 	q := vars["q"]
+	// This is a premature hack. TODO find a graceful way to handle "c++",
+	// and stop confounding spaces and pluses.
+	q = strings.Replace(q, "c++", "cpp", -1)
 	terms := SplitForSearching(q, true)
 
 	words, typedLangs := separateLangKeywords(terms)
-	if len(words) == 0 {
-		words, typedLangs = typedLangs, nil
-	}
 
 	words = FilterStrings(words, func(chunk string) bool {
 		// Small terms (1 or 2 chars) must be discarded,
@@ -59,6 +59,10 @@ func search(w http.ResponseWriter, r *http.Request) error {
 		// (Words only, not language names.)
 		return len(chunk) >= 3 || RegexpDigitsOnly.MatchString(chunk)
 	})
+
+	if len(words) == 0 {
+		words, typedLangs = typedLangs, nil
+	}
 
 	numberMaxResults := 20
 	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
