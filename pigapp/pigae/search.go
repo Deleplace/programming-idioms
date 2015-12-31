@@ -46,9 +46,13 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	c := appengine.NewContext(r)
 	q := vars["q"]
+
 	// This is a premature hack. TODO find a graceful way to handle "c++",
 	// and stop confounding spaces and pluses.
 	q = strings.Replace(q, "c++", "cpp", -1)
+	q = strings.Replace(q, "C++", "cpp", -1)
+	// TODO find a graceful way to handle "c#".
+
 	terms := SplitForSearching(q, true)
 
 	if len(terms) == 0 {
