@@ -1,0 +1,257 @@
+* {
+	box-sizing: border-box;
+}
+
+.clear {
+	float: none !important;
+	clear: both !important;
+	height: 0 !important;
+	width: 0 !important;
+}
+
+.limit-width {
+	padding: 0 0.5em;
+	margin: 0 auto;
+	max-width: 80rem;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+a:hover {
+	outline: 1px solid #46A8FF;
+}
+
+html {
+	color: #333;
+
+	font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+	font-weight: 300;
+	line-height: 1.2;
+	letter-spacing: 0.02em;
+
+	-ms-word-wrap: break-all;
+	word-wrap: break-word;
+	-webkit-font-smoothing: antialiased;
+}
+
+body, html {
+	margin: 0; padding: 0;
+}
+
+button, input {
+	font-size: 1rem;
+}
+
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+.rule {
+	height: 0;
+	margin: 0.5rem 0;
+	border-top: 1px solid #ddd;
+}
+
+/* Header */
+
+#header {
+	padding: 1rem 0;
+	background: #FFF;
+	box-shadow: 0 2px 3px #C3C3C3;
+	text-align: top;
+}
+
+#header .logo {
+	display: inline-block;
+	font-size: 0;
+}
+
+#header .logo:hover {
+	outline: none;
+}
+
+#header .search {
+	float: right;
+	display: inline-block;
+	padding: 0 0 0 2px;
+	background: #fff;
+	border-radius: 2px;
+	border: 1px solid #26b4d3;
+	font-size: 1rem;
+	margin-left: 1rem;
+	margin-top: 1rem;
+}
+
+#header .search .search-query {
+	margin: 0;
+	padding: 0.1rem 0.5rem;
+	border: 0;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+#header .search .search-submit {
+	margin: 0;
+	margin-bottom: 1px;
+	padding: 0 0.5rem;
+	border: 0;
+	height: 1.6rem;
+	background: #7BDDF3; /* #26b4d3 */
+	color: #fff;
+	cursor: pointer;
+	font-size: inherit;
+	line-height: inherit;
+	border-left: 1px solid #26b4d3;
+	width: 2.5rem;
+}
+
+#header .search .search-submit:hover {
+	background: #26b4d3;
+}
+
+/* Language Bar */
+
+.language-bar {
+	margin-top: 0.5rem;
+	font-size: 0.8rem;
+}
+
+.language-bar .language-add {
+	display: inline-block;
+	background: #7BDDF3;
+	color: #fff;
+	width: 1.2rem;
+	text-align: center;
+	margin-right: 0.3rem;
+}
+
+.language-bar .language {
+	border: 1px solid #26b4d3;
+	margin-right: 0.3rem;
+}
+
+.language-bar .language-name {
+	padding-left: 0.2rem;
+	padding-right: 0.2rem;
+}
+
+.language-bar .language-remove {
+	padding-left: 0.2rem;
+	padding-right: 0.2rem;
+}
+
+.language-bar .language-remove:hover {
+	background: #f88;
+}
+
+/* Idiom view */
+
+.idiom .header {
+	height: 2rem;
+	margin-bottom: 0.5rem;
+}
+
+.idiom .header h2 {
+	line-height: 2rem;
+	font-size: 1.5rem;
+}
+
+.idiom-actions {
+	float: left;
+	line-height: 2rem;
+	margin-right: 0.5rem;
+}
+
+.idiom-actions a {
+	float: left;
+	padding: 0 0.3rem;
+	font-size: 1rem;
+	line-height: 2rem;
+	text-align: center;
+}
+
+
+.idiom-description {
+	max-width: 35rem;
+}
+
+.idiom-languages {
+	padding: 0 0.25rem;
+	border-bottom: 1px solid #ccc;
+	margin-top: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.idiom-languages > a {
+	float: left;
+	margin-right: 0.5rem;
+	padding: 0 0.3rem;
+}
+
+.idiom-example {
+	margin-bottom: 1rem;
+}
+
+.idiom-example .actions {
+	float: left;
+	width: 2rem;
+	text-align: center;
+}
+
+.idiom-example .actions .language {
+	padding: 0.2rem 0;
+	margin-bottom: 0.2rem;
+	background: #eee;
+	font-weight: 800;
+}
+
+.idiom-example .actions > * {
+	display: block;
+}
+.idiom-example .actions .votes {
+	font-size: 0.6rem;
+}
+
+.idiom-example .content {
+	margin-left: 2rem;
+}
+
+.idiom-example .code {
+	float: left;
+	width: 70%;
+	min-height: 5rem;
+	max-height: 10rem;
+
+	padding: 0.5rem 1rem;
+	background: #eee;
+
+	font-family: monospace;
+	white-space: pre;
+	overflow: auto;
+}
+
+.idiom-example .comments {
+	float: left;
+	width: 25%;
+	margin-left: 0.5rem;
+	font-size: 0.8rem;
+	color: #444;
+}
+
+@media(max-width: 700px) {
+	.idiom-example .code {
+		float: none;
+		width: auto;
+		margin-right: 0;
+	}
+
+	.idiom-example .comments {
+		float: none;
+		width: auto;
+		margin-top: 0.5rem;
+		margin-bottom: 1rem;
+	}
+}

@@ -21,7 +21,7 @@ var envProd = Env{
 	IsDev:           false,
 	Host:            "http://www.programming-idioms.org",
 	UseAbsoluteUrls: true,
-	UseMinifiedCss:  true,
+	UseMinifiedCss:  false, // during current redesign
 	UseMinifiedJs:   true,
 }
 
