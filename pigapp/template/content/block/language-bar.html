@@ -1,25 +1,24 @@
 {{define "language-bar"}}
 {{if .PageMeta.Toggles.languageBar}} 
-<div class="well language-list">
-	<div class="row-fluid">
-		<div class="span3">
-			<div class="btn-group actions">
-              <button class="btn btn-inverse btn-see-non-favorite {{if .UserProfile.SeeNonFavorite}}active{{else}}{{end}} {{if not .UserProfile.FavoriteLanguages}}disabled{{end}}" title="See implementations in other languages as well (recommended)"><i class="icon-asterisk"></i></button>
-              <button class="btn btn-inverse show-languages-pool" title="Add your favorite language"><i class="icon-plus"></i></button>
-            </div>
-        </div>
+<div class="limit-width language-bar">
+	<span title="List of favorite languages.">Favorites:</span>
+	<a title="Add a favorite language." class="language-add" href="#">+</a>
+	{{range .UserProfile.FavoriteLanguages}}
+		<span class="language">
+			<a class="language-name" href="#">{{. | printNiceLang}}</a>
+			<a class="language-remove" href="#">×</a>
+		</span>
+	{{end}}
+
+
+
+	<div class="row-fluid" style="display: none;">
 		<div class="span9">
 			{{if empty .UserProfile.FavoriteLanguages}} 
-				<div class="language-bar-hint">
-					This language bar is your friend. Select your favorite languages!
-				</div>
+				This language bar is your friend. Select your favorite languages!
 			{{end}}
-			<ul class="favorite-languages sortable-lang">
-				{{range .UserProfile.FavoriteLanguages}}
-					<li class="active" data-language="{{.}}"><span class="badge badge-fav-lang">{{. | printNiceLang}} <a href="#" class="favorite-language-remove icon-remove"></a></span></li>
-				{{end}}
-			</ul>
 		</div>
+
 		<div class="span12 addible-languages-pool" style="display: none;">
 			Select your favorite languages :
 			<ul>

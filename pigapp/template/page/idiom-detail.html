@@ -1,79 +1,40 @@
 {{define "page-idiom-detail"}}
 {{template "prologue"}}  
 {{template "head" .PageMeta}}  
-<body>  
+<body>
 <div class="page-holder">
 	{{template "header-small" .}}  
-	<div class="page-content container-fluid">
 
-    <div class="row-fluid">
-		<div class="span8">
-			{{template "language-bar" .}}
-		</div>
-    </div>
+	{{template "language-bar" .}}
 			
-	<div class="row-fluid">
-		<div class="span10">
-			{{template "idiom-summary-large"  decorate .Idiom .UserProfile}}
-			{{$selectedImplId := .SelectedImplID}}
-			<div class="sortable-y">
-				{{range .Idiom.Implementations}}
-				{{if or (isInStringList .LanguageName $.UserProfile.FavoriteLanguages) (idEqual .Id $selectedImplId)}}
-					<div>
-						<div class="handle">
-						    <ul class="nav nav-tabs">
-	   							<li class="active">
-	   								<a href="#" class="lang-tab"><span class="label {{if idEqual .Id $selectedImplId}}badge-lang{{end}} {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
-							    </li>
-	    					</ul>
-						</div>
-						<div class="">
-							{{template "impl-code-and-comments" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
-						</div>
-					</div>
-				{{end}}
-				{{end}}
+	<div class="limit-width idiom">
+		<div class="header">
+			<div class="idiom-actions">
+				<a href="#star">★</a>
+				<a href="#edit">✐</a>
+				<div class="clear"></div>
 			</div>
-			<div class="implementations-tabs">
-				<ul class="nav nav-tabs">
-					{{$tabclass := ""}}
-					{{range .Idiom.Implementations}}
-						{{if not (or (isInStringList .LanguageName $.UserProfile.FavoriteLanguages) (idEqual .Id $selectedImplId))}}
-							<li class="{{$tabclass}}">
-								<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
-							</li>
-						{{end}}
-					{{end}}
-				</ul>
-				{{range .Idiom.Implementations}}
-					{{if not (or (isInStringList .LanguageName $.UserProfile.FavoriteLanguages) (idEqual .Id $selectedImplId))}}
-						<div id="impl{{.Id}}">
-							<div class="">
-								{{template "impl-code-and-comments" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
-							</div>
-						</div>
-					{{end}}
-				{{end}}
-			</div>
-			{{if .PageMeta.Toggles.implAddition}}
-				<div class="new-impl-invitation hide-on-mobile">
-					<hr/>
-					<h5>Do you know the best way to do this in your language ?</h5>
-					<a href="{{hostPrefix}}/impl-create/{{.Idiom.Id}}" class="btn btn-primary"><i class="icon-plus-sign"></i> New implementation...</a>
-				</div>
+			<h2>#{{.Idiom.Id}} {{.Idiom.Title}}</h2>
+		</div>
+		<div class="idiom-description">{{markup2CSS .Idiom.LeadParagraph}}</div>
+		<div class="idiom-languages">
+			{{range .Idiom.Implementations}}
+				<a href="#impl-{{.Id}}">{{.LanguageName}}</a>
 			{{end}}
+			<div class="clear"></div>
 		</div>
-		<div class="span2">
-			<div class="show-on-desktop">
-				{{template "right-column" .Idiom}}
+		{{range .Idiom.Implementations}}
+			<div class="idiom-example">
+				<div class="actions"><a href="#" name="impl-{{.Id}}" class="language">{{.LanguageName}}</a><a href="#">★</a><div class="votes">{{if gt .Rating 0}}{{.Rating}}{{end}}</div></div>
+				<div class="content">
+					<div class="code">{{.CodeBlock}}</div>
+					<div class="comments">{{markup2CSS .AuthorComment}}</div>
+					<div class="clear"></div>
+				</div>
 			</div>
-		</div>
+		{{end}}
 	</div>
 	
-	</div>
-{{template "footer" .}}
-{{template "modal-nickname"}}
-{{template "modal-impl-grid" .}}
 {{template "include-js" .}}
 </div>  
 </body>

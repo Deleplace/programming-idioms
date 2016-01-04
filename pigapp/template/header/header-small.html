@@ -1,15 +1,24 @@
 {{define "header-small"}}
-<header class="header-small">
-	<div class="navbar">
-	<div class="navbar-inner">
-		<ul class="nav">
-              <li>
-                <a href="{{hostPrefix}}/"><img src="{{hostPrefix}}{{themeDir}}/img/wheel_48x48.png" width="48" height="48" class="header_picto" /></a>
-              </li>
-              <li class="">
-				<h1><a href="{{hostPrefix}}/">Programming-Idioms</a></h1>
-				<div class="slogan">Please don't reinvent the wheel.</div>
-              </li>
+<div id="header">
+	<div class="limit-width">
+		<a class="logo" href="/"><img src="{{hostPrefix}}{{themeDir}}/img/logo.png" alt=""></a>
+		<form class="search" action="/search">
+			<input name="q" class="search-query" placeholder="keywords">
+			<button class="search-submit" type="submit">&#128269;</button>
+		</form>
+		<form class="search" action="#">
+			<button class="search-submit" type="submit">? </button>
+			{{if not .PageMeta.Toggles.editing}}
+				<a href="{{hostPrefix}}/random-idiom" class="search-submit">⚂ </a>
+			{{end}}
+			<button class="search-submit" type="submit">A </button>
+		</form>
+		<div class="clear"></div>
+		<div class="clear"></div>
+	</div>
+</div>
+
+		<ul class="nav" style="display:none;">
               <li class="">
 				{{template "greetings" .}}
               </li>
@@ -18,18 +27,6 @@
 					{{template "actions-button" .}}
 				</div>
               </li>
-              <li>
-				{{if not .PageMeta.Toggles.editing}}
-					<a href="{{hostPrefix}}/random-idiom"><img src="{{hostPrefix}}{{themeDir}}/img/dice_32x32.png" width="32" height="32" class="header_picto dice" title="Go to a random idiom" onmouseover="this.src='{{hostPrefix}}{{themeDir}}/img/dice_32x32_highlight.png';" onmouseout="this.src='{{hostPrefix}}{{themeDir}}/img/dice_32x32.png';" /></a>
-				{{end}}
-              </li>
-              <li class="">
-				{{template "search-input" .}}
-              </li>
 		</ul>
-	</div>
-	<div class="blue-to-white">&nbsp;</div>
-	</div>
-</header>
 {{template "message-zone"}}
 {{end}}

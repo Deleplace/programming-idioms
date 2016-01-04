@@ -55,6 +55,7 @@ $(function() {
 	$('.togglabe').on('click',function() {
 		$(this).toggleClass("active");
 	});
+	/*
 	$('div').popover({
 		html : true
 	}).popover('show');
@@ -73,6 +74,7 @@ $(function() {
 	$('.popover-on-hover').popover({
 		trigger : 'hover focus'
 	});
+	*/
 
 
 	

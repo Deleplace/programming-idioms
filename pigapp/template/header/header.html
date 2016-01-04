@@ -1,34 +1,23 @@
 {{define "header"}}
-<header class="compact header">
-	<div class="navbar">
-	<div class="navbar-inner">
-		<ul class="nav">
-              <li>
-                <a href="{{hostPrefix}}/"><img src="{{hostPrefix}}{{themeDir}}/img/wheel_64x64.png" width="64" height="64" class="header_picto" /></a>
-              </li>
-              <li class="">
-				<h1><a href="{{hostPrefix}}/">Programming-Idioms</a></h1>
-				<div class="slogan">Please don't reinvent the wheel.</div>
-              </li>
-              <li class="">
-				{{template "greetings" .}}
-              </li>
-              <li class="">
-				<div class="hide-on-mobile">
-					{{template "actions-button" .}}
-				</div>
-              </li>
-              <li>
-                <a href="{{hostPrefix}}/random-idiom"><img src="{{hostPrefix}}{{themeDir}}/img/dice_48x48.png" width="48" height="48" class="header_picto dice" title="Go to a random idiom" onmouseover="this.src='{{hostPrefix}}{{themeDir}}/img/dice_48x48_highlight.png';" onmouseout="this.src='{{hostPrefix}}{{themeDir}}/img/dice_48x48.png';" /></a>
-              </li>
-              <li class="">
-				{{template "search-input" .}}
-              </li>
-		</ul>
+
+<div id="header">
+	<div class="limit-width">
+		<a class="logo" href="/"><img src="{{hostPrefix}}{{themeDir}}/img/logo.png" alt=""></a>
+		<form class="search" action="/search">
+			<input name="q" class="search-query" placeholder="keywords">
+			<button class="search-submit" type="submit">&#128269;</button>
+		</form>
+		<form class="search" action="#">
+			<button class="search-submit" type="submit">? </button>
+			{{if not .PageMeta.Toggles.editing}}
+				<a href="{{hostPrefix}}/random-idiom" class="search-submit">⚂ </a>
+			{{end}}
+			<button class="search-submit" type="submit">A </button>
+		</form>
+		<div class="clear"></div>
+		<div class="clear"></div>
 	</div>
-	<div class="blue-to-white">&nbsp;</div>
-	</div>
-</header>
+</div>
 
 {{template "message-zone"}}
 {{end}}
