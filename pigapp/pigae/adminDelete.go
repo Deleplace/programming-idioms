@@ -15,7 +15,12 @@ func idiomDelete(w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
 
-	err := dao.deleteIdiom(c, idiomID)
+	why := r.FormValue("why")
+	if why == "" {
+		why = fmt.Sprintf("Admin deletes idiom %d", idiomID)
+	}
+
+	err := dao.deleteIdiom(c, idiomID, why)
 
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
@@ -35,7 +40,11 @@ func implDelete(w http.ResponseWriter, r *http.Request) error {
 	implIDStr := r.FormValue("implId")
 	implID := String2Int(implIDStr)
 
-	err := dao.deleteImpl(c, idiomID, implID)
+	why := r.FormValue("why")
+	if why == "" {
+		why = fmt.Sprintf("Admin deletes impl %d", implID)
+	}
+	err := dao.deleteImpl(c, idiomID, implID, why)
 
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {

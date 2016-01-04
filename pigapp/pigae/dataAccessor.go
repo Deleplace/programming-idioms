@@ -42,8 +42,8 @@ type idiomSaver interface {
 	deleteAllIdioms(c appengine.Context) error
 	unindexAll(c appengine.Context) error
 	unindex(c appengine.Context, idiomId int) error
-	deleteIdiom(c appengine.Context, idiomID int) error
-	deleteImpl(c appengine.Context, idiomID int, implID int) error
+	deleteIdiom(c appengine.Context, idiomID int, why string) error
+	deleteImpl(c appengine.Context, idiomID int, implID int, why string) error
 	nextIdiomID(c appengine.Context) (int, error)
 	nextImplID(c appengine.Context) (int, error)
 	revert(c appengine.Context, idiomID int, version int) (*Idiom, error)

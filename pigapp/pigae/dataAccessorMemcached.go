@@ -249,7 +249,7 @@ func (a *MemcacheDatastoreAccessor) unindex(c appengine.Context, idiomID int) er
 	return a.dataAccessor.unindex(c, idiomID)
 }
 
-func (a *MemcacheDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int) error {
+func (a *MemcacheDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int, why string) error {
 	// Clear cache entries
 	_, idiom, err := a.dataAccessor.getIdiom(c, idiomID)
 	if err == nil {
@@ -260,10 +260,10 @@ func (a *MemcacheDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int
 	}
 
 	// Delete in datastore
-	return a.dataAccessor.deleteIdiom(c, idiomID)
+	return a.dataAccessor.deleteIdiom(c, idiomID, why)
 }
 
-func (a *MemcacheDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int, implID int) error {
+func (a *MemcacheDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int, implID int, why string) error {
 	// Clear cache entries
 	_, idiom, err := a.dataAccessor.getIdiom(c, idiomID)
 	if err == nil {
@@ -271,7 +271,8 @@ func (a *MemcacheDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int,
 		logIf(err2, c.Errorf, "deleting impl")
 	}
 
-	err = a.dataAccessor.deleteImpl(c, idiomID, implID)
+	// Delete in datastore
+	err = a.dataAccessor.deleteImpl(c, idiomID, implID, why)
 	return err
 }
 

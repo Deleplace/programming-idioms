@@ -262,7 +262,7 @@ func (a *GaeDatastoreAccessor) deleteAllIdioms(c appengine.Context) error {
 	return datastore.DeleteMulti(c, keys)
 }
 
-func (a *GaeDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int) error {
+func (a *GaeDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int, why string) error {
 	key, _, err := a.getIdiom(c, idiomID)
 	if err != nil {
 		return err
@@ -273,13 +273,15 @@ func (a *GaeDatastoreAccessor) deleteIdiom(c appengine.Context, idiomID int) err
 		c.Errorf("Failed to unindex idiom %d: %v", idiomID, err)
 	}
 	return datastore.Delete(c, key)
+	// The why param is ignored for now, because idiom doesn't exist anymore.
 }
 
-func (a *GaeDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int, implID int) error {
+func (a *GaeDatastoreAccessor) deleteImpl(c appengine.Context, idiomID int, implID int, why string) error {
 	key, idiom, err := a.getIdiom(c, idiomID)
 	if err != nil {
 		return err
 	}
+	idiom.EditSummary = why
 	if i, _, found := idiom.FindImplInIdiom(implID); found {
 		idiom.Implementations = append(idiom.Implementations[:i], idiom.Implementations[i+1:]...)
 		return a.saveExistingIdiom(c, key, idiom)

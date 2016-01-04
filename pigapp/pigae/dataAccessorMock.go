@@ -34,11 +34,11 @@ func (a DatastoreAccessorMock) deleteAllIdioms(c appengine.Context) error {
 	return nil
 }
 
-func (a DatastoreAccessorMock) deleteIdiom(c appengine.Context, idiomID int) error {
+func (a DatastoreAccessorMock) deleteIdiom(c appengine.Context, idiomID int, why string) error {
 	return nil
 }
 
-func (a DatastoreAccessorMock) deleteImpl(c appengine.Context, idiomID int, implID int) error {
+func (a DatastoreAccessorMock) deleteImpl(c appengine.Context, idiomID int, implID int, why string) error {
 	return nil
 }
 
