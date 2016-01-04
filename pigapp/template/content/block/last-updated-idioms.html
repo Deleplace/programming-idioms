@@ -7,8 +7,9 @@
     {{range .}}
 		<div class="well idiom-summary-small">
 			{{template "small-id-and-rating" .}}
+			{{$implRecent := .FindRecentlyUpdatedImpl}}
 			<div class="idiom_title">
-				<a href="{{NiceIdiomURL .}}">{{.Title}}</a>
+				<a href="{{NiceImplURL . $implRecent.Id $implRecent.LanguageName}}">{{.Title}}</a>
 			</div>
 			<div class="idiom_cover">
 				<button class="btn count">

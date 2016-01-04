@@ -245,6 +245,23 @@ func (idiom *Idiom) FindImplInIdiom(implId int) (int, *Impl, bool) {
 	return -1, nil, false
 }
 
+// FindRecentlyUpdatedImpl is a (unoptimized) iteration to retrieve
+// the most recently updated impl, inside an Idiom.
+//
+// It returns a pointer to the Impl, not a copy.
+func (idiom *Idiom) FindRecentlyUpdatedImpl() *Impl {
+	var recentImpl *Impl
+	var d time.Time
+	for i := range idiom.Implementations {
+		impl := &idiom.Implementations[i]
+		if impl.VersionDate.After(d) {
+			recentImpl = impl
+			d = impl.VersionDate
+		}
+	}
+	return recentImpl
+}
+
 // ExtractIndexableWords compute the list of words contained in an Idiom.
 // First return value is the list of all matchable words.
 // Second return value is the list of matchable words from title only.
