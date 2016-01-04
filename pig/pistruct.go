@@ -29,6 +29,9 @@ type Idiom struct {
 	// LeadParagraph is the idiom Description : 1 to 3 lines are fine
 	LeadParagraph string
 
+	// ExtraKeywords for indexation+search
+	ExtraKeywords string
+
 	// Author is the name of the original creator of this idiom on this website
 	Author string
 
@@ -249,13 +252,20 @@ func (idiom *Idiom) ExtractIndexableWords() (w []string, wTitle []string, wLead 
 	w = SplitForIndexing(idiom.Title, true)
 	w = append(w, fmt.Sprintf("%d", idiom.Id))
 	wTitle = w
+
 	wLead = SplitForIndexing(idiom.LeadParagraph, true)
 	w = append(w, wLead...)
+	// ExtraKeywords as not as important as Title, rather as important as Lead
+	wKeywords := SplitForIndexing(idiom.ExtraKeywords, true)
+	wLead = append(wLead, wKeywords...)
+	w = append(w, wKeywords...)
+
 	for i := range idiom.Implementations {
 		impl := &idiom.Implementations[i]
 		wImpl := impl.ExtractIndexableWords()
 		w = append(w, wImpl...)
 	}
+
 	return w, wTitle, wLead
 }
 

@@ -41,6 +41,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 
 	c := appengine.NewContext(r)
 	lead := r.FormValue("idiom_lead")
+	keywords := r.FormValue("idiom_keywords")
 	picture := r.FormValue("idiom_picture") /* TODO upload file ?! */
 	language := normLang(r.FormValue("impl_language"))
 	imports := r.FormValue("impl_imports")
@@ -85,6 +86,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		Id:               idiomID,
 		Title:            title,
 		LeadParagraph:    lead,
+		ExtraKeywords:    keywords,
 		Picture:          picture, /* TODO upload file ?! */
 		Author:           username,
 		LastEditor:       username,
@@ -141,6 +143,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	idiom.LastEditedImplID = 0
 	idiom.Title = title
 	idiom.LeadParagraph = r.FormValue("idiom_lead")
+	idiom.ExtraKeywords = r.FormValue("idiom_keywords")
 	idiom.EditSummary = r.FormValue("edit_summary")
 	/* idiomPicture.go
 	idiom.Picture, err = processUploadFile(r, "idiom_picture")
