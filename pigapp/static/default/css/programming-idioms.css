@@ -527,7 +527,7 @@ textarea.impl-code{
 	margin-left: -425px
 }
 
-.impl-preview {
+.idiom-preview, .impl-preview {
 	padding-left: 10px;
 	padding-top: 20px;
 	padding-right: 20px;

@@ -578,6 +578,60 @@ $(function() {
 	$(".btn-impl-edit-preview").on("click", function(){
 		showImplEditPreview();
 		return false;
+	});
+
+	//
+	// Idiom create : [Preview] button injects values
+	// in modal window.
+	//
+
+	function showIdiomCreatePreview(){
+			$('pre').popover("hide"); // Hide (0,0) popovers of hidden tabs
+			var m = $('.modal-idiom-preview');
+
+			var title = $(".form-idiom-creation input[name=idiom_title]").val();
+			m.find(".idiom-title").html(title);
+			var lead = $(".form-idiom-creation textarea[name=idiom_lead]").val();
+			var escapedLead = $("<div>").text(lead).html();
+			var refinedLead = emphasize(escapedLead);
+			m.find(".idiom-lead-paragraph").html(refinedLead);
+
+			var lang = $(".form-idiom-creation input[name=impl_language]").val();
+			m.find(".lang-tab span.label").html(lang);
+			var imports = $(".form-idiom-creation textarea.imports").val();
+			if( imports )
+				m.find(".piimports pre").html( imports ).show();
+			else
+				m.find(".piimports pre").html( imports ).hide();
+			m.find(".picode pre").html( $(".form-idiom-creation textarea.impl-code").val() );
+			var comment = $(".form-idiom-creation textarea[name=impl_comment]").val();
+			var escapedComment = $("<div>").text(comment).html();
+			var refinedComment = emphasize(escapedComment);
+			m.find(".picode pre").attr("data-content", refinedComment);
+			var extDocURL = $(".form-idiom-creation input[name=impl_doc_url]").val();
+			if( extDocURL )
+				m.find("a.impl-doc").attr("href", extDocURL).show();
+			else
+				m.find("a.impl-doc").attr("href", "#").hide();
+			var extDemoURL = $(".form-idiom-creation input[name=impl_demo_url]").val();
+			if( extDemoURL )
+				m.find("a.impl-demo").attr("href", extDemoURL).show();
+			else
+				m.find("a.impl-demo").attr("href", "#").hide();
+			var extAttributionURL = $(".form-idiom-creation input[name=impl_attribution_url]").val();
+			if( extAttributionURL )
+				m.find("a.impl-attribution").attr("href", extAttributionURL).show();
+			else
+				m.find("a.impl-attribution").attr("href", "#").hide();
+			m.modal();
+			window.setTimeout(function(){
+				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
+			}, 800);
+	}
+
+	$(".btn-idiom-create-preview").on("click", function(){
+		showIdiomCreatePreview();
+		return false;
 	})
 
 	//

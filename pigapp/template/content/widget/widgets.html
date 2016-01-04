@@ -414,6 +414,29 @@
 	</div>
 {{end}}
 
+{{define "modal-idiom-preview"}}
+	<div class="modal hide fade modal-idiom-preview">
+	  <div class="modal-header">
+	    <h3>Preview</h3>
+	  </div>
+
+	  <div class="row-fluid idiom-preview">
+	  	<div class="span10">
+			<div class="well idiom-summary-large">
+				<div class="row-fluid">
+					<div class="span6">
+						<h1 class="idiom-title">ZeTitle</h1>
+						<p class="idiom-lead-paragraph identifier-emphasize">Lead markup interpreted</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	  </div>
+
+	  {{template "impl-preview-skeleton"}}
+	</div>
+{{end}}
+
 {{define "modal-impl-grid"}}
 	<div class="modal hide fade modal-impl-grid">
 		<div class="impl-grid">
