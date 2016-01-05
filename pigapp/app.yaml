@@ -1,5 +1,5 @@
-application: programming-idioms
-version: 1-0
+application: programming-idioms-alt
+version: redesign
 runtime: go
 api_version: go1
 

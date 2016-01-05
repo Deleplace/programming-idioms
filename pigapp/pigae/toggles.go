@@ -102,10 +102,10 @@ func initToggles() {
 	toggles["implEditing"] = true
 	toggles["pictureEditing"] = false
 	toggles["idiomVotingUp"] = true
-	toggles["idiomVotingDown"] = true
+	toggles["idiomVotingDown"] = false
 	toggles["showIdiomRating"] = true
 	toggles["implVotingUp"] = true
-	toggles["implVotingDown"] = true
+	toggles["implVotingDown"] = false
 	toggles["showImplRating"] = true
 	toggles["languageCreation"] = false
 

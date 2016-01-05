@@ -19,7 +19,7 @@ type Env struct {
 
 var envProd = Env{
 	IsDev:           false,
-	Host:            "http://www.programming-idioms.org",
+	Host:            "http://redesign.programming-idioms-alt.appspot.com",
 	UseAbsoluteUrls: true,
 	UseMinifiedCss:  false, // during current redesign
 	UseMinifiedJs:   true,
