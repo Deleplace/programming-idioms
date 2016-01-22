@@ -175,7 +175,7 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Cont
 		// Exactly 1 term is a lang: assume user really wants this lang
 		lang := typedLangs[0]
 		// 1) Impls in lang, containing all words
-		retrievers = append(retrievers, func() ([]string, error) {
+		implRetriever := func() ([]string, error) {
 			var keystrings []string
 			implQuery := "Bulk:(~" + strings.Join(terms, " AND ~") + ") AND Lang:" + lang
 			implIdiomIDs, _, err := executeImplTextSearchQuery(c, implQuery, limit)
@@ -185,21 +185,23 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Cont
 			for _, idiomID := range implIdiomIDs {
 				idiomKey := newIdiomKey(c, idiomID)
 				idiomKeyString := idiomKey.Encode()
-				if !seenIdiomKeyStrings[idiomKeyString] {
-					keystrings = append(keystrings, idiomKeyString)
-					seenIdiomKeyStrings[idiomKeyString] = true
-				}
+				//				if !seenIdiomKeyStrings[idiomKeyString] {
+				keystrings = append(keystrings, idiomKeyString)
+				//					seenIdiomKeyStrings[idiomKeyString] = true
+				//				}
 			}
 			return keystrings, nil
-		})
-		retrievers = append(retrievers,
-			// 2) Idioms with words in title, having an impl in lang
-			idiomQueryRetriever("TitleWords:(~"+strings.Join(typedWords, " AND ~")+") AND Langs:("+lang+")"),
+		}
+		retrievers = []retriever{
+			// 1) Idioms with words in title, having an impl in lang
+			idiomQueryRetriever("TitleWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Langs:(" + lang + ")"),
+			// 2) Implementations in lang, containing all terms
+			implRetriever,
 			// 3) Idioms with words in lead paragraph (or title), having an impl in lang
-			idiomQueryRetriever("TitleOrLeadWords:(~"+strings.Join(typedWords, " AND ~")+") AND Langs:("+lang+")"),
+			idiomQueryRetriever("TitleOrLeadWords:(~" + strings.Join(typedWords, " AND ~") + ") AND Langs:(" + lang + ")"),
 			// 4) Just all the terms
-			idiomQueryRetriever("Bulk:(~"+strings.Join(terms, " AND ~")+")"),
-		)
+			idiomQueryRetriever("Bulk:(~" + strings.Join(terms, " AND ~") + ")"),
+		}
 
 	} else {
 		// Either 0 or many langs. Just make sure all terms are respected.
