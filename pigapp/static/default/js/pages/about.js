@@ -58,12 +58,11 @@ $(function() {
 		var index = td.index();
 		var firstLine = $(thead).children("tr").first();
 		var langTh = $(firstLine).children("th")[index];
-		var langA = $(langTh).children("a").first();
-		var lang = langA.html();
+		var lang = $(langTh).html();
 		
-		var raw = "Click to see idiom "+idiomId+" in "+lang;
+		var raw = "Click to see idiom " + idiomId + " in " + lang;
 		if( href.indexOf("/impl-create") >= 0 )
-			raw = "Click to create implementation in "+lang;
+			raw = "Click to create implementation in " + lang;
 		var content = "<div class='coverage-cell-bubble'>" + raw + "</div>";
 		link.addClass("viewIdiomPop");
 		
