@@ -55,13 +55,6 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	terms := SplitForSearching(q, true)
 
-	if len(terms) == 0 {
-		// Search query is empty or illegible...
-		redirURL := hostPrefix() + "/about#about-block-all-idioms"
-		http.Redirect(w, r, redirURL, http.StatusFound)
-		return nil
-	}
-
 	words, typedLangs := separateLangKeywords(terms)
 
 	words = FilterStrings(words, func(chunk string) bool {
@@ -70,6 +63,13 @@ func search(w http.ResponseWriter, r *http.Request) error {
 		// (Words only, not language names.)
 		return len(chunk) >= 3 || RegexpDigitsOnly.MatchString(chunk)
 	})
+
+	if len(words)+len(typedLangs) == 0 {
+		// Search query is empty or illegible...
+		redirURL := hostPrefix() + "/about#about-block-all-idioms"
+		http.Redirect(w, r, redirURL, http.StatusFound)
+		return nil
+	}
 
 	if len(words) == 0 {
 		words, typedLangs = typedLangs, nil
