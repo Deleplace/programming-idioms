@@ -147,3 +147,11 @@ func Flatten(s string) string {
 	s = strings.Replace(s, "\n", " ", -1)
 	return s
 }
+
+func Truncate(s string, maxChars int) string {
+	runes := []rune(s)
+	if len(runes) < maxChars {
+		return s
+	}
+	return string(runes[:maxChars])
+}

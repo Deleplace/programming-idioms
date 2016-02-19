@@ -361,7 +361,8 @@
 		<label class="control-label" for="user_nickname">Username</label>
 		<div class="controls">
 			<input type="text" name="user_nickname" class="input-xlarge"
-				placeholder="Your nickname here" required="required" value="{{.}}" />
+				placeholder="Your nickname here" required="required"
+				maxlength="30" value="{{.}}" />
 		</div>
 	</div>
 {{end}}

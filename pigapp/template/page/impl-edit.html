@@ -79,19 +79,19 @@
 						<div class="control-group">
 							<label class="control-label" for="impl_doc_url">Documentation URL</label>
 							<div class="controls">
-								<input type="text" name="impl_doc_url" class="input-xlarge"	value="{{.Impl.DocumentationURL}}" />
+								<input type="text" name="impl_doc_url" class="input-xlarge" maxlength="250"	value="{{.Impl.DocumentationURL}}" />
 							</div>
 						</div>
 						<div class="control-group">
 							<label class="control-label" for="impl_attribution_url">Original attribution URL</label>
 							<div class="controls">
-								<input type="text" name="impl_attribution_url" class="input-xlarge"	value="{{.Impl.OriginalAttributionURL}}" />
+								<input type="text" name="impl_attribution_url" class="input-xlarge" maxlength="250"	value="{{.Impl.OriginalAttributionURL}}" />
 							</div>
 						</div>
 						<div class="control-group">
 							<label class="control-label" for="impl_demo_url">Online demo</label>
 							<div class="controls">
-								<input type="text" name="impl_demo_url" class="input-xlarge" value="{{.Impl.DemoURL}}" />
+								<input type="text" name="impl_demo_url" class="input-xlarge" maxlength="250" value="{{.Impl.DemoURL}}" />
 							</div>
 						</div>
 						<div class="control-group">
@@ -103,6 +103,7 @@
 									data-content="It's okay to modify someone else's contribution. Just explain briefly."
 									value=""
 									required="required"
+									maxlength="120"
 									placeholder="Why?" />
 							</div>
 						</div>

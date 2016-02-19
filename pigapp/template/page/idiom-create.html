@@ -14,7 +14,7 @@
 						<div class="control-group">
 							<label class="control-label" for="idiom_title">Title</label>
 							<div class="controls">
-								<input type="text" name="idiom_title" class="input-xlarge"
+								<input type="text" name="idiom_title" class="input-xlarge" maxlength="120"
 									placeholder="Your concise idiom title" required="required" />
 								<div class="">
 									An idiom statement must be expressed in generic terms ; It cannot be specific to one programming language.
@@ -33,7 +33,7 @@
 						<div class="control-group">
 							<label class="control-label" for="idiom_keywords">Extra keywords</label>
 							<div class="controls">
-								<input type="text" name="idiom_keywords" class="input-xlarge"
+								<input type="text" name="idiom_keywords" class="input-xlarge" maxlength="120"
 									placeholder="Important related words" />
 								<div class="">
 									Optional keywords, that are not already found in Title and Lead. Used for indexation and search.
@@ -80,14 +80,14 @@
 						<div class="control-group">
 							<label class="control-label" for="impl_doc_url">Documentation URL</label>
 							<div class="controls">
-								<input type="text" name="impl_doc_url" class="input-xlarge"	
+								<input type="text" name="impl_doc_url" class="input-xlarge" maxlength="250"
 									placeholder="e.g. http://docs.oracle.com/javase/7/docs/api/java/lang/String.html#indexOf%28java.lang.String%29"/>
 							</div>
 						</div>
 						<div class="control-group">
 							<label class="control-label" for="impl_attribution_url">Original attribution URL</label>
 							<div class="controls">
-								<input type="text" name="impl_attribution_url" class="input-xlarge"
+								<input type="text" name="impl_attribution_url" class="input-xlarge" maxlength="250"
 									data-toggle="popover"
 									data-content="Please be fair if you are using someone's work"
 									placeholder="e.g. http://en.wikipedia.org/wiki/Schwartzian_transform#The_Perl_idiom" />
@@ -96,7 +96,7 @@
 						<div class="control-group">
 							<label class="control-label" for="impl_demo_url">Online demo</label>
 							<div class="controls">
-								<input type="text" name="impl_demo_url" class="input-xlarge"
+								<input type="text" name="impl_demo_url" class="input-xlarge" maxlength="250"
 									placeholder="e.g. http://play.golang.org/p/1b2SQjo9iL" />
 							</div>
 						</div>

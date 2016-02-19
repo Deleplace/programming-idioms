@@ -200,6 +200,8 @@ $(function() {
 	
 	$("#modal-nickname .form-nickname").on("submit", function(){
 		var nick = $(this).find("input.nickname").val();
+		if( nick.length>30 )
+			nick = nick.substring(0,30);
 		$.cookie("Nickname", nick, { expires : 100, path: '/' });
 		$(".greetings").html('<i class="icon-user"> '+ nick +'</i> <a href="#" class="remove-nickname"><i class="icon-remove"></i></a>').show();
 		$("#modal-nickname").modal("hide");

@@ -15,6 +15,7 @@ func implSave(w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := r.FormValue("idiom_id")
 	existingIDStr := r.FormValue("impl_id")
 	username := r.FormValue("user_nickname")
+	username = Truncate(username, 30)
 
 	if !toggles["anonymousWrite"] {
 		if username == "" {
@@ -47,6 +48,14 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
 	editSummary := fmt.Sprintf("New %v implementation by user [%v]", language, username)
+
+	imports = Truncate(imports, 200)
+	code = Truncate(code, 500)
+	comment = Truncate(comment, 500)
+	attributionURL = Truncate(attributionURL, 250)
+	demoURL = Truncate(demoURL, 250)
+	docURL = Truncate(docURL, 250)
+
 	c.Infof("[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
 
 	if !StringSliceContains(allLanguages(), language) {
@@ -120,6 +129,14 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
+
+	imports = Truncate(imports, 200)
+	code = Truncate(code, 500)
+	comment = Truncate(comment, 500)
+	attributionURL = Truncate(attributionURL, 250)
+	demoURL = Truncate(demoURL, 250)
+	docURL = Truncate(docURL, 250)
+
 	c.Infof("[%v] is updating impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
 
 	idiomID := String2Int(idiomIDStr)

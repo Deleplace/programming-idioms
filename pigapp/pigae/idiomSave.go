@@ -16,6 +16,7 @@ func idiomSave(w http.ResponseWriter, r *http.Request) error {
 	existingIDStr := r.FormValue("idiom_id")
 	title := r.FormValue("idiom_title")
 	username := r.FormValue("user_nickname")
+	username = Truncate(username, 30)
 
 	if !toggles["anonymousWrite"] {
 		if username == "" {
@@ -51,6 +52,16 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
 	editSummary := fmt.Sprintf("Idiom creation by user [%v]", username)
+
+	lead = Truncate(lead, 500)
+	keywords = Truncate(keywords, 250)
+	imports = Truncate(imports, 200)
+	code = Truncate(code, 500)
+	comment = Truncate(comment, 500)
+	attributionURL = Truncate(attributionURL, 250)
+	demoURL = Truncate(demoURL, 250)
+	docURL = Truncate(docURL, 250)
+
 	c.Infof("[%v] is creating new idiom [%v]", username, title)
 
 	if !StringSliceContains(allLanguages(), language) {
@@ -151,6 +162,9 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 		return err
 	}
 	*/
+	idiom.LeadParagraph = Truncate(idiom.LeadParagraph, 500)
+	idiom.ExtraKeywords = Truncate(idiom.ExtraKeywords, 250)
+	idiom.EditSummary = Truncate(idiom.EditSummary, 120)
 
 	err = dao.saveExistingIdiom(c, key, idiom)
 	if err != nil {
