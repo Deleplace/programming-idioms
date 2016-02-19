@@ -7,6 +7,14 @@ $(function() {
 	$('#import-form input.upload').on("click", function(){
 		// See http://stackoverflow.com/questions/166221/how-can-i-upload-files-asynchronously-with-jquery#answer-8758614
 	    var formData = new FormData($('#import-form')[0]);
+	    if( window.location.href.indexOf("localhost") === -1 ){
+	    	var expectedSafeWord = "prod";
+	    	var confirm = prompt("This is not your localhost. Please enter safeword. The safeword is \"" + expectedSafeWord + "\".", "");
+	    	if( confirm != expectedSafeWord ){
+	    		alert("Aborting!");
+	    		return;
+	    	}
+	    }
 	    $.ajax({
 	        url: '/admin-data-import-ajax',
 	        type: 'POST',
