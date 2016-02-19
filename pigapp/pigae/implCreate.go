@@ -39,8 +39,9 @@ func implCreate(w http.ResponseWriter, r *http.Request) error {
 
 	data := &ImplCreateFacade{
 		PageMeta: PageMeta{
-			PageTitle: fmt.Sprintf("Creating implementation for idiom %d : %s", idiom.Id, idiom.Title),
-			Toggles:   myToggles,
+			PageTitle:             fmt.Sprintf("Creating implementation for idiom %d : %s", idiom.Id, idiom.Title),
+			Toggles:               myToggles,
+			PreventIndexingRobots: true,
 		},
 		UserProfile: readUserProfile(r),
 		Idiom:       idiom,

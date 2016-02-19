@@ -51,8 +51,9 @@ func implEdit(w http.ResponseWriter, r *http.Request) error {
 
 	data := &ImplEditFacade{
 		PageMeta: PageMeta{
-			PageTitle: fmt.Sprintf("Editing Idiom %d : %s", idiom.Id, idiom.Title),
-			Toggles:   myToggles,
+			PageTitle:             fmt.Sprintf("Editing Idiom %d : %s", idiom.Id, idiom.Title),
+			Toggles:               myToggles,
+			PreventIndexingRobots: true,
 		},
 		UserProfile: readUserProfile(r),
 		Idiom:       idiom,

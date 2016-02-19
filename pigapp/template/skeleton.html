@@ -11,6 +11,9 @@
 			{{.PageTitle}}
 		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		{{if .PreventIndexingRobots}}
+			<meta name="robots" content="noindex">
+		{{end}}
 		<link rel="SHORTCUT ICON" href="{{hostPrefix}}{{themeDir}}/img/favicon_32x32.png" />
 		{{if .Toggles.useCDN}} 
 			<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">

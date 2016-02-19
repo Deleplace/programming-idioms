@@ -10,11 +10,18 @@ import "fmt"
 
 // PageMeta is basic metadata useful for any web page.
 type PageMeta struct {
-	PageTitle   string
-	Toggles     Toggles
+	// PageTitle is the title of this page
+	PageTitle string
+	// Toggles (global or custom) used to tune the output
+	Toggles Toggles
+	// SearchQuery is printed in search field, in case of new similar search
 	SearchQuery string
-	ExtraCss    []string
-	ExtraJs     []string
+	// ExtraCss after programming-idioms.css
+	ExtraCss []string
+	// ExtraJs after programming-idioms.js
+	ExtraJs []string
+	// PreventIndexingRobots for edit pages, etc.
+	PreventIndexingRobots bool
 }
 
 // UserProfile is a soft (non-secure) user profile
