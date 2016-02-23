@@ -3,15 +3,15 @@ package pigae
 import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
-	"appengine/datastore"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine/datastore"
 )
 
 // GaeVotesAccessor is a votesAccessor designed for the Google App Engine Datastore.
 type GaeVotesAccessor struct {
 }
 
-func (va GaeVotesAccessor) idiomVote(c appengine.Context, vote IdiomVoteLog, nickname string) (newRating int, myVote int, err error) {
+func (va GaeVotesAccessor) idiomVote(c context.Context, vote IdiomVoteLog, nickname string) (newRating int, myVote int, err error) {
 	// TODO: a transaction to make sure the counter is safely incremented
 
 	key, idiom, err := dao.getIdiom(c, vote.IdiomId)
@@ -34,7 +34,7 @@ func (va GaeVotesAccessor) idiomVote(c appengine.Context, vote IdiomVoteLog, nic
 	return
 }
 
-func (va GaeVotesAccessor) implVote(c appengine.Context, vote ImplVoteLog, nickname string) (newRating int, myVote int, err error) {
+func (va GaeVotesAccessor) implVote(c context.Context, vote ImplVoteLog, nickname string) (newRating int, myVote int, err error) {
 	// TODO a transaction for (vote save + idiom save).  Note that rating data is redundant as rating could be recomputed.
 
 	key, idiom, err := dao.getIdiomByImplID(c, vote.ImplId)
@@ -63,11 +63,11 @@ func (va GaeVotesAccessor) implVote(c appengine.Context, vote ImplVoteLog, nickn
 
 // This ancestor (voting booth) is specific to a nickname.
 // Thus it should not lead to much contention.
-func (va GaeVotesAccessor) createVoteIdiomLogNicknameAncestorKey(c appengine.Context, nickname string) (key *datastore.Key) {
+func (va GaeVotesAccessor) createVoteIdiomLogNicknameAncestorKey(c context.Context, nickname string) (key *datastore.Key) {
 	return datastore.NewKey(c, "IdiomVoteLog", nickname, 0, nil)
 }
 
-func (va GaeVotesAccessor) getIdiomVotes(c appengine.Context, nickname string) (keys []*datastore.Key, votes []*IdiomVoteLog, err error) {
+func (va GaeVotesAccessor) getIdiomVotes(c context.Context, nickname string) (keys []*datastore.Key, votes []*IdiomVoteLog, err error) {
 	q := datastore.NewQuery("IdiomVoteLog").Ancestor(va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
 	votes = make([]*IdiomVoteLog, 0, 1)
 	keys, err = q.GetAll(c, &votes)
@@ -77,7 +77,7 @@ func (va GaeVotesAccessor) getIdiomVotes(c appengine.Context, nickname string) (
 	return keys, votes, nil
 }
 
-func (va GaeVotesAccessor) getIdiomVote(c appengine.Context, nickname string, idiomID int) (key *datastore.Key, vote *IdiomVoteLog, err error) {
+func (va GaeVotesAccessor) getIdiomVote(c context.Context, nickname string, idiomID int) (key *datastore.Key, vote *IdiomVoteLog, err error) {
 	q := datastore.NewQuery("IdiomVoteLog").Ancestor(va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
 	q = q.Filter("IdiomId = ", idiomID)
 	votes := make([]*IdiomVoteLog, 0, 1)
@@ -91,7 +91,7 @@ func (va GaeVotesAccessor) getIdiomVote(c appengine.Context, nickname string, id
 	return keys[0], votes[0], nil
 }
 
-func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c appengine.Context, vote IdiomVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *IdiomVoteLog, err error) {
+func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c context.Context, vote IdiomVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *IdiomVoteLog, err error) {
 	key, existing, err := va.getIdiomVote(c, nickname, vote.IdiomId)
 	if err != nil {
 		return
@@ -118,11 +118,11 @@ func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c appengine.Context, vote Idiom
 
 // This ancestor (voting booth) is specific to a nickname.
 // Thus it should not lead to much contention.
-func (va GaeVotesAccessor) createVoteImplLogNicknameAncestorKey(c appengine.Context, nickname string) (key *datastore.Key) {
+func (va GaeVotesAccessor) createVoteImplLogNicknameAncestorKey(c context.Context, nickname string) (key *datastore.Key) {
 	return datastore.NewKey(c, "ImplVoteLog", nickname, 0, nil)
 }
 
-func (va GaeVotesAccessor) getImplVotes(c appengine.Context, nickname string) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
+func (va GaeVotesAccessor) getImplVotes(c context.Context, nickname string) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
 	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
 	votes = make([]*ImplVoteLog, 0, 1)
 	keys, err = q.GetAll(c, &votes)
@@ -132,7 +132,7 @@ func (va GaeVotesAccessor) getImplVotes(c appengine.Context, nickname string) (k
 	return keys, votes, nil
 }
 
-func (va GaeVotesAccessor) getImplVote(c appengine.Context, nickname string, implID int) (key *datastore.Key, vote *ImplVoteLog, err error) {
+func (va GaeVotesAccessor) getImplVote(c context.Context, nickname string, implID int) (key *datastore.Key, vote *ImplVoteLog, err error) {
 	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
 	q = q.Filter("ImplId = ", implID)
 	votes := make([]*ImplVoteLog, 0, 1)
@@ -146,7 +146,7 @@ func (va GaeVotesAccessor) getImplVote(c appengine.Context, nickname string, imp
 	return keys[0], votes[0], nil
 }
 
-func (va GaeVotesAccessor) saveImplVoteOrRemove(c appengine.Context, vote ImplVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *ImplVoteLog, err error) {
+func (va GaeVotesAccessor) saveImplVoteOrRemove(c context.Context, vote ImplVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *ImplVoteLog, err error) {
 	key, existing, err := va.getImplVote(c, nickname, vote.ImplId)
 	if err != nil {
 		return
@@ -171,7 +171,7 @@ func (va GaeVotesAccessor) saveImplVoteOrRemove(c appengine.Context, vote ImplVo
 	return
 }
 
-func (va GaeVotesAccessor) decorateIdiom(c appengine.Context, idiom *Idiom, username string) {
+func (va GaeVotesAccessor) decorateIdiom(c context.Context, idiom *Idiom, username string) {
 	if username == "" {
 		return
 	}
@@ -185,7 +185,7 @@ func (va GaeVotesAccessor) decorateIdiom(c appengine.Context, idiom *Idiom, user
 	}
 }
 
-func (va GaeVotesAccessor) decorateImpl(c appengine.Context, impl *Impl, username string) {
+func (va GaeVotesAccessor) decorateImpl(c context.Context, impl *Impl, username string) {
 	if username == "" {
 		return
 	}

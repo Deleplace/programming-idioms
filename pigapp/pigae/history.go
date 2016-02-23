@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"appengine"
+	"google.golang.org/appengine"
 )
 
 // IdiomHistoryFacade is the Facade for the Idiom History page.

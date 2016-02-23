@@ -1,8 +1,8 @@
 package pigae
 
 import (
-	"appengine"
-	"appengine/blobstore"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/blobstore"
 	"net/http"
 )
 

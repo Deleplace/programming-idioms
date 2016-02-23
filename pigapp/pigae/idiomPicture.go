@@ -8,8 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"appengine"
-	"appengine/blobstore"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/blobstore"
 )
 
 // IdiomAddPictureFacade is the Facade for the Add Idiom Picture page.
@@ -38,7 +38,12 @@ func idiomAddPicture(w http.ResponseWriter, r *http.Request) error {
 	myToggles := copyToggles(toggles)
 	myToggles["editing"] = true
 
-	uploadURL, err := blobstore.UploadURL(c, "/picture-upload", nil)
+	uploadURL, err := blobstore.UploadURL(c, "/picture-upload", nil) /*,
+	&blobstore.UploadURLOptions{
+		MaxUploadBytes:        105 * 1024,
+		MaxUploadBytesPerBlob: 105 * 1024,
+		StorageBucket:         "programming-idioms-pictures/idiom/" + idiomIDStr + "/lead/",
+	})*/
 	if err != nil {
 		return err
 	}

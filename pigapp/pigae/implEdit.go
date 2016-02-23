@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"appengine"
+	"google.golang.org/appengine"
 )
 
 // ImplEditFacade is the Facade for the Implementation Edit page

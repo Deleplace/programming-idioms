@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"appengine"
+	"google.golang.org/appengine"
 )
 
 // IdiomEditFacade is the Facade for the Add Idiom Picture page.

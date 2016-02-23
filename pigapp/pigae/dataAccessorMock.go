@@ -5,8 +5,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
-	"appengine/datastore"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine/datastore"
 )
 
 // DatastoreAccessorMock should be useful for unit testing. But is is dead code for now.
@@ -14,40 +14,40 @@ type DatastoreAccessorMock struct {
 	idioms []*Idiom
 }
 
-func (a DatastoreAccessorMock) getIdiom(c appengine.Context, idiomID int) (key *datastore.Key, idiom *Idiom, thiserror error) {
+func (a DatastoreAccessorMock) getIdiom(c context.Context, idiomID int) (key *datastore.Key, idiom *Idiom, thiserror error) {
 	return
 }
 
-func (a DatastoreAccessorMock) saveNewIdiom(c appengine.Context, idiom *Idiom) (key *datastore.Key, thiserror error) {
+func (a DatastoreAccessorMock) saveNewIdiom(c context.Context, idiom *Idiom) (key *datastore.Key, thiserror error) {
 	return
 }
 
-func (a DatastoreAccessorMock) saveExistingIdiom(c appengine.Context, key *datastore.Key, idiom *Idiom) error {
+func (a DatastoreAccessorMock) saveExistingIdiom(c context.Context, key *datastore.Key, idiom *Idiom) error {
 	return nil
 }
 
-func (a DatastoreAccessorMock) getAllIdioms(c appengine.Context, limit int, order string) (keys []*datastore.Key, idioms []*Idiom, thiserror error) {
+func (a DatastoreAccessorMock) getAllIdioms(c context.Context, limit int, order string) (keys []*datastore.Key, idioms []*Idiom, thiserror error) {
 	return
 }
 
-func (a DatastoreAccessorMock) deleteAllIdioms(c appengine.Context) error {
+func (a DatastoreAccessorMock) deleteAllIdioms(c context.Context) error {
 	return nil
 }
 
-func (a DatastoreAccessorMock) deleteIdiom(c appengine.Context, idiomID int, why string) error {
+func (a DatastoreAccessorMock) deleteIdiom(c context.Context, idiomID int, why string) error {
 	return nil
 }
 
-func (a DatastoreAccessorMock) deleteImpl(c appengine.Context, idiomID int, implID int, why string) error {
+func (a DatastoreAccessorMock) deleteImpl(c context.Context, idiomID int, implID int, why string) error {
 	return nil
 }
 
 // Language filter lang is optional.
-func (a DatastoreAccessorMock) searchIdiomsByWords(c appengine.Context, words []string, lang string, limit int) ([]*Idiom, error) {
+func (a DatastoreAccessorMock) searchIdiomsByWords(c context.Context, words []string, lang string, limit int) ([]*Idiom, error) {
 	return nil, nil
 }
 
-func (a DatastoreAccessorMock) searchIdiomsByWordsWithFavorites(c appengine.Context, words []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
+func (a DatastoreAccessorMock) searchIdiomsByWordsWithFavorites(c context.Context, words []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
 	return nil, nil
 }
 
@@ -59,30 +59,30 @@ func (a DatastoreAccessorMock) processUploadFiles(r *http.Request, names []strin
 	return nil, nil, nil
 }
 
-func (a DatastoreAccessorMock) nextIdiomID(c appengine.Context) (int, error) {
+func (a DatastoreAccessorMock) nextIdiomID(c context.Context) (int, error) {
 	return -1, nil
 }
 
-func (a DatastoreAccessorMock) nextImplID(c appengine.Context) (int, error) {
+func (a DatastoreAccessorMock) nextImplID(c context.Context) (int, error) {
 	return -1, nil
 }
 
-func (a DatastoreAccessorMock) languagesHavingImpl(c appengine.Context) []string {
+func (a DatastoreAccessorMock) languagesHavingImpl(c context.Context) []string {
 	return nil
 }
 
-func (a DatastoreAccessorMock) recentIdioms(c appengine.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
+func (a DatastoreAccessorMock) recentIdioms(c context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
 	return nil, nil
 }
 
-func (a DatastoreAccessorMock) popularIdioms(c appengine.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
+func (a DatastoreAccessorMock) popularIdioms(c context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
 	return nil, nil
 }
 
-func (a DatastoreAccessorMock) idiomsFilterOrder(c appengine.Context, favoriteLangs []string, limitEachLang int, showOther bool, sortOrder string) ([]*Idiom, error) {
+func (a DatastoreAccessorMock) idiomsFilterOrder(c context.Context, favoriteLangs []string, limitEachLang int, showOther bool, sortOrder string) ([]*Idiom, error) {
 	return nil, nil
 }
 
-func (a DatastoreAccessorMock) randomIdiom(c appengine.Context) (key *datastore.Key, idiom *Idiom, thiserror error) {
+func (a DatastoreAccessorMock) randomIdiom(c context.Context) (key *datastore.Key, idiom *Idiom, thiserror error) {
 	return nil, nil, nil
 }

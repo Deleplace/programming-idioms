@@ -9,8 +9,9 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"appengine"
-	"appengine/user"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/user"
 )
 
 func lookForNickname(r *http.Request) string {
@@ -53,7 +54,7 @@ func readUserProfile(r *http.Request) UserProfile {
 	}
 	if u.Nickname != "" || len(u.FavoriteLanguages) > 0 {
 		c := appengine.NewContext(r)
-		c.Infof("%v", u)
+		log.Infof(c, "%v", u)
 	}
 	return u
 }

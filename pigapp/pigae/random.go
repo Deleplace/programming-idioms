@@ -7,7 +7,8 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
 
-	"appengine"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 func randomIdiom(w http.ResponseWriter, r *http.Request) error {
@@ -29,7 +30,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		if havingLang == "" {
 			return fmt.Errorf("Invalid language [%s]", vars["havingLang"])
 		}
-		c.Infof("Going to a random idiom having lang %v", havingLang)
+		log.Infof(c, "Going to a random idiom having lang %v", havingLang)
 		_, idiom, err = dao.randomIdiomHaving(c, havingLang)
 		if err != nil {
 			return err
@@ -45,7 +46,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		if notHavingLang == "" {
 			return fmt.Errorf("Invalid language [%s]", vars["notHavingLang"])
 		}
-		c.Infof("Going to a random idiom not having lang %v", notHavingLang)
+		log.Infof(c, "Going to a random idiom not having lang %v", notHavingLang)
 		_, idiom, err = dao.randomIdiomNotHaving(c, notHavingLang)
 		if err != nil {
 			return err
@@ -59,7 +60,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		url = NiceIdiomURL(idiom)
 	}
 
-	c.Infof("Picked idiom #%v: %v", idiom.Id, idiom.Title)
+	log.Infof(c, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }

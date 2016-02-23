@@ -13,7 +13,9 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 func adminExport(w http.ResponseWriter, r *http.Request) error {
@@ -55,7 +57,7 @@ func adminImportAjax(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func importFile(c appengine.Context, file multipart.File, fileHeader *multipart.FileHeader) (int, error) {
+func importFile(c context.Context, file multipart.File, fileHeader *multipart.FileHeader) (int, error) {
 	chunks := strings.Split(fileHeader.Filename, ".")
 	extension := Last(chunks)
 	var err error
@@ -74,7 +76,7 @@ func importFile(c appengine.Context, file multipart.File, fileHeader *multipart.
 	n := 0
 	for _, idiom := range idioms {
 		if fixNewlines(idiom) {
-			c.Infof("Fixed newlines in idiom #%d", idiom.Id)
+			log.Infof(c, "Fixed newlines in idiom #%d", idiom.Id)
 		}
 		if _, err = dao.saveNewIdiom(c, idiom); err != nil {
 			return n, err

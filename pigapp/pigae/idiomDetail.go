@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"appengine"
+	"google.golang.org/appengine"
 )
 
 // IdiomDetailFacade is the Facade for the Idiom Detail page.

@@ -1,6 +1,6 @@
 package pigae
 
-import "appengine"
+import "google.golang.org/appengine"
 
 // Env encapsulates a Programming-Idioms webapp environment.
 type Env struct {

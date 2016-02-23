@@ -6,7 +6,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
+	"google.golang.org/appengine"
 )
 
 func idiomDelete(w http.ResponseWriter, r *http.Request) error {

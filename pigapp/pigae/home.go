@@ -5,7 +5,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine"
 )
 
 // HomeFacade is the Facade for the homepage.
@@ -23,7 +24,7 @@ func home(w http.ResponseWriter, r *http.Request) error {
 }
 
 // Possible controllers include : home(), bookmarkableUserURL()
-func homeView(w http.ResponseWriter, c appengine.Context, userProfile UserProfile) error {
+func homeView(w http.ResponseWriter, c context.Context, userProfile UserProfile) error {
 
 	homeToggles := copyToggles(toggles)
 

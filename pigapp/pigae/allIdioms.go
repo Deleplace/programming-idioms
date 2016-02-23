@@ -5,7 +5,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
+	"google.golang.org/appengine"
 )
 
 // AllIdiomsFacade is the Facade for block All Idioms of the About page.

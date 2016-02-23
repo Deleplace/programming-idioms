@@ -5,7 +5,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine"
 )
 
 // AboutFacade is the Facade for the About page.
@@ -113,7 +114,7 @@ func ajaxAboutRss(w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "block-about-rss", nil)
 }
 
-func languageCoverage(c appengine.Context) (cover CoverageFacade, err error) {
+func languageCoverage(c context.Context) (cover CoverageFacade, err error) {
 	checked := map[int]map[string]int{}
 	langImplCount := map[string]int{}
 	_, idioms, err := dao.getAllIdioms(c, 199, "-ImplCount") // TODO change 199 ?!

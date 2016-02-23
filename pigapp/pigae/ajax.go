@@ -10,7 +10,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
+	"google.golang.org/appengine"
 )
 
 // Response is a generic container suitable to be directly converted into a JSON HTTP response.

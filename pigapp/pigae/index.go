@@ -9,7 +9,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"appengine"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine"
 )
 
 // ThemeVersion is the version of the current CSS-JS theme.
@@ -312,8 +313,16 @@ func validateURLFormatOrEmpty(urlStr string) error {
 	return validateURLFormat(urlStr)
 }
 
+/*
 func logIf(err error, logfunc func(format string, args ...interface{}), when string) {
 	if err != nil {
 		logfunc("Problem on %v: %v", when, err.Error())
+	}
+}
+*/
+
+func logIf(err error, logfunc func(c context.Context, format string, args ...interface{}), c context.Context, when string) {
+	if err != nil {
+		logfunc(c, "Problem on %v: %v", when, err.Error())
 	}
 }

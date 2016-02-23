@@ -7,9 +7,10 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
-	"appengine/datastore"
-	gaesearch "appengine/search"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/log"
+	gaesearch "google.golang.org/appengine/search"
 )
 
 // searchableIdiomDoc is the searchable unit for 1 idiom.
@@ -59,7 +60,7 @@ type searchableImplDoc struct {
 	Bulk string
 }
 
-func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.Key) error {
+func indexIdiomFullText(c context.Context, idiom *Idiom, idiomKey *datastore.Key) error {
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return err
@@ -108,15 +109,15 @@ func indexIdiomFullText(c appengine.Context, idiom *Idiom, idiomKey *datastore.K
 	return nil
 }
 
-func (a *GaeDatastoreAccessor) unindexAll(c appengine.Context) error {
-	c.Infof("Unindexing everything (from the text search indexes)")
+func (a *GaeDatastoreAccessor) unindexAll(c context.Context) error {
+	log.Infof(c, "Unindexing everything (from the text search indexes)")
 
 	// Must remove 1 by 1 (Index has no batch methods)
 	for _, indexName := range []string{
 		"idioms",
 		"impls",
 	} {
-		c.Infof("Unindexing items of [%v]", indexName)
+		log.Infof(c, "Unindexing items of [%v]", indexName)
 		index, err := gaesearch.Open(indexName)
 		if err != nil {
 			return err
@@ -128,7 +129,7 @@ func (a *GaeDatastoreAccessor) unindexAll(c appengine.Context) error {
 				break
 			}
 			if err != nil {
-				c.Errorf("Error getting next indexed object to unindex: %v", err)
+				log.Errorf(c, "Error getting next indexed object to unindex: %v", err)
 				return err
 			}
 			err = index.Delete(c, docID)
@@ -141,8 +142,8 @@ func (a *GaeDatastoreAccessor) unindexAll(c appengine.Context) error {
 	return nil
 }
 
-func (a *GaeDatastoreAccessor) unindex(c appengine.Context, idiomID int) error {
-	c.Infof("Unindexing idiom %d", idiomID)
+func (a *GaeDatastoreAccessor) unindex(c context.Context, idiomID int) error {
+	log.Infof(c, "Unindexing idiom %d", idiomID)
 
 	docID := strconv.Itoa(idiomID)
 	index, err := gaesearch.Open("idioms")
@@ -158,7 +159,7 @@ type retriever func() ([]string, error)
 // searchIdiomsByWordsWithFavorites must return idioms that contain *all* the searched words.
 // If seeNonFavorite==false, it must only return idioms that have at least 1 implementation in 1 of the user favoriteLangs.
 // If seeNonFavorite==true, it must return the same list but extended with idioms that contain all the searched words but no implementation in a user favoriteLang.
-func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c appengine.Context, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
+func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c context.Context, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
 	terms := append(append([]string(nil), typedWords...), typedLangs...)
 
 	var retrievers []retriever
@@ -232,12 +233,12 @@ queryloop:
 				idiomKeyStrings = append(idiomKeyStrings, kstr)
 				seenIdiomKeyStrings[kstr] = true
 				if len(idiomKeyStrings) == limit {
-					c.Debugf("[%d] -> %d new results, %d dupes, stopping here.", r, m, dupes)
+					log.Debugf(c, "[%d] -> %d new results, %d dupes, stopping here.", r, m, dupes)
 					break queryloop
 				}
 			}
 		}
-		c.Debugf("[%d] -> %d new results, %d dupes.", r, m, dupes)
+		log.Debugf(c, "[%d] -> %d new results, %d dupes.", r, m, dupes)
 	}
 
 	// TODO use favoriteLangs
@@ -265,7 +266,7 @@ queryloop:
 	return idioms, err
 }
 
-func (a *GaeDatastoreAccessor) searchImplIDs(c appengine.Context, words, langs []string) (map[string]bool, error) {
+func (a *GaeDatastoreAccessor) searchImplIDs(c context.Context, words, langs []string) (map[string]bool, error) {
 	index, err := gaesearch.Open("impls")
 	if err != nil {
 		return nil, err
@@ -296,7 +297,7 @@ func (a *GaeDatastoreAccessor) searchImplIDs(c appengine.Context, words, langs [
 	return hits, nil
 }
 
-func executeImplTextSearchQuery(c appengine.Context, query string, limit int) (idiomIDs, implIDs []int, err error) {
+func executeImplTextSearchQuery(c context.Context, query string, limit int) (idiomIDs, implIDs []int, err error) {
 	index, err := gaesearch.Open("impls")
 	if err != nil {
 		return nil, nil, err
@@ -335,8 +336,8 @@ func executeImplTextSearchQuery(c appengine.Context, query string, limit int) (i
 	return idiomIDs, implIDs, nil
 }
 
-func executeIdiomKeyTextSearchQuery(c appengine.Context, query string, limit int) (keystrings []string, err error) {
-	// c.Infof(query)
+func executeIdiomKeyTextSearchQuery(c context.Context, query string, limit int) (keystrings []string, err error) {
+	// log.Infof(c, query)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return nil, err
@@ -369,8 +370,8 @@ func executeIdiomKeyTextSearchQuery(c appengine.Context, query string, limit int
 	return idiomKeyStrings, nil
 }
 
-func executeIdiomTextSearchQuery(c appengine.Context, query string, limit int) ([]*Idiom, error) {
-	// c.Infof(query)
+func executeIdiomTextSearchQuery(c context.Context, query string, limit int) ([]*Idiom, error) {
+	// log.Infof(c, query)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return nil, err
@@ -413,7 +414,7 @@ func executeIdiomTextSearchQuery(c appengine.Context, query string, limit int) (
 	return idioms, err
 }
 
-func (a *GaeDatastoreAccessor) searchIdiomsByLangs(c appengine.Context, langs []string, limit int) ([]*Idiom, error) {
+func (a *GaeDatastoreAccessor) searchIdiomsByLangs(c context.Context, langs []string, limit int) ([]*Idiom, error) {
 	dsq := datastore.NewQuery("Idiom")
 	dsq = dsq.Filter("Implementations.LanguageName = ", langs[0])
 	if len(langs) >= 2 {

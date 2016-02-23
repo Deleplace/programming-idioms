@@ -8,8 +8,9 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
-	"appengine/user"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/user"
 )
 
 // IsAdmin determines whether the current user is regarded as Admin by the Google auth provider.
@@ -108,7 +109,7 @@ func sendMessageForUserAjax(w http.ResponseWriter, r *http.Request) error {
 		Message:      r.FormValue("message"),
 		CreationDate: time.Now(),
 	}
-	c.Infof("Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
+	log.Infof(c, "Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
 	_, err := dao.saveNewMessage(c, &msg)
 	if err != nil {
 		return err

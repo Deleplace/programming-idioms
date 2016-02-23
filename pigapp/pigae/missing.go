@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"appengine"
+	"google.golang.org/appengine"
 )
 
 // This screen shows, for a given language, which implementations

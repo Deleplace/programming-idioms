@@ -6,9 +6,11 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
-	"appengine/datastore"
-	"appengine/memcache"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/memcache"
 )
 
 // Low-level Datastore entities manipulation, outside
@@ -34,7 +36,7 @@ func adminResaveEntities(w http.ResponseWriter, r *http.Request) error {
 }
 
 // 2015-11-06 to force field EditSummary (even if empty) on every IdiomHistory persisted entity.
-func resaveAllIdiomHistory(c appengine.Context) error {
+func resaveAllIdiomHistory(c context.Context) error {
 	defer memcache.Flush(c)
 	saved := 0
 	keys, err := datastore.NewQuery("IdiomHistory").KeysOnly().GetAll(c, nil)
@@ -44,7 +46,7 @@ func resaveAllIdiomHistory(c appengine.Context) error {
 	nbEntities := len(keys)
 
 	defer func() {
-		c.Infof("Resaved %d IdiomHistory entities out of %d.", saved, nbEntities)
+		log.Infof(c, "Resaved %d IdiomHistory entities out of %d.", saved, nbEntities)
 	}()
 
 	for len(keys) > 0 {
@@ -82,7 +84,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		// Warning: fetching the whole history of 1 idiom
 		// may have quite a big memory footprint
 		idiomID := idiomKey.IntID()
-		c.Infof("Repairing versions for idiom: %v", idiomID)
+		log.Infof(c, "Repairing versions for idiom: %v", idiomID)
 
 		q := datastore.NewQuery("IdiomHistory").
 			Filter("Id =", idiomID).
@@ -102,7 +104,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 			histories[i].Version = 1 + i
 		}
 		lastVersion := len(histories)
-		c.Infof("\tSaving %v history entities.", len(histories))
+		log.Infof(c, "\tSaving %v history entities.", len(histories))
 		for len(historyKeys) > 0 {
 			bunch := 10
 			if len(historyKeys) < 10 {
@@ -123,9 +125,9 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 		if idiom.Version == lastVersion {
-			c.Infof("\tIdiom version %v already clean", idiom.Version)
+			log.Infof(c, "\tIdiom version %v already clean", idiom.Version)
 		} else {
-			c.Infof("\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
+			log.Infof(c, "\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
 			idiom.Version = lastVersion
 			_, err = datastore.Put(c, idiomKey, &idiom)
 			if err != nil {

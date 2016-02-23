@@ -9,7 +9,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine"
 )
 
 // RssItem is a news.
@@ -76,7 +77,7 @@ func rssRecentlyCreated(w http.ResponseWriter, r *http.Request) error {
 }
 
 func rss(w http.ResponseWriter,
-	c appengine.Context,
+	c context.Context,
 	r *http.Request,
 	idioms []*Idiom,
 	datation func(*Idiom) string,

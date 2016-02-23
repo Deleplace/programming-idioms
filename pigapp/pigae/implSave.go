@@ -8,7 +8,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"appengine"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 func implSave(w http.ResponseWriter, r *http.Request) error {
@@ -56,7 +57,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	c.Infof("[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
+	log.Infof(c, "[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
 
 	if !StringSliceContains(allLanguages(), language) {
 		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), allNiceLangs), http.StatusBadRequest}
@@ -137,7 +138,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	c.Infof("[%v] is updating impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+	log.Infof(c, "[%v] is updating impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
 
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
