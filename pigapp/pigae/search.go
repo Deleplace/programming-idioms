@@ -9,7 +9,9 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"golang.org/x/net/context"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 //
@@ -75,22 +77,21 @@ func search(w http.ResponseWriter, r *http.Request) error {
 		words, typedLangs = typedLangs, nil
 	}
 
+	typedLangsSet := make(map[string]bool, len(typedLangs))
+	for _, lang := range typedLangs {
+		typedLangsSet[lang] = true
+	}
+
+	matchingPromise := matchingImplPromise(c, words, typedLangs)
+
 	numberMaxResults := 20
 	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
 	if err != nil {
 		return err
 	}
 
-	typedLangsSet := make(map[string]bool, len(typedLangs))
-	for _, lang := range typedLangs {
-		typedLangsSet[lang] = true
-	}
+	matchingImplIDs := <-matchingPromise
 
-	// Highlight matching impls :)
-	matchingImplIDs, err := dao.searchImplIDs(c, words, typedLangs)
-	if err != nil {
-		return err
-	}
 	for _, idiom := range hits {
 		implFavoriteLanguagesFirstWithOrder(idiom, userProfile.FavoriteLanguages, "", userProfile.SeeNonFavorite)
 		for i := range idiom.Implementations {
@@ -107,6 +108,22 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	normalizedQ := strings.Join(terms, " ")
 	return listResults(w, r, normalizedQ, hits)
+}
+
+func matchingImplPromise(c context.Context, words, typedLangs []string) chan map[string]bool {
+	ch := make(chan map[string]bool)
+	go func() {
+		// Highlight matching impls :)
+		matchingImplIDs, err := dao.searchImplIDs(c, words, typedLangs)
+		if err == nil {
+			ch <- matchingImplIDs
+		} else {
+			log.Errorf(c, "problem fetching impl highlights: %v")
+			ch <- map[string]bool{}
+		}
+		close(ch)
+	}()
+	return ch
 }
 
 func listResults(w http.ResponseWriter, r *http.Request, q string, idioms []*Idiom) error {

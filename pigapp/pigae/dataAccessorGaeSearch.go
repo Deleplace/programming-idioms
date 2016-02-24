@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -216,16 +217,29 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c context.Contex
 		)
 	}
 
-queryloop:
-	for r, retriever := range retrievers {
-		// TODO measure that, then parallelize
-		keyStrings, err := retriever()
-		if err != nil {
-			return nil, err
-		}
+	ch := make(chan []string, 8)
+	var wg sync.WaitGroup
+	wg.Add(len(retrievers))
+	for _, retriever := range retrievers {
+		go func() {
+			keyStrings, err := retriever()
+			if err != nil {
+				log.Errorf(c, "problem fetching search results: %v", err)
+			} else {
+				ch <- keyStrings
+			}
+			wg.Done()
+		}()
+	}
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+harvestloop:
+	for kstrChunk := range ch {
 		m := 0
 		dupes := 0
-		for _, kstr := range keyStrings {
+		for _, kstr := range kstrChunk {
 			if seenIdiomKeyStrings[kstr] {
 				dupes++
 			} else {
@@ -233,12 +247,12 @@ queryloop:
 				idiomKeyStrings = append(idiomKeyStrings, kstr)
 				seenIdiomKeyStrings[kstr] = true
 				if len(idiomKeyStrings) == limit {
-					log.Debugf(c, "[%d] -> %d new results, %d dupes, stopping here.", r, m, dupes)
-					break queryloop
+					log.Debugf(c, "%d new results, %d dupes, stopping here.", m, dupes)
+					break harvestloop
 				}
+				log.Debugf(c, "%d new results, %d dupes.", m, dupes)
 			}
 		}
-		log.Debugf(c, "[%d] -> %d new results, %d dupes.", r, m, dupes)
 	}
 
 	// TODO use favoriteLangs
