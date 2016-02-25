@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"sync"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -176,6 +175,7 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c context.Contex
 	if len(typedLangs) == 1 {
 		// Exactly 1 term is a lang: assume user really wants this lang
 		lang := typedLangs[0]
+		log.Debugf(c, "User is looking for results in [%v]", lang)
 		// 1) Impls in lang, containing all words
 		implRetriever := func() ([]string, error) {
 			var keystrings []string
@@ -187,10 +187,7 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c context.Contex
 			for _, idiomID := range implIdiomIDs {
 				idiomKey := newIdiomKey(c, idiomID)
 				idiomKeyString := idiomKey.Encode()
-				//				if !seenIdiomKeyStrings[idiomKeyString] {
 				keystrings = append(keystrings, idiomKeyString)
-				//					seenIdiomKeyStrings[idiomKeyString] = true
-				//				}
 			}
 			return keystrings, nil
 		}
@@ -217,26 +214,26 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(c context.Contex
 		)
 	}
 
-	ch := make(chan []string, 8)
-	var wg sync.WaitGroup
-	wg.Add(len(retrievers))
-	for _, retriever := range retrievers {
+	// Each retriever will send 1 slice in 1 channel. So we can harvest them in right order.
+	promises := make([]chan []string, len(retrievers))
+	for i := range retrievers {
+		retriever := retrievers[i]
+		promises[i] = make(chan []string, 1)
+		ch := promises[i]
 		go func() {
 			keyStrings, err := retriever()
 			if err != nil {
 				log.Errorf(c, "problem fetching search results: %v", err)
+				ch <- nil
 			} else {
 				ch <- keyStrings
 			}
-			wg.Done()
+			close(ch)
 		}()
 	}
-	go func() {
-		wg.Wait()
-		close(ch)
-	}()
 harvestloop:
-	for kstrChunk := range ch {
+	for _, promise := range promises {
+		kstrChunk := <-promise
 		m := 0
 		dupes := 0
 		for _, kstr := range kstrChunk {
@@ -250,9 +247,9 @@ harvestloop:
 					log.Debugf(c, "%d new results, %d dupes, stopping here.", m, dupes)
 					break harvestloop
 				}
-				log.Debugf(c, "%d new results, %d dupes.", m, dupes)
 			}
 		}
+		log.Debugf(c, "%d new results, %d dupes.", m, dupes)
 	}
 
 	// TODO use favoriteLangs
@@ -381,6 +378,7 @@ func executeIdiomKeyTextSearchQuery(c context.Context, query string, limit int) 
 		idiomKeyString := newIdiomKey(c, idiomID).Encode()
 		idiomKeyStrings = append(idiomKeyStrings, idiomKeyString)
 	}
+	//log.Debugf(c, "Query [%v] yields %d results.", query, len(idiomKeyStrings))
 	return idiomKeyStrings, nil
 }
 
