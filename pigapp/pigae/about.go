@@ -29,29 +29,13 @@ type CoverageFacade struct {
 }
 
 func about(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
-
-	allIdioms, err := retrieveAllIdioms(r)
-	if err != nil {
-		return err
-	}
-
-	coverage, _ := languageCoverage(c)
-	favlangs := lookForFavoriteLanguages(r)
-	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount)
-
-	aboutToggles := copyToggles(toggles)
-
 	data := AboutFacade{
 		PageMeta: PageMeta{
 			PageTitle: "About Programming-Idioms",
-			Toggles:   aboutToggles,
 			ExtraCss:  []string{hostPrefix() + themeDirectory() + "/css/docs.css"},
 			ExtraJs:   []string{hostPrefix() + themeDirectory() + "/js/pages/about.js"},
 		},
 		UserProfile: readUserProfile(r),
-		AllIdioms:   allIdioms,
-		Coverage:    coverage,
 	}
 
 	if err := templates.ExecuteTemplate(w, "page-about", data); err != nil {
