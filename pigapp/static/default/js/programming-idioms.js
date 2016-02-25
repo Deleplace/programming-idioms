@@ -696,6 +696,8 @@ $(function() {
 	// dice icon "Go To Random Idiom".
 	$("img.dice").each(function(){
 		var src = $(this).attr('src');
+		if(src.indexOf('_highlight') !== -1)
+			return;
 		var srcHighlight = src.replace('.png', '_highlight.png')
 		preload([
 			srcHighlight
