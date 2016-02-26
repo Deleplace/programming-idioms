@@ -49,10 +49,58 @@ func (a *MemcacheDatastoreAccessor) cacheValue(c context.Context, cacheKey strin
 	return err
 }
 
+func (a *MemcacheDatastoreAccessor) cacheValues(c context.Context, cacheKeys []string, data []interface{}, expiration time.Duration) error {
+	if len(cacheKeys) != len(data) {
+		panic(fmt.Errorf("Wrong params length", len(cacheKeys), len(data)))
+	}
+	N := len(cacheKeys)
+
+	var buffer bytes.Buffer
+	enc := gob.NewEncoder(&buffer)
+
+	items := make([]*memcache.Item, N)
+	for i, cacheKey := range cacheKeys {
+		cacheData := data[i]
+		err := enc.Encode(&cacheData)
+		if err != nil {
+			log.Debugf(c, "Failed encoding for cache[%v] : %v", cacheKey, err)
+			return err
+		}
+		cacheItem := &memcache.Item{
+			Key:        cacheKey,
+			Value:      buffer.Bytes(),
+			Expiration: expiration,
+		}
+		items[i] = cacheItem
+	}
+
+	// Set the items, unconditionally, in 1 batch call
+	err := memcache.SetMulti(c, items)
+	if err != nil {
+		log.Debugf(c, "Failed setting cache items: %v", cacheKeys, err)
+	}
+	return err
+}
+
 // Just a shortcut for caching the datastoreKey + value
 func (a *MemcacheDatastoreAccessor) cacheKeyValue(c context.Context, cacheKey string, datastoreKey *datastore.Key, entity interface{}, expiration time.Duration) error {
 	kae := &KeyAndEntity{datastoreKey, entity}
 	return a.cacheValue(c, cacheKey, kae, expiration)
+}
+
+// Just a shortcut for caching the datastoreKeys + values
+func (a *MemcacheDatastoreAccessor) cacheKeysValues(c context.Context, cacheKeys []string, datastoreKeys []*datastore.Key, entities []interface{}, expiration time.Duration) error {
+	if len(cacheKeys) != len(datastoreKeys) || len(cacheKeys) != len(entities) {
+		panic(fmt.Errorf("Wrong params length", len(cacheKeys), len(datastoreKeys), len(entities)))
+	}
+	N := len(cacheKeys)
+
+	items := make([]interface{}, N)
+	for i, datastoreKey := range datastoreKeys {
+		kae := &KeyAndEntity{datastoreKey, entities[i]}
+		items[i] = kae
+	}
+	return a.cacheValues(c, cacheKeys, items, expiration)
 }
 
 // Just a shortcut for caching the pair
@@ -111,13 +159,20 @@ func (a *MemcacheDatastoreAccessor) recacheIdiom(c context.Context, key *datasto
 		return err
 	}
 
-	for _, impl := range idiom.Implementations {
-		cacheKey = fmt.Sprintf("getIdiomByImplID(%v)", impl.Id)
-		err = a.cacheKeyValue(c, cacheKey, key, idiom, 24*time.Hour)
-		if err != nil {
-			log.Errorf(c, err.Error())
-			return err
-		}
+	// Batch memcache set call
+	N := len(idiom.Implementations)
+	cacheKeys := make([]string, N)
+	datastoreKeys := make([]*datastore.Key, N)
+	cacheValues := make([]interface{}, N)
+	for i, impl := range idiom.Implementations {
+		cacheKeys[i] = fmt.Sprintf("getIdiomByImplID(%v)", impl.Id)
+		datastoreKeys[i] = key
+		cacheValues[i] = idiom
+	}
+	err = a.cacheKeysValues(c, cacheKeys, datastoreKeys, cacheValues, 24*time.Hour)
+	if err != nil {
+		log.Errorf(c, err.Error())
+		return err
 	}
 	// Unfortunatly, some previous "getIdiomByImplID(xyz)" might be left uninvalidated.
 	// (theoretically)
