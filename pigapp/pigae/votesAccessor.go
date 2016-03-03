@@ -17,8 +17,7 @@ type votesGetter interface {
 	getIdiomVote(c context.Context, nickname string, idiomID int) (key *datastore.Key, vote *IdiomVoteLog, err error)
 	getImplVotes(c context.Context, nickname string) (keys []*datastore.Key, votes []*ImplVoteLog, err error)
 	getImplVote(c context.Context, nickname string, implID int) (key *datastore.Key, vote *ImplVoteLog, err error)
-	decorateIdiom(c context.Context, idiom *Idiom, username string)
-	decorateImpl(c context.Context, impl *Impl, username string)
+	decorateIdiom(c context.Context, idiom *Idiom, username string) error
 }
 
 type votesSaver interface {

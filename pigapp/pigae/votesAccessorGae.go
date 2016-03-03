@@ -146,6 +146,13 @@ func (va GaeVotesAccessor) getImplVote(c context.Context, nickname string, implI
 	return keys[0], votes[0], nil
 }
 
+func (va GaeVotesAccessor) getImplVotesForIdiom(c context.Context, nickname string, idiomID int) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
+	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
+	q = q.Filter("IdiomId = ", idiomID)
+	keys, err = q.GetAll(c, &votes)
+	return
+}
+
 func (va GaeVotesAccessor) saveImplVoteOrRemove(c context.Context, vote ImplVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *ImplVoteLog, err error) {
 	key, existing, err := va.getImplVote(c, nickname, vote.ImplId)
 	if err != nil {
@@ -171,11 +178,17 @@ func (va GaeVotesAccessor) saveImplVoteOrRemove(c context.Context, vote ImplVote
 	return
 }
 
-func (va GaeVotesAccessor) decorateIdiom(c context.Context, idiom *Idiom, username string) {
+func (va GaeVotesAccessor) decorateIdiom(c context.Context, idiom *Idiom, username string) error {
 	if username == "" {
-		return
+		return nil
 	}
-	if _, vote, _ := va.getIdiomVote(c, username, idiom.Id); vote != nil {
+
+	// Mark idiom already upvoted or downvoted by current user, if she did.
+	_, vote, err := va.getIdiomVote(c, username, idiom.Id)
+	if err != nil {
+		return err
+	}
+	if vote != nil {
 		switch vote.Value {
 		case -1:
 			idiom.Deco.DownVoted = true
@@ -183,19 +196,25 @@ func (va GaeVotesAccessor) decorateIdiom(c context.Context, idiom *Idiom, userna
 			idiom.Deco.UpVoted = true
 		}
 	}
-}
 
-func (va GaeVotesAccessor) decorateImpl(c context.Context, impl *Impl, username string) {
-	if username == "" {
-		return
+	// Mark each impl already upvoted or downvoted by current user, if she did.
+	_, votes, err := va.getImplVotesForIdiom(c, username, idiom.Id)
+	if err != nil {
+		return err
 	}
-	_, vote, _ := va.getImplVote(c, username, impl.Id)
-	if vote != nil {
-		switch vote.Value {
+	voteMap := make(map[int]int, len(votes))
+	for _, vote := range votes {
+		voteMap[vote.ImplId] = vote.Value
+	}
+
+	for i := range idiom.Implementations {
+		impl := &idiom.Implementations[i]
+		switch voteMap[impl.Id] {
 		case -1:
 			impl.Deco.DownVoted = true
 		case 1:
 			impl.Deco.UpVoted = true
 		}
 	}
+	return nil
 }

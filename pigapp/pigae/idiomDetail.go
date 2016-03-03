@@ -74,9 +74,6 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 
 	userProfile := readUserProfile(r)
 	daoVotes.decorateIdiom(c, idiom, userProfile.Nickname)
-	for i := range idiom.Implementations {
-		daoVotes.decorateImpl(c, &(idiom.Implementations[i]), userProfile.Nickname)
-	}
 
 	myToggles := copyToggles(toggles)
 	myToggles["actionEditIdiom"] = true
