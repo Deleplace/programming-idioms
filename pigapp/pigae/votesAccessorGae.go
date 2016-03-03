@@ -5,6 +5,8 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
+
+	"sync"
 )
 
 // GaeVotesAccessor is a votesAccessor designed for the Google App Engine Datastore.
@@ -183,38 +185,52 @@ func (va GaeVotesAccessor) decorateIdiom(c context.Context, idiom *Idiom, userna
 		return nil
 	}
 
+	var wg sync.WaitGroup
+	wg.Add(2)
+	var err1, err2 error
+
 	// Mark idiom already upvoted or downvoted by current user, if she did.
-	_, vote, err := va.getIdiomVote(c, username, idiom.Id)
-	if err != nil {
-		return err
-	}
-	if vote != nil {
-		switch vote.Value {
-		case -1:
-			idiom.Deco.DownVoted = true
-		case 1:
-			idiom.Deco.UpVoted = true
+	go func() {
+		_, vote, err := va.getIdiomVote(c, username, idiom.Id)
+		err1 = err
+		if vote != nil {
+			switch vote.Value {
+			case -1:
+				idiom.Deco.DownVoted = true
+			case 1:
+				idiom.Deco.UpVoted = true
+			}
 		}
-	}
+		wg.Done()
+	}()
 
 	// Mark each impl already upvoted or downvoted by current user, if she did.
-	_, votes, err := va.getImplVotesForIdiom(c, username, idiom.Id)
-	if err != nil {
-		return err
-	}
-	voteMap := make(map[int]int, len(votes))
-	for _, vote := range votes {
-		voteMap[vote.ImplId] = vote.Value
-	}
-
-	for i := range idiom.Implementations {
-		impl := &idiom.Implementations[i]
-		switch voteMap[impl.Id] {
-		case -1:
-			impl.Deco.DownVoted = true
-		case 1:
-			impl.Deco.UpVoted = true
+	go func() {
+		_, votes, err := va.getImplVotesForIdiom(c, username, idiom.Id)
+		err2 = err
+		voteMap := make(map[int]int, len(votes))
+		for _, vote := range votes {
+			voteMap[vote.ImplId] = vote.Value
 		}
+
+		for i := range idiom.Implementations {
+			impl := &idiom.Implementations[i]
+			switch voteMap[impl.Id] {
+			case -1:
+				impl.Deco.DownVoted = true
+			case 1:
+				impl.Deco.UpVoted = true
+			}
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
+	if err1 != nil {
+		return err1
+	}
+	if err2 != nil {
+		return err2
 	}
 	return nil
 }
