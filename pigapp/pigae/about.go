@@ -59,10 +59,14 @@ func ajaxAboutContact(w http.ResponseWriter, r *http.Request) error {
 }
 
 func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
+	c := appengine.NewContext(r)
+
+	log.Debugf(c, "retrieveAllIdioms start...")
 	allIdioms, err := retrieveAllIdioms(r)
 	if err != nil {
 		return err
 	}
+	log.Debugf(c, "retrieveAllIdioms end.")
 
 	data := AboutFacade{
 		PageMeta: PageMeta{
@@ -72,9 +76,11 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 		AllIdioms:   allIdioms,
 	}
 
+	log.Debugf(c, "block-about-all-idioms templating start...")
 	if err := templates.ExecuteTemplate(w, "block-about-all-idioms", data); err != nil {
 		return PiError{err.Error(), http.StatusInternalServerError}
 	}
+	log.Debugf(c, "block-about-all-idioms templating end.")
 	return nil
 }
 
