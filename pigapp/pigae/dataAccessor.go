@@ -31,7 +31,6 @@ type idiomGetter interface {
 	randomIdiomHaving(c context.Context, havingLang string) (*datastore.Key, *Idiom, error)
 	randomIdiomNotHaving(c context.Context, notHavingLang string) (*datastore.Key, *Idiom, error)
 	idiomsFilterOrder(c context.Context, favoriteLangs []string, limitEachLang int, showOther bool, sortOrder string) ([]*Idiom, error)
-	languagesHavingImpl(c context.Context) []string
 	getIdiomHistory(c context.Context, idiomID int, version int) (*datastore.Key, *IdiomHistory, error)
 	getIdiomHistoryList(c context.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error)
 }

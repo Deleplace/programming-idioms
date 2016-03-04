@@ -240,13 +240,9 @@ func (a *GaeDatastoreAccessor) getAllIdioms(c context.Context, limit int, order 
 	if limit > 0 {
 		q = q.Limit(limit)
 	}
-	idioms := make([]*Idiom, 0, 40)
-	//idioms = []*Idiom{}
+	idioms := make([]*Idiom, 0, 200)
 	keys, err := q.GetAll(c, &idioms)
-	if err != nil {
-		return nil, nil, err
-	}
-	return keys, idioms, nil
+	return keys, idioms, err
 }
 
 func (a *GaeDatastoreAccessor) deleteAllIdioms(c context.Context) error {
@@ -361,20 +357,6 @@ func (a *GaeDatastoreAccessor) nextImplID(c context.Context) (int, error) {
 		return 0, fmt.Errorf("Impl %d already exists :(", newID)
 	}
 	return newID, nil
-}
-
-func (a *GaeDatastoreAccessor) languagesHavingImpl(c context.Context) []string {
-	q := datastore.NewQuery("Idiom").Project("Implementations.LanguageName").Distinct()
-	idioms := make([]*Idiom, 0, 40)
-	_, err := q.GetAll(c, &idioms)
-	if err != nil {
-		log.Warningf(c, "Error getting languages having impl: %v", err.Error())
-	}
-	languages := make([]string, len(idioms))
-	for i, idiom := range idioms {
-		languages[i] = idiom.Implementations[0].LanguageName
-	}
-	return languages
 }
 
 func (a *GaeDatastoreAccessor) recentIdioms(c context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {

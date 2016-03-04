@@ -398,29 +398,6 @@ func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(c context.Context, langs
 	return idioms, nil
 }
 
-func (a *MemcacheDatastoreAccessor) languagesHavingImpl(c context.Context) (langs []string) {
-	cacheKey := "languagesHavingImpl()"
-	//log.Debugf(c, "Getting cache[%v]", cacheKey)
-	data, cacheerr := a.readCache(c, cacheKey)
-	if cacheerr != nil {
-		log.Errorf(c, cacheerr.Error())
-		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.languagesHavingImpl(c)
-	}
-	if data == nil {
-		// Not in the cache. Then fetch the real datastore data. And cache it.
-		langs = a.dataAccessor.languagesHavingImpl(c)
-		//dataAccessor.cacheValue(c, cacheKey, langs, 24*time.Hour)
-		// For now, it might mange too often
-		err2 := a.cacheValue(c, cacheKey, langs, 5*time.Minute)
-		logIf(err2, log.Errorf, c, "caching languages")
-		return
-	}
-	// Found in cache :)
-	langs = data.([]string)
-	return
-}
-
 func (a *MemcacheDatastoreAccessor) recentIdioms(c context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
 	cacheKey := fmt.Sprintf("recentIdioms(%v,%v,%v)", favoriteLangs, showOther, n)
 	//log.Debugf(c, cacheKey)

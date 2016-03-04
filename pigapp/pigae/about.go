@@ -7,6 +7,7 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 // AboutFacade is the Facade for the About page.
@@ -82,7 +83,9 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 
 	coverage, _ := languageCoverage(c)
 	favlangs := lookForFavoriteLanguages(r)
+	log.Debugf(c, "favoritesFirstWithOrder start...")
 	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount)
+	log.Debugf(c, "favoritesFirstWithOrder end.")
 
 	data := AboutFacade{
 		PageMeta: PageMeta{
@@ -92,7 +95,10 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 		Coverage:    coverage,
 	}
 
-	return templates.ExecuteTemplate(w, "block-about-language-coverage", data)
+	log.Debugf(c, "block-about-language-coverage templating start...")
+	err := templates.ExecuteTemplate(w, "block-about-language-coverage", data)
+	log.Debugf(c, "block-about-language-coverage templating end.")
+	return err
 }
 
 func ajaxAboutRss(w http.ResponseWriter, r *http.Request) error {
@@ -102,13 +108,16 @@ func ajaxAboutRss(w http.ResponseWriter, r *http.Request) error {
 func languageCoverage(c context.Context) (cover CoverageFacade, err error) {
 	checked := map[int]map[string]int{}
 	langImplCount := map[string]int{}
+	log.Debugf(c, "Loading full idiom list...")
 	_, idioms, err := dao.getAllIdioms(c, 199, "-ImplCount") // TODO change 199 ?!
 	if err != nil {
 		return cover, err
 	}
+	log.Debugf(c, "Full idiom list loaded.")
 	idiomIds := make([]int, len(idioms))
 	idiomTitles := make([]string, len(idioms))
 
+	log.Debugf(c, "Counting impls of each idiom...")
 	for i, idiom := range idioms {
 		idiomIds[i] = idiom.Id
 		idiomTitles[i] = idiom.Title
@@ -122,11 +131,12 @@ func languageCoverage(c context.Context) (cover CoverageFacade, err error) {
 			langImplCount[impl.LanguageName]++
 		}
 	}
+	log.Debugf(c, "Impls of each idiom counted.")
 
 	cover = CoverageFacade{
 		IdiomIds:      idiomIds,
 		IdiomTitles:   idiomTitles,
-		Languages:     dao.languagesHavingImpl(c),
+		Languages:     allLanguages(),
 		Checked:       checked,
 		LangImplCount: langImplCount,
 	}
