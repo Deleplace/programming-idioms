@@ -182,9 +182,9 @@ func ConcurrentPromise(funcs ...func()) chan bool {
 	return ch
 }
 
-// ConcurrentWithErrors launches provided funcs, and gathers errors.
+// ConcurrentWithAllErrors launches provided funcs, and gathers errors.
 // If no errors, ok is true and the returned slice contains all nil values.
-func ConcurrentWithErrors(funcs ...func() error) (ok bool, errs []error) {
+func ConcurrentWithAllErrors(funcs ...func() error) (ok bool, errs []error) {
 	errs = make([]error, len(funcs))
 	var wg sync.WaitGroup
 	wg.Add(len(funcs))
@@ -204,4 +204,18 @@ func ConcurrentWithErrors(funcs ...func() error) (ok bool, errs []error) {
 		}
 	}
 	return ok, errs
+}
+
+// ConcurrentWithAnyErrors launches provided funcs, and returns
+// 1 error if at least 1 error occurred, nil otherwise.
+func ConcurrentWithAnyError(funcs ...func() error) error {
+	ok, errs := ConcurrentWithAllErrors(funcs...)
+	if !ok {
+		for _, err := range errs {
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
