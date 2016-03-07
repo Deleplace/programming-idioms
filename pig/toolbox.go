@@ -155,3 +155,28 @@ func Truncate(s string, maxChars int) string {
 	}
 	return string(runes[:maxChars])
 }
+
+// Concurrent launches provided funcs, and waits for their completion.
+func Concurrent(funcs ...func()) {
+	var wg sync.WaitGroup
+	wg.Add(len(funcs))
+	for _, f := range funcs {
+		f := f
+		go func() {
+			f()
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+}
+
+// Concurrent launches provided funcs, and returns a channel to notify completion.
+func ConcurrentPromise(funcs ...func()) chan bool {
+	ch := make(chan bool)
+	go func() {
+		Concurrent(funcs...)
+		ch <- true
+		close(ch)
+	}()
+	return ch
+}
