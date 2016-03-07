@@ -6,6 +6,7 @@ import (
 	"io"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 // StringSliceContains determines whether this slice contain this string?
@@ -179,4 +180,28 @@ func ConcurrentPromise(funcs ...func()) chan bool {
 		close(ch)
 	}()
 	return ch
+}
+
+// ConcurrentWithErrors launches provided funcs, and gathers errors.
+// If no errors, ok is true and the returned slice contains all nil values.
+func ConcurrentWithErrors(funcs ...func() error) (ok bool, errs []error) {
+	errs = make([]error, len(funcs))
+	var wg sync.WaitGroup
+	wg.Add(len(funcs))
+	for i, f := range funcs {
+		i := i
+		f := f
+		go func() {
+			errs[i] = f()
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+	ok = true
+	for _, err := range errs {
+		if err != nil {
+			ok = false
+		}
+	}
+	return ok, errs
 }
