@@ -22,7 +22,7 @@ import (
 //
 // Some methods are not redefined : randomIdiom, nextIdiomID, nextImplID, processUploadFile, processUploadFiles
 type MemcacheDatastoreAccessor struct {
-	dataAccessor
+	GaeDatastoreAccessor
 }
 
 func (a *MemcacheDatastoreAccessor) cacheValue(c context.Context, cacheKey string, data interface{}, expiration time.Duration) error {
@@ -231,11 +231,11 @@ func (a *MemcacheDatastoreAccessor) getIdiom(c context.Context, idiomID int) (*d
 	if cacheerr != nil {
 		log.Errorf(c, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.getIdiom(c, idiomID)
+		return a.GaeDatastoreAccessor.getIdiom(c, idiomID)
 	}
 	if data == nil {
 		// Not in the cache. Then fetch the real datastore data. And cache it.
-		key, idiom, err := a.dataAccessor.getIdiom(c, idiomID)
+		key, idiom, err := a.GaeDatastoreAccessor.getIdiom(c, idiomID)
 		if err == nil {
 			err2 := a.recacheIdiom(c, key, idiom)
 			logIf(err2, log.Errorf, c, "recaching idiom")
@@ -255,11 +255,11 @@ func (a *MemcacheDatastoreAccessor) getIdiomByImplID(c context.Context, implID i
 	if cacheerr != nil {
 		log.Errorf(c, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.getIdiomByImplID(c, implID)
+		return a.GaeDatastoreAccessor.getIdiomByImplID(c, implID)
 	}
 	if data == nil {
 		// Not in the cache. Then fetch the real datastore data. And cache it.
-		key, idiom, err := a.dataAccessor.getIdiomByImplID(c, implID)
+		key, idiom, err := a.GaeDatastoreAccessor.getIdiomByImplID(c, implID)
 		if err == nil {
 			err2 := a.cacheKeyValue(c, cacheKey, key, idiom, 24*time.Hour)
 			logIf(err2, log.Errorf, c, "caching idiom")
@@ -274,7 +274,7 @@ func (a *MemcacheDatastoreAccessor) getIdiomByImplID(c context.Context, implID i
 }
 
 func (a *MemcacheDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom) (*datastore.Key, error) {
-	key, err := a.dataAccessor.saveNewIdiom(c, idiom)
+	key, err := a.GaeDatastoreAccessor.saveNewIdiom(c, idiom)
 	if err == nil {
 		err2 := a.recacheIdiom(c, key, idiom)
 		logIf(err2, log.Errorf, c, "saving new idiom")
@@ -284,7 +284,7 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom
 
 func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *datastore.Key, idiom *Idiom) error {
 	log.Infof(c, "Saving idiom #%v: %v", idiom.Id, idiom.Title)
-	err := a.dataAccessor.saveExistingIdiom(c, key, idiom)
+	err := a.GaeDatastoreAccessor.saveExistingIdiom(c, key, idiom)
 	if err == nil {
 		log.Infof(c, "Saved idiom #%v, version %v", idiom.Id, idiom.Version)
 		err2 := a.recacheIdiom(c, key, idiom)
@@ -299,11 +299,11 @@ func (a *MemcacheDatastoreAccessor) getAllIdioms(c context.Context, limit int, o
 	if cacheerr != nil {
 		log.Errorf(c, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.getAllIdioms(c, limit, order)
+		return a.GaeDatastoreAccessor.getAllIdioms(c, limit, order)
 	}
 	if data == nil {
 		// Not in the cache. Then fetch the real datastore data. And cache it.
-		keys, idioms, err := a.dataAccessor.getAllIdioms(c, limit, order)
+		keys, idioms, err := a.GaeDatastoreAccessor.getAllIdioms(c, limit, order)
 		if err == nil {
 			// Cached "All idioms" will have a 10mn lag after an idiom/impl creation.
 			//a.cachePair(c, cacheKey, keys, idioms, 10*time.Minute)
@@ -321,7 +321,7 @@ func (a *MemcacheDatastoreAccessor) getAllIdioms(c context.Context, limit int, o
 }
 
 func (a *MemcacheDatastoreAccessor) deleteAllIdioms(c context.Context) error {
-	err := a.dataAccessor.deleteAllIdioms(c)
+	err := a.GaeDatastoreAccessor.deleteAllIdioms(c)
 	if err != nil {
 		return err
 	}
@@ -330,16 +330,16 @@ func (a *MemcacheDatastoreAccessor) deleteAllIdioms(c context.Context) error {
 }
 
 func (a *MemcacheDatastoreAccessor) unindexAll(c context.Context) error {
-	return a.dataAccessor.unindexAll(c)
+	return a.GaeDatastoreAccessor.unindexAll(c)
 }
 
 func (a *MemcacheDatastoreAccessor) unindex(c context.Context, idiomID int) error {
-	return a.dataAccessor.unindex(c, idiomID)
+	return a.GaeDatastoreAccessor.unindex(c, idiomID)
 }
 
 func (a *MemcacheDatastoreAccessor) deleteIdiom(c context.Context, idiomID int, why string) error {
 	// Clear cache entries
-	_, idiom, err := a.dataAccessor.getIdiom(c, idiomID)
+	_, idiom, err := a.GaeDatastoreAccessor.getIdiom(c, idiomID)
 	if err == nil {
 		err2 := a.uncacheIdiom(c, idiom)
 		logIf(err2, log.Errorf, c, "deleting idiom")
@@ -348,30 +348,30 @@ func (a *MemcacheDatastoreAccessor) deleteIdiom(c context.Context, idiomID int, 
 	}
 
 	// Delete in datastore
-	return a.dataAccessor.deleteIdiom(c, idiomID, why)
+	return a.GaeDatastoreAccessor.deleteIdiom(c, idiomID, why)
 }
 
 func (a *MemcacheDatastoreAccessor) deleteImpl(c context.Context, idiomID int, implID int, why string) error {
 	// Clear cache entries
-	_, idiom, err := a.dataAccessor.getIdiom(c, idiomID)
+	_, idiom, err := a.GaeDatastoreAccessor.getIdiom(c, idiomID)
 	if err == nil {
 		err2 := a.uncacheIdiom(c, idiom)
 		logIf(err2, log.Errorf, c, "deleting impl")
 	}
 
 	// Delete in datastore
-	err = a.dataAccessor.deleteImpl(c, idiomID, implID, why)
+	err = a.GaeDatastoreAccessor.deleteImpl(c, idiomID, implID, why)
 	return err
 }
 
 func (a *MemcacheDatastoreAccessor) searchIdiomsByWordsWithFavorites(c context.Context, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
 	// Personalized searches not cached (yet)
-	return a.dataAccessor.searchIdiomsByWordsWithFavorites(c, typedWords, typedLangs, favoriteLangs, seeNonFavorite, limit)
+	return a.GaeDatastoreAccessor.searchIdiomsByWordsWithFavorites(c, typedWords, typedLangs, favoriteLangs, seeNonFavorite, limit)
 }
 
 func (a *MemcacheDatastoreAccessor) searchImplIDs(c context.Context, words, langs []string) (map[string]bool, error) {
 	// TODO cache this... or not.
-	return a.dataAccessor.searchImplIDs(c, words, langs)
+	return a.GaeDatastoreAccessor.searchImplIDs(c, words, langs)
 }
 
 func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(c context.Context, langs []string, limit int) ([]*Idiom, error) {
@@ -381,11 +381,11 @@ func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(c context.Context, langs
 	if cacheerr != nil {
 		log.Errorf(c, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.searchIdiomsByLangs(c, langs, limit)
+		return a.GaeDatastoreAccessor.searchIdiomsByLangs(c, langs, limit)
 	}
 	if data == nil {
 		// Not in the cache. Then fetch the real datastore data. And cache it.
-		idioms, err := a.dataAccessor.searchIdiomsByLangs(c, langs, limit)
+		idioms, err := a.GaeDatastoreAccessor.searchIdiomsByLangs(c, langs, limit)
 		if err == nil {
 			// Search results will have a 10mn lag after an idiom/impl creation/update.
 			err2 := a.cacheValue(c, cacheKey, idioms, 10*time.Minute)
@@ -405,11 +405,11 @@ func (a *MemcacheDatastoreAccessor) recentIdioms(c context.Context, favoriteLang
 	if cacheerr != nil {
 		log.Errorf(c, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.recentIdioms(c, favoriteLangs, showOther, n)
+		return a.GaeDatastoreAccessor.recentIdioms(c, favoriteLangs, showOther, n)
 	}
 	if data == nil {
 		// Not in the cache. Then fetch the real datastore data. And cache it.
-		idioms, err := a.dataAccessor.recentIdioms(c, favoriteLangs, showOther, n)
+		idioms, err := a.GaeDatastoreAccessor.recentIdioms(c, favoriteLangs, showOther, n)
 		if err == nil {
 			// "Popular idioms" will have a 10mn lag after an idiom/impl creation.
 			err2 := a.cacheValue(c, cacheKey, idioms, 10*time.Minute)
@@ -429,11 +429,11 @@ func (a *MemcacheDatastoreAccessor) popularIdioms(c context.Context, favoriteLan
 	if cacheerr != nil {
 		log.Errorf(c, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.popularIdioms(c, favoriteLangs, showOther, n)
+		return a.GaeDatastoreAccessor.popularIdioms(c, favoriteLangs, showOther, n)
 	}
 	if data == nil {
 		// Not in the cache. Then fetch the real datastore data. And cache it.
-		idioms, err := a.dataAccessor.popularIdioms(c, favoriteLangs, showOther, n)
+		idioms, err := a.GaeDatastoreAccessor.popularIdioms(c, favoriteLangs, showOther, n)
 		if err == nil {
 			// "Popular idioms" will have a 10mn lag after an idiom/impl creation.
 			err2 := a.cacheValue(c, cacheKey, idioms, 10*time.Minute)
@@ -448,7 +448,7 @@ func (a *MemcacheDatastoreAccessor) popularIdioms(c context.Context, favoriteLan
 
 // TODO cache this
 func (a *MemcacheDatastoreAccessor) idiomsFilterOrder(c context.Context, favoriteLangs []string, limitEachLang int, showOther bool, sortOrder string) ([]*Idiom, error) {
-	idioms, err := a.dataAccessor.idiomsFilterOrder(c, favoriteLangs, limitEachLang, showOther, sortOrder)
+	idioms, err := a.GaeDatastoreAccessor.idiomsFilterOrder(c, favoriteLangs, limitEachLang, showOther, sortOrder)
 	return idioms, err
 }
 
@@ -458,11 +458,11 @@ func (a *MemcacheDatastoreAccessor) getAppConfig(c context.Context) (Application
 	if cacheerr != nil {
 		log.Errorf(c, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
-		return a.dataAccessor.getAppConfig(c)
+		return a.GaeDatastoreAccessor.getAppConfig(c)
 	}
 	if data == nil {
 		// Not in the cache. Then fetch the real datastore data. And cache it.
-		appConfig, err := a.dataAccessor.getAppConfig(c)
+		appConfig, err := a.GaeDatastoreAccessor.getAppConfig(c)
 		if err == nil {
 			log.Infof(c, "Retrieved ApplicationConfig (Toggles) from Datastore")
 			err2 := a.cacheValue(c, cacheKey, appConfig, 24*time.Hour)
@@ -480,7 +480,7 @@ func (a *MemcacheDatastoreAccessor) saveAppConfig(c context.Context, appConfig A
 	if err != nil {
 		return err
 	}
-	return a.dataAccessor.saveAppConfig(c, appConfig)
+	return a.GaeDatastoreAccessor.saveAppConfig(c, appConfig)
 	// TODO force toggles refresh for all instances, after memcache flush
 }
 
@@ -489,7 +489,7 @@ func (a *MemcacheDatastoreAccessor) saveAppConfigProperty(c context.Context, pro
 	if err != nil {
 		return err
 	}
-	return a.dataAccessor.saveAppConfigProperty(c, prop)
+	return a.GaeDatastoreAccessor.saveAppConfigProperty(c, prop)
 	// TODO force toggles refresh for all instances, after memcache flush
 }
 
@@ -498,7 +498,7 @@ func (a *MemcacheDatastoreAccessor) deleteCache(c context.Context) error {
 }
 
 func (a *MemcacheDatastoreAccessor) revert(c context.Context, idiomID int, version int) (*Idiom, error) {
-	idiom, err := a.dataAccessor.revert(c, idiomID, version)
+	idiom, err := a.GaeDatastoreAccessor.revert(c, idiomID, version)
 	if err != nil {
 		return idiom, err
 	}
@@ -508,7 +508,7 @@ func (a *MemcacheDatastoreAccessor) revert(c context.Context, idiomID int, versi
 }
 
 func (a *MemcacheDatastoreAccessor) historyRestore(c context.Context, idiomID int, version int) (*Idiom, error) {
-	idiom, err := a.dataAccessor.historyRestore(c, idiomID, version)
+	idiom, err := a.GaeDatastoreAccessor.historyRestore(c, idiomID, version)
 	if err != nil {
 		return idiom, err
 	}
@@ -518,7 +518,7 @@ func (a *MemcacheDatastoreAccessor) historyRestore(c context.Context, idiomID in
 }
 
 func (a *MemcacheDatastoreAccessor) saveNewMessage(c context.Context, msg *MessageForUser) (*datastore.Key, error) {
-	key, err := a.dataAccessor.saveNewMessage(c, msg)
+	key, err := a.GaeDatastoreAccessor.saveNewMessage(c, msg)
 	if err != nil {
 		return key, err
 	}
@@ -542,7 +542,7 @@ func (a *MemcacheDatastoreAccessor) getMessagesForUser(c context.Context, userna
 	}
 	if data == nil {
 		// Not in the cache. Then fetch the real datastore data. And cache it.
-		keys, messages, err := a.dataAccessor.getMessagesForUser(c, username)
+		keys, messages, err := a.GaeDatastoreAccessor.getMessagesForUser(c, username)
 		if err == nil {
 			err2 := a.cachePair(c, cacheKey, keys, messages, 2*time.Hour)
 			logIf(err2, log.Errorf, c, "caching user messages")
@@ -556,7 +556,7 @@ func (a *MemcacheDatastoreAccessor) getMessagesForUser(c context.Context, userna
 }
 
 func (a *MemcacheDatastoreAccessor) dismissMessage(c context.Context, key *datastore.Key) (*MessageForUser, error) {
-	msg, err := a.dataAccessor.dismissMessage(c, key)
+	msg, err := a.GaeDatastoreAccessor.dismissMessage(c, key)
 	if err != nil {
 		return nil, err
 	}
