@@ -265,7 +265,7 @@ var datastoreDao = GaeDatastoreAccessor{}
 var memcachedDao = MemcacheDatastoreAccessor{datastoreDao}
 var dao = memcachedDao
 
-var daoVotes votesAccessor = GaeVotesAccessor{}
+var daoVotes = GaeVotesAccessor{}
 
 func parametersMissing(w http.ResponseWriter, r *http.Request, params ...string) error {
 	missing := []string{}
