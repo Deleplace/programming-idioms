@@ -128,10 +128,6 @@ func initToggles() {
 	toggles["useCDN"] = false
 }
 
-func toggled(name string) bool {
-	return toggles[name]
-}
-
 func copyToggles(src Toggles) Toggles {
 	dest := make(Toggles, len(src))
 	for k, v := range src {
