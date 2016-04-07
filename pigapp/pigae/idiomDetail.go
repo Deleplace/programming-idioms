@@ -75,13 +75,21 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	userProfile := readUserProfile(r)
 	daoVotes.decorateIdiom(c, idiom, userProfile.Nickname)
 
+	pageTitle := idiom.Title
+	if selectedImplLang != "" {
+		// SEO: specify the language in the HTML title, for search engine results
+		if niceLang := printNiceLang(selectedImplLang); niceLang != "" {
+			pageTitle += ", in " + niceLang
+		}
+	}
+
 	myToggles := copyToggles(toggles)
 	myToggles["actionEditIdiom"] = true
 	myToggles["actionIdiomHistory"] = true
 	myToggles["actionAddImpl"] = true
 	data := &IdiomDetailFacade{
 		PageMeta: PageMeta{
-			PageTitle: idiom.Title,
+			PageTitle: pageTitle,
 			Toggles:   myToggles,
 		},
 		UserProfile:    userProfile,
