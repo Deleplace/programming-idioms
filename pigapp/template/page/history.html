@@ -17,7 +17,7 @@
 					<td>{{.Version}}</td>
 					<td>{{.VersionDate.Format "2006-01-02, 15:04"}}</td>
 					<td>{{.EditSummary}}</td>
-					<td>{{.LastEditor}}</td>
+					<td>{{.IdiomOrImplLastEditor}}</td>
 					<td>{{if and ($.UserProfile.IsAdmin) (gt (len $.HistoryList) 1)}}
 							<form method="POST" action="/history-restore">
 								<input type="hidden" name="idiomId" value="{{$.Idiom.Id}}" />

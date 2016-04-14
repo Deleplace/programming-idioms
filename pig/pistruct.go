@@ -213,6 +213,9 @@ type IdiomHistory struct {
 	// TODO: how to get rid properly?
 	// Got `datastore: cannot load field "EditorSummary" into a "pig.IdiomHistory": no such struct field`
 	EditorSummary string `deprecated`
+	// IdiomOrImplLastEditor is redundant storage of most recent impl update's editor,
+	// to be directly indexed and displayed in history list.
+	IdiomOrImplLastEditor string
 }
 
 func (ih *IdiomHistory) AsIdiomPtr() *Idiom {
@@ -296,6 +299,19 @@ func (impl *Impl) ExtractIndexableWords() []string {
 		w = append(w, SplitForIndexing(impl.AuthorComment, true)...)
 	}
 	return w
+}
+
+// ComputeIdiomOrImplLastEditor computes IdiomOrImplLastEditor
+func (hist *IdiomHistory) ComputeIdiomOrImplLastEditor() {
+	hist.IdiomOrImplLastEditor = hist.LastEditor
+	mostRecentDate := hist.VersionDate
+	for _, impl := range hist.Implementations {
+		lame := -time.Second // lame delta because hist.VersionDate is always greater
+		if !impl.VersionDate.Before(mostRecentDate.Add(lame)) {
+			hist.IdiomOrImplLastEditor = impl.LastEditor
+			mostRecentDate = impl.VersionDate
+		}
+	}
 }
 
 var regexpWhiteSpace = regexp.MustCompile("[ \\t\\n]")

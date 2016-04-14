@@ -72,7 +72,7 @@ func (a *GaeDatastoreAccessor) getIdiomHistory(c context.Context, idiomID int, v
 
 func (a *GaeDatastoreAccessor) getIdiomHistoryList(c context.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error) {
 	q := datastore.NewQuery("IdiomHistory").
-		Project("Version", "VersionDate", "LastEditor", "EditSummary").
+		Project("Version", "VersionDate", "IdiomOrImplLastEditor", "EditSummary").
 		Filter("Id =", idiomID).
 		Order("-Version")
 	historyList := make([]*IdiomHistory, 0)
@@ -158,6 +158,7 @@ var historyDelayer = delay.Func("save-history-item", func(c context.Context, idi
 	if err != nil {
 		return err
 	}
+	historyItem.ComputeIdiomOrImplLastEditor()
 	// Saves a new IdiomHistory entity. This causes no contention on the original Idiom entity.
 	_, err = datastore.Put(c, newHistoryKey(c), &historyItem)
 	return err
