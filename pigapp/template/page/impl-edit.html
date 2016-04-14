@@ -16,7 +16,7 @@
 								<input type="hidden" name="idiom_id" value="{{.Idiom.Id}}" readonly="readonly" class="input-small" />
 								<span class="idiom_id label label-larger"># {{.Idiom.Id}}</span>
 								<span class="idiom_title">
-									<a href="{{NiceIdiomURL .Idiom}}">{{.Idiom.Title}}</a>
+									<a href="{{NiceImplURL .Idiom .Impl.Id .Impl.LanguageName}}">{{.Idiom.Title}}</a>
 								</span>
 							</div>
 						</div>
