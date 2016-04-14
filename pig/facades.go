@@ -12,6 +12,8 @@ import "fmt"
 type PageMeta struct {
 	// PageTitle is the title of this page
 	PageTitle string
+	// PageKeywords for meta tag "keyword"
+	PageKeywords string
 	// Toggles (global or custom) used to tune the output
 	Toggles Toggles
 	// SearchQuery is printed in search field, in case of new similar search

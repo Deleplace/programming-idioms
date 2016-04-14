@@ -89,8 +89,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	myToggles["actionAddImpl"] = true
 	data := &IdiomDetailFacade{
 		PageMeta: PageMeta{
-			PageTitle: pageTitle,
-			Toggles:   myToggles,
+			PageTitle:    pageTitle,
+			PageKeywords: idiom.ExtraKeywords,
+			Toggles:      myToggles,
 		},
 		UserProfile:    userProfile,
 		Idiom:          idiom,
