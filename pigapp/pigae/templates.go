@@ -21,6 +21,7 @@ func initTemplates() (*template.Template, error) {
 		"allToggleNames":        allToggleNames,
 		"printNiceLang":         printNiceLang,
 		"printNiceLangs":        printNiceLangs,
+		"printShortLang":        printShortLang,
 		"prettifyCSSClass":      prettifyCSSClass,
 		"prettifyExtension":     prettifyExtension,
 		"normLang":              normLang,

@@ -631,7 +631,9 @@ footer a.visited {
 .language-coverage th {
 	padding-left: 3px;
 	padding-right: 3px;	
-	min-width: 30px;
+	width: 2.0em;
+	overflow-x: visible;
+	vertical-align: top;
 }
 
 .language-coverage th.idiom-title{
