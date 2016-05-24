@@ -17,7 +17,14 @@ type CheatSheetFacade struct {
 	PageMeta    PageMeta
 	UserProfile UserProfile
 	Lang        string
-	Idioms      []*Idiom
+	Idioms      []*Idiom // TODO []CheatSheetLine
+}
+
+type CheatSheetLine struct {
+	IdiomID            string
+	IdiomTitle         string
+	IdiomLeadParagraph string
+	ImplCodeBlock      string
 }
 
 func cheatsheet(w http.ResponseWriter, r *http.Request) error {
