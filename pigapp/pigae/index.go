@@ -65,6 +65,7 @@ func initRoutes() {
 		handle("/rss-recently-updated", rssRecentlyUpdated)
 		handle("/my/{nickname}/{langs}", bookmarkableUserURL)
 		handle("/my/{langs}", bookmarkableUserURL)
+		handle("/cheatsheet/{lang}", cheatsheet)
 		handleAjax("/typeahead-languages", typeaheadLanguages)
 		handleAjax("/ajax-other-implementations", ajaxOtherImplementations)
 		if toggles["writable"] {
@@ -126,6 +127,7 @@ var neededPathVariables = map[string][]string{
 	"/impl-edit/{idiomId}/{implId}":                     {"idiomId", "implId"},
 	"/impl-create/{idiomId}":                            {"idiomId"},
 	"/impl-create/{idiomId}/{lang}":                     {"idiomId"},
+	"/cheatsheet/{lang}":                                {"lang"},
 }
 
 // Request will fail if it doesn't provide the required GET or POST parameters

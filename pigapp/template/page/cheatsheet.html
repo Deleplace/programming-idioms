@@ -1,0 +1,31 @@
+{{define "page-cheatsheet"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>  
+<div class="page-holder">
+	{{template "header-small" .}}  
+	<div class="page-content container-fluid">
+
+		<h2>{{.Lang}} code</h2>
+
+		<div>
+			<table>
+				{{range .Idioms}}
+					<tr>
+						<th>{{.Id}}</th>
+						<td>{{.Title}}</td>
+						<td>{{.LeadParagraph}}</td>
+						{{with index .Implementations 0}}
+							<td><pre>{{.CodeBlock}}</pre></td>
+						{{end}}
+					</tr>
+				{{end}}
+			</table>
+		</div>
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}  
+</div>
+</body>
+{{template "close-html"}}
+{{end}}
