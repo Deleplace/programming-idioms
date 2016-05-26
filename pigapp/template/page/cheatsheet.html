@@ -9,13 +9,14 @@
 		<h2>{{.Lang | printNiceLang}} code</h2>
 
 		<div>
-			<table>
+			<table class="cheatsheet-lines">
 				{{range .CheatsheetLines}}
 					<tr>
 						<th>{{.IdiomID}}</th>
-						<td>{{.IdiomTitle}}</td>
-						<td>{{.IdiomLeadParagraph}}</td>
-						<td><pre>{{.ImplCodeBlock}}</pre></td>
+						<td class="idiom-title">{{.IdiomTitle}}</td>
+						<td class="idiom-lead">{{.IdiomLeadParagraph}}</td>
+						<td class="impl-code"><pre>{{.ImplCodeBlock}}</pre></td>
+						<td><button type="button" class="close">&times;</button></div></td>
 					</tr>
 				{{end}}
 			</table>

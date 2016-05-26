@@ -748,3 +748,40 @@ footer a.visited {
 	color: #777;
 	padding-left: 12px;
 }
+
+/* Individual cheatsheet */
+
+.cheatsheet-lines th, .cheatsheet-lines td {
+  vertical-align: top;
+}
+
+.page-cheatsheet .impl-code {
+	width: 60%;
+}
+
+/* 
+ * CSS for printing
+ */
+
+@media print {
+  .actions-dropdown, .dice, .form-search {
+    display:none !important;
+  }
+
+  a[href]:after {
+    content: none !important;
+  }
+
+  .page-cheatsheet .idiom-title {
+  	width: 10%;
+  }
+  .page-cheatsheet .idiom-lead {
+  	width: 20%;
+  }
+  .page-cheatsheet .impl-code {
+  	width: 60%;
+  }
+  .page-cheatsheet button.close {
+    display:none !important;
+  }
+}

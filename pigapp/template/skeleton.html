@@ -22,24 +22,24 @@
 			<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 			<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
 			{{if .Toggles.useMinifiedCss}} 
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.min.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.min.css" />
 			{{else}}
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/prettify.css" media="screen" />
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/prettify.css" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.css" />
 			{{end}}
 		{{else}}
 			{{if .Toggles.useMinifiedCss}} 
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.nocdn.min.css" media="screen" />
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/font-awesome/css/font-awesome.min.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.nocdn.min.css" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/font-awesome/css/font-awesome.min.css" />
 			{{else}}
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/bootstrap-combined.no-icons.min.css" media="screen" />
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/font-awesome/css/font-awesome.css" media="screen" />
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/prettify.css" media="screen" />
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.css" media="screen" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/bootstrap-combined.no-icons.min.css" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/font-awesome/css/font-awesome.css" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/prettify.css" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.css" />
 			{{end}}
 		{{end}}
 		{{range .ExtraCss}}
-			<link rel="stylesheet" href="{{.}}" media="screen" />
+			<link rel="stylesheet" href="{{.}}" />
 		{{end}}
 		{{if .Toggles.isDev}}
 			{{/* This green header, as a reminder this is DEV (not PROD) */}}
