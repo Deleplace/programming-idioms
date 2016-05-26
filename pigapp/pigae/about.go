@@ -89,9 +89,7 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 
 	coverage, _ := languageCoverage(c)
 	favlangs := lookForFavoriteLanguages(r)
-	log.Debugf(c, "favoritesFirstWithOrder start...")
 	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount)
-	log.Debugf(c, "favoritesFirstWithOrder end.")
 
 	data := AboutFacade{
 		PageMeta: PageMeta{
@@ -109,6 +107,19 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 
 func ajaxAboutRss(w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "block-about-rss", nil)
+}
+
+type AboutCheatsheetsFacade struct {
+	UserProfile UserProfile
+	Langs       []string
+}
+
+func ajaxAboutCheatsheets(w http.ResponseWriter, r *http.Request) error {
+	data := AboutCheatsheetsFacade{
+		UserProfile: readUserProfile(r),
+		Langs:       allLanguages(),
+	}
+	return templates.ExecuteTemplate(w, "block-about-cheatsheets", data)
 }
 
 func languageCoverage(c context.Context) (cover CoverageFacade, err error) {

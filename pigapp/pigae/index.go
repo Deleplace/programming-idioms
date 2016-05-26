@@ -90,6 +90,7 @@ func initRoutes() {
 			handle("/about-block-all-idioms", ajaxAboutAllIdioms)
 			handle("/about-block-language-coverage", ajaxAboutLanguageCoverage)
 			handle("/about-block-rss", ajaxAboutRss)
+			handle("/about-block-cheatsheets", ajaxAboutCheatsheets)
 			handle("/about-block-see-also", ajaxAboutSeeAlso)
 			handle("/about-block-contact", ajaxAboutContact)
 			// Admin

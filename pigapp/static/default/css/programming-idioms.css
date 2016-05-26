@@ -578,6 +578,7 @@ footer a.visited {
 	float: right;
 }
 
+
 /* All idioms list */
 .key {     
 	font-weight: bold;
@@ -696,6 +697,12 @@ footer a.visited {
 
 .language-coverage .fold-unfold:hover {
     cursor: pointer;
+}
+
+/* About : cheatsheets */
+
+.pi-cheatsheets li {
+	padding-bottom: 6px;
 }
 
 .list-external-sites li{

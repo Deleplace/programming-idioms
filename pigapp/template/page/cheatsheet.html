@@ -1,12 +1,12 @@
 {{define "page-cheatsheet"}}
 {{template "prologue"}}  
 {{template "head" .PageMeta}}  
-<body>  
+<body class="page-cheatsheet">  
 <div class="page-holder">
 	{{template "header-small" .}}  
 	<div class="page-content container-fluid">
 
-		<h2>{{.Lang}} code</h2>
+		<h2>{{.Lang | printNiceLang}} code</h2>
 
 		<div>
 			<table>

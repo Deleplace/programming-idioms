@@ -1,0 +1,23 @@
+{{define "block-about-cheatsheets"}}
+	<div class="pi-cheatsheets">
+		<h2>Cheatsheets</h2>
+
+		<p>See all implementations for one language, in a long printable list.</p>
+
+		{{if .UserProfile.FavoriteLanguages}}
+		<ul class="inline">
+		{{range .UserProfile.FavoriteLanguages}}
+			<li><a href="/cheatsheet/{{.}}" class="btn btn-success"><b>{{. | printNiceLang}}</b> <i class="icon-list"></i></a></li>
+		{{end}}
+		</ul>
+		{{end}}
+
+		<ul class="inline">
+		{{range .Langs}}
+			{{if not (isInStringList . $.UserProfile.FavoriteLanguages)}}
+			<li><a href="/cheatsheet/{{.}}" class="btn btn-primary">{{. | printNiceLang}} <i class="icon-list"></i></a></li> 
+			{{end}}
+		{{end}}
+		</ul>
+	</div>
+{{end}}
