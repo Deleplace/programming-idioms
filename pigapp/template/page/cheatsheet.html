@@ -10,20 +10,17 @@
 
 		<div>
 			<table>
-				{{range .Idioms}}
+				{{range .CheatsheetLines}}
 					<tr>
-						<th>{{.Id}}</th>
-						<td>{{.Title}}</td>
-						<td>{{.LeadParagraph}}</td>
-						{{with index .Implementations 0}}
-							<td><pre>{{.CodeBlock}}</pre></td>
-						{{end}}
+						<th>{{.IdiomID}}</th>
+						<td>{{.IdiomTitle}}</td>
+						<td>{{.IdiomLeadParagraph}}</td>
+						<td><pre>{{.ImplCodeBlock}}</pre></td>
 					</tr>
 				{{end}}
 			</table>
 		</div>
 	</div>
-{{template "footer" .}}
 {{template "include-js" .}}  
 </div>
 </body>

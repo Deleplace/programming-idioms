@@ -32,6 +32,10 @@ func adminReindexAjax(w http.ResponseWriter, r *http.Request) error {
 		if err != nil {
 			return nil
 		}
+		err = indexIdiomCheatsheets(c, idiom)
+		if err != nil {
+			return nil
+		}
 		indexed++
 	}
 	log.Infof(c, "Reindexed %d idioms.", indexed)

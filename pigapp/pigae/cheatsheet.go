@@ -5,6 +5,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
+	"google.golang.org/appengine"
 )
 
 //
@@ -14,39 +15,24 @@ import (
 
 // AllIdiomsFacade is the Facade for the Cheat Sheets.
 type CheatSheetFacade struct {
-	PageMeta    PageMeta
-	UserProfile UserProfile
-	Lang        string
-	Idioms      []*Idiom // TODO []CheatSheetLine
-}
-
-type CheatSheetLine struct {
-	IdiomID            string
-	IdiomTitle         string
-	IdiomLeadParagraph string
-	ImplCodeBlock      string
+	PageMeta        PageMeta
+	UserProfile     UserProfile
+	Lang            string
+	CheatsheetLines []cheatSheetLineDoc
 }
 
 func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	lang := vars["lang"]
+	c := appengine.NewContext(r)
 
-	idioms, err := retrieveAllIdioms(r) // TODO filter this very much
+	// Security belt. Might be changed if needed.
+	limit := 1000
+
+	// This uses the Search API to retrieve just the data we need.
+	cheatsheetLines, err := dao.getCheatSheet(c, lang, limit)
 	if err != nil {
 		return PiError{err.Error(), http.StatusInternalServerError}
-	}
-
-	filteredIdioms := make([]*Idiom, 0, len(idioms))
-	// This loop won't be necessary, when we have a Datastore query
-	// which fetches only the relevant implementations.
-	for _, idiom := range idioms {
-		for _, impl := range idiom.Implementations {
-			if impl.LanguageName == lang {
-				newIdiom := *idiom
-				newIdiom.Implementations = []Impl{impl}
-				filteredIdioms = append(filteredIdioms, &newIdiom)
-			}
-		}
 	}
 
 	data := CheatSheetFacade{
@@ -54,9 +40,9 @@ func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 			PageTitle: printNiceLang(lang) + " cheat sheet",
 			Toggles:   toggles,
 		},
-		UserProfile: readUserProfile(r),
-		Lang:        lang,
-		Idioms:      filteredIdioms,
+		UserProfile:     readUserProfile(r),
+		Lang:            lang,
+		CheatsheetLines: cheatsheetLines,
 	}
 
 	if err := templates.ExecuteTemplate(w, "page-cheatsheet", data); err != nil {

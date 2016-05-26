@@ -173,6 +173,10 @@ var indexDelayer = delay.Func("index-text-idiom", func(c context.Context, idiomK
 	}
 	// Full text API causes no contention on the original Idiom entity.
 	err = indexIdiomFullText(c, &idiom, idiomKey)
+	if err != nil {
+		return err
+	}
+	err = indexIdiomCheatsheets(c, &idiom)
 	return err
 })
 

@@ -2,6 +2,7 @@ package pigae
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -60,6 +61,53 @@ type searchableImplDoc struct {
 	Bulk string
 }
 
+// cheatSheetLineDoc contains some impl data, but only the field Lang is intended to be searched.
+type cheatSheetLineDoc struct {
+	// Lang is the language of this implementation
+	Lang gaesearch.Atom
+	// IdiomID is the ID of the idiom this impl belongs to.
+	IdiomID gaesearch.Atom
+	// IdiomTitle is the title of the idiom this impl belongs to.
+	IdiomTitle gaesearch.Atom
+	// IdiomLeadParagraph is the description of the idiom this impl belongs to.
+	IdiomLeadParagraph gaesearch.Atom
+	// ImplID is the ID of this impl.
+	ImplID gaesearch.Atom
+	// ImplImportsBlock is the imports block of this impl.
+	ImplImportsBlock gaesearch.Atom
+	// ImplCodeBlock is the code block of this impl.
+	ImplCodeBlock gaesearch.Atom
+}
+
+type cheatSheetLineDocs []cheatSheetLineDoc
+
+func (lines cheatSheetLineDocs) Len() int {
+	return len(lines)
+}
+func (lines cheatSheetLineDocs) Swap(i, j int) {
+	lines[i], lines[j] = lines[j], lines[i]
+}
+func (lines cheatSheetLineDocs) Less(i, j int) bool {
+	pad := func(a, b gaesearch.Atom) (gaesearch.Atom, gaesearch.Atom) {
+		x, y := a, b
+		for len(x) < len(y) {
+			x = "0" + x
+		}
+		for len(y) < len(x) {
+			y = "0" + y
+		}
+		return x, y
+	}
+
+	// Sort by IdiomID asc, ImplID asc
+	idiomID1, idiomID2 := pad(lines[i].IdiomID, lines[j].IdiomID)
+	if idiomID1 == idiomID2 {
+		implID1, implID2 := pad(lines[i].ImplID, lines[j].ImplID)
+		return implID1 < implID2
+	}
+	return idiomID1 < idiomID2
+}
+
 func indexIdiomFullText(c context.Context, idiom *Idiom, idiomKey *datastore.Key) error {
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
@@ -109,6 +157,34 @@ func indexIdiomFullText(c context.Context, idiom *Idiom, idiomKey *datastore.Key
 	return nil
 }
 
+func indexIdiomCheatsheets(c context.Context, idiom *Idiom) error {
+	index, err := gaesearch.Open("cheatsheets")
+	if err != nil {
+		return err
+	}
+	// Index each impl individually.
+	for _, impl := range idiom.Implementations {
+		docID := fmt.Sprintf("%d_%d", idiom.Id, impl.Id)
+		doc := &cheatSheetLineDoc{
+			Lang:               gaesearch.Atom(impl.LanguageName),
+			IdiomID:            gaesearch.Atom(strconv.Itoa(idiom.Id)),
+			IdiomTitle:         gaesearch.Atom(idiom.Title),
+			IdiomLeadParagraph: gaesearch.Atom(idiom.LeadParagraph),
+			ImplID:             gaesearch.Atom(strconv.Itoa(impl.Id)),
+			ImplImportsBlock:   gaesearch.Atom(impl.ImportsBlock),
+			ImplCodeBlock:      gaesearch.Atom(impl.CodeBlock),
+		}
+		// Weird that the search API doesn't have batch queries.
+		// TODO: index each impl concurrently?
+		_, err = index.Put(c, docID, doc)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (a *GaeDatastoreAccessor) unindexAll(c context.Context) error {
 	log.Infof(c, "Unindexing everything (from the text search indexes)")
 
@@ -116,6 +192,7 @@ func (a *GaeDatastoreAccessor) unindexAll(c context.Context) error {
 	for _, indexName := range []string{
 		"idioms",
 		"impls",
+		"cheatsheets",
 	} {
 		log.Infof(c, "Unindexing items of [%v]", indexName)
 		index, err := gaesearch.Open(indexName)
@@ -438,4 +515,34 @@ func (a *GaeDatastoreAccessor) searchIdiomsByLangs(c context.Context, langs []st
 		return nil, err
 	}
 	return hits, nil
+}
+
+func (a *GaeDatastoreAccessor) getCheatSheet(c context.Context, lang string, limit int) ([]cheatSheetLineDoc, error) {
+	index, err := gaesearch.Open("cheatsheets")
+	if err != nil {
+		return nil, err
+	}
+	if limit == 0 {
+		// Limit is not optional. 0 means zero result.
+		return nil, nil
+	}
+	cheatLines := make([]cheatSheetLineDoc, 0, 200)
+	query := "Lang:" + lang
+	it := index.Search(c, query, &gaesearch.SearchOptions{
+		Limit: limit,
+	})
+	for {
+		var cheatLine cheatSheetLineDoc
+		_, err := it.Next(&cheatLine)
+		if err == gaesearch.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		cheatLines = append(cheatLines, cheatLine)
+	}
+	// Sort by IdiomID asc, ImplID asc
+	sort.Sort(cheatSheetLineDocs(cheatLines))
+	return cheatLines, err
 }
