@@ -759,6 +759,19 @@ footer a.visited {
 	width: 60%;
 }
 
+.page-cheatsheet .dotted {
+	border-bottom: dotted 1px #CCC;
+}
+
+.page-cheatsheet pre {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+.page-cheatsheet .close {
+  font-size: 35px;
+}
+
 /* 
  * CSS for printing
  */
@@ -784,4 +797,5 @@ footer a.visited {
   .page-cheatsheet button.close {
     display:none !important;
   }
+
 }

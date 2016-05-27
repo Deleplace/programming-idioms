@@ -705,7 +705,7 @@ $(function() {
 	});
 
 	$(".cheatsheet-lines button.close").click(function(){
-		$(this).closest("tr").remove();
+		$(this).closest("tr").hide('normal');
 	});
 
 });
