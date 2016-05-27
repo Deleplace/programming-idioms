@@ -6,6 +6,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
 	"google.golang.org/appengine"
+	gaesearch "google.golang.org/appengine/search"
 )
 
 //
@@ -49,4 +50,9 @@ func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 		return PiError{err.Error(), http.StatusInternalServerError}
 	}
 	return nil
+}
+
+// useful for calling markup2CSS on cheatSheetLineDoc fields
+func atom2string(atom gaesearch.Atom) string {
+	return string(atom)
 }
