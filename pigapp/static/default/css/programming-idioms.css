@@ -870,11 +870,8 @@ footer a.visited {
   }
 
 
-  .page-cheatsheet .idiom-title {
-  	width: 10%;
-  }
-  .page-cheatsheet .idiom-lead {
-  	width: 20%;
+  .page-cheatsheet .idiom-title-and-lead {
+  	width: 30%;
   }
   .page-cheatsheet .impl-code {
   	width: 60%;

@@ -27,8 +27,10 @@
 				{{range .CheatsheetLines}}
 					<tr class="cheatsheet-line">
 						<th class="idiom-id dotted">{{.IdiomID}}</th>
-						<td class="idiom-title dotted">{{markup2CSS (atom2string .IdiomTitle)}}</td>
-						<td class="idiom-lead dotted">{{markup2CSS (atom2string .IdiomLeadParagraph)}}</td>
+						<td class="idiom-title-and-lead dotted">
+							<div class="idiom-title">{{markup2CSS (atom2string .IdiomTitle)}}</div>
+							<div>{{markup2CSS (atom2string .IdiomLeadParagraph)}}</div>
+						</td>
 						<td class="impl-code dotted">
 							<div class="piimports">
 								<pre class="impl-imports" style="display: none;">{{.ImplImportsBlock}}</pre>
