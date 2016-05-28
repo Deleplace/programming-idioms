@@ -205,7 +205,7 @@ header .form-search {
 /* Header for print-friendly pages */
 
 .header-print {
-	margin: 0px 0px 12px 0px;
+	margin: 0px 0px 10px 0px;
 	padding: 0px;
 }
 
@@ -228,6 +228,10 @@ header .form-search {
 	margin-top: 2px;
 	color: #557;
 	font-style: italic;
+}
+
+.header-print .navbar {
+    margin-bottom: 0px;
 }
 
 .header-print .navbar-inner {
@@ -790,6 +794,10 @@ footer a.visited {
 
 /* Individual cheatsheet */
 
+.page-cheatsheet h2 {
+	margin-top: 5px;
+}
+
 .page-cheatsheet .actions-dropdown {
 	display:none;
 }
@@ -830,12 +838,13 @@ footer a.visited {
 }
 
 .page-cheatsheet .dotted {
-	border-bottom: dotted 1px #CCC;
+	border-top: dotted 1px #CCC;
 }
 
-.page-cheatsheet pre.picode {
-	margin-top: 0px;
-	margin-bottom: 4px;
+.page-cheatsheet .picode pre {
+	margin-top: 2px;
+	margin-bottom: 0px;
+	padding: 4px;
 }
 
 .page-cheatsheet .close {
