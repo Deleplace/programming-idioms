@@ -114,8 +114,7 @@ $(function() {
 	        },
 	        success: function(response){
 				//var count = response.imported;  ???
-	        	var count = response.indexed
-	        	$.fn.pisuccess( count + " idioms reindexed.");
+	        	$.fn.pisuccess( response.message );
 	        },
 	        error: function(xhr, status, e){
 	        	$.fn.pierror( "Reindex failed : " + xhr.responseText);
