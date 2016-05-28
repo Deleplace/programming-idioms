@@ -723,9 +723,9 @@ $(function() {
 
 	$(".page-cheatsheet #showImports").change(function(){
 		if( $(this).is(':checked') ){
-			$("pre.impl-imports").show();
+			$(".piimports").show();
 		}else{
-			$("pre.impl-imports").hide();
+			$(".piimports").hide();
 		}
 	});
 

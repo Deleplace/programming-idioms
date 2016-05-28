@@ -841,6 +841,16 @@ footer a.visited {
 	border-top: dotted 1px #CCC;
 }
 
+.page-cheatsheet .piimports {
+	padding: 0px;
+}
+
+.page-cheatsheet .piimports pre {
+	font-size: 13px;
+	padding: 4px;
+    border-radius: 0px;
+}
+
 .page-cheatsheet .picode pre {
 	margin-top: 2px;
 	margin-bottom: 0px;
@@ -880,4 +890,8 @@ footer a.visited {
     display:none !important;
   }
 
+  .page-cheatsheet .piimports pre {
+    border-width: 1px !important;
+    border-radius: 0px;
+  }
 }

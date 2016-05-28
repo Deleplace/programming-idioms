@@ -36,9 +36,11 @@
 							<div>{{markup2CSS (atom2string .IdiomLeadParagraph)}}</div>
 						</td>
 						<td class="impl-code dotted">
-							<div class="piimports">
-								<pre class="impl-imports" style="display: none;">{{.ImplImportsBlock}}</pre>
+							{{if .ImplImportsBlock}}
+							<div class="piimports" style="display: none;">
+								<pre>{{.ImplImportsBlock}}</pre>
 							</div>
+							{{end}}
 							<div class="picode">
 								<pre>{{.ImplCodeBlock}}</pre>
 							</div>
