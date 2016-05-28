@@ -202,7 +202,46 @@ header .form-search {
 	padding-right: 0px;
 }
 
-.header-small .navbar .nav>li>a {
+/* Header for print-friendly pages */
+
+.header-print {
+	margin: 0px 0px 12px 0px;
+	padding: 0px;
+}
+
+.header-print img {
+	margin: 0px 0px 5px 0px;
+}
+
+.header-print h1 {
+	font-size: 20px;
+	overflow-x : hidden;
+	margin: 0px;
+	line-height: normal;
+}
+
+.header-print h1 a {
+	color: #005;
+}
+
+.header-print .slogan {
+	margin-top: 2px;
+	color: #557;
+	font-style: italic;
+}
+
+.header-print .navbar-inner {
+	padding-left: 8px;
+}
+
+.header-print .nav>li {
+	padding-top: 6px;
+	padding-left: 8px;
+	padding-right: 2px;
+}
+
+
+.header-print .navbar .nav>li>a {
 	padding: 0px;
 }
 
