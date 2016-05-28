@@ -751,8 +751,39 @@ footer a.visited {
 
 /* Individual cheatsheet */
 
+.page-cheatsheet .actions-dropdown {
+	display:none;
+}
+
+.page-cheatsheet .dice {
+	display:none;
+}
+
+.page-cheatsheet .form-search {
+	display:none;
+}
+
+.page-cheatsheet .filters {
+	float: right;
+	margin-bottom: 15px;
+}
+
+.page-cheatsheet .filters button,
+.page-cheatsheet .filters label,
+.page-cheatsheet .filters #filter {
+	margin-left: 12px;
+}
+
+.cheatsheet-lines {
+	clear: both;
+}
+
 .cheatsheet-lines th, .cheatsheet-lines td {
   vertical-align: top;
+}
+
+.page-cheatsheet .idiom-title {
+	font-weight: bold;
 }
 
 .page-cheatsheet .impl-code {
@@ -763,12 +794,13 @@ footer a.visited {
 	border-bottom: dotted 1px #CCC;
 }
 
-.page-cheatsheet pre {
-	margin-top: 4px;
+.page-cheatsheet pre.picode {
+	margin-top: 0px;
 	margin-bottom: 4px;
 }
 
 .page-cheatsheet .close {
+  margin-top: 8px;
   font-size: 35px;
 }
 
@@ -784,6 +816,11 @@ footer a.visited {
   a[href]:after {
     content: none !important;
   }
+
+  .page-cheatsheet .filters{
+    display: none !important;
+  }
+
 
   .page-cheatsheet .idiom-title {
   	width: 10%;

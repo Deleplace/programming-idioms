@@ -6,16 +6,37 @@
 	{{template "header-small" .}}  
 	<div class="page-content container-fluid">
 
+		<div class="filters form-inline">
+			<button class="page-print icon-print icon-2x"></button>
+
+			<label for="showIdiomId" class="checkbox">
+				<input type="checkbox" id="showIdiomId" checked="checked" /> Idiom ID
+			</label>
+
+			<label for="showImports" class="checkbox">
+				<input type="checkbox" id="showImports" /> Imports
+			</label>
+
+			<input type="text" id="filter" class="input-small" placeholder="filter..." />
+		</div>
+
 		<h2>{{.Lang | printNiceLang}} code</h2>
 
 		<div>
 			<table class="cheatsheet-lines">
 				{{range .CheatsheetLines}}
-					<tr>
+					<tr class="cheatsheet-line">
 						<th class="idiom-id dotted">{{.IdiomID}}</th>
 						<td class="idiom-title dotted">{{markup2CSS (atom2string .IdiomTitle)}}</td>
 						<td class="idiom-lead dotted">{{markup2CSS (atom2string .IdiomLeadParagraph)}}</td>
-						<td class="impl-code"><pre>{{.ImplCodeBlock}}</pre></td>
+						<td class="impl-code dotted">
+							<div class="piimports">
+								<pre class="impl-imports" style="display: none;">{{.ImplImportsBlock}}</pre>
+							</div>
+							<div class="picode">
+								<pre>{{.ImplCodeBlock}}</pre>
+							</div>
+						</td>
 						<td><button type="button" class="close">&times;</button></div></td>
 					</tr>
 				{{end}}

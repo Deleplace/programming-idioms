@@ -704,8 +704,38 @@ $(function() {
 		]);
 	});
 
-	$(".cheatsheet-lines button.close").click(function(){
-		$(this).closest("tr").hide('normal');
+
+	$("button.page-print").click(function(){
+		window.print();
 	});
 
+	$(".cheatsheet-lines button.close").click(function(){
+		$(this).closest("tr").remove();
+	});
+
+	$(".page-cheatsheet #showIdiomId").change(function(){
+		if( $(this).is(':checked') ){
+			$("th.idiom-id").show();
+		}else{
+			$("th.idiom-id").hide();
+		}
+	});
+
+	$(".page-cheatsheet #showImports").change(function(){
+		if( $(this).is(':checked') ){
+			$("pre.impl-imports").show();
+		}else{
+			$("pre.impl-imports").hide();
+		}
+	});
+
+	$(".page-cheatsheet #filter").change(function(){
+		var word = $(this).val();
+		$("tr.cheatsheet-line").hide();
+		$("tr.cheatsheet-line").each(function(){
+			if( $(this).html().indexOf(word) !== -1 ){
+				$(this).show('normal');
+			}
+		});
+	});
 });
