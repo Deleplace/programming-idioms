@@ -733,7 +733,9 @@ $(function() {
 		var word = $(this).val();
 		$("tr.cheatsheet-line").hide();
 		$("tr.cheatsheet-line").each(function(){
-			if( $(this).html().indexOf(word) !== -1 ){
+			var lowerHtml = $(this).html().toLowerCase();
+			var lowerWord = word.toLowerCase();
+			if( lowerHtml.indexOf(lowerWord) !== -1 ){
 				$(this).show('normal');
 			}
 		});
