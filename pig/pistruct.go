@@ -301,6 +301,20 @@ func (impl *Impl) ExtractIndexableWords() []string {
 	return w
 }
 
+// FindIdiomOrImplLastEditor returns last user who touched something
+func (idiom *Idiom) FindIdiomOrImplLastEditor() string {
+	last := idiom.LastEditor
+	mostRecentDate := idiom.VersionDate
+	for _, impl := range idiom.Implementations {
+		lame := -time.Second // lame delta because idiom.VersionDate is always greater
+		if !impl.VersionDate.Before(mostRecentDate.Add(lame)) {
+			last = impl.LastEditor
+			mostRecentDate = impl.VersionDate
+		}
+	}
+	return last
+}
+
 // ComputeIdiomOrImplLastEditor computes IdiomOrImplLastEditor
 func (hist *IdiomHistory) ComputeIdiomOrImplLastEditor() {
 	hist.IdiomOrImplLastEditor = hist.LastEditor

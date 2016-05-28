@@ -105,7 +105,7 @@ func rss(w http.ResponseWriter,
 			}
 			desc += "."
 		}
-		desc += "<br/>Last contributor: " + idiom.Implementations[0].LastEditor + "."
+		desc += "<br/>Last contributor: " + idiom.FindIdiomOrImplLastEditor() + "."
 		desc += "<br/>Last edit: " + idiom.EditSummary
 		item := &RssItem{
 			Link:        itemLink,
