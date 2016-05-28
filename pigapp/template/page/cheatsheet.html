@@ -17,6 +17,10 @@
 				<input type="checkbox" id="showImports" /> Imports
 			</label>
 
+			<label for="showComments" class="checkbox">
+				<input type="checkbox" id="showComments" /> Comments
+			</label>
+
 			<input type="text" id="filter" class="input-small" placeholder="filter..." />
 		</div>
 
@@ -37,6 +41,9 @@
 							</div>
 							<div class="picode">
 								<pre>{{.ImplCodeBlock}}</pre>
+							</div>
+							<div class="impl-comment" style="display: none;">
+								{{markup2CSS (atom2string .ImplCodeBlockComment)}}
 							</div>
 						</td>
 						<td><button type="button" class="close">&times;</button></div></td>

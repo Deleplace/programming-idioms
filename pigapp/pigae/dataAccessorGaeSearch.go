@@ -77,6 +77,8 @@ type cheatSheetLineDoc struct {
 	ImplImportsBlock gaesearch.Atom
 	// ImplCodeBlock is the code block of this impl.
 	ImplCodeBlock gaesearch.Atom
+	// ImplCodeBlock is the comment of this impl.
+	ImplCodeBlockComment gaesearch.Atom
 }
 
 type cheatSheetLineDocs []cheatSheetLineDoc
@@ -166,13 +168,14 @@ func indexIdiomCheatsheets(c context.Context, idiom *Idiom) error {
 	for _, impl := range idiom.Implementations {
 		docID := fmt.Sprintf("%d_%d", idiom.Id, impl.Id)
 		doc := &cheatSheetLineDoc{
-			Lang:               gaesearch.Atom(impl.LanguageName),
-			IdiomID:            gaesearch.Atom(strconv.Itoa(idiom.Id)),
-			IdiomTitle:         gaesearch.Atom(idiom.Title),
-			IdiomLeadParagraph: gaesearch.Atom(idiom.LeadParagraph),
-			ImplID:             gaesearch.Atom(strconv.Itoa(impl.Id)),
-			ImplImportsBlock:   gaesearch.Atom(impl.ImportsBlock),
-			ImplCodeBlock:      gaesearch.Atom(impl.CodeBlock),
+			Lang:                 gaesearch.Atom(impl.LanguageName),
+			IdiomID:              gaesearch.Atom(strconv.Itoa(idiom.Id)),
+			IdiomTitle:           gaesearch.Atom(idiom.Title),
+			IdiomLeadParagraph:   gaesearch.Atom(idiom.LeadParagraph),
+			ImplID:               gaesearch.Atom(strconv.Itoa(impl.Id)),
+			ImplImportsBlock:     gaesearch.Atom(impl.ImportsBlock),
+			ImplCodeBlock:        gaesearch.Atom(impl.CodeBlock),
+			ImplCodeBlockComment: gaesearch.Atom(impl.AuthorComment),
 		}
 		// Weird that the search API doesn't have batch queries.
 		// TODO: index each impl concurrently?

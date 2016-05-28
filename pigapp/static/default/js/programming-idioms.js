@@ -729,6 +729,14 @@ $(function() {
 		}
 	});
 
+	$(".page-cheatsheet #showComments").change(function(){
+		if( $(this).is(':checked') ){
+			$(".impl-comment").show();
+		}else{
+			$(".impl-comment").hide();
+		}
+	});
+
 	$(".page-cheatsheet #filter").change(function(){
 		var word = $(this).val();
 		$("tr.cheatsheet-line").hide();
