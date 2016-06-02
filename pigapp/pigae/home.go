@@ -30,7 +30,7 @@ func homeView(w http.ResponseWriter, c context.Context, userProfile UserProfile)
 
 	data := &HomeFacade{
 		PageMeta: PageMeta{
-			PageTitle: "Programming-Idioms",
+			PageTitle: "Programming Idioms",
 			Toggles:   homeToggles,
 		},
 		UserProfile:       userProfile,
