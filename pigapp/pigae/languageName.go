@@ -40,7 +40,11 @@ var allNiceLangs []string
 
 func allLanguages() []string {
 	if allLangs == nil {
-		allLangs = append(mainStreamLanguages(), moreLanguages()...)
+		mainstream := mainStreamLanguages()
+		more := moreLanguages()
+		allLangs = make([]string, len(mainstream)+len(more))
+		copy(allLangs, mainstream)
+		copy(allLangs[len(mainstream):], more)
 		sort.Strings(allLangs)
 		allNiceLangs = make([]string, len(allLangs))
 		for i, lg := range allLangs {
