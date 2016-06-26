@@ -132,7 +132,7 @@ func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, ve
 		errTooManyItems = PiError{ErrorText: fmt.Sprintf("Found many history items for idiom %v, version %v. Restoring most recent candidate.", idiomID, version), Code: 500}
 		for i := range histories {
 			candidate := &histories[i].Idiom
-			if candidate.VersionDate > historyIdiom.VersionDate {
+			if candidate.VersionDate.After(historyIdiom.VersionDate) {
 				historyIdiom = candidate
 			}
 		}
