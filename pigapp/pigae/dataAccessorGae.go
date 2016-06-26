@@ -124,8 +124,18 @@ func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, ve
 	if len(histories) == 0 {
 		return nil, PiError{ErrorText: fmt.Sprintf("No history found for idiom %v", idiomID), Code: 400}
 	}
-	if len(histories) == 2 {
-		return nil, PiError{ErrorText: fmt.Sprintf("Found many history items for idiom %v, version %v", idiomID, version), Code: 500}
+	var errTooManyItems error
+	historyIdiom := &histories[0].Idiom
+	if len(histories) >= 2 {
+		// Workaround for unsolved bug when history versions are inconsistent
+		// Let's just restore the "most recent" candidate
+		errTooManyItems = PiError{ErrorText: fmt.Sprintf("Found many history items for idiom %v, version %v. Restoring most recent candidate.", idiomID, version), Code: 500}
+		for i := range histories {
+			candidate := &histories[i].Idiom
+			if candidate.VersionDate > historyIdiom.VersionDate {
+				historyIdiom = candidate
+			}
+		}
 	}
 
 	idiomKey, idiom, err := a.getIdiom(c, idiomID)
@@ -139,12 +149,15 @@ func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, ve
 	newVersion := idiom.Version + 1
 	log.Infof(c, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
 
-	historyIdiom := &histories[0].Idiom
 	historyIdiom.Version = currentVersion // will be incremented
 	historyIdiom.EditSummary = fmt.Sprintf("Restored version %v", version)
 	err = a.saveExistingIdiom(c, idiomKey, historyIdiom)
 	if err != nil {
 		return nil, err
+	}
+	if errTooManyItems != nil {
+		// Return error *after* the restoring is done
+		return historyIdiom, errTooManyItems
 	}
 	return historyIdiom, nil
 }
