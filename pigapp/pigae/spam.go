@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 
+	. "github.com/Deleplace/programming-idioms/pig"
+
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
@@ -67,6 +69,21 @@ func isSpam(w http.ResponseWriter, r *http.Request) (busted bool) {
 		motive = "identical imports and codeblock [" + r.FormValue("impl_imports")[0:10] + "...]"
 		return true
 	}
-
+	for _, field := range []string{
+		"idiom_title",
+		"idiom_keywords",
+		"user_nickname",
+		"impl_language",
+	} {
+		for _, trash := range []string{
+			"http://",
+			"https://",
+		} {
+			if strings.Contains(r.FormValue(field), trash) {
+				motive = "suspicious value for form field [" + field + "] : [" + Truncate(r.FormValue(field), 30) + "]"
+				return true
+			}
+		}
+	}
 	return false
 }
