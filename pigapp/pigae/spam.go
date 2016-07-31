@@ -79,7 +79,23 @@ func isSpam(w http.ResponseWriter, r *http.Request) (busted bool) {
 			"http://",
 			"https://",
 		} {
-			if strings.Contains(r.FormValue(field), trash) {
+			if strings.Contains(strings.ToLower(r.FormValue(field)), trash) {
+				motive = "suspicious value for form field [" + field + "] : [" + Truncate(r.FormValue(field), 30) + "]"
+				return true
+			}
+		}
+	}
+	for _, field := range []string{
+		"idiom_title",
+		"idiom_keywords",
+		"user_nickname",
+		"impl_language",
+		"idiom_lead",
+	} {
+		for _, trash := range []string{
+			"href=",
+		} {
+			if strings.Contains(strings.ToLower(r.FormValue(field)), trash) {
 				motive = "suspicious value for form field [" + field + "] : [" + Truncate(r.FormValue(field), 30) + "]"
 				return true
 			}
