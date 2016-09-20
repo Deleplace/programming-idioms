@@ -64,6 +64,7 @@ func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	c := appengine.NewContext(r)
+	userProfile := readUserProfile(r)
 
 	idiomIDStr := r.FormValue("idiom_id")
 	pictureURL := r.FormValue("picture_url")
@@ -79,6 +80,7 @@ func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	idiom.ImageURL = pictureURL
+	idiom.EditSummary = "Updated picture URL by user [" + userProfile.Nickname + "]"
 
 	err = dao.saveExistingIdiom(c, key, idiom)
 	if err != nil {
