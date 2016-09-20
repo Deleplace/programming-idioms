@@ -103,7 +103,7 @@
 					<div class="span6">
 						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}">{{.Title}}</a></h1>
 						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
-						{{if .Picture}}<div class="idiom-picture"><img src="{{hostPrefix}}/idiom-picture?blobKey={{.Picture}}" alt="Illustration"/></div>{{end}}
+						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
 					</div>
 					<div class="span4">
 						<div class="language-list">
@@ -141,7 +141,7 @@
 						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
 					</div>
 					<div class="span1">
-						{{if .Picture}}<div class="idiom-picture"><img src="{{hostPrefix}}/idiom-picture?blobKey={{.Picture}}" alt="Illustration"/></div>{{end}}
+						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
 					</div>
 					<div class="span4">
 						<div class="language-list">

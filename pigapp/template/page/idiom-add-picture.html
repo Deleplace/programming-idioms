@@ -8,7 +8,7 @@
 	
 		<div class="row-fluid">
 			<div class="span6">
-				<form class="form-horizontal" action="{{.UploadURL}}" method="POST" enctype="multipart/form-data">
+				<form class="form-horizontal" action="{{hostPrefix}}/idiom-save-picture" method="POST">
 					<fieldset>
 						<div class="control-group">
 							<label class="control-label" for="idiom_id">Id</label>
@@ -31,10 +31,9 @@
 							</div>
 						</div>
 						<div class="control-group">
-							<label class="control-label" for="idiom_picture">Picture</label>
+							<label class="control-label" for="idiom_picture">Picture URL</label>
 							<div class="controls">
-								{{.Idiom.Picture}}
-								<input type="file" name="idiom_picture" class="input-xlarge" />
+								<input title="" data-original-title="" name="picture_url" class="input-xlarge" placeholder="https://...." maxlength="300" type="text" value="{{.Idiom.ImageURL}}" />
 							</div>
 						</div>
 						{{template "input-username" .UserProfile.Nickname}}

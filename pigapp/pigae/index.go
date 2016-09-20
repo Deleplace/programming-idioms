@@ -73,7 +73,7 @@ func initRoutes() {
 			handle("/idiom-save", idiomSave)
 			handle("/idiom-edit/{idiomId}", idiomEdit)
 			handle("/idiom-add-picture/{idiomId}", idiomAddPicture)
-			handle("/picture-upload", idiomSavePicture) // todo: ?
+			handle("/idiom-save-picture", idiomSavePicture)
 			handle("/impl-edit/{idiomId}/{implId}", implEdit)
 			//handle("/fake-idiom-save", fakeIdiomSave)
 			handle("/idiom-create", idiomCreate)
@@ -135,7 +135,7 @@ var neededPathVariables = map[string][]string{
 var neededParameters = map[string][]string{
 	"/typeahead-languages":         { /*todo*/ },
 	"/idiom-save":                  {"idiom_title"},
-	"/picture-upload":              { /*todo*/ },
+	"/idiom-save-picture":          { /*todo*/ },
 	"/impl-save":                   {"idiom_id", "impl_code"},
 	"/revert":                      {"idiomId", "version"},
 	"/ajax-idiom-vote":             {"idiomId", "choice"},
@@ -160,7 +160,7 @@ var neededToggles = map[string][]string{
 	"/idiom-save":                   {"writable"},
 	"/idiom-edit/{idiomId}":         {"writable", "writable", "idiomEditing"},
 	"/idiom-add-picture/{idiomId}":  {"writable", "idiomEditing"},
-	"/picture-upload":               {"writable", "idiomEditing"},
+	"/idiom-save-picture":           {"writable", "idiomEditing"},
 	"/impl-edit/{idiomId}/{implId}": {"writable", "implEditing"},
 	"/idiom-create":                 {"writable"},
 	"/impl-create/{idiomId}":        {"writable", "implAddition"},
