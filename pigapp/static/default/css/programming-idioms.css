@@ -438,7 +438,7 @@ header .form-search {
   font-weight: bold;
 }
 .idiom-summary-large .idiom-picture img{
-  height: 160px;
+  max-height: 160px;
 }
 .idiom-summary-large .language-list {
   float: left;
