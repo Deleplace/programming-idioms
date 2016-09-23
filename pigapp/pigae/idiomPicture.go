@@ -81,6 +81,7 @@ func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
 
 	idiom.ImageURL = pictureURL
 	idiom.EditSummary = "Updated picture URL by user [" + userProfile.Nickname + "]"
+	idiom.LastEditor = userProfile.Nickname
 
 	err = dao.saveExistingIdiom(c, key, idiom)
 	if err != nil {
