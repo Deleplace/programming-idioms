@@ -15,7 +15,7 @@ import (
 
 // IsAdmin determines whether the current user is regarded as Admin by the Google auth provider.
 func IsAdmin(r *http.Request) bool {
-	c := appengine.NewContext(r) // TODOD check if NewContext is expensive
+	c := appengine.NewContext(r) // TODO check if NewContext is expensive
 	u := user.Current(c)
 	return u != nil && u.Admin
 }
