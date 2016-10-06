@@ -30,6 +30,7 @@ func idiomEdit(w http.ResponseWriter, r *http.Request) error {
 		return PiError{"Idiom " + idiomIDStr + " not found : " + err.Error(), http.StatusNotFound}
 	}
 
+	userProfile := readUserProfile(r)
 	myToggles := copyToggles(toggles)
 	myToggles["editing"] = true
 
@@ -39,7 +40,7 @@ func idiomEdit(w http.ResponseWriter, r *http.Request) error {
 			Toggles:               myToggles,
 			PreventIndexingRobots: true,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: userProfile,
 		Idiom:       idiom,
 	}
 

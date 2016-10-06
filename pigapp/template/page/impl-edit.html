@@ -94,6 +94,20 @@
 								<input type="text" name="impl_demo_url" class="input-xlarge" maxlength="250" value="{{.Impl.DemoURL}}" />
 							</div>
 						</div>
+		 				{{if .UserProfile.IsAdmin}}
+						<div class="control-group">
+							<label class="control-label" for="impl_picture_url">Picture URL (admin)</label>
+							<div class="controls">
+								<input type="text" name="impl_picture_url" class="input-xlarge" maxlength="250" value="{{.Impl.PictureURL}}" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="impl_protected">Protected</label>
+							<div class="controls">
+								<input type="checkbox" name="impl_protected"  {{if .Impl.Protected}}checked="checked"{{end}} />
+							</div>
+						</div>
+						{{end}}
 						<div class="control-group">
 							<label class="control-label" for="edit_summary">Edit summary</label>
 							<div class="controls">
@@ -107,14 +121,6 @@
 									placeholder="Why?" />
 							</div>
 						</div>
-		 				{{if .UserProfile.IsAdmin}}
-						<div class="control-group">
-							<label class="control-label" for="impl_picture_url">Picture URL (admin)</label>
-							<div class="controls">
-								<input type="text" name="impl_picture_url" class="input-xlarge" maxlength="250" value="{{.Impl.PictureURL}}" />
-							</div>
-						</div>
-						{{end}}
 						{{template "input-username" .UserProfile.Nickname}}
 						<div class="control-group">
 							<div class="controls">

@@ -62,6 +62,14 @@
 							</div>
 						</div>
 						*/}}
+		 				{{if .UserProfile.IsAdmin}}
+						<div class="control-group">
+							<label class="control-label" for="idiom_protected">Protected</label>
+							<div class="controls">
+								<input type="checkbox" name="idiom_protected" {{if .Idiom.Protected}}checked="checked"{{end}} />
+							</div>
+						</div>
+						{{end}}
 						<div class="control-group">
 							<label class="control-label" for="edit_summary">Edit summary</label>
 							<div class="controls">

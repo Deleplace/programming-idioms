@@ -120,7 +120,9 @@
 					<div class="span1">
 						<div class="show-on-desktop">
 							{{template "idiom-impl-grid-button" .}}
-							{{template "idiom-edit-button" .}}
+							{{if or (not .Protected) $isAdmin}}
+								{{template "idiom-edit-button" .}}
+							{{end}}
 							{{if $isAdmin}}
 								{{template "idiom-delete-button" .}}
 							{{end}}
@@ -208,7 +210,9 @@
 		</div>
 		<div class="span1">
 			<div class="show-on-desktop">
-				{{template "impl-edit-button" decorate .Impl .Idiom}}
+				{{if or (and (not .Impl.Protected) (not .Idiom.Protected)) .UserProfile.IsAdmin}}
+					{{template "impl-edit-button" decorate .Impl .Idiom}}
+				{{end}}
 				{{if .UserProfile.IsAdmin}}
 					{{template "impl-delete-button" decorate .Impl .Idiom}}
 				{{end}}

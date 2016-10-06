@@ -95,6 +95,9 @@ type Idiom struct {
 
 	// NoSQL-style : store directly some data from other objects
 	RelatedIdiomTitles []string
+
+	// Proctected when "only admin can edit"
+	Protected bool
 }
 
 // Impl is a specific implementation of one Idiom in one programming language.
@@ -162,6 +165,9 @@ type Impl struct {
 
 	// PictureURL to illustrate this impl.
 	PictureURL string
+
+	// Proctected when "only admin can edit"
+	Protected bool
 }
 
 // IdiomRenderingDecoration is the "current user" vote on this Idiom, if any.

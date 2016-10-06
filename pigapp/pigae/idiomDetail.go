@@ -84,9 +84,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	myToggles := copyToggles(toggles)
-	myToggles["actionEditIdiom"] = true
+	myToggles["actionEditIdiom"] = !idiom.Protected || IsAdmin(r)
 	myToggles["actionIdiomHistory"] = true
-	myToggles["actionAddImpl"] = true
+	myToggles["actionAddImpl"] = !idiom.Protected || IsAdmin(r)
 	data := &IdiomDetailFacade{
 		PageMeta: PageMeta{
 			PageTitle:    pageTitle,

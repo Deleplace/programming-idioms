@@ -163,6 +163,25 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 
 	_, impl, _ := idiom.FindImplInIdiom(implID)
 
+	isAdmin := IsAdmin(r)
+	if idiom.Protected && !isAdmin {
+		return PiError{"Can't edit protected idiom " + idiomIDStr, http.StatusUnauthorized}
+	}
+	if impl.Protected && !isAdmin {
+		return PiError{"Can't edit protected impl " + existingImplIDStr, http.StatusUnauthorized}
+	}
+	if isAdmin {
+		wasProtected := impl.Protected
+		impl.Protected = r.FormValue("impl_protected") != ""
+
+		if wasProtected && !impl.Protected {
+			log.Infof(c, "[%v] unprotects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+		}
+		if !wasProtected && impl.Protected {
+			log.Infof(c, "[%v] protects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+		}
+	}
+
 	if r.FormValue("impl_version") != strconv.Itoa(impl.Version) {
 		return PiError{fmt.Sprintf("Implementation has been concurrently modified (editing version %v, current version is %v)", r.FormValue("impl_version"), impl.Version), http.StatusConflict}
 	}
@@ -187,7 +206,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	impl.Version = impl.Version + 1
 	impl.VersionDate = time.Now()
 
-	if IsAdmin(r) {
+	if isAdmin {
 		// 2016-10: only Admin may set an impl picture
 		impl.PictureURL = r.FormValue("impl_picture_url")
 	}

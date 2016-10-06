@@ -109,7 +109,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	}
 	/*
 		Authenticated user name not needed here, as of 2015.
-		Espacially not for the Admin.
+		Especially not for the Admin.
 
 		if u := user.Current(c); u != nil {
 			idiom.Author = u.String()
@@ -147,6 +147,23 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	if err != nil {
 		return PiError{"Could not find idiom " + existingIDStr, http.StatusNotFound}
 	}
+
+	isAdmin := IsAdmin(r)
+	if idiom.Protected && !isAdmin {
+		return PiError{"Can't edit protected idiom " + existingIDStr, http.StatusUnauthorized}
+	}
+	if isAdmin {
+		wasProtected := idiom.Protected
+		idiom.Protected = r.FormValue("idiom_protected") != ""
+
+		if wasProtected && !idiom.Protected {
+			log.Infof(c, "[%v] unprotects idiom %v", username, existingIDStr)
+		}
+		if !wasProtected && idiom.Protected {
+			log.Infof(c, "[%v] protects idiom %v", username, existingIDStr)
+		}
+	}
+
 	if r.FormValue("idiom_version") != strconv.Itoa(idiom.Version) {
 		return PiError{fmt.Sprintf("Idiom has been concurrently modified (editing version %v, current version is %v)", r.FormValue("idiom_version"), idiom.Version), http.StatusConflict}
 	}
