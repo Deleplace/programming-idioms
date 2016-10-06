@@ -54,8 +54,10 @@ type Idiom struct {
 	OriginalAttributionURL string
 
 	// Picture representing the concept, if necessary
+	// DEPRECATED
 	Picture string
 
+	// ImageURL to illustrate this idiom.
 	ImageURL string
 
 	// Autoincremented at each update 1, 2, 3...
@@ -157,6 +159,9 @@ type Impl struct {
 
 	// ImportsBlock contains the import directives, appart from main code section.
 	ImportsBlock string
+
+	// PictureURL to illustrate this impl.
+	PictureURL string
 }
 
 // IdiomRenderingDecoration is the "current user" vote on this Idiom, if any.

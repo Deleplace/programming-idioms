@@ -305,7 +305,12 @@
 		</div>
 	{{end}}
 	<div class="picode">
-		<pre data-toggle="popover" data-content="{{markup2CSS .AuthorComment | html}}" class="prettyprint {{.LanguageName | prettifyCSSClass}}">{{.CodeBlock}}</pre>
+		{{if trim .CodeBlock}}
+			<pre data-toggle="popover" data-content="{{markup2CSS .AuthorComment | html}}" class="prettyprint {{.LanguageName | prettifyCSSClass}}">{{.CodeBlock}}</pre>
+		{{end}}
+		{{if .PictureURL}}
+			<div class="impl-picture"><img src="{{.PictureURL}}" alt="Illustration"/></div>
+		{{end}}
 	</div>
 {{end}}
 

@@ -102,6 +102,12 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		Version:                1,
 		VersionDate:            now,
 	}
+
+	if IsAdmin(r) {
+		// 2016-10: only Admin may set an impl picture
+		newImpl.PictureURL = r.FormValue("impl_picture_url")
+	}
+
 	idiom.Implementations = append(idiom.Implementations, newImpl)
 	idiom.EditSummary = editSummary
 	idiom.LastEditedImplID = implID
@@ -180,6 +186,11 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	impl.DocumentationURL = docURL
 	impl.Version = impl.Version + 1
 	impl.VersionDate = time.Now()
+
+	if IsAdmin(r) {
+		// 2016-10: only Admin may set an impl picture
+		impl.PictureURL = r.FormValue("impl_picture_url")
+	}
 
 	err = dao.saveExistingIdiom(c, key, idiom)
 	if err != nil {

@@ -47,6 +47,7 @@ func initTemplates() (*template.Template, error) {
 		"implementationsFor":    implementationsFor,
 		"shorten":               Shorten,
 		"atom2string":           atom2string,
+		"trim":                  strings.TrimSpace,
 	}
 	t = t.Funcs(funcMap)
 	folders := []string{
