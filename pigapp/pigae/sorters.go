@@ -90,16 +90,20 @@ func (s *implByLanguageSorter) Swap(i, j int) {
 	s.impl[i], s.impl[j] = s.impl[j], s.impl[i]
 }
 func (s *implByLanguageSorter) Less(i, j int) bool {
-	a, isfav := s.scores[s.impl[i].LanguageName]
-	if !isfav {
-		return false
+	a, isfavA := s.scores[s.impl[i].LanguageName]
+	b, isfavB := s.scores[s.impl[j].LanguageName]
+	if isfavA == isfavB {
+		if isfavA {
+			// both fav: user-defined pref order
+			return a < b
+		} else {
+			// both non-fav: alphabetical order of lang name
+			return s.impl[i].LanguageName < s.impl[j].LanguageName
+		}
+	} else {
+		// all fav before all non-fav
+		return isfavA
 	}
-	b, isfav := s.scores[s.impl[j].LanguageName]
-	if !isfav {
-		return true
-	}
-	return a < b
-	// Note: this currently violates transitivity (among non-favs)
 }
 
 // Puts favorites first, but does not care about which are "most favorite"
