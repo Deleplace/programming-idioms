@@ -3,6 +3,7 @@ package pigae
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
@@ -48,12 +49,14 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	c := appengine.NewContext(r)
 	q := vars["q"]
+	//q := url.QueryUnescape(q)  Not needed, so it seems.
 
 	// This is a premature hack. TODO find a graceful way to handle "c++",
 	// and stop confounding spaces and pluses.
+	q = strings.Replace(q, "C++", "Cpp", -1)
 	q = strings.Replace(q, "c++", "cpp", -1)
-	q = strings.Replace(q, "C++", "cpp", -1)
-	// TODO find a graceful way to handle "c#".
+	q = strings.Replace(q, "C#", "Csharp", -1)
+	q = strings.Replace(q, "c#", "csharp", -1)
 
 	terms := SplitForSearching(q, true)
 
@@ -148,9 +151,9 @@ func searchRedirect(w http.ResponseWriter, r *http.Request) error {
 		http.Redirect(w, r, "/", 301)
 		return nil
 	}
-	q = strings.Replace(q, " ", "+", -1)
+	safeQ := url.QueryEscape(q)
 
-	http.Redirect(w, r, hostPrefix()+"/search/"+q, http.StatusMovedPermanently)
+	http.Redirect(w, r, hostPrefix()+"/search/"+safeQ, http.StatusMovedPermanently)
 	return nil
 }
 
