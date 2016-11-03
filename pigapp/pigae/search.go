@@ -57,6 +57,8 @@ func search(w http.ResponseWriter, r *http.Request) error {
 	q = strings.Replace(q, "c++", "cpp", -1)
 	q = strings.Replace(q, "C#", "Csharp", -1)
 	q = strings.Replace(q, "c#", "csharp", -1)
+	q = strings.Replace(q, "C♯", "Csharp", -1)
+	q = strings.Replace(q, "c♯", "csharp", -1)
 
 	terms := SplitForSearching(q, true)
 
