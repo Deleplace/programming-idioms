@@ -51,8 +51,7 @@ func search(w http.ResponseWriter, r *http.Request) error {
 	q := vars["q"]
 	//q := url.QueryUnescape(q)  Not needed, so it seems.
 
-	// This is a premature hack. TODO find a graceful way to handle "c++",
-	// and stop confounding spaces and pluses.
+	// Maybe someday we find a graceful way to handle "c++", "c#", etc. but...
 	q = strings.Replace(q, "C++", "Cpp", -1)
 	q = strings.Replace(q, "c++", "cpp", -1)
 	q = strings.Replace(q, "C#", "Csharp", -1)
