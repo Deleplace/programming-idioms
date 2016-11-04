@@ -13,10 +13,11 @@ import (
 
 // IdiomDetailFacade is the Facade for the Idiom Detail page.
 type IdiomDetailFacade struct {
-	PageMeta       PageMeta
-	UserProfile    UserProfile
-	Idiom          *Idiom
-	SelectedImplID int
+	PageMeta         PageMeta
+	UserProfile      UserProfile
+	Idiom            *Idiom
+	SelectedImplID   int
+	SelectedImplLang string
 }
 
 func idiomDetail(w http.ResponseWriter, r *http.Request) error {
@@ -63,6 +64,17 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	includeNonFav := seeNonFavorite(r)
 	implFavoriteLanguagesFirstWithOrder(idiom, favlangs, selectedImplLang, includeNonFav)
 
+	// Selected impl as very first element
+	for i := range idiom.Implementations {
+		if idiom.Implementations[i].LanguageName != selectedImplLang {
+			break
+		}
+		if idiom.Implementations[i].Id == selectedImplID {
+			idiom.Implementations[0], idiom.Implementations[i] = idiom.Implementations[i], idiom.Implementations[0]
+			break
+		}
+	}
+
 	implLangInURL := vars["implLang"]
 	if implLangInURL != "" && strings.ToLower(selectedImplLang) != strings.ToLower(implLangInURL) {
 		// Maybe an accident,
@@ -93,9 +105,10 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			PageKeywords: idiom.ExtraKeywords,
 			Toggles:      myToggles,
 		},
-		UserProfile:    userProfile,
-		Idiom:          idiom,
-		SelectedImplID: selectedImplID,
+		UserProfile:      userProfile,
+		Idiom:            idiom,
+		SelectedImplID:   selectedImplID,
+		SelectedImplLang: selectedImplLang,
 	}
 	return templates.ExecuteTemplate(w, "page-idiom-detail", data)
 }

@@ -3,7 +3,7 @@
 {{template "head" .PageMeta}}  
 <body>  
 <div class="page-holder">
-	{{template "header-small" .}}  
+	{{template "header-small" .}}
 	<div class="page-content container-fluid">
 
     <div class="row-fluid">
@@ -16,9 +16,10 @@
 		<div class="span10">
 			{{template "idiom-summary-large"  decorate .Idiom .UserProfile}}
 			{{$selectedImplId := .SelectedImplID}}
+			{{$selectedImplLang := .SelectedImplLang}}
 			<div class="sortable-y">
 				{{range .Idiom.Implementations}}
-				{{if or (isInStringList .LanguageName $.UserProfile.FavoriteLanguages) (idEqual .Id $selectedImplId)}}
+				{{if or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages)}}
 					<div>
 						<div class="handle">
 						    <ul class="nav nav-tabs">
@@ -38,7 +39,7 @@
 				<ul class="nav nav-tabs">
 					{{$tabclass := ""}}
 					{{range .Idiom.Implementations}}
-						{{if not (or (isInStringList .LanguageName $.UserProfile.FavoriteLanguages) (idEqual .Id $selectedImplId))}}
+						{{if not (or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages))}}
 							<li class="{{$tabclass}}">
 								<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
 							</li>
@@ -46,7 +47,7 @@
 					{{end}}
 				</ul>
 				{{range .Idiom.Implementations}}
-					{{if not (or (isInStringList .LanguageName $.UserProfile.FavoriteLanguages) (idEqual .Id $selectedImplId))}}
+					{{if not (or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages))}}
 						<div id="impl{{.Id}}">
 							<div class="">
 								{{template "impl-code-and-comments" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
