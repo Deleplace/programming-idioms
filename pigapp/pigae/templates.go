@@ -1,6 +1,7 @@
 package pigae
 
 import (
+	"fmt"
 	"html/template"
 	"reflect"
 	"strings"
@@ -48,6 +49,8 @@ func initTemplates() (*template.Template, error) {
 		"shorten":               Shorten,
 		"atom2string":           atom2string,
 		"trim":                  strings.TrimSpace,
+		"ifval":                 ifval,
+		"diffClass":             diffClass,
 	}
 	t = t.Funcs(funcMap)
 	folders := []string{
@@ -137,5 +140,50 @@ func langCoverageClass(lang string, favlangs []string) string {
 	if StringSliceContains(favlangs, lang) {
 		return "coverage-fav-lang"
 	}
+	return ""
+}
+
+// A "functional if": depending of first (bool) argument,
+// return second or third argument.
+// Note that all arguments are always evaluated, even if discarded.
+func ifval(cond bool, value1, value2 interface{}) interface{} {
+	if cond {
+		return value1
+	}
+	return value2
+}
+
+// diffClass compare arguments to determine some CSS class to apply:
+// - empty when equals
+// - "touched" when both values are different and non-empty
+// - "created" when left is empty and right is non-empty
+// - "deleted" when left is non-empty and right is empty
+func diffClass(leftArg, rightArg interface{}) string {
+	switch left := leftArg.(type) {
+	case string:
+		right, ok := rightArg.(string)
+		if !ok {
+			panic(fmt.Errorf("unexpected right type %T\n", rightArg))
+		}
+
+		// \r\n are pita
+		left = strings.Replace(left, "\r\n", "\n", -1)
+		right = strings.Replace(right, "\r\n", "\n", -1)
+
+		if left == right {
+			return ""
+		}
+		if left == "" {
+			return "created"
+		}
+		if right == "" {
+			return "deleted"
+		}
+		return "touched"
+	// TODO other useful types?
+	default:
+		panic(fmt.Errorf("unexpected left type %T\n", leftArg))
+	}
+
 	return ""
 }

@@ -37,7 +37,7 @@ const rssTemplateString = `<?xml version="1.0" encoding="UTF-8"?>
 <description>{{.FeedDescription}}</description>
 <atom:link href="{{.FeedURL}}" rel="self" type="application/rss+xml" />
 {{range .Items}}
-{{.}}
+  {{.}}
 {{end}}
 </channel>
 </rss>`
@@ -75,6 +75,9 @@ func rssRecentlyCreated(w http.ResponseWriter, r *http.Request) error {
 	idiomGuidation := func(idiom *Idiom) string { return fmt.Sprintf("%v/guid/idiom/%v", env.Host, idiom.Id) }
 	return rss(w, c, r, idioms, dateCreation, idiomGuidation, "/rss-recently-created", "Programming Idioms recently created idioms", "Idioms recently created", "<br/><br/>Implemented in ")
 }
+
+// TODO an interface IdiomRssFeeder, 2 implementations (1 for updates, 1 for creations),
+// and func rss takes a IdiomRssFeeder as param.
 
 func rss(w http.ResponseWriter,
 	c context.Context,

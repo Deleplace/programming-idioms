@@ -778,6 +778,107 @@ footer a.visited {
 	margin-bottom: 5px;
 }
 
+/* Version diff */
+
+.version-diff .summary {
+	text-align: center;
+}
+
+.version-diff .summary .bigicon {
+	font-size: 48px;
+	margin-top: 6px;
+}
+
+.version-diff .idiom-summary-large .voting,
+.version-diff .idiom-summary-large .show-impl-grid,
+.version-diff .idiom-summary-large .btn-edit,
+.version-diff .idiom-summary-large .btn-danger {
+	display: none;
+}
+
+.version-diff .lang {
+	margin-top: 12px;
+}
+
+.version-diff .idiom-left .touched {
+	background-color: #FD9;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.version-diff .idiom-right .touched {
+	background-color: #FC6;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.version-diff .well {
+	margin-bottom: 2px;
+}
+
+.version-diff .impl-creation-true {
+	background-color: #DFD;
+}
+
+.version-diff .impl-left.touched {
+	background-color: #FD9;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.version-diff .impl-right.touched {
+	background-color: #FC6;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.version-diff .impl-left.created {
+	background-color: #DFD;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.version-diff .impl-right.created {
+	background-color: #AFA;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.version-diff .impl-left.deleted {
+	background-color: #FFD7D7;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.version-diff .impl-right.deleted {
+	background-color: #FAA;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.version-diff pre {
+	margin-top: 6px;
+	max-width: 90%;
+}
+
+.version-diff .diff-code-comments {
+	max-width: 80%;
+	margin-left: 10%;
+	padding: 6px;
+	border: 1px solid #777;
+	border-radius: 5px;
+	background-color: white;
+	margin-bottom: 3px;
+}
+
+.version-diff .field-value {
+	margin-left: 10%;
+	padding: 3px;
+	border: 1px solid #BBB;
+	border-radius: 2px;
+	background-color: white;
+}
+
 /* Missing fields list */
 
 .idioms-missing-fields td.mark {

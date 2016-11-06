@@ -4,7 +4,7 @@
 <body>  
 <div class="page-holder">
 	{{template "header-small" .}}  
-	<div class="page-content container-fluid">
+	<div class="page-content container-fluid version-diff">
 
     <div class="row-fluid">
 		<div class="span8">
@@ -12,80 +12,241 @@
 		</div>
     </div>
 	
-	<!-- TODO list of edit summaries
 	<div class="row-fluid">
 		<div class="span3">
 		</div>
 		<div class="span6">
+	<!-- TODO list of edit summaries
 			<ul>
 				<li>Editor1 said "Fixed typo"</li>
 				<li>Editor2 created Java impl</li>
 				<li>Editor2 deleted PHP impl</li>
 			</ul>
-			→
+    -->
+    		<div class="summary">
+    		  <div>
+    		  Edit summary for version {{.IdiomRight.Version}} : <br/>
+    		  <span class="quote">{{markup2CSS .IdiomRight.EditSummary}}</span>
+    		  </div>
+    		  <div class="bigicon">
+			    ↷
+			  </div>
+			</div>
 		</div>
 		<div class="span3">
 		</div>
     </div>
-    -->
+
 	<div class="row-fluid">
-		<div class="span6">
-			{{template "idiom-summary-large"  decorate .IdiomLeft.AsIdiomPtr .UserProfile}}
+		<div class="span6 idiom-left">
+			<div class="right">
+				<h4>Version {{.IdiomLeft.Version}}</h4>
+			</div>
 		</div>
-		<div class="span6">
-			{{template "idiom-summary-large"  decorate .IdiomRight.AsIdiomPtr .UserProfile}}
+		<div class="span6 idiom-right">
+			<div class="left">
+				<h4>Version {{.IdiomRight.Version}}</h4>
+			</div>
 		</div>
+	</div>
+
+
+	<div class="row-fluid">
+		{{$left := .IdiomLeft.AsIdiomPtr}}
+		{{$right := .IdiomRight.AsIdiomPtr}}
+
+		{{with $left}}
+		<div class="span6 idiom-left">
+			<div class="well idiom-summary-large">
+				<div class="row-fluid">
+					<div class="span10">
+						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}" class="{{if ne .Title $right.Title}}touched{{end}}">{{.Title}}</a></h1>
+						<p class="idiom-lead-paragraph identifier-emphasize  {{if ne .LeadParagraph $right.LeadParagraph}}touched{{end}}">{{markup2CSS .LeadParagraph}}</p>
+						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
+					</div>
+				</div>
+			</div>
+		</div>
+		{{end}}
+
+		{{with $right}}
+		<div class="span6 idiom-right">
+			<div class="well idiom-summary-large">
+				<div class="row-fluid">
+					<div class="span10">
+						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}" class="{{if ne .Title $left.Title}}touched{{end}}">{{.Title}}</a></h1>
+						<p class="idiom-lead-paragraph identifier-emphasize {{if ne .LeadParagraph $left.LeadParagraph}}touched{{end}}">{{markup2CSS .LeadParagraph}}</p>
+						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
+					</div>
+				</div>
+			</div>
+		</div>
+		{{end}}
     </div>
 			
+	{{/* IDIOM EXTRA KEYWORDS */}}
+	<div class="row-fluid">
+		<div class="span6 impl-left">
+			{{if $left.ExtraKeywords}}
+				<div class="{{if ne $left.ExtraKeywords $right.ExtraKeywords}}touched{{end}}">
+					<h5>Extra Keywords</h5>
+					{{$left.ExtraKeywords}}
+				</div>
+			{{end}}
+		</div>
+		<div class="span6 impl-right">
+			{{if $right.ExtraKeywords}}
+				<div class="{{if ne $left.ExtraKeywords $right.ExtraKeywords}}touched{{end}}">
+					<h5>Extra Keywords</h5>
+					{{$right.ExtraKeywords}}
+				</div>
+			{{end}}
+		</div>
+	</div>
+
+
 	{{range $implId := .ImplIDs}}
-	<div class="row-fluid">
-		<div class="span6">
-			{{if index $.CreationImplIDs $implId}}
-				∅
-			{{else}}
-				{{with index $.ImplLeft $implId}}
-					<div>{{.LanguageName}}</div>
+		{{$left := index $.ImplLeft $implId}}
+		{{$right := index $.ImplRight $implId}}
+
+		{{/* LANGUAGE NAME */}}
+		<div class="row-fluid lang">
+			<div class="span6 impl-left">
+				{{if $left.LanguageName}}
+				    <ul class="nav nav-tabs">
+							<li class="active">
+								<a href="#" class="lang-tab"><span class="label badge-lang">{{$left.LanguageName | printNiceLang}}</span></a>
+					    </li>
+					</ul>
 				{{end}}
-			{{end}}
-		</div>
-		<div class="span6">
-			{{if index $.DeletionImplIDs $implId}}
-				∅  (deleted!)
-			{{else}}
-				{{with index $.ImplRight $implId}}
-					<div>{{.LanguageName}}</div>
+			</div>
+			<div class="span6 impl-right">
+				{{if $right.LanguageName}}
+				    <ul class="nav nav-tabs">
+							<li class="active">
+								<a href="#" class="lang-tab"><span class="label badge-lang">{{$right.LanguageName | printNiceLang}}</span></a>
+					    </li>
+					</ul>
 				{{end}}
-			{{end}}
+			</div>
 		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span6">
-			{{if index $.CreationImplIDs $implId}}
-				∅
-			{{else}}
-				{{with index $.ImplLeft $implId}}
-					<div>{{.CodeBlock}}</div>
+
+		{{/* IMPORTS BLOCK */}}
+		{{if or $left.ImportsBlock $right.ImportsBlock }}
+			<div class="row-fluid">
+				{{$c := diffClass $left.ImportsBlock $right.ImportsBlock}}
+				<div class="span6 impl-left {{$c}}">
+					{{if $left.CodeBlock}}
+						<h5>Imports</h5>
+						<pre>{{$left.ImportsBlock}}</pre>
+					{{end}}
+				</div>
+				<div class="span6 impl-right {{$c}}">
+					{{if $right.CodeBlock}}
+						<h5>Imports</h5>
+						<pre>{{$right.ImportsBlock}}</pre>
+					{{end}}
+				</div>
+			</div>
+		{{end}}
+
+		{{/* CODE BLOCK */}}
+		<div class="row-fluid">
+			{{$c := diffClass $left.CodeBlock $right.CodeBlock}}
+			<div class="span6 impl-left {{$c}}">
+				{{if $left.CodeBlock}}
+					<h5>Code</h5>
+					<pre>{{$left.CodeBlock}}</pre>
 				{{end}}
-			{{end}}
-			<hr/>
-		</div>
-		<div class="span6">
-			{{if index $.DeletionImplIDs $implId}}
-				∅  (deleted!)
-			{{else}}
-				{{with index $.ImplRight $implId}}
-					<div>{{.CodeBlock}}</div>
+			</div>
+			<div class="span6 impl-right {{$c}}">
+				{{if $right.CodeBlock}}
+					<h5>Code</h5>
+					<pre>{{$right.CodeBlock}}</pre>
 				{{end}}
-			{{end}}
-			<hr/>
+			</div>
 		</div>
-	</div>
-	{{/*
-					<div>{{.AuthorComment}}</div>
-					<div>{{.OriginalAttributionURL}}</div>
-					<div>{{.DemoURL}}</div>
-					<div>{{.DocumentationURL}}</div>
-	*/}}
+
+		{{/* COMMENTS BUBBLE */}}
+		{{if or $left.AuthorComment $right.AuthorComment }}
+		<div class="row-fluid">
+			{{$c := diffClass $left.AuthorComment $right.AuthorComment}}
+			<div class="span6 impl-left {{$c}}">
+				{{if $left.AuthorComment}}
+					<h5>Comments bubble</h5>
+					<div class="diff-code-comments">
+						{{markup2CSS $left.AuthorComment}}
+					</div>
+				{{end}}
+			</div>
+			<div class="span6 impl-right {{$c}}">
+				{{if $right.AuthorComment}}
+					<h5>Comments bubble</h5>
+					<div class="diff-code-comments">
+						{{markup2CSS $right.AuthorComment}}
+					</div>
+				{{end}}
+			</div>
+		</div>
+		{{end}}
+
+		{{/* DOC URL */}}
+		{{if or $left.DocumentationURL $right.DocumentationURL }}
+			<div class="row-fluid">
+				{{$c := diffClass $left.DocumentationURL $right.DocumentationURL}}
+				<div class="span6 impl-left {{$c}}">
+					{{if $left.DocumentationURL}}
+						<h5>Doc URL</h5>
+						<div class="field-value">{{$left.DocumentationURL}}</div>
+					{{end}}
+				</div>
+				<div class="span6 impl-right {{$c}}">
+					{{if $right.DocumentationURL}}
+						<h5>Doc URL</h5>
+						<div class="field-value">{{$right.DocumentationURL}}</div>
+					{{end}}
+				</div>
+			</div>
+		{{end}}
+
+		{{/* ORIGINAL ATTRIBUTION URL */}}
+		{{if or $left.OriginalAttributionURL $right.OriginalAttributionURL }}
+			<div class="row-fluid">
+				{{$c := diffClass $left.OriginalAttributionURL $right.OriginalAttributionURL}}
+				<div class="span6 impl-left {{$c}}">
+					{{if $left.OriginalAttributionURL}}
+						<h5>Origin</h5>
+						<div class="field-value">{{$left.OriginalAttributionURL}}</div>
+					{{end}}
+				</div>
+				<div class="span6 impl-right {{$c}}">
+					{{if $right.OriginalAttributionURL}}
+						<h5>Origin</h5>
+						<div class="field-value">{{$right.OriginalAttributionURL}}</div>
+					{{end}}
+				</div>
+			</div>
+		{{end}}
+
+		{{/* DEMO URL */}}
+		{{if or $left.DemoURL $right.DemoURL }}
+			<div class="row-fluid">
+				{{$c := diffClass $left.DemoURL $right.DemoURL}}
+				<div class="span6 impl-left {{$c}}">
+					{{if $left.DemoURL}}
+						<h5>Demo URL</h5>
+						<div class="field-value">{{$left.DemoURL}}</div>
+					{{end}}
+				</div>
+				<div class="span6 impl-right {{$c}}">
+					{{if $right.DemoURL}}
+						<h5>Demo URL</h5>
+						<div class="field-value">{{$right.DemoURL}}</div>
+					{{end}}
+				</div>
+			</div>
+		{{end}}
+
 	{{end}}
 	
 	</div>
