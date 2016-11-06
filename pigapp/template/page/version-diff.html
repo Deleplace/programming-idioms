@@ -86,17 +86,18 @@
 			
 	{{/* IDIOM EXTRA KEYWORDS */}}
 	<div class="row-fluid">
-		<div class="span6 impl-left">
+		{{$c := diffClass $left.ExtraKeywords $right.ExtraKeywords}}
+		<div class="span6 idiom-left">
 			{{if $left.ExtraKeywords}}
-				<div class="{{if ne $left.ExtraKeywords $right.ExtraKeywords}}touched{{end}}">
+				<div class="{{$c}}">
 					<h5>Extra Keywords</h5>
 					{{$left.ExtraKeywords}}
 				</div>
 			{{end}}
 		</div>
-		<div class="span6 impl-right">
+		<div class="span6 idiom-right">
 			{{if $right.ExtraKeywords}}
-				<div class="{{if ne $left.ExtraKeywords $right.ExtraKeywords}}touched{{end}}">
+				<div class="{{$c}}">
 					<h5>Extra Keywords</h5>
 					{{$right.ExtraKeywords}}
 				</div>
