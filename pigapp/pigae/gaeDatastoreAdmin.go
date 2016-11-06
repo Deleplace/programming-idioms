@@ -136,6 +136,6 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintln(w, Response{"success": true, "message": "History repaired for idiom" + idiomIDStr})
+	fmt.Fprintln(w, Response{"success": true, "message": "History repaired for idiom " + idiomIDStr})
 	return nil
 }
