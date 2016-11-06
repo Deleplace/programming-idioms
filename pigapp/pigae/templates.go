@@ -51,6 +51,7 @@ func initTemplates() (*template.Template, error) {
 		"trim":                  strings.TrimSpace,
 		"ifval":                 ifval,
 		"diffClass":             diffClass,
+		"plus":                  plus,
 	}
 	t = t.Funcs(funcMap)
 	folders := []string{
@@ -189,4 +190,8 @@ func diffClass(leftArg, rightArg interface{}) string {
 	}
 
 	return ""
+}
+
+func plus(a, b int) int {
+	return a + b
 }
