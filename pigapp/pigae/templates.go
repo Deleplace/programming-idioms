@@ -115,7 +115,10 @@ func host() string {
 	return env.Host
 }
 
-// Workaround for proper PageMeta.Toggles
+// Poor workaround for proper PageMeta.Toggles
+//
+// Note this is reading global toggles, it doesn't
+// work at all with page custom toggles.
 func isToggled(name string) bool {
 	return toggles[name]
 }

@@ -78,13 +78,12 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 
 	userProfile := readUserProfile(r)
 	myToggles := copyToggles(toggles)
-	myToggles["writable"] = false // evertyhing is read-only!
+	myToggles["writable"] = false
 	myToggles["actionEditIdiom"] = false
 	myToggles["actionIdiomHistory"] = false
 	myToggles["actionAddImpl"] = false
-	myToggles["idiomEditing"] = false
-	myToggles["idiomVotingUp"] = false
-	myToggles["idiomVotingDown"] = false
+	// Note that custom toggles don't work
+	// in deeply nested templates...
 	data := &VersionDiffFacade{
 		PageMeta: PageMeta{
 			PageTitle: right.Title,
