@@ -8,7 +8,7 @@
 			
 		<div class="row-fluid">
 		
-			<div class="span4">
+			<div class="span3">
 				<form method="POST">
 				  <fieldset>
 				    <legend>Toggles</legend>
@@ -26,7 +26,7 @@
 				</form>
 			</div>
 			
-			<div class="span4">
+			<div class="span3">
 				<form action="{{hostPrefix}}/admin-data-export">
 				  <fieldset>
 				    <legend>Export to file</legend>
@@ -43,7 +43,7 @@
 				</form>
 			</div>
 				
-			<div class="span4">
+			<div class="span3">
 				<form id="import-form" enctype="multipart/form-data" method="POST">
 				  <fieldset>
 				    <legend>Import from file</legend>
@@ -56,16 +56,27 @@
 				</form>
 			</div>
 				
-			<div class="span4">
+			<div class="span3">
 				<form id="reindex-form" enctype="multipart/form-data" method="POST">
 				  <fieldset>
 				    <legend>Full Text Index</legend>
-					<input type="button" class="btn upload" value="Reindex all idioms" />
+					<input type="button" class="btn submit" value="Reindex all idioms" />
+				  </fieldset>
+				</form>
+			</div>
+
+			<div class="span3">
+				<form id="repair-history-form" enctype="multipart/form-data" method="POST">
+				  <fieldset>
+				    <legend>Repair history</legend>
+				    <label for="idiomId">Idiom Id</label>
+				    <input type="text" name="idiomId" class="idiom input-small" required="required" value="" />
+					<input type="button" class="btn submit" value="Repair" />
 				  </fieldset>
 				</form>
 			</div>
 			
-			<div class="span4">
+			<div class="span3">
 				<form id="relation-form" enctype="multipart/form-data">
 				  <fieldset>
 				    <legend>Add relation</legend>
@@ -78,7 +89,7 @@
 				</form>
 			</div>
 
-			<div class="span4">
+			<div class="span3">
 				<form id="message-for-user-form" enctype="multipart/form-data">
 				  <fieldset>
 				    <legend>New message for user</legend>

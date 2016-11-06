@@ -99,12 +99,11 @@ $(function() {
 	        data: {
 	        	idiomAId: idA,
 	        	idiomBId: idB
-	        },
+	        }
 	    });
 	});
 	
-	$('#reindex-form input.upload').on("click", function(){
-		// See http://stackoverflow.com/questions/166221/how-can-i-upload-files-asynchronously-with-jquery#answer-8758614
+	$('#reindex-form input.submit').on("click", function(){
 	    $.ajax({
 	        url: '/admin-reindex-ajax',
 	        type: 'POST',
@@ -113,7 +112,6 @@ $(function() {
 	            return myXhr;
 	        },
 	        success: function(response){
-				//var count = response.imported;  ???
 	        	$.fn.pisuccess( response.message );
 	        },
 	        error: function(xhr, status, e){
@@ -122,6 +120,28 @@ $(function() {
 	        cache: false,
 	        contentType: false,
 	        processData: false
+	    });
+	});
+
+	$('#repair-history-form input.submit').on("click", function(){
+		var id = $("#repair-history-form input.idiom").val();
+	    $.ajax({
+	        url: '/admin-repair-history-versions',
+	        type: 'POST',
+	        xhr: function() {
+	            var myXhr = $.ajaxSettings.xhr();
+	            return myXhr;
+	        },
+	        success: function(response){
+	        	$.fn.pisuccess( response.message );
+	        },
+	        error: function(xhr, status, e){
+	        	$.fn.pierror( "History repair failed : " + xhr.responseText);
+	        },
+	        data: {
+	        	idiomId: id,
+	        },
+	        cache: false
 	    });
 	});
 
