@@ -237,6 +237,34 @@ func (a *GaeDatastoreAccessor) saveExistingIdiom(c context.Context, key *datasto
 	return err
 }
 
+// stealthIncrementIdiomRating doesn't update Version and VersionDate
+func (a *GaeDatastoreAccessor) stealthIncrementIdiomRating(c context.Context, idiomID int, delta int) (*datastore.Key, *Idiom, error) {
+	key, idiom, err := dao.getIdiom(c, idiomID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	idiom.Rating += delta
+
+	_, err = datastore.Put(c, key, idiom)
+	return key, idiom, err
+}
+
+// stealthIncrementImplRating doesn't update Version and VersionDate
+func (a *GaeDatastoreAccessor) stealthIncrementImplRating(c context.Context, idiomID, implID int, delta int) (key *datastore.Key, idiom *Idiom, newImplRating int, err error) {
+	key, idiom, err = dao.getIdiom(c, idiomID)
+	if err != nil {
+		return nil, nil, 0, err
+	}
+
+	// TODO: more efficient way than iterating?
+	_, impl, _ := idiom.FindImplInIdiom(implID)
+	impl.Rating += delta
+
+	_, err = datastore.Put(c, key, idiom)
+	return key, idiom, impl.Rating, err
+}
+
 func newHistoryKey(c context.Context) *datastore.Key {
 	return datastore.NewIncompleteKey(c, "IdiomHistory", nil)
 }

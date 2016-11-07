@@ -14,22 +14,15 @@ type GaeVotesAccessor struct {
 func (va GaeVotesAccessor) idiomVote(c context.Context, vote IdiomVoteLog, nickname string) (newRating int, myVote int, err error) {
 	// TODO: a transaction to make sure the counter is safely incremented
 
-	key, idiom, err := dao.getIdiom(c, vote.IdiomId)
-	if err != nil {
-		return
-	}
-
-	delta, _, storedVote, err := va.saveIdiomVoteOrRemove(c, vote, nickname)
+	delta, _, storedVote, errsave := va.saveIdiomVoteOrRemove(c, vote, nickname)
+	err = errsave
 	if storedVote != nil {
 		myVote = storedVote.Value
 	}
 
 	if delta != 0 {
-		idiom.Rating += delta
-		err = dao.saveExistingIdiom(c, key, idiom)
-		if err == nil {
-			newRating = idiom.Rating
-		}
+		_, idiom, errinc := dao.stealthIncrementIdiomRating(c, vote.IdiomId, delta)
+		newRating, err = idiom.Rating, errinc
 	}
 	return
 }
@@ -37,25 +30,21 @@ func (va GaeVotesAccessor) idiomVote(c context.Context, vote IdiomVoteLog, nickn
 func (va GaeVotesAccessor) implVote(c context.Context, vote ImplVoteLog, nickname string) (newRating int, myVote int, err error) {
 	// TODO a transaction for (vote save + idiom save).  Note that rating data is redundant as rating could be recomputed.
 
-	key, idiom, err := dao.getIdiomByImplID(c, vote.ImplId)
+	_, idiom, errget := dao.getIdiomByImplID(c, vote.ImplId)
 	if err != nil {
+		err = errget
 		return
 	}
 
 	vote.IdiomId = idiom.Id
-	delta, _, storedVote, err := va.saveImplVoteOrRemove(c, vote, nickname)
+	delta, _, storedVote, errsave := va.saveImplVoteOrRemove(c, vote, nickname)
+	err = errsave
 	if storedVote != nil {
 		myVote = storedVote.Value
 	}
 
 	if delta != 0 {
-		// TODO: more efficient way than iterating?
-		_, impl, _ := idiom.FindImplInIdiom(vote.ImplId)
-		impl.Rating += delta
-		err = dao.saveExistingIdiom(c, key, idiom)
-		if err == nil {
-			newRating = impl.Rating
-		}
+		_, _, newRating, err = dao.stealthIncrementImplRating(c, vote.IdiomId, vote.ImplId, delta)
 	}
 
 	return

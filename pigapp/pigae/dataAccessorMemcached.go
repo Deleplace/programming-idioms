@@ -293,6 +293,20 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *da
 	return err
 }
 
+func (a *MemcacheDatastoreAccessor) stealthIncrementIdiomRating(c context.Context, idiomID int, delta int) (*datastore.Key, *Idiom, error) {
+	key, idiom, err := a.GaeDatastoreAccessor.stealthIncrementIdiomRating(c, idiomID, delta)
+	err2 := a.recacheIdiom(c, key, idiom)
+	logIf(err2, log.Errorf, c, "updating idiom rating")
+	return key, idiom, err
+}
+
+func (a *MemcacheDatastoreAccessor) stealthIncrementImplRating(c context.Context, idiomID, implID int, delta int) (key *datastore.Key, idiom *Idiom, newImplRating int, err error) {
+	key, idiom, newImplRating, err = a.GaeDatastoreAccessor.stealthIncrementImplRating(c, idiomID, implID, delta)
+	err2 := a.recacheIdiom(c, key, idiom)
+	logIf(err2, log.Errorf, c, "updating impl rating")
+	return
+}
+
 func (a *MemcacheDatastoreAccessor) getAllIdioms(c context.Context, limit int, order string) ([]*datastore.Key, []*Idiom, error) {
 	cacheKey := fmt.Sprintf("getAllIdioms(%v,%v)", limit, order)
 	data, cacheerr := a.readCache(c, cacheKey)
