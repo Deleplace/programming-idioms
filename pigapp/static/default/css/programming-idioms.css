@@ -778,6 +778,11 @@ footer a.visited {
 	margin-bottom: 5px;
 }
 
+.idiom-history td {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
 /* Version diff */
 
 .version-diff .summary {

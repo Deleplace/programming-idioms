@@ -11,19 +11,19 @@
 
 		<div>
 		<table class="idiom-history">
-			<tr><th>#</th><th>Edit date</th><th>Edit Summary</th><th></th>
+			<tr><th></th><th>#</th><th>Edit date</th><th>Edit Summary</th><th>Editor</th><th></th>
 			{{range $i, $h := .HistoryList}}
 				<tr>
-					<td>{{.Version}}</td>
-					<td>{{.VersionDate.Format "2006-01-02, 15:04"}}</td>
-					<td>{{.EditSummary}}</td>
-					<td>{{.IdiomOrImplLastEditor}}</td>
 					<td>
 						{{if lt (plus $i 1) (len $.HistoryList)}}
 							{{$prev := (index $.HistoryList (plus $i 1)).Version }}
 							<a href="/idiom/{{$.Idiom.Id}}/diff/{{$prev}}/{{.Version}}" class="btn">👁 Δ</a>
 						{{end}}
 					</td>
+					<td>{{.Version}}</td>
+					<td>{{.VersionDate.Format "2006-01-02, 15:04"}}</td>
+					<td>{{shorten .EditSummary 120}}</td>
+					<td>{{shorten .IdiomOrImplLastEditor 40}}</td>
 					<td>{{if and ($.UserProfile.IsAdmin) (gt (len $.HistoryList) 1)}}
 							<form method="POST" action="/history-restore">
 								<input type="hidden" name="idiomId" value="{{$.Idiom.Id}}" />

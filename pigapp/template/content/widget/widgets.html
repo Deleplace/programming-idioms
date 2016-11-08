@@ -30,7 +30,7 @@
 								<li><a href="{{hostPrefix}}/idiom-add-picture/{{.Idiom.Id}}"><i class="icon-fixed-width icon-camera"></i> Add picture</a></li>
 							{{end}}
 						{{end}}
-						{{if and  .PageMeta.Toggles.actionIdiomHistory .UserProfile.IsAdmin}}
+						{{if .PageMeta.Toggles.actionIdiomHistory}}
 							<li><a href="{{hostPrefix}}/history/{{.Idiom.Id}}"><i class="icon-fixed-width icon-sort-by-attributes-alt"></i> Idiom history</a></li>
 						{{end}}
 						{{if and .PageMeta.Toggles.implEditing .PageMeta.Toggles.actionEditIdiom}}
