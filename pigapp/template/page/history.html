@@ -22,7 +22,7 @@
 					</td>
 					<td>{{.Version}}</td>
 					<td>{{.VersionDate.Format "2006-01-02, 15:04"}}</td>
-					<td>{{shorten .EditSummary 120}}</td>
+					<td>{{shorten .EditSummary 120 | markup2CSS}}</td>
 					<td>{{shorten .IdiomOrImplLastEditor 40}}</td>
 					<td>{{if and ($.UserProfile.IsAdmin) (gt (len $.HistoryList) 1)}}
 							<form method="POST" action="/history-restore">
