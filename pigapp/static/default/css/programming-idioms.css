@@ -983,6 +983,13 @@ footer a.visited {
     content: none !important;
   }
 
+  .language-list,
+  button,
+  .new-impl-invitation,
+  .about-link {
+    display:none !important;
+  }
+
   .page-cheatsheet .filters{
     display: none !important;
   }
