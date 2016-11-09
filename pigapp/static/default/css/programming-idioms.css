@@ -161,6 +161,11 @@ header .form-search {
 .header a,.header-small a {
 	color: white;
 }
+
+.header-small .navbar .nav>li>a {
+	padding: 0px;
+}
+
 .actions-dropdown a {
 	color: black;
 }
