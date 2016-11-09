@@ -254,14 +254,6 @@ header .form-search {
 	padding: 0px;
 }
 
-/* Issue #1: have a dice icon */
-.pi-icon-dice{
-	width: 16px;
-	height: 15px;
-	background-repeat: no-repeat;
-	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAPCAQAAABHeoekAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQffCBoUGTiIReJKAAABA0lEQVQY023RPSvFcRQH8M//F+lamD0lMyEUMXgBslgNBl6EQcpkwaIsxGbiBZiUEmFwKQsLifJQppvlfwz3n66HczqdzvmevufJaWk9/NH5OOiDJ+7+gYX8JqIH6jbRo4wrr6qSVLKmUL7u7S7XfWICLZ78kExMXb4MpoR3W79hyPbi5jxBxQUmhf0CC6FEtixVEzla0V5D0FrM8+02jBrCGNqMuEVJymvqjnHmyIJHJ6rNU/o12SVua+I0RVRUeVZ0mZXZNW0J9HI/MBebMZOLxYh4Ky4ZETEcYi1Sx8V4Z+dIc8YOVgvik8Iaiq3bD0P+308+IkH2UN+/mP095bbnxi+vtXhgQzy30AAAAABJRU5ErkJggg==);
-}
-
 /* Messages zone */
 
 .message-zone {
