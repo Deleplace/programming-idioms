@@ -29,7 +29,7 @@ func favoritesFirst(languages []string, favoriteLanguages []string) {
 // Parameter favoriteLanguages contain user favorite languages, in decreasing order of
 // interest (favoriteLanguages[0] is the most important, etc.).
 // Inspired by planetSorter
-// in http://golang.org/pkg/sort/
+// in https://golang.org/pkg/sort/
 type languageSorter struct {
 	languages []string
 	scores    map[string]int

@@ -15,7 +15,7 @@ html, body{
 }
 
 .page-holder{
-  	/* See http://stackoverflow.com/questions/8824831/make-div-stay-at-bottom-of-pages-content-all-the-time-even-when-there-are-scrol/8825714#8825714 */
+  	/* See https://stackoverflow.com/questions/8824831/make-div-stay-at-bottom-of-pages-content-all-the-time-even-when-there-are-scrol/8825714#8825714 */
     min-height: 100%;
     position:relative;
 }
@@ -589,7 +589,7 @@ footer {
   color: #555555;
   /*margin-top : 10px;*/
 
-  /* See http://stackoverflow.com/questions/8824831/make-div-stay-at-bottom-of-pages-content-all-the-time-even-when-there-are-scrol/8825714#8825714 */  
+  /* See https://stackoverflow.com/questions/8824831/make-div-stay-at-bottom-of-pages-content-all-the-time-even-when-there-are-scrol/8825714#8825714 */  
   /*height: 100px;*/ 
   width:100%;
   position: absolute;

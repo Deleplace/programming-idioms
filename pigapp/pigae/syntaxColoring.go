@@ -35,7 +35,7 @@ func prettifyCSSClass(lang string) string {
 	suff := lg
 	var p PrettyAdaptor
 	var ok bool
-	// See http://google-code-prettify.googlecode.com/svn/trunk/README.html
+	// See https://github.com/google/code-prettify/blob/master/README.md
 	if p, ok = Pretty[strings.ToLower(normLang(lang))]; !ok {
 		return "lang-" + suff
 	}

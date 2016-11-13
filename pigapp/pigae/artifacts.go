@@ -20,7 +20,7 @@ func decorate(data interface{}, deco interface{}) *PipelineDecorator {
 }
 
 // Thanks to tux21b
-// (see http://stackoverflow.com/questions/18276173/calling-a-template-with-several-pipeline-parameters)
+// (see https://stackoverflow.com/questions/18276173/calling-a-template-with-several-pipeline-parameters)
 func dict(values ...interface{}) (map[string]interface{}, error) {
 	if len(values)%2 != 0 {
 		return nil, fmt.Errorf("invalid dict call")

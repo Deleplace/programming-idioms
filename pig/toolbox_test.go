@@ -5,7 +5,7 @@ import (
 )
 
 //
-// Inspired by http://code.google.com/p/go-wiki/wiki/TableDrivenTests
+// Inspired by https://github.com/golang/go/wiki/TableDrivenTests
 //
 
 // ---

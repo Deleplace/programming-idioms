@@ -119,9 +119,9 @@ func demoSiteSuggest(lang string) string {
 	suggestion := ""
 	switch strings.ToLower(lang) {
 	case "js":
-		suggestion = "http://jsfiddle.net/nick/..."
+		suggestion = "https://jsfiddle.net/nick/..."
 	case "go":
-		suggestion = "http://play.golang.org/p/..."
+		suggestion = "https://play.golang.org/p/..."
 	}
 	if rand.Intn(10) < 4 {
 		return "https://gist.github.com/..."

@@ -424,7 +424,7 @@ $(function() {
 	});
 	
 	// Being able to insert <tab> characters in code
-	// See http://stackoverflow.com/questions/6140632/how-to-handle-tab-in-textarea#answer-6140696
+	// See https://stackoverflow.com/questions/6140632/how-to-handle-tab-in-textarea#answer-6140696
 	$("textarea").keydown(function(e) {
 	    if(e.keyCode === 9) { // tab was pressed
 	    	if(! e.ctrlKey){ // but not Ctrl+tab (do not prevent the default browser shortcut)

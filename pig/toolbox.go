@@ -61,7 +61,7 @@ func FilterOut(s []string, forbidden []string) []string {
 
 // FilterStrings creates a new slice from s, removing any element that doesn't match the predicate fn.
 //
-// From http://blog.golang.org/go-slices-usage-and-internals
+// From https://blog.golang.org/go-slices-usage-and-internals
 //
 // Accept nils and empty lists.
 // Never yields nil, but may yield an empty list.
