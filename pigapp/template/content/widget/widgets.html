@@ -53,7 +53,7 @@
 	<p class="greetings">
 	{{if .PageMeta.Toggles.greetings}}
 		{{if .UserProfile.Nickname}}
-			<i class="icon-user"> <a href="{{host}}/my/{{.UserProfile.Nickname}}/_{{join .UserProfile.FavoriteLanguages "_"}}">{{.UserProfile.Nickname}}</a></i> <a href="#" class="remove-nickname"><i class="icon-remove"></i></a>
+			<i class="icon-user user-info-link"> <a href="#">{{.UserProfile.Nickname}}</a></i> <a href="#" class="remove-nickname"><i class="icon-remove"></i></a>
 		{{end}}
 	{{end}}
 	</p>

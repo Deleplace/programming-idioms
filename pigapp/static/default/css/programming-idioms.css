@@ -451,6 +451,24 @@ header .form-search {
 	margin: 0;
 }
 
+/* Cookies & Profile box */
+.profile-box dl {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 2px;
+	width: 60%;
+	border: solid 1px #DDD;
+	border-radius: 4px;
+}
+
+.profile-box dt button {
+	float: right;
+}
+
+.profile-url {
+	width: 90%;
+}
+
 /* Tabbed implementations in Idiom Detail */
 
 li > a.lang-tab {

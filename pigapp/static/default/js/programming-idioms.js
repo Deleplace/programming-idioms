@@ -184,7 +184,8 @@ $(function() {
 	 });
 	
 	// 
-	// Authentication (weak)
+	// Identification
+	// (weak, no proper authentication)
 	//
 	var logged = function(){
 		var nick = $.cookie("Nickname");
@@ -211,6 +212,77 @@ $(function() {
 	$(document).on("click", ".remove-nickname", function(){
 		$.removeCookie("Nickname", { path: '/' });
 		$(".greetings").hide();
+	});
+
+	$(".user-info-link a").click(function() {
+		var headerCode =  '<div class="modal-header">'
+						+ '	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+						+ '	<h3>Cookie contents</h3>'
+						+ '</div>';
+		var header = $(headerCode);
+		var body = $("<div>").addClass("modal-body");
+		var dlNickname = $("<dl>");
+		if(logged()) {
+			var dt1 = $("<dt><tt>Nickname</tt></dt>");
+			var removeBtn = $("<button>").text("Delete this cookie");
+			dt1.append(removeBtn);
+			var dd1 = $("<dd>").text(username());
+			removeBtn.click(function(){
+				$.removeCookie("Nickname", { path: '/' });
+				dlNickname.hide("slow", function(){ dlNickname.remove(); });
+				takeaway.hide("slow", function(){ takeaway.remove(); });
+				updateProfileUrl();
+				$("p.greetings").hide("slow", function(){ $("p.greetings").remove(); });
+			});
+			dlNickname.append(dt1).append(dd1);
+			body.append(dlNickname);
+		}
+
+		var dlLangs = $("<dl>");
+		var langsConcat = $.cookie("my-languages");
+		if( langsConcat ){
+			var dt = $("<dt><tt>my-languages</tt></dt>");
+			var removeBtn = $("<button>").text("Delete this cookie");
+			removeBtn.click(function(){ 
+				$.removeCookie("my-languages", { path: '/' });
+				dlLangs.hide("slow", function(){ dlLangs.remove(); });
+				updateProfileUrl();
+				$("ul.favorite-languages li").hide("slow", function(){ $("ul.favorite-languages li").remove(); });
+			});
+			dt.append(removeBtn);
+			dlLangs.append(dt);
+			var langs = langsConcat.split(/_/);
+			langs.forEach(function(lang) {
+				var dd = $("<dd>").text(lang);
+				dlLangs.append(dd);
+			});
+			body.append(dlLangs);
+		}
+		var takeaway = $("<div>").addClass("profile-take-away");
+		takeaway.append("<h4>To take your profile with you</h4>")
+		takeaway.append("<p>Copy this URL. Profiles are not stored on server, only in cookies or in this URL.</p>")
+		urlbox = $("<input>").attr("type", "text").addClass("profile-url");
+		takeaway.append(urlbox);
+		body.append(takeaway);
+		var fullhost = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+		var updateProfileUrl = function(){
+			var nick = username();
+			var lgs = $.cookie("my-languages");
+			if(!lgs)
+				lgs = "";
+			var profileUrl = fullhost
+				+ "/my/" + encodeURIComponent(nick)
+				+ "/_" + lgs;
+			urlbox.val(profileUrl);
+		}
+		updateProfileUrl();
+		$("<div>").addClass("modal")
+			.addClass("profile-box")
+			.append(header)
+			.append(body)
+			.modal("show");
+		urlbox.select();
+		return false;
 	});
 	
 	// 
