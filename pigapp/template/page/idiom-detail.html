@@ -48,7 +48,7 @@
 				</ul>
 				{{range .Idiom.Implementations}}
 					{{if not (or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages))}}
-						<div id="impl{{.Id}}">
+						<div id="impl{{.Id}}" class="fouc">
 							<div class="">
 								{{template "impl-code-and-comments" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
 							</div>

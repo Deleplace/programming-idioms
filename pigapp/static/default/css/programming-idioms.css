@@ -475,6 +475,11 @@ li > a.lang-tab {
 	padding : 4px 6px 4px 6px;
 }
 
+.implementations-tabs .fouc {
+	/* To avoid FOUC, hide this mess until jQuery tabs() has done its job! */
+	display: none;
+}
+
 .sortable-y .handle:hover {
     cursor: move;
 }
