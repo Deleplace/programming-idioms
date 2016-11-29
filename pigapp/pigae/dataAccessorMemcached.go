@@ -279,6 +279,7 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom
 		err2 := a.recacheIdiom(c, key, idiom)
 		logIf(err2, log.Errorf, c, "saving new idiom")
 	}
+	htmlCacheEvict(c, "about-block-language-coverage")
 	return key, err
 }
 
@@ -290,6 +291,7 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *da
 		err2 := a.recacheIdiom(c, key, idiom)
 		logIf(err2, log.Errorf, c, "saving existing idiom")
 	}
+	htmlCacheEvict(c, "about-block-language-coverage")
 	return err
 }
 

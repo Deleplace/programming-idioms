@@ -1,7 +1,9 @@
 package pigae
 
 import (
+	"bytes"
 	"net/http"
+	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -86,9 +88,18 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 
 func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
+	favlangs := lookForFavoriteLanguages(r)
+
+	if len(favlangs) == 0 {
+		if coverageHtml := htmlCacheZipRead(c, "about-block-language-coverage"); coverageHtml != nil {
+			// Using the whole HTML block from Memcache
+			log.Debugf(c, "block-about-language-coverage from memcache!")
+			_, err := w.Write(coverageHtml)
+			return err
+		}
+	}
 
 	coverage, _ := languageCoverage(c)
-	favlangs := lookForFavoriteLanguages(r)
 	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount)
 
 	data := AboutFacade{
@@ -99,9 +110,20 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 		Coverage:    coverage,
 	}
 
+	var buffer bytes.Buffer
 	log.Debugf(c, "block-about-language-coverage templating start...")
-	err := templates.ExecuteTemplate(w, "block-about-language-coverage", data)
+	err := templates.ExecuteTemplate(&buffer, "block-about-language-coverage", data)
 	log.Debugf(c, "block-about-language-coverage templating end.")
+	if err != nil {
+		return err
+	}
+
+	if len(favlangs) == 0 {
+		// Caching may also be done in own goroutine, or defered as a task.
+		htmlCacheZipWrite(c, "about-block-language-coverage", buffer.Bytes(), 24*time.Hour)
+	}
+
+	_, err = w.Write(buffer.Bytes())
 	return err
 }
 
