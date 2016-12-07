@@ -310,6 +310,9 @@ func (impl *Impl) ExtractIndexableWords() []string {
 	if len(impl.AuthorComment) >= 3 {
 		w = append(w, SplitForIndexing(impl.AuthorComment, true)...)
 	}
+	if langExtras, ok := langsExtraKeywords[impl.LanguageName]; ok {
+		w = append(w, langExtras...)
+	}
 	// Note: we don't index external URLs.
 	return w
 }

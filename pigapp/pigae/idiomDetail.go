@@ -90,7 +90,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	pageTitle := idiom.Title
 	if selectedImplLang != "" {
 		// SEO: specify the language in the HTML title, for search engine results
-		if niceLang := printNiceLang(selectedImplLang); niceLang != "" {
+		if niceLang := PrintNiceLang(selectedImplLang); niceLang != "" {
 			pageTitle += ", in " + niceLang
 		}
 	}

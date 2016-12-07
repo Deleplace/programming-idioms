@@ -10,7 +10,7 @@
 		<ul>
 			{{range $i,$rid := .RelatedIdiomIds}}
 				{{$title := index $.RelatedIdiomTitles $i}}
-				<li><a href="{{NiceIdiomIDTitleURL $rid $title}}">{{$title}}</a></li>
+				<li><a href="{{niceIdiomIDTitleURL $rid $title}}">{{$title}}</a></li>
 			{{end}} 
 		</ul>
 	{{end}} 

@@ -101,7 +101,7 @@
 			<div class="well idiom-summary-large">
 				<div class="row-fluid">
 					<div class="span6">
-						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}">{{.Title}}</a></h1>
+						<h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
 						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
 						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
 					</div>
@@ -109,7 +109,7 @@
 						<div class="language-list">
 							<ul class="inline">
 								{{range .Implementations}}
-									<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+									<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
 								{{end}}
 							</ul>
 						</div>
@@ -139,7 +139,7 @@
 			<div class="well idiom-summary-medium">
 				<div class="row-fluid">
 					<div class="span7">
-						<h1>Idiom #{{.Id}} <a href="{{NiceIdiomURL .}}">{{.Title}}</a></h1>
+						<h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
 						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
 					</div>
 					<div class="span1">
@@ -149,7 +149,7 @@
 						<div class="language-list">
 							<ul class="inline">
 								{{range .Implementations}}
-									<li class="active{{if .Deco.Matching}} matching{{end}}{{if .Deco.SearchedLang}} searched-lang{{end}}"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+									<li class="active{{if .Deco.Matching}} matching{{end}}{{if .Deco.SearchedLang}} searched-lang{{end}}"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
 								{{end}}
 							</ul>
 						</div>
@@ -160,7 +160,7 @@
 {{end}}
 
 {{define "idiom-link"}}
-	Idiom #{{.Id}} : <a href="{{NiceIdiomURL .}}">{{.Title}}</a>
+	Idiom #{{.Id}} : <a href="{{niceIdiomURL .}}">{{.Title}}</a>
 {{end}}
 
 {{define "idiom-table-line"}}
@@ -168,9 +168,9 @@
 	{{with .Data}}
 	<tr>
 		<td><span class="idiom_id label"># {{.Id}}</span></td>
-		<td><a href="{{NiceIdiomURL .}}">{{.Title}}</a></td>
+		<td><a href="{{niceIdiomURL .}}">{{.Title}}</a></td>
 		<td>{{if toggled "showIdiomRating"}}{{if .Rating}}{{template "small-rating" .Rating}}{{end}}{{end}}</td>
-		<td>{{range .Implementations}}<span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span>{{end}}</td>
+		<td>{{range .Implementations}}<span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span>{{end}}</td>
 	</tr>
 	{{end}}
 {{end}}
@@ -178,7 +178,7 @@
 {{define "idiom-cell-fluid"}}
 	{{with .Data}}
 	<div class="span4 idiom-cell">
-		<a class="btn btn-large btn-block" type="button" href="{{NiceIdiomURL .}}">
+		<a class="btn btn-large btn-block" type="button" href="{{niceIdiomURL .}}">
 			<span class="left">
 				<span class="idiom_id label"># {{.Id}}</span>
 				{{.Title}}

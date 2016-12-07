@@ -31,7 +31,7 @@ type SearchResultsFacade struct {
 func separateLangKeywords(terms []string) (words, langs []string) {
 	words = make([]string, 0, len(terms))
 	for _, term := range terms {
-		lang := normLang(term)
+		lang := NormLang(term)
 		if lang == "" {
 			words = append(words, term)
 		} else {
@@ -166,7 +166,7 @@ func listByLanguage(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
 	langsStr := vars["langs"]
 	langs := strings.Split(langsStr, "_")
-	langs = MapStrings(langs, normLang)
+	langs = MapStrings(langs, NormLang)
 	langs = RemoveEmptyStrings(langs)
 
 	numberMaxResults := 20
@@ -179,6 +179,6 @@ func listByLanguage(w http.ResponseWriter, r *http.Request) error {
 		implFavoriteLanguagesFirstWithOrder(idiom, userProfile.FavoriteLanguages, "", userProfile.SeeNonFavorite)
 	}
 
-	niceLangs := MapStrings(langs, printNiceLang)
+	niceLangs := MapStrings(langs, PrintNiceLang)
 	return listResults(w, r, fmt.Sprintf("Language=%v", niceLangs), hits)
 }

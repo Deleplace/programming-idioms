@@ -26,7 +26,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 
 	switch {
 	case havingLang != "":
-		havingLang = normLang(havingLang)
+		havingLang = NormLang(havingLang)
 		if havingLang == "" {
 			return fmt.Errorf("Invalid language [%s]", vars["havingLang"])
 		}
@@ -42,7 +42,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 			}
 		}
 	case notHavingLang != "":
-		notHavingLang = normLang(notHavingLang)
+		notHavingLang = NormLang(notHavingLang)
 		if notHavingLang == "" {
 			return fmt.Errorf("Invalid language [%s]", vars["notHavingLang"])
 		}

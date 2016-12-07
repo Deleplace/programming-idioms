@@ -33,7 +33,7 @@
 							<tr>
 								<th><span class="idiom_id label"># {{$idiom.Id}}{{/* > {{.Id}} */}}</span></th>
 								<td>
-									<a href="{{NiceImplURL $idiom .Id $.Lang}}">{{shorten $idiom.Title 35}}</a>
+									<a href="{{niceImplURL $idiom .Id $.Lang}}">{{shorten $idiom.Title 35}}</a>
 								</td>
 								<td class="mark">
 									{{if blank .DemoURL}}

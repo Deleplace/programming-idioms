@@ -8,7 +8,7 @@
 		<div class="well idiom-summary-small">
 			{{template "small-id-and-rating" .}}
 			<div class="idiom_title">
-				<a href="{{NiceIdiomURL .}}">{{.Title}}</a>
+				<a href="{{niceIdiomURL .}}">{{.Title}}</a>
 			</div>
 			<div class="idiom_cover">
 				<button class="btn count">
@@ -18,7 +18,7 @@
 					<ul class="inline">
 						{{$idiom := .}}
 						{{range .Implementations}}
-							<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $idiom .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+							<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $idiom .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
 						{{end}}
 					</ul>
 				</div>

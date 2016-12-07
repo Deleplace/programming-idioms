@@ -2,6 +2,8 @@ package pigae
 
 import (
 	"strings"
+
+	. "github.com/Deleplace/programming-idioms/pig"
 )
 
 // PrettyAdaptor contains a CSS class and a syntax coloring JS script, for some language.
@@ -36,7 +38,7 @@ func prettifyCSSClass(lang string) string {
 	var p PrettyAdaptor
 	var ok bool
 	// See https://github.com/google/code-prettify/blob/master/README.md
-	if p, ok = Pretty[strings.ToLower(normLang(lang))]; !ok {
+	if p, ok = Pretty[strings.ToLower(NormLang(lang))]; !ok {
 		return "lang-" + suff
 	}
 	return "lang-" + p.CssClass
@@ -45,6 +47,6 @@ func prettifyCSSClass(lang string) string {
 // Just returns "" for no extension
 // Not used anymore, see prettify-extra-languages.min.js
 func prettifyExtension(lang string) string {
-	p := Pretty[strings.ToLower(normLang(lang))]
+	p := Pretty[strings.ToLower(NormLang(lang))]
 	return p.JsExtension
 }

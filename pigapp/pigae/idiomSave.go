@@ -45,7 +45,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	lead := r.FormValue("idiom_lead")
 	keywords := r.FormValue("idiom_keywords")
 	picture := r.FormValue("idiom_picture") /* TODO upload file ?! */
-	language := normLang(r.FormValue("impl_language"))
+	language := NormLang(r.FormValue("impl_language"))
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
 	comment := r.FormValue("impl_comment")
@@ -65,8 +65,8 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 
 	log.Infof(c, "[%v] is creating new idiom [%v]", username, title)
 
-	if !StringSliceContains(allLanguages(), language) {
-		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), allNiceLangs), http.StatusBadRequest}
+	if !StringSliceContains(AllLanguages(), language) {
+		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs), http.StatusBadRequest}
 	}
 
 	// TODO put that in a transaction!

@@ -25,7 +25,7 @@ func lookForFavoriteLanguages(r *http.Request) []string {
 	if cookie, errkie := r.Cookie("my-languages"); errkie == nil {
 		langs := strings.Split(cookie.Value, "_")
 		langs = RemoveEmptyStrings(langs)
-		langs = MapStrings(langs, normLang)
+		langs = MapStrings(langs, NormLang)
 		return langs
 	}
 	return nil
@@ -119,7 +119,7 @@ func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 	if langsArray[len(langsArray)-1] == "" {
 		langsArray = langsArray[:len(langsArray)-1]
 	}
-	langsArray = MapStrings(langsArray, normLang)
+	langsArray = MapStrings(langsArray, NormLang)
 	userProfile.FavoriteLanguages = langsArray
 
 	// Display homepage, with updated profile

@@ -28,7 +28,7 @@ func implCreate(w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
 
-	preSelectedLanguage := normLang(vars["lang"])
+	preSelectedLanguage := NormLang(vars["lang"])
 
 	_, idiom, err := dao.getIdiom(c, idiomID)
 	if err != nil {

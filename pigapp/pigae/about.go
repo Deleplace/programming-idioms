@@ -139,7 +139,7 @@ type AboutCheatsheetsFacade struct {
 func ajaxAboutCheatsheets(w http.ResponseWriter, r *http.Request) error {
 	data := AboutCheatsheetsFacade{
 		UserProfile: readUserProfile(r),
-		Langs:       allLanguages(),
+		Langs:       AllLanguages(),
 	}
 	return templates.ExecuteTemplate(w, "block-about-cheatsheets", data)
 }
@@ -175,7 +175,7 @@ func languageCoverage(c context.Context) (cover CoverageFacade, err error) {
 	cover = CoverageFacade{
 		IdiomIds:      idiomIds,
 		IdiomTitles:   idiomTitles,
-		Languages:     allLanguages(),
+		Languages:     AllLanguages(),
 		Checked:       checked,
 		LangImplCount: langImplCount,
 	}

@@ -9,7 +9,7 @@
 			{{template "small-id-and-rating" .}}
 			{{$implRecent := .FindRecentlyUpdatedImpl}}
 			<div class="idiom_title">
-				<a href="{{NiceImplURL . $implRecent.Id $implRecent.LanguageName}}">{{.Title}}</a>
+				<a href="{{niceImplURL . $implRecent.Id $implRecent.LanguageName}}">{{.Title}}</a>
 			</div>
 			<div class="idiom_cover">
 				<button class="btn count">
@@ -19,7 +19,7 @@
 					<ul class="inline">
 						{{$idiom := .}}
 						{{range .Implementations}}
-							<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{NiceImplURL $idiom .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+							<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $idiom .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
 						{{end}}
 					</ul>
 				</div>

@@ -48,7 +48,7 @@ func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 
 	data := CheatSheetFacade{
 		PageMeta: PageMeta{
-			PageTitle: printNiceLang(lang) + " cheat sheet",
+			PageTitle: PrintNiceLang(lang) + " cheat sheet",
 			Toggles:   toggles,
 		},
 		UserProfile:     readUserProfile(r),

@@ -41,7 +41,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	}
 
 	c := appengine.NewContext(r)
-	language := normLang(r.FormValue("impl_language"))
+	language := NormLang(r.FormValue("impl_language"))
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
 	comment := r.FormValue("impl_comment")
@@ -59,8 +59,8 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 
 	log.Infof(c, "[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
 
-	if !StringSliceContains(allLanguages(), language) {
-		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), allNiceLangs), http.StatusBadRequest}
+	if !StringSliceContains(AllLanguages(), language) {
+		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs), http.StatusBadRequest}
 	}
 
 	idiomID := String2Int(idiomIDStr)

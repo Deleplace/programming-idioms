@@ -102,9 +102,9 @@ func rss(w http.ResponseWriter,
 		if len(idiom.Implementations) > 0 {
 			impl0 := idiom.Implementations[0]
 			itemLink = env.Host + NiceImplRelativeURL(idiom, impl0.Id, impl0.LanguageName)
-			desc += listIntro + printNiceLang(impl0.LanguageName)
+			desc += listIntro + PrintNiceLang(impl0.LanguageName)
 			for _, impl := range idiom.Implementations[1:] {
-				desc += ", " + printNiceLang(impl.LanguageName)
+				desc += ", " + PrintNiceLang(impl.LanguageName)
 			}
 			desc += "."
 		}

@@ -1,12 +1,10 @@
-package pigae
+package pig
 
 import (
 	"fmt"
 	"os"
 	"sort"
 	"strings"
-
-	"github.com/Deleplace/programming-idioms/pig"
 )
 
 //
@@ -17,15 +15,15 @@ import (
 var mainStreamLangs = [...]string{"C", "Cpp", "Csharp", "Go", "Java", "JS", "Obj-C", "PHP", "Python", "Ruby"}
 
 // Return alpha codes for each language (no encoding problems).
-// See printNiceLang to display them more fancy.
-func mainStreamLanguages() []string {
+// See PrintNiceLang to display them more fancy.
+func MainStreamLanguages() []string {
 	return mainStreamLangs[:]
 }
 
 var moreLangs = [...]string{"Ada", "Caml", "Clojure", "Cobol", "D", "Dart", "Elixir", "Erlang", "Fortran", "Haskell", "Lua", "Lisp", "Pascal", "Perl", "Prolog", "Rust", "Scala", "Scheme", "VB"}
 
-func moreLanguages() []string {
-	// These do *not* include the mainStreamLanguages()
+func MoreLanguages() []string {
+	// These do *not* include the MainStreamLanguages()
 	return moreLangs[:]
 }
 
@@ -35,36 +33,36 @@ var synonymLangs = map[string]string{
 	"Visual Basic": "VB",
 }
 
-var allLangs []string
-var allNiceLangs []string
+var AllLangs []string
+var AllNiceLangs []string
 
-func allLanguages() []string {
-	if allLangs == nil {
-		mainstream := mainStreamLanguages()
-		more := moreLanguages()
-		allLangs = make([]string, len(mainstream)+len(more))
-		copy(allLangs, mainstream)
-		copy(allLangs[len(mainstream):], more)
-		sort.Strings(allLangs)
-		allNiceLangs = make([]string, len(allLangs))
-		for i, lg := range allLangs {
-			allNiceLangs[i] = printNiceLang(lg)
+func AllLanguages() []string {
+	if AllLangs == nil {
+		mainstream := MainStreamLanguages()
+		more := MoreLanguages()
+		AllLangs = make([]string, len(mainstream)+len(more))
+		copy(AllLangs, mainstream)
+		copy(AllLangs[len(mainstream):], more)
+		sort.Strings(AllLangs)
+		AllNiceLangs = make([]string, len(AllLangs))
+		for i, lg := range AllLangs {
+			AllNiceLangs[i] = PrintNiceLang(lg)
 		}
 	}
-	return allLangs
+	return AllLangs
 }
 
 // autocompletions is a map[string][]string
 var autocompletions = precomputeAutocompletions()
 
-func languageAutoComplete(fragment string) []string {
+func LanguageAutoComplete(fragment string) []string {
 	fragment = strings.ToLower(fragment)
 
 	// Dynamic search (slow)
 	// options := []string{}
-	// for _, lg := range allLanguages() {
-	// 	if strings.Contains(strings.ToLower(lg), fragment) || strings.Contains(strings.ToLower(printNiceLang(lg)), fragment) {
-	// 		options = append(options, printNiceLang(lg))
+	// for _, lg := range AllLanguages() {
+	// 	if strings.Contains(strings.ToLower(lg), fragment) || strings.Contains(strings.ToLower(PrintNiceLang(lg)), fragment) {
+	// 		options = append(options, PrintNiceLang(lg))
 	// 	}
 	// }
 	// return options
@@ -73,7 +71,7 @@ func languageAutoComplete(fragment string) []string {
 	return autocompletions[fragment]
 }
 
-func printNiceLang(lang string) string {
+func PrintNiceLang(lang string) string {
 	switch strings.TrimSpace(strings.ToLower(lang)) {
 	case "cpp":
 		return "C++"
@@ -84,15 +82,15 @@ func printNiceLang(lang string) string {
 	}
 }
 
-func printNiceLangs(langs []string) []string {
+func PrintNiceLangs(langs []string) []string {
 	nice := make([]string, len(langs))
 	for i, lang := range langs {
-		nice[i] = printNiceLang(lang)
+		nice[i] = PrintNiceLang(lang)
 	}
 	return nice
 }
 
-func printShortLang(lang string) string {
+func PrintShortLang(lang string) string {
 	switch strings.TrimSpace(strings.ToLower(lang)) {
 	case "clojure":
 		return "Clj"
@@ -133,9 +131,9 @@ func indexByLowerCase(langs []string) map[string]string {
 	return m
 }
 
-var langLowerCaseIndex = indexByLowerCase(allLanguages())
+var langLowerCaseIndex = indexByLowerCase(AllLanguages())
 
-func normLang(lang string) string {
+func NormLang(lang string) string {
 	lg := strings.TrimSpace(strings.ToLower(lang))
 	switch lg {
 	case "c++":
@@ -157,13 +155,13 @@ func precomputeAutocompletions() map[string][]string {
 	m := make(map[string][]string, 100)
 
 	// Crazy shadowing of variable "lg" is allowed in go...
-	for _, trueLg := range allLanguages() {
-		niceLg := printNiceLang(trueLg)
+	for _, trueLg := range AllLanguages() {
+		niceLg := PrintNiceLang(trueLg)
 		for _, lg := range []string{trueLg, niceLg} {
 			lg := strings.ToLower(lg)
 			fragments := substrings(lg)
 			for _, frag := range fragments {
-				if !pig.StringSliceContains(m[frag], niceLg) {
+				if !StringSliceContains(m[frag], niceLg) {
 					m[frag] = append(m[frag], niceLg)
 				}
 			}
@@ -171,11 +169,11 @@ func precomputeAutocompletions() map[string][]string {
 	}
 
 	for lg, trueLg := range synonymLangs {
-		niceLg := printNiceLang(trueLg)
+		niceLg := PrintNiceLang(trueLg)
 		lg := strings.ToLower(lg)
 		fragments := substrings(lg)
 		for _, frag := range fragments {
-			if !pig.StringSliceContains(m[frag], niceLg) {
+			if !StringSliceContains(m[frag], niceLg) {
 				m[frag] = append(m[frag], niceLg)
 			}
 		}
@@ -201,4 +199,25 @@ func substrings(s string) []string {
 		}
 	}
 	return fragments
+}
+
+var langsExtraKeywords = map[string][]string{
+	"Clojure": []string{"clj", "cljs", "cljc", "edn"},
+	"Csharp":  []string{"cs"},
+	"D":       []string{"dlang"},
+	"Elixir":  []string{"ex", "exs"},
+	"Go":      []string{"golang"},
+	"JS":      []string{"javascript"},
+	"Obj-C":   []string{"Objective", "Objective-C", "mm"},
+	"Python":  []string{"py"},
+	"Ruby":    []string{"rb"},
+	"VB":      []string{"visual", "basic"},
+	"Erlang":  []string{"erl", "hrl"},
+	"Fortran": []string{"for", "f90", "f95"},
+	"Haskell": []string{"hs", "lhs"},
+	"Pascal":  []string{"pp", "pas", "inc"},
+	"Perl":    []string{"pl"},
+	"Rust":    []string{"rs"},
+	"Scala":   []string{"sc"},
+	"Scheme":  []string{"scs", "ss"},
 }

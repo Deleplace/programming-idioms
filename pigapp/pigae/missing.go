@@ -18,7 +18,7 @@ func missingList(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
 	vars := mux.Vars(r)
 	lang := vars["lang"]
-	lang = normLang(lang)
+	lang = NormLang(lang)
 	langs := []string{lang}
 
 	// Warning: manipulating a lot of idioms in memory can get expensive.

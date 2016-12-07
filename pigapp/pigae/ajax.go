@@ -139,7 +139,7 @@ func ajaxDemoSiteSuggest(w http.ResponseWriter, r *http.Request) error {
 
 func typeaheadLanguages(w http.ResponseWriter, r *http.Request) error {
 	userInput := r.FormValue("userInput")
-	suggestions := languageAutoComplete(userInput)
+	suggestions := LanguageAutoComplete(userInput)
 	w.Header().Set("Content-Type", "application/json")
 	// TODO browser cache 2d
 	// TODO server cache 2d
