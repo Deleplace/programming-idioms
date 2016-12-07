@@ -305,10 +305,12 @@ func (impl *Impl) ExtractIndexableWords() []string {
 	w := make([]string, 0, 20)
 	w = append(w, fmt.Sprintf("%d", impl.Id))
 	w = append(w, strings.ToLower(impl.LanguageName))
+	w = append(w, SplitForIndexing(impl.ImportsBlock, true)...)
 	w = append(w, SplitForIndexing(impl.CodeBlock, true)...)
 	if len(impl.AuthorComment) >= 3 {
 		w = append(w, SplitForIndexing(impl.AuthorComment, true)...)
 	}
+	// Note: we don't index external URLs.
 	return w
 }
 
