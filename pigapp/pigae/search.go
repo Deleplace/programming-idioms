@@ -122,7 +122,7 @@ func matchingImplPromise(c context.Context, words, typedLangs []string) chan map
 		if err == nil {
 			ch <- matchingImplIDs
 		} else {
-			log.Errorf(c, "problem fetching impl highlights: %v")
+			log.Errorf(c, "problem fetching impl highlights: %v", err)
 			ch <- map[string]bool{}
 		}
 		close(ch)

@@ -51,7 +51,7 @@ func (a *MemcacheDatastoreAccessor) cacheValue(c context.Context, cacheKey strin
 
 func (a *MemcacheDatastoreAccessor) cacheValues(c context.Context, cacheKeys []string, data []interface{}, expiration time.Duration) error {
 	if len(cacheKeys) != len(data) {
-		panic(fmt.Errorf("Wrong params length", len(cacheKeys), len(data)))
+		panic(fmt.Errorf("Wrong params length %d, %d", len(cacheKeys), len(data)))
 	}
 	N := len(cacheKeys)
 
@@ -121,7 +121,7 @@ func (a *MemcacheDatastoreAccessor) cacheKeyValue(c context.Context, cacheKey st
 // A shortcut for caching the datastoreKeys + values
 func (a *MemcacheDatastoreAccessor) cacheKeysValues(c context.Context, cacheKeys []string, datastoreKeys []*datastore.Key, entities []interface{}, expiration time.Duration) error {
 	if len(cacheKeys) != len(datastoreKeys) || len(cacheKeys) != len(entities) {
-		panic(fmt.Errorf("Wrong params length", len(cacheKeys), len(datastoreKeys), len(entities)))
+		panic(fmt.Errorf("Wrong params length %d, %d, %d", len(cacheKeys), len(datastoreKeys), len(entities)))
 	}
 	N := len(cacheKeys)
 

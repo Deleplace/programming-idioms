@@ -188,8 +188,6 @@ func diffClass(leftArg, rightArg interface{}) string {
 	default:
 		panic(fmt.Errorf("unexpected left type %T\n", leftArg))
 	}
-
-	return ""
 }
 
 func plus(a, b int) int {

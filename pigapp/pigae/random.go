@@ -17,7 +17,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	havingLang := vars["havingLang"]
 	notHavingLang := vars["notHavingLang"]
 	if havingLang != "" && notHavingLang != "" {
-		return fmt.Errorf("Can't have both filters:", havingLang, notHavingLang)
+		return fmt.Errorf("Can't have both filters: havingLang, notHavingLang")
 	}
 
 	var idiom *Idiom
