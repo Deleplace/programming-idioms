@@ -287,7 +287,7 @@ func (a *GaeDatastoreAccessor) getAllIdioms(c context.Context, limit int, order 
 	if limit > 0 {
 		q = q.Limit(limit)
 	}
-	idioms := make([]*Idiom, 0, 300)
+	idioms := make([]*Idiom, 0, 500)
 	keys, err := q.GetAll(c, &idioms)
 	return keys, idioms, err
 }

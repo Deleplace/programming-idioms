@@ -27,8 +27,13 @@ type CoverageFacade struct {
 	Languages   []string
 	// Ex: Checked[123]["java"] == 957
 	Checked map[int]map[string]int
+	// How many impls does each language have?
 	// Ex : langImplCount["java"] == 52
 	LangImplCount map[string]int
+	// What is the cumulated "score" for this language?
+	// Including number of impls, doc URLs, and demo URLs.
+	// Ex : langImplScore["java"] == 81
+	LangImplScore map[string]int
 }
 
 func about(w http.ResponseWriter, r *http.Request) error {
@@ -99,8 +104,12 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	coverage, _ := languageCoverage(c)
-	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount)
+	coverage, err := languageCoverage(c)
+	if err != nil {
+		log.Errorf(c, "Error generating language coverage: %v", err)
+		return PiError{"Couldn't generate language coverage", 500}
+	}
+	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount, coverage.LangImplScore)
 
 	data := AboutFacade{
 		PageMeta: PageMeta{
@@ -112,7 +121,7 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 
 	var buffer bytes.Buffer
 	log.Debugf(c, "block-about-language-coverage templating start...")
-	err := templates.ExecuteTemplate(&buffer, "block-about-language-coverage", data)
+	err = templates.ExecuteTemplate(&buffer, "block-about-language-coverage", data)
 	log.Debugf(c, "block-about-language-coverage templating end.")
 	if err != nil {
 		return err
@@ -147,6 +156,7 @@ func ajaxAboutCheatsheets(w http.ResponseWriter, r *http.Request) error {
 func languageCoverage(c context.Context) (cover CoverageFacade, err error) {
 	checked := map[int]map[string]int{}
 	langImplCount := map[string]int{}
+	langImplScore := map[string]int{}
 	log.Debugf(c, "Loading full idiom list...")
 	_, idioms, err := dao.getAllIdioms(c, 299, "-ImplCount") // TODO change 299 ?!
 	if err != nil {
@@ -168,6 +178,18 @@ func languageCoverage(c context.Context) (cover CoverageFacade, err error) {
 				checked[idiom.Id][impl.LanguageName] = impl.Id
 			}
 			langImplCount[impl.LanguageName]++
+			// 1 point for existing
+			score := 1
+			langImplScore[impl.LanguageName]++
+			if len(impl.DocumentationURL) > 6 {
+				// 1 point for documentation URL
+				score++
+			}
+			if len(impl.DemoURL) > 6 {
+				// 1 point for online demo
+				score++
+			}
+			langImplScore[impl.LanguageName] += score
 		}
 	}
 	log.Debugf(c, "Impls of each idiom counted.")
@@ -178,6 +200,7 @@ func languageCoverage(c context.Context) (cover CoverageFacade, err error) {
 		Languages:     AllLanguages(),
 		Checked:       checked,
 		LangImplCount: langImplCount,
+		LangImplScore: langImplScore,
 	}
 	return cover, nil
 }

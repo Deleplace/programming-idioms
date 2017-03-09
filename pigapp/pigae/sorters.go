@@ -32,8 +32,9 @@ func favoritesFirst(languages []string, favoriteLanguages []string) {
 // in https://golang.org/pkg/sort/
 type languageSorter struct {
 	languages []string
-	scores    map[string]int
+	userScore map[string]int
 	implCount map[string]int
+	implScore map[string]int
 }
 
 func (s *languageSorter) Len() int {
@@ -43,8 +44,8 @@ func (s *languageSorter) Swap(i, j int) {
 	s.languages[i], s.languages[j] = s.languages[j], s.languages[i]
 }
 func (s *languageSorter) Less(i, j int) bool {
-	a, isfavA := s.scores[s.languages[i]]
-	b, isfavB := s.scores[s.languages[j]]
+	a, isfavA := s.userScore[s.languages[i]]
+	b, isfavB := s.userScore[s.languages[j]]
 	if isfavA {
 		if isfavB {
 			return a < b
@@ -55,23 +56,24 @@ func (s *languageSorter) Less(i, j int) bool {
 		if isfavB {
 			return false
 		} else {
-			return s.implCount[s.languages[i]] >= s.implCount[s.languages[j]]
+			return s.implScore[s.languages[i]] >= s.implScore[s.languages[j]]
 		}
 	}
 }
 
 // Parameter favoriteLanguages contain user favorite languages, in decreasing order of
 // interest (favoriteLanguages[0] is the most important, etc.).
-func favoritesFirstWithOrder(languages []string, favoriteLanguages []string, implCount map[string]int) {
+func favoritesFirstWithOrder(languages []string, favoriteLanguages []string, implCount map[string]int, implScore map[string]int) {
 	// TODO unit test all this
-	scores := map[string]int{}
+	userScore := map[string]int{}
 	for i, lang := range favoriteLanguages {
-		scores[lang] = i
+		userScore[lang] = i
 	}
 	ls := &languageSorter{
 		languages: languages,
-		scores:    scores,
+		userScore: userScore,
 		implCount: implCount,
+		implScore: implScore,
 	}
 	sort.Sort(ls)
 }
@@ -79,8 +81,8 @@ func favoritesFirstWithOrder(languages []string, favoriteLanguages []string, imp
 // Inspired by planetSorter
 // in http://golang.org/pkg/sort/
 type implByLanguageSorter struct {
-	impl   []Impl
-	scores map[string]int
+	impl      []Impl
+	userScore map[string]int
 }
 
 func (s *implByLanguageSorter) Len() int {
@@ -90,8 +92,8 @@ func (s *implByLanguageSorter) Swap(i, j int) {
 	s.impl[i], s.impl[j] = s.impl[j], s.impl[i]
 }
 func (s *implByLanguageSorter) Less(i, j int) bool {
-	a, isfavA := s.scores[s.impl[i].LanguageName]
-	b, isfavB := s.scores[s.impl[j].LanguageName]
+	a, isfavA := s.userScore[s.impl[i].LanguageName]
+	b, isfavB := s.userScore[s.impl[j].LanguageName]
 	if isfavA == isfavB {
 		if isfavA {
 			// both fav: user-defined pref order
@@ -131,20 +133,20 @@ func implFavoriteLanguagesFirst(implementations []Impl, favoriteLanguages []stri
 func implFavoriteLanguagesFirstWithOrder(idiom *Idiom, favoriteLanguages []string, selectedLang string, includeNonFav bool) {
 	// TODO unit test all this
 	implementations := idiom.Implementations
-	scores := map[string]int{}
+	userScore := map[string]int{}
 	for i, lang := range favoriteLanguages {
-		scores[lang] = i
+		userScore[lang] = i
 	}
 	if selectedLang != "" {
 		// Selected language will be first in the list
-		scores[selectedLang] = -1
+		userScore[selectedLang] = -1
 	}
 
 	if !includeNonFav {
 		// Let's remove all uninteresting impls
 		n := len(implementations)
 		for i := 0; i < n; {
-			_, fav := scores[implementations[i].LanguageName]
+			_, fav := userScore[implementations[i].LanguageName]
 			if fav {
 				i++
 			} else {
@@ -157,8 +159,8 @@ func implFavoriteLanguagesFirstWithOrder(idiom *Idiom, favoriteLanguages []strin
 	}
 
 	is := &implByLanguageSorter{
-		impl:   implementations,
-		scores: scores,
+		impl:      implementations,
+		userScore: userScore,
 	}
 	sort.Sort(is)
 }
