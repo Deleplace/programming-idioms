@@ -149,9 +149,14 @@ func Flatten(s string) string {
 	return s
 }
 
+// CRLF -> LF
+func NoCR(s string) string {
+	return strings.Replace(s, "\r\n", "\n", -1)
+}
+
 func Truncate(s string, maxChars int) string {
 	runes := []rune(s)
-	if len(runes) < maxChars {
+	if len(runes) <= maxChars {
 		return s
 	}
 	return string(runes[:maxChars])

@@ -57,7 +57,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	lead = Truncate(lead, 500)
 	keywords = Truncate(keywords, 250)
 	imports = Truncate(imports, 200)
-	code = Truncate(code, 500)
+	code = Truncate(NoCR(code), 500)
 	comment = Truncate(comment, 500)
 	attributionURL = Truncate(attributionURL, 250)
 	demoURL = Truncate(demoURL, 250)

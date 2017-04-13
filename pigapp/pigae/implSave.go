@@ -51,7 +51,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	editSummary := fmt.Sprintf("New %v implementation by user [%v]", language, username)
 
 	imports = Truncate(imports, 200)
-	code = Truncate(code, 500)
+	code = Truncate(NoCR(code), 500)
 	comment = Truncate(comment, 500)
 	attributionURL = Truncate(attributionURL, 250)
 	demoURL = Truncate(demoURL, 250)
@@ -138,7 +138,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	docURL := r.FormValue("impl_doc_url")
 
 	imports = Truncate(imports, 200)
-	code = Truncate(code, 500)
+	code = Truncate(NoCR(code), 500)
 	comment = Truncate(comment, 500)
 	attributionURL = Truncate(attributionURL, 250)
 	demoURL = Truncate(demoURL, 250)
