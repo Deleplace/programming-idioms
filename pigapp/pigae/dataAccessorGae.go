@@ -479,6 +479,7 @@ func (a *GaeDatastoreAccessor) randomIdiom(c context.Context) (*datastore.Key, *
 		return nil, nil, err
 	}
 	k := rand.Intn(count)
+	// This is really slow: ~100ms. TODO find a better way.
 	q = q.Offset(k).Limit(1)
 	idioms := make([]*Idiom, 0, 1)
 	keys, err := q.GetAll(c, &idioms)

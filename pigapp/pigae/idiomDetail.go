@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 // IdiomDetailFacade is the Facade for the Idiom Detail page.
@@ -62,6 +63,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 
 	favlangs := lookForFavoriteLanguages(r)
 	includeNonFav := seeNonFavorite(r)
+	log.Infof(c, "Reorder impls start...")
 	implFavoriteLanguagesFirstWithOrder(idiom, favlangs, selectedImplLang, includeNonFav)
 
 	// Selected impl as very first element
@@ -74,6 +76,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			break
 		}
 	}
+	log.Infof(c, "Reorder impls end.")
 
 	implLangInURL := vars["implLang"]
 	if implLangInURL != "" && strings.ToLower(selectedImplLang) != strings.ToLower(implLangInURL) {
@@ -85,7 +88,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	userProfile := readUserProfile(r)
+	log.Infof(c, "Decorate with votes start...")
 	daoVotes.decorateIdiom(c, idiom, userProfile.Nickname)
+	log.Infof(c, "Decorate with votes end.")
 
 	pageTitle := idiom.Title
 	if selectedImplLang != "" {
@@ -110,5 +115,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		SelectedImplID:   selectedImplID,
 		SelectedImplLang: selectedImplLang,
 	}
-	return templates.ExecuteTemplate(w, "page-idiom-detail", data)
+
+	log.Infof(c, "ExecuteTemplate start...")
+	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	log.Infof(c, "ExecuteTemplate end.")
+	return err
 }
