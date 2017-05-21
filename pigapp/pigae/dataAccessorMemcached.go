@@ -209,6 +209,8 @@ func (a *MemcacheDatastoreAccessor) recacheIdiom(c context.Context, datastoreKey
 	// Unfortunately, some previous "getIdiomByImplID(xyz)" might be left uninvalidated.
 	// (theoretically)
 	return err
+
+	TODO invalidaye all htmlCaches for this idiom
 }
 
 func (a *MemcacheDatastoreAccessor) uncacheIdiom(c context.Context, idiom *Idiom) error {
@@ -223,6 +225,8 @@ func (a *MemcacheDatastoreAccessor) uncacheIdiom(c context.Context, idiom *Idiom
 		log.Errorf(c, err.Error())
 	}
 	return err
+
+	TODO invalidaye all htmlCaches for this idiom
 }
 
 func (a *MemcacheDatastoreAccessor) getIdiom(c context.Context, idiomID int) (*datastore.Key, *Idiom, error) {

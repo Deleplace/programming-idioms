@@ -1,8 +1,10 @@
 package pigae
 
 import (
+	"bytes"
 	"net/http"
 	"strings"
+	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -23,8 +25,20 @@ type IdiomDetailFacade struct {
 
 func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-
 	c := appengine.NewContext(r)
+	favlangs := lookForFavoriteLanguages(r)
+
+	if len(favlangs) == 0 {
+		// Zero-preference ≡ anonymous visit ≡ cache enabled
+		path := r.URL.RequestURI()
+		if cachedPage := htmlCacheRead(c, path); cachedPage != nil {
+			// Using the whole HTML block from Memcache
+			log.Debugf(c, "%s from memcache!", path)
+			_, err := w.Write(cachedPage)
+			return err
+		}
+		log.Debugf(c, "%s not in memcache.", path)
+	}
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -61,7 +75,6 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	favlangs := lookForFavoriteLanguages(r)
 	includeNonFav := seeNonFavorite(r)
 	log.Infof(c, "Reorder impls start...")
 	implFavoriteLanguagesFirstWithOrder(idiom, favlangs, selectedImplLang, includeNonFav)
@@ -116,8 +129,23 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		SelectedImplLang: selectedImplLang,
 	}
 
+	var buffer bytes.Buffer
 	log.Infof(c, "ExecuteTemplate start...")
-	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	err = templates.ExecuteTemplate(&buffer, "page-idiom-detail", data)
 	log.Infof(c, "ExecuteTemplate end.")
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(buffer.Bytes())
+	// TODO flush w ?
+
+	if len(favlangs) == 0 {
+		// Zero-preference ≡ anonymous visit ≡ cache enabled
+		path := r.URL.RequestURI()
+		htmlCacheWrite(c, path, buffer.Bytes(), 24*time.Hour)
+		// Not that this cache entry must be later invalidated in case
+		// of any modification in this idiom.
+	}
+
 	return err
 }
