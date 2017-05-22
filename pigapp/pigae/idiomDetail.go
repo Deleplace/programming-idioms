@@ -26,9 +26,10 @@ type IdiomDetailFacade struct {
 func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	c := appengine.NewContext(r)
-	favlangs := lookForFavoriteLanguages(r)
+	userProfile := readUserProfile(r)
+	favlangs := userProfile.FavoriteLanguages
 
-	if len(favlangs) == 0 {
+	if userProfile.Empty() {
 		// Zero-preference ≡ anonymous visit ≡ cache enabled
 		path := r.URL.RequestURI()
 		if cachedPage := htmlCacheRead(c, path); cachedPage != nil {
@@ -100,7 +101,6 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	userProfile := readUserProfile(r)
 	log.Infof(c, "Decorate with votes start...")
 	daoVotes.decorateIdiom(c, idiom, userProfile.Nickname)
 	log.Infof(c, "Decorate with votes end.")
@@ -139,7 +139,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	_, err = w.Write(buffer.Bytes())
 	// TODO flush w ?
 
-	if len(favlangs) == 0 {
+	if userProfile.Empty() {
 		// Zero-preference ≡ anonymous visit ≡ cache enabled
 		path := r.URL.RequestURI()
 		htmlCacheWrite(c, path, buffer.Bytes(), 24*time.Hour)

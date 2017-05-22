@@ -43,6 +43,14 @@ func (u UserProfile) String() string {
 	return fmt.Sprintf("UserProfile[%s %v%s]", u.Nickname, u.FavoriteLanguages, nonFav)
 }
 
+// Empty means the visitor doesn't have any meaningful profile data in her cookies.
+func (u UserProfile) Empty() bool {
+	return u.Nickname == "" &&
+		len(u.FavoriteLanguages) == 0 &&
+		u.SeeNonFavorite == true &&
+		u.IsAdmin == false
+}
+
 // LanguageSingleSelector is used to specify the prefilled value
 // of a programming language selection widget.
 type LanguageSingleSelector struct {
