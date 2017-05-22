@@ -4,13 +4,16 @@ import (
 	"bytes"
 	"compress/gzip"
 	"io/ioutil"
+	"strconv"
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
+	"google.golang.org/appengine/delay"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
+	"google.golang.org/appengine/taskqueue"
 )
 
 // Sometimes we want to saved whole blocks of template-generated HTML
@@ -103,4 +106,77 @@ func htmlUncacheIdiomAndImpls(c context.Context, idiom *Idiom) {
 		// A lot of impl HTML paages won't be in cache, which will cause
 		// en error. Never mind, just ignore.
 	}
+}
+
+func htmlRecacheNowAndTomorrow(c context.Context, idiomID int) error {
+	// Now
+	err := recacheHtmlIdiom.Call(c, idiomID)
+	if err != nil {
+		return err
+	}
+
+	// Tomorrow
+	t, _ := recacheHtmlIdiom.Task(idiomID)
+	t.Delay = 24*time.Hour + 10*time.Minute
+	_, err = taskqueue.Add(c, t, "")
+	return err
+}
+
+var recacheHtmlIdiom, recacheHtmlImpl *delay.Function
+
+func init() {
+	recacheHtmlIdiom = delay.Func("recache-html-idiom", func(c context.Context, idiomID int) {
+		log.Infof(c, "Start recaching HTML for idiom %d", idiomID)
+		_, idiom, err := dao.getIdiom(c, idiomID)
+		if err != nil {
+			log.Errorf(c, "recacheHtmlIdiom: %v", err)
+			return
+		}
+
+		path := NiceIdiomRelativeURL(idiom)
+		var buffer bytes.Buffer
+		vars := map[string]string{
+			"idiomId":    strconv.Itoa(idiomID),
+			"idiomTitle": uriNormalize(idiom.Title),
+		}
+		err = generateIdiomDetailPage(c, &buffer, vars)
+		if err != nil {
+			log.Errorf(c, "recacheHtmlIdiom: %v", err)
+			return
+		}
+		htmlCacheWrite(c, path, buffer.Bytes(), 24*time.Hour)
+
+		// Then, create async task for each impl to be HTML-recached
+		for _, impl := range idiom.Implementations {
+			implPath := NiceImplRelativeURL(idiom, impl.Id, impl.LanguageName)
+			recacheHtmlImpl.Call(c, implPath, idiom.Id, idiom.Title, impl.Id, impl.LanguageName)
+		}
+
+	})
+
+	recacheHtmlImpl = delay.Func("recache-html-impl", func(
+		c context.Context,
+		implPath string,
+		idiomID int,
+		idiomTitle string,
+		implID int,
+		implLang string,
+	) {
+		log.Infof(c, "Recaching HTML for %s", implPath)
+		// TODO call idiomDetail(fakeWriter, fakeRequest)
+
+		var buffer bytes.Buffer
+		vars := map[string]string{
+			"idiomId":    strconv.Itoa(idiomID),
+			"idiomTitle": uriNormalize(idiomTitle),
+			"implId":     strconv.Itoa(implID),
+			"implLang":   implLang,
+		}
+		err := generateIdiomDetailPage(c, &buffer, vars)
+		if err != nil {
+			log.Errorf(c, "recacheHtmlImpl: %v", err)
+			return
+		}
+		htmlCacheWrite(c, implPath, buffer.Bytes(), 24*time.Hour)
+	})
 }

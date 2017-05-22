@@ -2,6 +2,7 @@ package pigae
 
 import (
 	"bytes"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -9,6 +10,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
 
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
@@ -30,7 +32,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	favlangs := userProfile.FavoriteLanguages
 
 	if userProfile.Empty() {
+		//
 		// Zero-preference ≡ anonymous visit ≡ cache enabled
+		//
 		path := r.URL.RequestURI()
 		if cachedPage := htmlCacheRead(c, path); cachedPage != nil {
 			// Using the whole HTML block from Memcache
@@ -39,7 +43,40 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 		log.Debugf(c, "%s not in memcache.", path)
+
+		var buffer bytes.Buffer
+		err := generateIdiomDetailPage(c, &buffer, vars)
+		if err != nil {
+			if properURL, ok := err.(needRedirectError); ok {
+				http.Redirect(w, r, string(properURL), 302)
+				return nil
+			}
+			return err
+		}
+		_, err = w.Write(buffer.Bytes())
+		if err != nil {
+			return err
+		}
+
+		htmlCacheWrite(c, path, buffer.Bytes(), 24*time.Hour)
+		// Note that this cache entry must be later invalidated in case
+		// of any modification in this idiom.
+
+		idiomIDStr := vars["idiomId"]
+		idiomID := String2Int(idiomIDStr)
+		err = htmlRecacheNowAndTomorrow(c, idiomID)
+		if err != nil {
+			log.Warningf(c, "htmlRecacheTomorrow: %v", err)
+		}
+		return nil
 	}
+
+	//
+	// Below: for users having custom profile
+	//
+	// WARNING the code below is currently very redundant with the second part of generateIdiomDetail.
+	// Please try to not diverge.
+	//
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -58,9 +95,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	selectedImplID := 0
-	selectedImplLang := ""
-	if selectedImplIDStr := vars["implId"]; len(selectedImplIDStr) > 0 {
+	var selectedImplID int
+	var selectedImplLang string
+	if selectedImplIDStr := vars["implId"]; selectedImplIDStr != "" {
 		selectedImplID = String2Int(selectedImplIDStr)
 		for _, impl := range idiom.Implementations {
 			if selectedImplID == impl.Id {
@@ -129,23 +166,104 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		SelectedImplLang: selectedImplLang,
 	}
 
-	var buffer bytes.Buffer
 	log.Infof(c, "ExecuteTemplate start...")
-	err = templates.ExecuteTemplate(&buffer, "page-idiom-detail", data)
+	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
 	log.Infof(c, "ExecuteTemplate end.")
-	if err != nil {
-		return err
-	}
-	_, err = w.Write(buffer.Bytes())
-	// TODO flush w ?
-
-	if userProfile.Empty() {
-		// Zero-preference ≡ anonymous visit ≡ cache enabled
-		path := r.URL.RequestURI()
-		htmlCacheWrite(c, path, buffer.Bytes(), 24*time.Hour)
-		// Not that this cache entry must be later invalidated in case
-		// of any modification in this idiom.
-	}
-
 	return err
+}
+
+func generateIdiomDetailPage(c context.Context, w io.Writer, vars map[string]string) error {
+	//
+	// WARNING this code is currently very redundant with the second part of idiomDetail.
+	// Please try to not diverge.
+	//
+
+	idiomIDStr := vars["idiomId"]
+	idiomID := String2Int(idiomIDStr)
+
+	_, idiom, err := dao.getIdiom(c, idiomID)
+	if err != nil {
+		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+	}
+
+	idiomTitleInURL := vars["idiomTitle"]
+	if idiomTitleInURL != "" && uriNormalize(idiom.Title) != idiomTitleInURL {
+		// Maybe the title has changed recently,
+		// or someone is attempting a practical joke forging a funny URL ?
+		properURL := NiceIdiomURL(idiom)
+		return needRedirectError(properURL)
+	}
+
+	var selectedImplID int
+	var selectedImplLang string
+	if selectedImplIDStr := vars["implId"]; selectedImplIDStr != "" {
+		selectedImplID = String2Int(selectedImplIDStr)
+		for _, impl := range idiom.Implementations {
+			if selectedImplID == impl.Id {
+				selectedImplLang = impl.LanguageName
+				break
+			}
+		}
+		if selectedImplLang == "" {
+			// The requested implementation was not found.
+			properURL := NiceIdiomURL(idiom)
+			return needRedirectError(properURL)
+		}
+	}
+
+	implFavoriteLanguagesFirstWithOrder(idiom, nil, selectedImplLang, true)
+
+	// Selected impl as very first element
+	for i := range idiom.Implementations {
+		if idiom.Implementations[i].LanguageName != selectedImplLang {
+			break
+		}
+		if idiom.Implementations[i].Id == selectedImplID {
+			idiom.Implementations[0], idiom.Implementations[i] = idiom.Implementations[i], idiom.Implementations[0]
+			break
+		}
+	}
+
+	implLangInURL := vars["implLang"]
+	if implLangInURL != "" && strings.ToLower(selectedImplLang) != strings.ToLower(implLangInURL) {
+		// Maybe an accident,
+		// or someone is attempting a practical joke forging a funny URL ?
+		properURL := NiceImplURL(idiom, selectedImplID, selectedImplLang)
+		return needRedirectError(properURL)
+	}
+
+	pageTitle := idiom.Title
+	if selectedImplLang != "" {
+		// SEO: specify the language in the HTML title, for search engine results
+		if niceLang := PrintNiceLang(selectedImplLang); niceLang != "" {
+			pageTitle += ", in " + niceLang
+		}
+	}
+
+	myToggles := copyToggles(toggles)
+	myToggles["actionEditIdiom"] = !idiom.Protected
+	myToggles["actionIdiomHistory"] = true
+	myToggles["actionAddImpl"] = !idiom.Protected
+	data := &IdiomDetailFacade{
+		PageMeta: PageMeta{
+			PageTitle:    pageTitle,
+			PageKeywords: idiom.ExtraKeywords,
+			Toggles:      myToggles,
+		},
+		UserProfile:      EmptyUserProfile(),
+		Idiom:            idiom,
+		SelectedImplID:   selectedImplID,
+		SelectedImplLang: selectedImplLang,
+	}
+
+	log.Infof(c, "ExecuteTemplate start...")
+	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	log.Infof(c, "ExecuteTemplate end.")
+	return err
+}
+
+type needRedirectError string
+
+func (err needRedirectError) Error() string {
+	return string(err)
 }

@@ -51,6 +51,15 @@ func (u UserProfile) Empty() bool {
 		u.IsAdmin == false
 }
 
+func EmptyUserProfile() UserProfile {
+	return UserProfile{
+		Nickname:          "",
+		FavoriteLanguages: nil,
+		SeeNonFavorite:    true,
+		IsAdmin:           false,
+	}
+}
+
 // LanguageSingleSelector is used to specify the prefilled value
 // of a programming language selection widget.
 type LanguageSingleSelector struct {
