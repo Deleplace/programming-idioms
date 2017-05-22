@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"time"
 
+	. "github.com/Deleplace/programming-idioms/pig"
+
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
@@ -47,6 +49,7 @@ func htmlCacheWrite(c context.Context, key string, data []byte, duration time.Du
 // Data changes should lead to cache entries invalidation.
 func htmlCacheEvict(c context.Context, key string) {
 	_ = memcache.Delete(c, key)
+	// See also htmlUncacheIdiomAndImpls
 }
 
 // When expected data may be >1MB.
@@ -83,4 +86,21 @@ func htmlCacheZipWrite(c context.Context, key string, data []byte, duration time
 	_ = zipwriter.Close()
 	log.Debugf(c, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), len(data), key)
 	htmlCacheWrite(c, key, zipbuffer.Bytes(), duration)
+}
+
+func htmlUncacheIdiomAndImpls(c context.Context, idiom *Idiom) {
+	//
+	// There are only two hard things in Computer Science: cache invalidation and naming things.
+	//
+	cachekeys := make([]string, 0, 1+len(idiom.Implementations))
+	cachekeys = append(cachekeys, NiceIdiomRelativeURL(idiom))
+	for _, impl := range idiom.Implementations {
+		cachekeys = append(cachekeys, NiceImplRelativeURL(idiom, impl.Id, impl.LanguageName))
+	}
+	err := memcache.DeleteMulti(c, cachekeys)
+	if err != nil {
+		// log.Errorf(c, "Uncaching idiom %d: %v", idiom.Id, err)
+		// A lot of impl HTML paages won't be in cache, which will cause
+		// en error. Never mind, just ignore.
+	}
 }

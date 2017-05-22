@@ -187,7 +187,7 @@ type pair struct {
 	Second interface{}
 }
 
-func (a *MemcacheDatastoreAccessor) recacheIdiom(c context.Context, datastoreKey *datastore.Key, idiom *Idiom) error {
+func (a *MemcacheDatastoreAccessor) recacheIdiom(c context.Context, datastoreKey *datastore.Key, idiom *Idiom, invalidateHTML bool) error {
 	cacheKey := fmt.Sprintf("getIdiom(%v)", idiom.Id)
 	err := a.cacheKeyValue(c, cacheKey, datastoreKey, idiom, 24*time.Hour)
 	if err != nil {
@@ -208,9 +208,13 @@ func (a *MemcacheDatastoreAccessor) recacheIdiom(c context.Context, datastoreKey
 	}
 	// Unfortunately, some previous "getIdiomByImplID(xyz)" might be left uninvalidated.
 	// (theoretically)
-	return err
 
-	TODO invalidaye all htmlCaches for this idiom
+	if invalidateHTML {
+		// Note that cached HTML pages are just evicted, not regenerated here.
+		htmlUncacheIdiomAndImpls(c, idiom)
+	}
+
+	return err
 }
 
 func (a *MemcacheDatastoreAccessor) uncacheIdiom(c context.Context, idiom *Idiom) error {
@@ -224,9 +228,11 @@ func (a *MemcacheDatastoreAccessor) uncacheIdiom(c context.Context, idiom *Idiom
 	if err != nil {
 		log.Errorf(c, err.Error())
 	}
-	return err
 
-	TODO invalidaye all htmlCaches for this idiom
+	// Cached HTML pages.
+	htmlUncacheIdiomAndImpls(c, idiom)
+
+	return err
 }
 
 func (a *MemcacheDatastoreAccessor) getIdiom(c context.Context, idiomID int) (*datastore.Key, *Idiom, error) {
@@ -241,7 +247,7 @@ func (a *MemcacheDatastoreAccessor) getIdiom(c context.Context, idiomID int) (*d
 		// Not in the cache. Then fetch the real datastore data. And cache it.
 		key, idiom, err := a.GaeDatastoreAccessor.getIdiom(c, idiomID)
 		if err == nil {
-			err2 := a.recacheIdiom(c, key, idiom)
+			err2 := a.recacheIdiom(c, key, idiom, false)
 			logIf(err2, log.Errorf, c, "recaching idiom")
 		}
 		return key, idiom, err
@@ -280,7 +286,7 @@ func (a *MemcacheDatastoreAccessor) getIdiomByImplID(c context.Context, implID i
 func (a *MemcacheDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom) (*datastore.Key, error) {
 	key, err := a.GaeDatastoreAccessor.saveNewIdiom(c, idiom)
 	if err == nil {
-		err2 := a.recacheIdiom(c, key, idiom)
+		err2 := a.recacheIdiom(c, key, idiom, false)
 		logIf(err2, log.Errorf, c, "saving new idiom")
 	}
 	htmlCacheEvict(c, "about-block-language-coverage")
@@ -292,7 +298,7 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *da
 	err := a.GaeDatastoreAccessor.saveExistingIdiom(c, key, idiom)
 	if err == nil {
 		log.Infof(c, "Saved idiom #%v, version %v", idiom.Id, idiom.Version)
-		err2 := a.recacheIdiom(c, key, idiom)
+		err2 := a.recacheIdiom(c, key, idiom, true)
 		logIf(err2, log.Errorf, c, "saving existing idiom")
 	}
 	htmlCacheEvict(c, "about-block-language-coverage")
@@ -301,14 +307,14 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *da
 
 func (a *MemcacheDatastoreAccessor) stealthIncrementIdiomRating(c context.Context, idiomID int, delta int) (*datastore.Key, *Idiom, error) {
 	key, idiom, err := a.GaeDatastoreAccessor.stealthIncrementIdiomRating(c, idiomID, delta)
-	err2 := a.recacheIdiom(c, key, idiom)
+	err2 := a.recacheIdiom(c, key, idiom, true)
 	logIf(err2, log.Errorf, c, "updating idiom rating")
 	return key, idiom, err
 }
 
 func (a *MemcacheDatastoreAccessor) stealthIncrementImplRating(c context.Context, idiomID, implID int, delta int) (key *datastore.Key, idiom *Idiom, newImplRating int, err error) {
 	key, idiom, newImplRating, err = a.GaeDatastoreAccessor.stealthIncrementImplRating(c, idiomID, implID, delta)
-	err2 := a.recacheIdiom(c, key, idiom)
+	err2 := a.recacheIdiom(c, key, idiom, true)
 	logIf(err2, log.Errorf, c, "updating impl rating")
 	return
 }
