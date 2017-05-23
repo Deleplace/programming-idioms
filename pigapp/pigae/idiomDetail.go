@@ -114,7 +114,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	includeNonFav := seeNonFavorite(r)
-	log.Infof(c, "Reorder impls start...")
+	log.Debugf(c, "Reorder impls start...")
 	implFavoriteLanguagesFirstWithOrder(idiom, favlangs, selectedImplLang, includeNonFav)
 
 	// Selected impl as very first element
@@ -127,7 +127,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			break
 		}
 	}
-	log.Infof(c, "Reorder impls end.")
+	log.Debugf(c, "Reorder impls end.")
 
 	implLangInURL := vars["implLang"]
 	if implLangInURL != "" && strings.ToLower(selectedImplLang) != strings.ToLower(implLangInURL) {
@@ -138,9 +138,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	log.Infof(c, "Decorate with votes start...")
+	log.Debugf(c, "Decorate with votes start...")
 	daoVotes.decorateIdiom(c, idiom, userProfile.Nickname)
-	log.Infof(c, "Decorate with votes end.")
+	log.Debugf(c, "Decorate with votes end.")
 
 	pageTitle := idiom.Title
 	if selectedImplLang != "" {
@@ -166,9 +166,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		SelectedImplLang: selectedImplLang,
 	}
 
-	log.Infof(c, "ExecuteTemplate start...")
+	log.Debugf(c, "ExecuteTemplate start...")
 	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
-	log.Infof(c, "ExecuteTemplate end.")
+	log.Debugf(c, "ExecuteTemplate end.")
 	return err
 }
 
@@ -256,9 +256,9 @@ func generateIdiomDetailPage(c context.Context, w io.Writer, vars map[string]str
 		SelectedImplLang: selectedImplLang,
 	}
 
-	log.Infof(c, "ExecuteTemplate start...")
+	log.Debugf(c, "ExecuteTemplate start...")
 	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
-	log.Infof(c, "ExecuteTemplate end.")
+	log.Debugf(c, "ExecuteTemplate end.")
 	return err
 }
 
