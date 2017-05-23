@@ -95,6 +95,8 @@ func htmlUncacheIdiomAndImpls(c context.Context, idiom *Idiom) {
 	//
 	// There are only two hard things in Computer Science: cache invalidation and naming things.
 	//
+	log.Infof(c, "Evicting HTML cached pages for idiom %d %q", idiom.Id, idiom.Title)
+
 	cachekeys := make([]string, 0, 1+len(idiom.Implementations))
 	cachekeys = append(cachekeys, NiceIdiomRelativeURL(idiom))
 	for _, impl := range idiom.Implementations {

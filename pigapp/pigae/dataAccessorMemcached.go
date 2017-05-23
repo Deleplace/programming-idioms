@@ -294,11 +294,15 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom
 }
 
 func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *datastore.Key, idiom *Idiom) error {
+	// It is important to invalidate cache with OLD paths, thus before saving
+	oldIdiomValue := a.getIdiom(idiom.Id)
+	htmlUncacheIdiomAndImpls(c, oldIdiomValue)
+
 	log.Infof(c, "Saving idiom #%v: %v", idiom.Id, idiom.Title)
 	err := a.GaeDatastoreAccessor.saveExistingIdiom(c, key, idiom)
 	if err == nil {
 		log.Infof(c, "Saved idiom #%v, version %v", idiom.Id, idiom.Version)
-		err2 := a.recacheIdiom(c, key, idiom, true)
+		err2 := a.recacheIdiom(c, key, idiom, false)
 		logIf(err2, log.Errorf, c, "saving existing idiom")
 	}
 	htmlCacheEvict(c, "about-block-language-coverage")
