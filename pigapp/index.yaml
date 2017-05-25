@@ -12,6 +12,11 @@ indexes:
 
 - kind: Idiom
   properties:
+  - name: Id
+  - name: Title
+
+- kind: Idiom
+  properties:
   - name: Implementations.LanguageName
   - name: Rating
     direction: desc

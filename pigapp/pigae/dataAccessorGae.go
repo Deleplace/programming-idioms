@@ -654,3 +654,10 @@ func (a *GaeDatastoreAccessor) dismissMessage(c context.Context, key *datastore.
 	_, err = datastore.Put(c, key, &userMessage)
 	return &userMessage, err
 }
+
+func (a *GaeDatastoreAccessor) getAllIdiomTitles(c context.Context) ([]*Idiom, error) {
+	q := datastore.NewQuery("Idiom").Project("Id", "Title")
+	idioms := make([]*Idiom, 0, 10)
+	_, err := q.GetAll(c, &idioms)
+	return idioms, err
+}

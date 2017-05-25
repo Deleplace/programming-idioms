@@ -25,12 +25,12 @@ import (
 // There is no guarantee that previously cached data will be found,
 // because memcache entries may vanish anytime, even before expiration.
 func htmlCacheRead(c context.Context, key string) []byte {
-	var cacheItem *memcache.Item
-	var err error
-	if cacheItem, err = memcache.Get(c, key); err == memcache.ErrCacheMiss {
+	cacheItem, err := memcache.Get(c, key)
+	if err == memcache.ErrCacheMiss {
 		// Item not in the cache
 		return nil
-	} else if err != nil {
+	}
+	if err != nil {
 		// Memcache failure. Ignore.
 		return nil
 	}
