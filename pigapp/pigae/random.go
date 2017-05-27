@@ -42,6 +42,13 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	// Note that we're redirecting to a *relative* URL
 	log.Infof(c, "Picked idiom url %s (out of %d)", url, len(urls))
 
+	// TODO when AppEngine has Go1.8:
+	// if pusher, ok := w.(http.Pusher); ok {
+	// 	if err := pusher.Push(url, nil); err != nil {
+	// 		log.Errorf("Failed to push %s: %v", url, err)
+	// 	}
+	// }
+
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }
