@@ -62,12 +62,10 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		// Note that this cache entry must be later invalidated in case
 		// of any modification in this idiom.
 
-		idiomIDStr := vars["idiomId"]
-		idiomID := String2Int(idiomIDStr)
-		err = htmlRecacheNowAndTomorrow(c, idiomID)
-		if err != nil {
-			log.Warningf(c, "htmlRecacheTomorrow: %v", err)
-		}
+		// Here we just cached 1 HTML page for 1 day.
+		// We tried previously to agressively trigger htmlRecacheNowAndTomorrow,
+		// but it didn't lead to great results in shared memcache.
+
 		return nil
 	}
 
