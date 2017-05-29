@@ -295,8 +295,9 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom
 
 func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *datastore.Key, idiom *Idiom) error {
 	// It is important to invalidate cache with OLD paths, thus before saving
-	oldIdiomValue := a.getIdiom(idiom.Id)
-	htmlUncacheIdiomAndImpls(c, oldIdiomValue)
+	if _, oldIdiomValue, err := a.getIdiom(c, idiom.Id); err == nil {
+		htmlUncacheIdiomAndImpls(c, oldIdiomValue)
+	}
 
 	log.Infof(c, "Saving idiom #%v: %v", idiom.Id, idiom.Title)
 	err := a.GaeDatastoreAccessor.saveExistingIdiom(c, key, idiom)

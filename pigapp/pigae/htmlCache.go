@@ -111,16 +111,24 @@ func htmlUncacheIdiomAndImpls(c context.Context, idiom *Idiom) {
 }
 
 func htmlRecacheNowAndTomorrow(c context.Context, idiomID int) error {
+	log.Debugf(c, "Creating html recache tasks for idiom %d", idiomID)
+	// These 2 task submissions may take several 10s of ms,
+	// thus we decide to submit them as a small batch.
+
 	// Now
-	err := recacheHtmlIdiom.Call(c, idiomID)
-	if err != nil {
-		return err
+	t1, err1 := recacheHtmlIdiom.Task(idiomID)
+	if err1 != nil {
+		return err1
 	}
 
 	// Tomorrow
-	t, _ := recacheHtmlIdiom.Task(idiomID)
-	t.Delay = 24*time.Hour + 10*time.Minute
-	_, err = taskqueue.Add(c, t, "")
+	t2, err2 := recacheHtmlIdiom.Task(idiomID)
+	if err2 != nil {
+		return err2
+	}
+	t2.Delay = 24*time.Hour + 10*time.Minute
+
+	_, err := taskqueue.AddMulti(c, []*taskqueue.Task{t1, t2}, "")
 	return err
 }
 
