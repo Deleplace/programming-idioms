@@ -138,12 +138,16 @@ func NormLang(lang string) string {
 	switch lg {
 	case "c++":
 		return "Cpp"
+	case "cc":
+		return "Cpp"
 	case "c#":
 		return "Csharp"
 	case "javascript":
 		return "JS"
 	case "golang":
 		return "Go"
+	case "py":
+		return "Python"
 	case "objective c":
 		return "Obj-C"
 	default:
