@@ -30,7 +30,7 @@ func init() {
 
 	// We want the random results to be different even if we reboot the server. Thus, we use
 	// the clock to seed the default generator.
-	// See http://www.programming-idioms.org/idiom/70/use-clock-as-random-generator-seed/346/go
+	// See https://www.programming-idioms.org/idiom/70/use-clock-as-random-generator-seed/346/go
 	rand.Seed(time.Now().UnixNano())
 }
 

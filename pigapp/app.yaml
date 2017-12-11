@@ -23,8 +23,11 @@ handlers:
 - url: /default_.*_
   static_dir: static/default
   expiration: "364d"
+  secure: always
 - url: /admin.*
   script: _go_app
   login: admin
+  secure: always
 - url: /.*
   script: _go_app
+  secure: always

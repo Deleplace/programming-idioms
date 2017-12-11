@@ -19,7 +19,7 @@ type Env struct {
 
 var envProd = Env{
 	IsDev:           false,
-	Host:            "http://www.programming-idioms.org",
+	Host:            "https://www.programming-idioms.org",
 	UseAbsoluteUrls: true,
 	UseMinifiedCss:  true,
 	UseMinifiedJs:   true,
