@@ -8,22 +8,32 @@ handlers:
   static_files: static/default/img/favicon.ico
   upload: static/default/img/favicon_32x32\.ico
   expiration: "1d"
+  http_headers:
+    Strict-Transport-Security: max-age=600
 - url: /sitemap\.xml
   static_files: static/default/xml/sitemap.xml
   upload: static/default/xml/sitemap\.xml
 - url: /default/img
   static_dir: static/default/img
   expiration: "15d"
+  http_headers:
+    Strict-Transport-Security: max-age=600
 - url: /default/css
   static_dir: static/default/css
   expiration: "1h"
+  http_headers:
+    Strict-Transport-Security: max-age=600
 - url: /default
   static_dir: static/default
   expiration: "1h"
+  http_headers:
+    Strict-Transport-Security: max-age=600
 - url: /default_.*_
   static_dir: static/default
   expiration: "364d"
   secure: always
+  http_headers:
+    Strict-Transport-Security: max-age=600
 - url: /admin.*
   script: _go_app
   login: admin
