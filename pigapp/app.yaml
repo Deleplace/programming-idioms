@@ -7,7 +7,7 @@ handlers:
 - url: /favicon\.ico
   static_files: static/default/img/favicon.ico
   upload: static/default/img/favicon_32x32\.ico
-  expiration: "364d"
+  expiration: "1d"
 - url: /sitemap\.xml
   static_files: static/default/xml/sitemap.xml
   upload: static/default/xml/sitemap\.xml
