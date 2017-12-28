@@ -98,36 +98,29 @@
 	{{$favlangs := .Deco.FavoriteLanguages}}
 	{{$isAdmin := .Deco.IsAdmin}}
 	{{with .Data}}
-			<div class="well idiom-summary-large">
-				<div class="row-fluid">
-					<div class="span6">
-						<h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
-						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
-						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
-					</div>
-					<div class="span4">
-						<div class="language-list">
-							<ul class="inline">
-								{{range .Implementations}}
-									<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
-								{{end}}
-							</ul>
-						</div>
-					</div>
-					<div class="span1">
-						{{template "voting-idiom" .}}
-					</div>
-					<div class="span1">
-						<div class="show-on-desktop">
-							{{template "idiom-impl-grid-button" .}}
-							{{if or (not .Protected) $isAdmin}}
-								{{template "idiom-edit-button" .}}
-							{{end}}
-							{{if $isAdmin}}
-								{{template "idiom-delete-button" .}}
-							{{end}}
-						</div>
-					</div>
+			<div class="idiom-summary-large">
+				<div>
+					<span><a href="{{niceIdiomURL .}}">Idiom #{{.Id}}</a></span>
+					<h1>{{.Title}}</h1>
+					<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+					{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
+				</div>
+				<div class="language-list">
+					<ul class="inline">
+						{{range .Implementations}}
+							<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
+						{{end}}
+					</ul>
+				</div>
+				{{template "voting-idiom" .}}
+				<div class="show-on-desktop">
+					{{template "idiom-impl-grid-button" .}}
+					{{if or (not .Protected) $isAdmin}}
+						{{template "idiom-edit-button" .}}
+					{{end}}
+					{{if $isAdmin}}
+						{{template "idiom-delete-button" .}}
+					{{end}}
 				</div>
 			</div>
 	{{end}}
@@ -316,6 +309,9 @@
 		{{end}}
 		{{if .PictureURL}}
 			<div class="impl-picture"><img src="{{.PictureURL}}" alt="Illustration"/></div>
+		{{end}}
+		{{if trim .AuthorComment}}
+			<div class="author-comment">{{markup2CSS .AuthorComment}}</div>
 		{{end}}
 	</div>
 {{end}}

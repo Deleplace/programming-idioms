@@ -6,48 +6,27 @@
 	{{template "header-small" .}}
 	<div class="page-content container-fluid">
 
-    <div class="row-fluid">
-		<div class="span8">
-			{{template "language-bar" .}}
-		</div>
-    </div>
+	{{template "language-bar" .}}
 			
 	<div class="row-fluid">
 		<div class="span10">
 			{{template "idiom-summary-large"  decorate .Idiom .UserProfile}}
 			{{$selectedImplId := .SelectedImplID}}
 			{{$selectedImplLang := .SelectedImplLang}}
-			<div class="sortable-y">
+			<div>
 				{{range .Idiom.Implementations}}
-				{{if or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages)}}
-					<div>
-						<div class="handle">
-						    <ul class="nav nav-tabs">
-	   							<li class="active">
-	   								<a href="#" class="lang-tab"><span class="label {{if idEqual .Id $selectedImplId}}badge-lang{{end}} {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
-							    </li>
-	    					</ul>
-						</div>
-						<div class="">
+					{{if or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages)}}
+						<div>
+							<h3 class="active">{{.LanguageName | printNiceLang}}</h3>
 							{{template "impl-code-and-comments" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
 						</div>
-					</div>
-				{{end}}
+					{{end}}
 				{{end}}
 			</div>
 			<div class="implementations-tabs">
-				<ul class="nav nav-tabs">
-					{{$tabclass := ""}}
-					{{range .Idiom.Implementations}}
-						{{if not (or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages))}}
-							<li class="{{$tabclass}}">
-								<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
-							</li>
-						{{end}}
-					{{end}}
-				</ul>
 				{{range .Idiom.Implementations}}
 					{{if not (or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages))}}
+						<h3>{{.LanguageName | printNiceLang}}</h3>
 						<div id="impl{{.Id}}" class="fouc">
 							<div class="">
 								{{template "impl-code-and-comments" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
@@ -58,7 +37,7 @@
 			</div>
 			{{if .PageMeta.Toggles.implAddition}}
 				{{if or (not .Idiom.Protected) .UserProfile.IsAdmin}}
-					<div class="new-impl-invitation hide-on-mobile">
+					<div class="new-impl-invitation contribution hide-on-mobile">
 						<hr/>
 						<h5>Do you know the best way to do this in your language ?</h5>
 						<a href="{{hostPrefix}}/impl-create/{{.Idiom.Id}}" class="btn btn-primary"><i class="icon-plus-sign"></i> New implementation...</a>
@@ -66,10 +45,8 @@
 				{{end}}
 			{{end}}
 		</div>
-		<div class="span2">
-			<div class="show-on-desktop">
-				{{template "right-column" .Idiom}}
-			</div>
+		<div class="show-on-desktop">
+			{{template "right-column" .Idiom}}
 		</div>
 	</div>
 	

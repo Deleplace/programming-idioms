@@ -1,0 +1,76 @@
+
+.header-small .dropdown-menu,
+.header-logo,
+.language-list,
+#modal-nickname,
+.voting,
+.voting_score,
+.implementations-tabs .nav-tabs,
+.modal-impl-grid,
+footer {
+	display: none;
+	/* TODO */
+}
+
+.show-on-desktop {
+	display: none;
+	/* Mobile first. Desktop, later. */
+}
+
+.contribution {
+	/* Mobile first: by default, code contribution is disabled. */
+	display: none;
+}
+
+
+header .top-items {
+	padding-left: 0;
+}
+
+header .top-items li {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+header h1 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+
+/* Import statements (boring) are greyed out */
+.piimports pre{
+	color: #777;
+	border: 1px solid;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom: 0px;
+    border-color: #D7D7D7;
+	background-color: #F5F5F5;
+	margin-bottom: 0px;
+    padding: 2px 4px 4px 15px;
+}
+
+.picode pre {
+    overflow-x: scroll;
+	background-color: #F5F5F5;
+	margin-top: 0;
+    padding: 2px 4px 4px 15px;
+}
+
+.picode .author-comment {
+	margin-left: 6%;
+	margin-right: 6%;
+	padding-left: 4%;
+	padding-right: 4%;
+	padding-top: 0.7em;
+	padding-bottom: 1em;
+	border-radius: 12px;
+	background-color: #CFE;
+}
+
+/* Emphasized identifier */
+.variable {
+	font-weight: bold;
+	font-style: italic;
+}

@@ -1,12 +1,10 @@
 {{define "header"}}
 <header class="compact header">
-	<div class="navbar">
-	<div class="navbar-inner">
-		<ul class="nav">
-              <li>
-                <a href="{{hostPrefix}}/"><img src="{{hostPrefix}}{{themeDir}}/img/wheel_64x64.png" width="64" height="64" class="header_picto" /></a>
-              </li>
-              <li class="">
+		<ul class="top-items">
+        <li>
+          <a href="{{hostPrefix}}/"><img src="{{hostPrefix}}{{themeDir}}/img/wheel_64x64.png" width="64" height="64" class="header-logo" /></a>
+        </li>
+        <li class="">
 				<h1><a href="{{hostPrefix}}/">Programming-Idioms</a></h1>
 				<div class="slogan">Please don't reinvent the wheel.</div>
               </li>
@@ -25,9 +23,6 @@
 				{{template "search-input" .}}
               </li>
 		</ul>
-	</div>
-	<div class="blue-to-white">&nbsp;</div>
-	</div>
 </header>
 
 {{template "message-zone"}}
