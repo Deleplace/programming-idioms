@@ -12,7 +12,8 @@ footer {
 	/* TODO */
 }
 
-.show-on-desktop {
+.show-on-desktop,
+.hide-on-mobile {
 	display: none;
 	/* Mobile first. Desktop, later. */
 }
@@ -21,6 +22,7 @@ footer {
 	/* Mobile first: by default, code contribution is disabled. */
 	display: none;
 }
+
 
 
 header .top-items {
@@ -37,6 +39,17 @@ header h1 {
 	margin-bottom: 10px;
 }
 
+h3.language-name {
+	display: inline-block;
+	margin-bottom: 0.5em;
+	padding: 2px 6px 2px 4px;
+	border-radius: 6px;
+	background-color: #04C;
+	color: white;
+}
+
+h3.language-name.active{
+}
 
 /* Import statements (boring) are greyed out */
 .piimports pre{
@@ -47,7 +60,8 @@ header h1 {
 	border-bottom: 0px;
     border-color: #D7D7D7;
 	background-color: #F5F5F5;
-	margin-bottom: 0px;
+	margin-top: 0;
+	margin-bottom: 0;
     padding: 2px 4px 4px 15px;
 }
 

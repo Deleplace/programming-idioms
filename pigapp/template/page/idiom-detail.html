@@ -17,7 +17,7 @@
 				{{range .Idiom.Implementations}}
 					{{if or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages)}}
 						<div>
-							<h3 class="active">{{.LanguageName | printNiceLang}}</h3>
+							<h3 class="language-name active">{{.LanguageName | printNiceLang}}</h3>
 							{{template "impl-code-and-comments" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
 						</div>
 					{{end}}
@@ -26,7 +26,7 @@
 			<div class="implementations-tabs">
 				{{range .Idiom.Implementations}}
 					{{if not (or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages))}}
-						<h3>{{.LanguageName | printNiceLang}}</h3>
+						<h3 class="language-name">{{.LanguageName | printNiceLang}}</h3>
 						<div id="impl{{.Id}}" class="fouc">
 							<div class="">
 								{{template "impl-code-and-comments" dict "Idiom" $.Idiom "Impl" . "UserProfile" $.UserProfile}}
