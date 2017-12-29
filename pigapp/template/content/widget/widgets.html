@@ -186,23 +186,22 @@
 
 {{define "impl-code-and-comments"}}
 	<div class="impl-code-and-comments">
-		<div class="{{if .Impl.AuthorComment}}span7{{else}}span10{{end}}">
+		<div>
 			{{template "implementation-code" .Impl}}
 
 			<div class="impl-external-links">
-				<ul class="nav nav-tabs">
+				<ul>
 					{{if .Impl.DemoURL}}<li class="active"><a href="{{.Impl.DemoURL}}" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a></li>{{end}}
 					{{if .Impl.DocumentationURL}}<li class="active"><a href="{{.Impl.DocumentationURL}}" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a></li>{{end}}
 					{{if .Impl.OriginalAttributionURL}}<li class="active"><a href="{{.Impl.OriginalAttributionURL}}" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a></li>{{end}}
 				</ul>
 			</div>
 
+			{{if trim .Impl.AuthorComment}}
+				<div class="author-comment">{{markup2CSS .Impl.AuthorComment}}</div>
+			{{end}}
+
 		</div>
-		{{if .Impl.AuthorComment}}
-		<div class="span3">
-			<!-- Space for comments (when exist) -->
-		</div>
-		{{end}}
 		<div class="span1">
 			<div class="show-on-desktop">
 				{{if or (and (not .Impl.Protected) (not .Idiom.Protected)) .UserProfile.IsAdmin}}
@@ -257,13 +256,16 @@
 	<div class="row-fluid">
 		<div class="span7">
 			{{template "implementation-code" .Impl}}
-			<div class="impl-external-links tabbable tabs-below pull-right">
-				<ul class="nav nav-tabs">
+			<div class="impl-external-links">
+				<ul>
 					{{if .Impl.DemoURL}}<li class="active"><a href="{{.Impl.DemoURL}}" class="ext-demo" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a></li>{{end}}
 					{{if .Impl.DocumentationURL}}<li class="active"><a href="{{.Impl.DocumentationURL}}" class="ext-doc" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a></li>{{end}}
 					{{if .Impl.OriginalAttributionURL}}<li class="active"><a href="{{.Impl.OriginalAttributionURL}}" class="ext-origin" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a></li>{{end}}
 				</ul>
 			</div>
+			{{if trim .Impl.AuthorComment}}
+				<div class="author-comment">{{markup2CSS .Impl.AuthorComment}}</div>
+			{{end}}
 		</div>
 	</div>
 {{end}}
@@ -309,9 +311,6 @@
 		{{end}}
 		{{if .PictureURL}}
 			<div class="impl-picture"><img src="{{.PictureURL}}" alt="Illustration"/></div>
-		{{end}}
-		{{if trim .AuthorComment}}
-			<div class="author-comment">{{markup2CSS .AuthorComment}}</div>
 		{{end}}
 	</div>
 {{end}}

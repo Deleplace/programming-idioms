@@ -5,7 +5,6 @@
 #modal-nickname,
 .voting,
 .voting_score,
-.implementations-tabs .nav-tabs,
 .modal-impl-grid,
 footer {
 	display: none;
@@ -40,33 +39,52 @@ header h1 {
 }
 
 .impl-code-and-comments {
+	min-width: 15em;
 	max-width: 50em;
 }
 
 h3.language-name {
 	display: inline-block;
-	margin-bottom: 0.5em;
+	margin-top: 0.5em;
 	padding: 2px 6px 2px 4px;
-	border-radius: 6px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
 	background-color: #04C;
 	color: white;
+	margin-bottom: 0;
 }
 
-/* Small clickable triangle to unfold. */
-.folded .fold-triangle {
-	background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%238C98F2'><polygon points='0,0 0,100 50,50'/></svg>") no-repeat;
-	background-size: 12px;
-	height: 1em;
-	border: none;
+h3.language-name:hover{
+    cursor: pointer;
+}
+
+.folded h3.language-name {
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
 }
 
 /* Small clickable triangle to fold. */
 .fold-triangle {
 	background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%238C98F2'><polygon points='0,50 100,50 50,100'/></svg>") no-repeat;
 	background-size: 12px;
+	background-position-x: 3px;
 	height: 1em;
 	border: none;
+	padding-right: 10px;
+	/*
 	margin-left: 3px;
+	*/
+}
+
+/* Small clickable triangle to unfold. */
+.folded .fold-triangle {
+	background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%238C98F2'><polygon points='0,0 0,100 50,50'/></svg>") no-repeat;
+	background-size: 12px;
+	background-position-x: 3px;
+}
+
+.fold-triangle:hover{
+    cursor: pointer;
 }
 
 button.fold-triangle:focus {
@@ -97,11 +115,12 @@ button.fold-triangle:focus {
 	margin-top: 0;
 	border-bottom-left-radius: 2px;
 	border-bottom-right-radius: 2px;
-    padding: 2px 4px 4px 15px;
+    padding: 2px 4px 12px 15px;
 }
 
-.picode .author-comment {
+.author-comment {
 	display: inline-block;
+	margin-top: 6px;
 	margin-left: 6%;
 	margin-right: 6%;
 	padding-left: 4%;
@@ -110,6 +129,7 @@ button.fold-triangle:focus {
 	padding-bottom: 1em;
 	border-radius: 12px;
 	background-color: #CFE;
+	box-shadow: -.2em .2em 3px #6AD;
 }
 
 /* Emphasized identifier */
@@ -119,17 +139,20 @@ button.fold-triangle:focus {
 }
 
 .impl-external-links {
-	float: right;
 	margin-top: -14px;
 }
 
 .impl-external-links ul {
 	margin-top: 0;
+	display: flex;
+	flex-direction: row-reverse;
+	margin-bottom: 0px;
 }
 
 .impl-external-links li {
 	display: inline-block;
-	margin-left: 0.5em;
+	margin-right: 0.3em;
+	margin-left: 0.3em;
 	padding: 5px;
 	border: solid 1px #888;
 	border-top: none;
