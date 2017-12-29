@@ -1,8 +1,7 @@
 {{define "block-about-all-idioms"}}
 	<div id="all-idioms" class="all-idioms">
 		<h2>All idioms</h2>
-		<div>Use your <span class="key">Ctrl</span><span class="key">F</span> or <span class="key">⌘</span><span class="key">F</span></div>
-		<br/>
+		<div class="show-on-desktop">Use your <span class="key">Ctrl</span><span class="key">F</span> or <span class="key">⌘</span><span class="key">F</span></div>
 		<div class="row-fluid">
 		  {{range .AllIdioms}}
 		    {{template "idiom-cell-fluid" decorate . $.UserProfile}}
