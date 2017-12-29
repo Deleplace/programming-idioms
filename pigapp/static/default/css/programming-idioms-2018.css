@@ -39,6 +39,10 @@ header h1 {
 	margin-bottom: 10px;
 }
 
+.impl-code-and-comments {
+	max-width: 50em;
+}
+
 h3.language-name {
 	display: inline-block;
 	margin-bottom: 0.5em;
@@ -48,7 +52,29 @@ h3.language-name {
 	color: white;
 }
 
-h3.language-name.active{
+/* Small clickable triangle to unfold. */
+.folded .fold-triangle {
+	background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%238C98F2'><polygon points='0,0 0,100 50,50'/></svg>") no-repeat;
+	background-size: 12px;
+	height: 1em;
+	border: none;
+}
+
+/* Small clickable triangle to fold. */
+.fold-triangle {
+	background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%238C98F2'><polygon points='0,50 100,50 50,100'/></svg>") no-repeat;
+	background-size: 12px;
+	height: 1em;
+	border: none;
+	margin-left: 3px;
+}
+
+button.fold-triangle:focus {
+	outline:0;
+}
+
+.single-impl-tab.folded .impl-code-and-comments {
+	display: none;
 }
 
 /* Import statements (boring) are greyed out */
@@ -69,10 +95,13 @@ h3.language-name.active{
     overflow-x: scroll;
 	background-color: #F5F5F5;
 	margin-top: 0;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
     padding: 2px 4px 4px 15px;
 }
 
 .picode .author-comment {
+	display: inline-block;
 	margin-left: 6%;
 	margin-right: 6%;
 	padding-left: 4%;
@@ -87,4 +116,32 @@ h3.language-name.active{
 .variable {
 	font-weight: bold;
 	font-style: italic;
+}
+
+.impl-external-links {
+	float: right;
+	margin-top: -14px;
+}
+
+.impl-external-links ul {
+	margin-top: 0;
+}
+
+.impl-external-links li {
+	display: inline-block;
+	margin-left: 0.5em;
+	padding: 5px;
+	border: solid 1px #888;
+	border-top: none;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+}
+
+.impl-external-links a {
+	text-decoration: none;
+}
+
+.impl-external-links a:hover{
+    font-weight:bolder;
+    cursor: pointer;
 }
