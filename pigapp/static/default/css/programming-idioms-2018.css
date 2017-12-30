@@ -1,12 +1,11 @@
 
 .header-small .dropdown-menu,
 .header-logo,
-.language-list,
+.idiom-summary-large .language-list,
 #modal-nickname,
 .voting,
 .voting_score,
-.modal-impl-grid,
-footer {
+.modal-impl-grid {
 	display: none;
 	/* TODO */
 }
@@ -22,9 +21,43 @@ footer {
 	display: none;
 }
 
+html,body{
+    height: 100%
+}
 
+.page-holder {
+	min-height: 100%;
+	position: relative;
+}
+
+body {
+	margin: 5px;
+}
+
+/*
+ *
+ * Header
+ *
+ */
+
+
+header {
+	margin: 0;
+	background-image:linear-gradient(to bottom, #0000aa, #3333dd);
+	color: white;
+	margin-bottom: 8px;
+}
+
+header a {
+	text-decoration: none;
+}
+
+header a:visited {
+	color: white;
+}
 
 header .top-items {
+	margin: 0;
 	padding-left: 0;
 }
 
@@ -38,14 +71,44 @@ header h1 {
 	margin-bottom: 10px;
 }
 
+.form-search input.search-query {
+	margin-right: 0;
+	border-top-left-radius: 1rem;
+	border-bottom-left-radius: 1rem;
+	padding-left: .7rem;
+}
+
+.form-search button {
+	margin-left: 0px;
+	border-top-right-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+}
+
+/*
+ *
+ * Common
+ *
+ */
+
+ h1 {
+	 margin-bottom: .5rem;
+	 margin-top: .5rem;
+ }
+
+/*
+ *
+ * Idiom detail
+ *
+ */
+
 .impl-code-and-comments {
-	min-width: 15em;
-	max-width: 50em;
+	min-width: 15rem;
+	max-width: 50rem;
 }
 
 h3.language-name {
 	display: inline-block;
-	margin-top: 0.5em;
+	margin-top: 0.5rem;
 	padding: 2px 6px 2px 4px;
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
@@ -56,6 +119,7 @@ h3.language-name {
 
 h3.language-name:hover{
     cursor: pointer;
+	background-color: #26E;
 }
 
 .folded h3.language-name {
@@ -68,12 +132,9 @@ h3.language-name:hover{
 	background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%238C98F2'><polygon points='0,50 100,50 50,100'/></svg>") no-repeat;
 	background-size: 12px;
 	background-position-x: 3px;
-	height: 1em;
+	height: 1rem;
 	border: none;
-	padding-right: 10px;
-	/*
-	margin-left: 3px;
-	*/
+	padding-right: 15px;
 }
 
 /* Small clickable triangle to unfold. */
@@ -85,6 +146,7 @@ h3.language-name:hover{
 
 .fold-triangle:hover{
     cursor: pointer;
+    box-shadow: inset 0 0 20px 20px rgba(255, 255, 255, 0.3);
 }
 
 button.fold-triangle:focus {
@@ -125,8 +187,8 @@ button.fold-triangle:focus {
 	margin-right: 6%;
 	padding-left: 4%;
 	padding-right: 4%;
-	padding-top: 0.7em;
-	padding-bottom: 1em;
+	padding-top: 0.7rem;
+	padding-bottom: 1rem;
 	border-radius: 12px;
 	background-color: #CFE;
 	box-shadow: -.2em .2em 3px #6AD;
@@ -151,8 +213,8 @@ button.fold-triangle:focus {
 
 .impl-external-links li {
 	display: inline-block;
-	margin-right: 0.3em;
-	margin-left: 0.3em;
+	margin-right: 0.3rem;
+	margin-left: 0.3rem;
 	padding: 5px;
 	border: solid 1px #888;
 	border-top: none;
@@ -168,3 +230,62 @@ button.fold-triangle:focus {
     font-weight:bolder;
     cursor: pointer;
 }
+
+/* 
+ *
+ * Search result list
+ *
+ */
+
+ .language-list ul {
+	 display: flex;
+	 flex-wrap: wrap;
+ }
+
+.idiom-summary-medium .lead-and-picture {
+	display: flex;
+}
+
+.idiom-summary-medium .idiom-picture img {
+	padding-left: 1rem;
+	max-width: 4rem;
+	max-height: 4rem;
+}
+
+/*
+ *
+ * Footer
+ *
+ */
+
+.page-content{
+    padding-bottom: 140px;    /* approx height of footer */
+}
+
+footer {
+  color: #555555;
+
+  display: flex;
+  justify-content: space-around;
+
+  /* See https://stackoverflow.com/questions/8824831/make-div-stay-at-bottom-of-pages-content-all-the-time-even-when-there-are-scrol/8825714#8825714 */  
+  width:100%;
+  position: absolute;
+  left: 0;
+  bottom: 0; 
+}
+
+footer > div {
+	display: inline-block;
+	padding: 0.2rem;
+}
+
+.about-link {
+	text-decoration: none;
+}
+
+/*
+ *
+ * Extra elements for large displays only.
+ *
+ */

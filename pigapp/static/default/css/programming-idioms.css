@@ -629,15 +629,15 @@ footer a {
 footer a.visited {
   color: #555555;
 }
-.powered-by {
+.powered-with {
   float: right;
   font-size: smaller;
   color: #888888;
 }
-.powered-by a {
+.powered-with a {
   color: #888888;
 }
-.powered-by a.visited {
+.powered-with a.visited {
   color: #888888;
 }
 .about-link {

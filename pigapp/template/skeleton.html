@@ -49,17 +49,9 @@
 		{{if .Toggles.isDev}}
 			{{/* This green header, as a reminder this is DEV (not PROD) */}}
 			<style>
-				.header .navbar-inner,.header-small .navbar-inner, footer .well{
+				header, footerZ {
 					background-color:#004400;
-					background-image:-moz-linear-gradient(top, #004400, #227722);
-					background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#004400), to(#227722));
-					background-image:-webkit-linear-gradient(top, #004400, #227722);
-					background-image:-o-linear-gradient(top, #004400, #227722);
 					background-image:linear-gradient(to bottom, #004400, #227722);
-				}
-				.blue-to-white{
-					background-color: #070;
-					background-image: linear-gradient(to bottom, #227722, #ffffff);
 				}
 			</style>
 		{{end}}
