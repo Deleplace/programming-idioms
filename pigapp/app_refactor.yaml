@@ -1,0 +1,34 @@
+application: programming-idioms
+module: default
+version: refactor
+runtime: go
+api_version: go1.6
+
+handlers:
+- url: /favicon\.ico
+  static_files: static/default/img/favicon.ico
+  upload: static/default/img/favicon_32x32\.ico
+  expiration: "1h"
+- url: /sitemap\.xml
+  static_files: static/default/xml/sitemap.xml
+  upload: static/default/xml/sitemap\.xml
+- url: /default/img
+  static_dir: static/default/img
+  expiration: "1h"
+- url: /default/css
+  static_dir: static/default/css
+  expiration: "1h"
+- url: /default
+  static_dir: static/default
+  expiration: "1h"
+- url: /default_.*_
+  static_dir: static/default
+  expiration: "1h"
+  secure: always
+- url: /admin.*
+  script: _go_app
+  login: admin
+  secure: always
+- url: /.*
+  script: _go_app
+  secure: always
