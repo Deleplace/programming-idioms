@@ -15,19 +15,27 @@ self.addEventListener('install', function(event) {
     );
 });
 
-// Below:
-// - works on Firefox
-// - not in Chromium : Uncaught (in promise) TypeError: Failed to execute 'clone' on 'Response': Response body is already used
+// This may be abusing response.clone() ... not sure about that.
 self.addEventListener('fetch', function(event) {
     event.respondWith(
       caches.match(event.request).then(function(resp) {
-        return resp || fetch(event.request).then(function(response) {
-          caches.open('v1').then(function(cache) {
-            cache.put(event.request, response.clone());
-          });
-          return response;
-        });
-      }).catch(function() {
+        if (resp) {
+            console.log("Found in cache: " + event.request.url);
+            return resp;
+        }
+        return fetch(event.request).then(function(response) {
+          console.log("Fetched " + event.request.url);
+          // Cache 200-299, but not 302, 404, 500...
+          if(response.ok) {
+            caches.open('v1').then(function(cache) {
+                console.log("Caching response for " + event.request.url);
+                cache.put(event.request, response.clone());
+            });
+          }
+          return response.clone();
+      });
+    }).catch(function() {
+        console.log("Not found " + event.request.url + " :(");
         return caches.match( '/default_' + ThemeDate + '/img/dice_48x48.png' );
       })
     );
