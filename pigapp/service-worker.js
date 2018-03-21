@@ -27,12 +27,13 @@ self.addEventListener('fetch', function(event) {
           console.log("Fetched " + event.request.url);
           // Cache 200-299, but not 302, 404, 500...
           if(response.ok) {
+            let responseClone = response.clone();
             caches.open('v1').then(function(cache) {
                 console.log("Caching response for " + event.request.url);
-                cache.put(event.request, response.clone());
+                cache.put(event.request, responseClone);
             });
           }
-          return response.clone();
+          return response;
       });
     }).catch(function() {
         console.log("Not found " + event.request.url + " :(");
