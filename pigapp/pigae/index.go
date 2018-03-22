@@ -108,6 +108,8 @@ func initRoutes() {
 			handleAjax("/admin-impl-delete", implDelete)
 			handleAjax("/admin-send-message-for-user", sendMessageForUserAjax)
 		}
+		handleAjax("/api/idiom/{idiomId}", jsonIdiom)
+		handleAjax("/api/idioms/all", jsonAllIdioms)
 
 		handle("/auth", handleAuth)
 		handle("/_ah/login_required", handleAuth)
@@ -150,6 +152,7 @@ var neededParameters = map[string][]string{
 	"/admin-idiom-delete":          {"idiomId"},
 	"/admin-impl-delete":           {"idiomId", "implId"},
 	"/admin-send-message-for-user": {"username", "message"},
+	"/api/idiom":                   {"idiomId"},
 }
 
 // Request will fail if corresponding toggle is off
