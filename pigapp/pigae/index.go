@@ -110,6 +110,7 @@ func initRoutes() {
 		}
 		handleAjax("/api/idiom/{idiomId}", jsonIdiom)
 		handleAjax("/api/idioms/all", jsonAllIdioms)
+		handleAjax("/api/search/{q}", jsonSearch)
 
 		handle("/auth", handleAuth)
 		handle("/_ah/login_required", handleAuth)

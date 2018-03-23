@@ -45,11 +45,25 @@ func separateLangKeywords(terms []string) (words, langs []string) {
 func search(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	userProfile := readUserProfile(r)
-
-	c := appengine.NewContext(r)
 	q := vars["q"]
 	//q := url.QueryUnescape(q)  Not needed, so it seems.
+	hits, normalizedQ, err := findResults(r, q)
+	if err != nil {
+		if err == errEmptyQ {
+			redirURL := hostPrefix() + "/about#about-block-all-idioms"
+			http.Redirect(w, r, redirURL, http.StatusFound)
+			return nil
+		}
+		return err
+	}
+
+	return listResults(w, r, normalizedQ, hits)
+}
+
+var errEmptyQ = fmt.Errorf("Empty search query")
+
+func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ string, err error) {
+	c := appengine.NewContext(r)
 
 	// Maybe someday we find a graceful way to handle "c++", "c#", etc. but...
 	q = strings.Replace(q, "C++", "Cpp", -1)
@@ -72,9 +86,7 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	if len(words)+len(typedLangs) == 0 {
 		// Search query is empty or illegible...
-		redirURL := hostPrefix() + "/about#about-block-all-idioms"
-		http.Redirect(w, r, redirURL, http.StatusFound)
-		return nil
+		return nil, "", errEmptyQ
 	}
 
 	if len(words) == 0 {
@@ -89,10 +101,11 @@ func search(w http.ResponseWriter, r *http.Request) error {
 	matchingPromise := matchingImplPromise(c, words, typedLangs)
 
 	numberMaxResults := 20
+
+	// Note that this currently depends on userProfile.FavoriteLanguages
+	// (not the best for caching and for SAP)
+	userProfile := readUserProfile(r)
 	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
-	if err != nil {
-		return err
-	}
 
 	matchingImplIDs := <-matchingPromise
 
@@ -109,9 +122,7 @@ func search(w http.ResponseWriter, r *http.Request) error {
 			}
 		}
 	}
-
-	normalizedQ := strings.Join(terms, " ")
-	return listResults(w, r, normalizedQ, hits)
+	return hits, strings.Join(terms, " "), nil
 }
 
 func matchingImplPromise(c context.Context, words, typedLangs []string) chan map[string]bool {
