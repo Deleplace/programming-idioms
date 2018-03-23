@@ -203,6 +203,8 @@ func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
 	log.Infof(ctx, "Unindexing everything (from the text search indexes)")
 
 	// Must remove 1 by 1 (Index has no batch methods)
+	// UPDATE: DeleteMulti now exists (since 2017-01)
+	// TODO: use DeleteMulti
 	for _, indexName := range []string{
 		"idioms",
 		"impls",
