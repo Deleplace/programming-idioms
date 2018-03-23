@@ -148,7 +148,8 @@ func indexIdiomFullText(c context.Context, idiom *Idiom, idiomKey *datastore.Key
 			Bulk:    strings.Join(w, " "),
 		}
 		// Weird that the search API doesn't have batch queries.
-		// TODO: index each impl concurrently?
+		// UPDATE: PutMulti now exists (since 2017-01)
+		// TODO: use PutMulti
 		// TODO: index only last edited impl?
 		_, err = indexImpl.Put(c, implDocID, implDoc)
 		if err != nil {
@@ -192,6 +193,8 @@ func (a *GaeDatastoreAccessor) unindexAll(c context.Context) error {
 	log.Infof(c, "Unindexing everything (from the text search indexes)")
 
 	// Must remove 1 by 1 (Index has no batch methods)
+	// UPDATE: DeleteMulti now exists (since 2017-01)
+	// TODO: use DeleteMulti
 	for _, indexName := range []string{
 		"idioms",
 		"impls",
