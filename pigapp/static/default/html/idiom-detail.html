@@ -1,0 +1,33 @@
+<html>
+    <head>
+            <link rel="stylesheet" href="/default/css/programming-idioms-minimalistic.css" />
+    </head>
+    <body>
+        <h1>New Look</h1>
+
+        <div id="app">
+            <div class="idiom">
+                <div class="summary">
+                    <div class="id">Idiom #{{ idiom.Id }}</div>
+                    <div class="title">{{ idiom.Title }}</div>
+                    <div class="lead-paragraph">{{ idiom.LeadParagraph }}</div>
+                </div>
+                <div class="impls">
+                    <div class="impl" v-for="impl in idiom.Implementations">
+                        <div class="lang">{{ impl.LanguageName }}</div>
+                        <pre class="code">{{ impl.CodeBlock }}</pre>
+                        <div class="comment" v-if="impl.AuthorComment">{{ impl.AuthorComment }}</div>
+                        <div class="link demo" v-if="impl.DemoURL"><a v-bind:href="impl.DemoURL">Demo</a></div>
+                        <div class="link doc" v-if="impl.DocumentationURL"><a v-bind:href="impl.DocumentationURL">Doc</a></div>
+                        <div class="link origin" v-if="impl.OriginalAttributionURL"><a v-bind:href="impl.OriginalAttributionURL">Origin</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.0"></script>
+        <script src="/default/js/vue/programming-idioms.js"></script>
+    </body>
+</html>

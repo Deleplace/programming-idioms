@@ -1,0 +1,37 @@
+div {
+    border: solid 1px #DDD;
+    margin: 2px;
+}
+
+.idiom {
+    border-color: #666;
+}
+.idiom .id {
+    display: inline-block;
+}
+.idiom .title {
+    display: inline-block;
+    background-color: #BEB;
+}
+
+.idiom .summary {
+    border-color: #888;
+}
+.idiom .impls {
+    margin-left: 2rem;
+    border-color: #888;
+}
+.idiom .impl {
+    margin-top: 1rem;
+    border-color: #AAA;
+}
+.idiom .impl .lang {
+    background-color: #DFD;
+}
+.idiom .impl .comment {
+    color: #444;
+    font-style: italic;
+}
+.idiom .impl .link {
+    display: inline-block;
+}

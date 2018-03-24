@@ -24,6 +24,9 @@ handlers:
   static_dir: static/default
   expiration: "364d"
   secure: always
+- url: /page
+  static_dir: static/default/html
+  expiration: "1h"
 - url: /admin.*
   script: _go_app
   login: admin
