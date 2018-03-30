@@ -22,7 +22,7 @@ var app = new Vue({
       }
     },
     methods: {
-      fetch122(resource) {
+      fetch122() {
         this.$http.get('/api/idiom/122').then((response) => {
           this.idiom = response.data;
         });
