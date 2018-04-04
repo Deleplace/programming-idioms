@@ -4,18 +4,16 @@
         <link rel="stylesheet" href="/default/css/programming-idioms-minimalistic.css" />
     </head>
     <body>
-        <h1>Idioms for <span class="search-query" v-bind="q"></span></h1>
-
         <div id="app" class="search-results">
+            <h1>Idioms for <span class="search-query">{{q}}</span></h1>
+
             <div class="idiom" v-for="idiom in results">
                 <div class="summary">
-                    <div class="id">Idiom #{{ idiom.Id }}</div>
+                    <div class="id">#{{ idiom.Id }}</div>
                     <div class="title"><a v-bind:href="idiomURL(idiom.Id)">{{ idiom.Title }}</a></div>
                     <div class="lead-paragraph">{{ idiom.LeadParagraph }}</div>
                 </div>
-                <div class="impls">
-                    <span v-for="impl in idiom.Implementations">{{ impl.LanguageName }}</span>
-                </div>
+                {{ idiom.Implementations.length }} langs
             </div>
         </div>
 

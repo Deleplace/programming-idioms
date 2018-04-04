@@ -4,6 +4,7 @@ div {
 
 .search input[type=text] {
     border-radius: 0.5rem;
+    padding-left: 0.3rem;
 }
 
 .idiom {
@@ -41,6 +42,10 @@ div {
 
 .search-results .idiom {
     margin-top: 1rem;
+}
+
+.search-results .search-query {
+    font-style: italic;
 }
 
 .search-results .idiom .id {
