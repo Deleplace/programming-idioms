@@ -1,16 +1,15 @@
 div {
-    border: solid 1px #DDD;
     margin: 2px;
 }
 
 .idiom {
     border-color: #666;
 }
+
 .idiom .id {
-    display: inline-block;
 }
+
 .idiom .title {
-    display: inline-block;
     background-color: #BEB;
 }
 
@@ -33,5 +32,17 @@ div {
     font-style: italic;
 }
 .idiom .impl .link {
+    display: inline-block;
+}
+
+.search-results .idiom {
+    margin-top: 1rem;
+}
+
+.search-results .idiom .id {
+    display: inline-block;
+}
+
+.search-results .idiom .title {
     display: inline-block;
 }

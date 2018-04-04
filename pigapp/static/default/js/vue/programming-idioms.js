@@ -1,33 +1,9 @@
-var app = new Vue({
-    el: '#app',
-    data: {
-      idiom: {
-        Title: 'Declare enumeration',
-        LeadParagraph: 'Create an enumerated type _Suit with 4 possible values _SPADES, _HEARTS, _DIAMONDS, _CLUBS.',
-        Implementations: [
-            {
-                LanguageName: 'Haskell',
-                CodeBlock: 'data Suit = SPADES | HEARTS | DIAMONDS | CLUBS deriving (Enum)'
-            },
-            {
-                LanguageName: 'Go',
-                CodeBlock: `const (
-                    SPADES = iota
-                    HEARTS
-                    DIAMONDS
-                    CLUBS
-                )`
-            }
-        ]
-      }
-    },
-    methods: {
-      fetch122() {
-        this.$http.get('/api/idiom/122').then((response) => {
-          this.idiom = response.data;
-        });
-      }
-    }
-  });
-
-  app.fetch122();
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}

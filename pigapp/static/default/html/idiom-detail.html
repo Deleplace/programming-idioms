@@ -1,15 +1,18 @@
 <html>
     <head>
-            <link rel="stylesheet" href="/default/css/programming-idioms-minimalistic.css" />
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/default/css/programming-idioms-minimalistic.css" />
     </head>
     <body>
-        <h1>New Look</h1>
-
         <div id="app">
-            <div class="idiom">
+            <div v-if="!idiom">
+                <!-- Idiom is still loading -->
+                ø
+            </div>
+            <div class="idiom" v-if="idiom">
                 <div class="summary">
                     <div class="id">Idiom #{{ idiom.Id }}</div>
-                    <div class="title">{{ idiom.Title }}</div>
+                    <h1 class="title">{{ idiom.Title }}</h1>
                     <div class="lead-paragraph">{{ idiom.LeadParagraph }}</div>
                 </div>
                 <div class="impls">
@@ -28,6 +31,8 @@
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.0"></script>
+        
         <script src="/default/js/vue/programming-idioms.js"></script>
+        <script src="/default/js/vue/idiom-detail.js"></script>
     </body>
 </html>
