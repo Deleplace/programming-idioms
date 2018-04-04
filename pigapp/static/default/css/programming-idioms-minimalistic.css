@@ -2,6 +2,10 @@ div {
     margin: 2px;
 }
 
+.search input[type=text] {
+    border-radius: 0.5rem;
+}
+
 .idiom {
     border-color: #666;
 }

@@ -8,6 +8,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
 
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
@@ -16,6 +17,24 @@ import (
 func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	c := appengine.NewContext(r)
 
+	url, err := randomIdiomURL(c)
+	if err != nil {
+		return err
+	}
+	// Note that we're redirecting to a *relative* URL
+
+	// TODO when AppEngine has Go1.8:
+	// if pusher, ok := w.(http.Pusher); ok {
+	// 	if err := pusher.Push(url, nil); err != nil {
+	// 		log.Errorf("Failed to push %s: %v", url, err)
+	// 	}
+	// }
+
+	http.Redirect(w, r, url, http.StatusFound)
+	return nil
+}
+
+func randomIdiomURL(c context.Context) (string, error) {
 	var urls []string
 	cachedUrls, err := dao.readCache(c, "all-idioms-urls")
 	if err == nil && cachedUrls != nil {
@@ -26,7 +45,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		log.Infof(c, "Fetching all idiom titles from Datastore")
 		idiomHeads, err := dao.getAllIdiomTitles(c)
 		if err != nil {
-			return err
+			return "", err
 		}
 		urls = make([]string, len(idiomHeads))
 		for i, head := range idiomHeads {
@@ -39,18 +58,8 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	}
 	k := rand.Intn(len(urls))
 	url := urls[k]
-	// Note that we're redirecting to a *relative* URL
 	log.Infof(c, "Picked idiom url %s (out of %d)", url, len(urls))
-
-	// TODO when AppEngine has Go1.8:
-	// if pusher, ok := w.(http.Pusher); ok {
-	// 	if err := pusher.Push(url, nil); err != nil {
-	// 		log.Errorf("Failed to push %s: %v", url, err)
-	// 	}
-	// }
-
-	http.Redirect(w, r, url, http.StatusFound)
-	return nil
+	return url, nil
 }
 
 // Among idioms having an impl in this language

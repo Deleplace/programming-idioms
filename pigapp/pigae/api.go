@@ -3,6 +3,8 @@ package pigae
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
@@ -75,4 +77,22 @@ func jsonSearch(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	return printJSON(w, hits, true)
+}
+
+// Handle /api/random-id
+func jsonRandomID(w http.ResponseWriter, r *http.Request) error {
+	c := appengine.NewContext(r)
+	url, err := randomIdiomURL(c)
+	if err != nil {
+		return err
+	}
+	// url looks like "/idiom/16/depth-first-traversing-of-a-binary-tree"
+	parts := strings.Split(url, "/")
+	idiomIDstr := parts[2]
+	// idiomIDstr looks like "16"
+	idiomID, err := strconv.Atoi(idiomIDstr)
+	if err != nil {
+		return err
+	}
+	return printJSON(w, idiomID, true)
 }
