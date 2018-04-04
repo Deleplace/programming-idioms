@@ -32,7 +32,7 @@ var envProd = Env{
 var envDev = Env{
 	IsDev:           true,
 	Host:            "http://localhost:8080",
-	UseAbsoluteUrls: true,
+	UseAbsoluteUrls: false,
 	UseMinifiedCss:  false,
 	UseMinifiedJs:   false,
 }

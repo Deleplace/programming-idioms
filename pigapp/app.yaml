@@ -31,6 +31,10 @@ handlers:
   script: _go_app
   login: admin
   secure: always
+- url: /service-worker\.js
+  static_files: service-worker.js
+  upload: service-worker.js
+  expiration: "0s"
 - url: /.*
   script: _go_app
   secure: always
