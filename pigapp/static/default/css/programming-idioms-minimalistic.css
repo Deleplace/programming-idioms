@@ -1,5 +1,10 @@
+body {
+    background-color: #FAFAF7;
+}
+
 div {
     margin: 2px;
+    color: #334;
 }
 
 .search input[type=text] {
@@ -15,12 +20,26 @@ div {
 }
 
 .idiom .title {
+    /*
     background-color: #BEB;
+    */
+    font-weight: bold;
+}
+
+.idiom .title a {
+	text-decoration: none;
 }
 
 .idiom .summary {
     border-color: #888;
 }
+
+.idiom .summary .langs-count {
+    color: #AAA;
+    font-weight: bold;
+    font-size: larger;
+}
+
 .idiom .impls {
     margin-left: 2rem;
     border-color: #888;
