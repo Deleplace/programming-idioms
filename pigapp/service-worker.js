@@ -15,7 +15,6 @@ self.addEventListener('install', function(event) {
     );
 });
 
-// This may be abusing response.clone() ... not sure about that.
 self.addEventListener('fetch', function(event) {
     event.respondWith(
       caches.match(event.request).then(function(resp) {
@@ -25,8 +24,7 @@ self.addEventListener('fetch', function(event) {
         }
         return fetch(event.request).then(function(response) {
           console.log("Fetched " + event.request.url);
-          // Cache 200-299, but not 302, 404, 500...
-          if(response.ok) {
+          if (cachable(event.request, response)) {
             let responseClone = response.clone();
             caches.open('v1').then(function(cache) {
                 console.log("Caching response for " + event.request.url);
@@ -41,3 +39,27 @@ self.addEventListener('fetch', function(event) {
       })
     );
   });
+
+function cachable(request, response) {
+  if (!response.ok) {
+    // Cache 200-299, but not 302, 404, 500...
+    return false;
+  }
+
+  // Random endpoints are specifically to **not** cache
+  if (request.url.indexOf("/api/random-id") != -1)
+    return false;
+  if (request.url.indexOf("/random-idiom") != -1)
+    return false;
+
+  // JS, CSS, PNG.
+  // TODO: handle updates...
+  if (request.url.indexOf("/default/") != -1)
+    return true;
+
+  // Limit to SPA pages & services, for now
+  if (request.url.indexOf("/default/") != -1)
+    return true;
+
+  return false;
+}
