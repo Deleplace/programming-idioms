@@ -33,9 +33,8 @@ self.addEventListener('fetch', function(event) {
           }
           return response;
       });
-    }).catch(function() {
-        console.log("Not found " + event.request.url + " :(");
-        return caches.match( '/default_' + ThemeDate + '/img/dice_48x48.png' );
+    }).catch(function(error) {
+        return handleOffline(event.request);
       })
     );
   });
@@ -64,4 +63,46 @@ function cachable(request, response) {
     return true;
 
   return false;
+}
+
+// Some feature are specifically designed to have a cromulent
+// offline behavior.
+function handleOffline(request) {
+
+  if (request.url.indexOf("/api/random-id") != -1) {
+    // Instead of asking the server to pick in the real DB,
+    // pick in the local cached DB.
+    console.log("Handling offline: " + request.url);
+    return caches.open('v1').then(function(cache) {
+      return cache.match("/api/idioms/all").then(function(resp) {
+        if (resp) {
+          console.log("  resp: " + JSON.stringify(resp));
+          var full = resp.body;
+          console.log("  Offline db: " + JSON.stringify(full));
+          console.log("  Offline db: " + full.length + " idioms.");
+          var chosen = pick(full);
+          console.log("  Chosen: " + chosen);
+          return chosen.Id;
+        }else{
+          console.log( "  No offline db :(");
+          return;
+        }
+      }).catch(function(error){
+        console.log("Cache error for /api/idioms/all : " + error);
+        return caches.match( '/default_' + ThemeDate + '/img/dice_48x48.png' );
+      });
+    });
+  }
+
+  if (request.url.indexOf("/api/idiom/") != -1) {
+    // Pick in the local cached DB.
+    console.log("Not implemented yet: local retrieval of " + request.url);
+  }
+
+  console.log("Not found " + event.request.url + " :(");
+  return caches.match( '/default_' + ThemeDate + '/img/dice_48x48.png' );
+}
+
+function pick(x) {
+  return x[Math.floor(Math.random() * x.length)];
 }

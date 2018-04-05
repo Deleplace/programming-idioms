@@ -17,3 +17,7 @@ var app = new Vue({
         }
     }
 });
+
+
+// Put the whole database in cache, for offline navigation
+app.$http.get('/api/idioms/all');
