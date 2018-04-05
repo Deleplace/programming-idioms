@@ -58,7 +58,9 @@ function cachable(request, response) {
     return true;
 
   // Limit to SPA pages & services, for now
-  if (request.url.indexOf("/default/") != -1)
+  if (request.url.indexOf("/page/") != -1)
+    return true;
+  if (request.url.indexOf("/api/") != -1)
     return true;
 
   return false;
