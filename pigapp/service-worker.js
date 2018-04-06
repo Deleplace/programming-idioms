@@ -136,6 +136,8 @@ function handleOffline(request) {
   return disconnectedResponse();
 }
 
+// Fetch list of all idioms in local cache, and call f.
+// f must take the db as argument, and return a Response object.
 function withLocalIdiomsDB(f) {
   return caches.match("/api/idioms/all").then(function(resp) {
     //debugger;
@@ -168,6 +170,7 @@ function matches(idiom, q) {
   // TODO return a score, for ranking
   // TODO search in implementations, too
   // TODO split q into words, and test all words (instead of exact q string)
+  // TODO match with language names (and synonyms)
 }
 
 function disconnectedResponse() {
