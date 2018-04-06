@@ -96,7 +96,7 @@ function handleOffline(request) {
         }
       }).catch(function(error){
         console.log("Cache error for /api/idioms/all : " + error);
-        return caches.match( '/default_' + ThemeDate + '/img/disconnected.png' );
+        return disconnectedResponse();
       });
   }
 
@@ -125,6 +125,25 @@ function handleOffline(request) {
     });
   }
 
+  if (request.url.indexOf("/api/search/") != -1) {
+    // Search in the local cached DB.
+    // Warning: result matches and order may differ from the equivalent server search.
+    var chunks = request.url.split("/");
+    var q = chunks[chunks.length-1];  // TODO what if the original q contains a "/" ?
+    console.log("Local search for " + q);
+    return withLocalIdiomsDB( (db) => {
+      var hits = [];
+      for(var i = 0; i < db.length; i++) {
+        var idiom = db[i];
+        if (matches(idiom, q)){
+          hits.push(idiom);
+          continue;
+        }
+      }
+      return new Response( JSON.stringify(hits) );
+    });
+  }
+
   if (request.url.indexOf("/page/idiom-detail.html") != -1) {
     // Regarless the ?id=123 param, the HTML is in cache.
     return caches.match("/page/idiom-detail.html");
@@ -136,6 +155,43 @@ function handleOffline(request) {
   }
 
   console.log("Not found " + request.url + " :(");
+  return disconnectedResponse();
+}
+
+function withLocalIdiomsDB(f) {
+  return caches.match("/api/idioms/all").then(function(resp) {
+    //debugger;
+    if (resp) {
+      // resp is a promise
+      return resp.json().then(body => {
+        var fullDB = body;
+        return f(fullDB);
+      });
+    }else{
+      console.log( "  No offline db :(");
+      return;
+    }
+  }).catch(function(error){
+    console.log("Cache error for /api/idioms/all : " + error);
+    return disconnectedResponse();
+  });
+}
+
+function matches(idiom, q) {
+  q = q.toLowerCase();
+  if (idiom.Title.toLowerCase().indexOf(q) !== -1){
+    return true;
+  }
+  if (idiom.LeadParagraph.toLowerCase().indexOf(q) !== -1){
+    return true;
+  }
+  return false;
+  // TODO return a score, for ranking
+  // TODO search in implementations, too
+  // TODO split q into words, and test all words (instead of exact q string)
+}
+
+function disconnectedResponse() {
   return caches.match( '/default_' + ThemeDate + '/img/disconnected.png' );
 }
 
