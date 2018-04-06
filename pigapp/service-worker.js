@@ -15,7 +15,7 @@ self.addEventListener('install', function(event) {
     );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request).then(function(resp) {
         if (resp) {
@@ -75,14 +75,17 @@ function handleOffline(request) {
     console.log("Handling offline: " + request.url);
     return caches.open('v1').then(function(cache) {
       return cache.match("/api/idioms/all").then(function(resp) {
+        //debugger;
         if (resp) {
-          console.log("  resp: " + JSON.stringify(resp));
-          var full = resp.body;
-          console.log("  Offline db: " + JSON.stringify(full));
-          console.log("  Offline db: " + full.length + " idioms.");
-          var chosen = pick(full);
-          console.log("  Chosen: " + chosen);
-          return chosen.Id;
+          // resp is a promise
+          return resp.json().then(body => {
+            var fullDB = body;
+            //console.log("  Offline db: " + JSON.stringify(full));
+            console.log("  Offline db: " + fullDB.length + " idioms.");
+            var chosen = pick(fullDB);
+            console.log("  Chosen: " + JSON.stringify(chosen));
+            return chosen.Id;
+          });
         }else{
           console.log( "  No offline db :(");
           return;
@@ -103,6 +106,7 @@ function handleOffline(request) {
   return caches.match( '/default_' + ThemeDate + '/img/dice_48x48.png' );
 }
 
+// Pick a random element in a list.
 function pick(x) {
   return x[Math.floor(Math.random() * x.length)];
 }
