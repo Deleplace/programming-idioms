@@ -13,7 +13,7 @@ var app = new Vue({
             // instead of asking the server.
         },
         idiomURL(idiomId) {
-          return "/default/html/idiom-detail.html?id=" + idiomId;
+          return "/page/idiom-detail.html?id=" + idiomId;
         }
     }
 });

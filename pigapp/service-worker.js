@@ -5,11 +5,15 @@ self.addEventListener('install', function(event) {
       caches.open('v1').then(function(cache) {
         return cache.addAll([
           '/',
+          '/page/home.html',
+          '/page/idiom-detail.html',
+          '/page/search-results.html',
           '/default_' + ThemeDate + '/css/bootstrap-combined.no-icons.min.css',
           '/default_' + ThemeDate + '/css/font-awesome/css/font-awesome.css',
           '/default_' + ThemeDate + '/css/prettify.css',
           '/default_' + ThemeDate + '/css/programming-idioms.css',
           '/default_' + ThemeDate + '/img/dice_48x48.png',
+          '/default_' + ThemeDate + '/img/disconnected.png',
         ]);
       })
     );
@@ -32,8 +36,9 @@ self.addEventListener('fetch', (event) => {
             });
           }
           return response;
-      });
-    }).catch(function(error) {
+        });
+      }).catch(function(error) {
+        console.log("Catched " + error);
         return handleOffline(event.request);
       })
     );
@@ -73,18 +78,17 @@ function handleOffline(request) {
     // Instead of asking the server to pick in the real DB,
     // pick in the local cached DB.
     console.log("Handling offline: " + request.url);
-    return caches.open('v1').then(function(cache) {
-      return cache.match("/api/idioms/all").then(function(resp) {
+    return caches.match("/api/idioms/all").then(function(resp) {
         //debugger;
         if (resp) {
           // resp is a promise
           return resp.json().then(body => {
             var fullDB = body;
             //console.log("  Offline db: " + JSON.stringify(full));
-            console.log("  Offline db: " + fullDB.length + " idioms.");
+            console.log("  Offline DB: " + fullDB.length + " idioms.");
             var chosen = pick(fullDB);
-            console.log("  Chosen: " + JSON.stringify(chosen));
-            return chosen.Id;
+            console.log("  Chosen: #" + chosen.Id + " " + chosen.Title);
+            return new Response(chosen.Id);
           });
         }else{
           console.log( "  No offline db :(");
@@ -92,18 +96,47 @@ function handleOffline(request) {
         }
       }).catch(function(error){
         console.log("Cache error for /api/idioms/all : " + error);
-        return caches.match( '/default_' + ThemeDate + '/img/dice_48x48.png' );
+        return caches.match( '/default_' + ThemeDate + '/img/disconnected.png' );
       });
-    });
   }
 
   if (request.url.indexOf("/api/idiom/") != -1) {
     // Pick in the local cached DB.
-    console.log("Not implemented yet: local retrieval of " + request.url);
+    var chunks = request.url.split("/");
+    var idiomIdStr = chunks[chunks.length-1];
+    console.log("Local retrieval of #" + idiomIdStr);
+    return caches.match("/api/idioms/all").then( (resp) => {
+      if (!resp) {
+        console.log( "  No offline db :(");
+        return;
+      }
+      return resp.json().then(body => {
+        var fullDB = body;
+        for(var i = 0; i < fullDB.length; i++) {
+          if (fullDB[i].Id == idiomIdStr){
+            console.log("Idiom #" + idiomIdStr + " found in Offline DB :)");
+            var idiom = fullDB[i];
+            return new Response( JSON.stringify(idiom) );
+          }
+        }
+        console.log("Idiom #" + idiomIdStr + " not found in Offline DB of " + fullDB.length + " idioms.");
+        return;
+      });
+    });
   }
 
-  console.log("Not found " + event.request.url + " :(");
-  return caches.match( '/default_' + ThemeDate + '/img/dice_48x48.png' );
+  if (request.url.indexOf("/page/idiom-detail.html") != -1) {
+    // Regarless the ?id=123 param, the HTML is in cache.
+    return caches.match("/page/idiom-detail.html");
+  }
+
+  if (request.url.indexOf("/page/search-results.html") != -1) {
+    // Regarless the ?q=foo param, the HTML is in cache.
+    return caches.match("/page/search-results.html");
+  }
+
+  console.log("Not found " + request.url + " :(");
+  return caches.match( '/default_' + ThemeDate + '/img/disconnected.png' );
 }
 
 // Pick a random element in a list.
