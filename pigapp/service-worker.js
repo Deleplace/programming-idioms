@@ -78,26 +78,11 @@ function handleOffline(request) {
     // Instead of asking the server to pick in the real DB,
     // pick in the local cached DB.
     console.log("Handling offline: " + request.url);
-    return caches.match("/api/idioms/all").then(function(resp) {
-        //debugger;
-        if (resp) {
-          // resp is a promise
-          return resp.json().then(body => {
-            var fullDB = body;
-            //console.log("  Offline db: " + JSON.stringify(full));
-            console.log("  Offline DB: " + fullDB.length + " idioms.");
-            var chosen = pick(fullDB);
-            console.log("  Chosen: #" + chosen.Id + " " + chosen.Title);
-            return new Response(chosen.Id);
-          });
-        }else{
-          console.log( "  No offline db :(");
-          return;
-        }
-      }).catch(function(error){
-        console.log("Cache error for /api/idioms/all : " + error);
-        return disconnectedResponse();
-      });
+    return withLocalIdiomsDB( (db) => {
+      var chosen = pick(db);
+      console.log("  Chosen: #" + chosen.Id + " " + chosen.Title);
+      return new Response(chosen.Id);
+    });
   }
 
   if (request.url.indexOf("/api/idiom/") != -1) {
@@ -105,23 +90,16 @@ function handleOffline(request) {
     var chunks = request.url.split("/");
     var idiomIdStr = chunks[chunks.length-1];
     console.log("Local retrieval of #" + idiomIdStr);
-    return caches.match("/api/idioms/all").then( (resp) => {
-      if (!resp) {
-        console.log( "  No offline db :(");
-        return;
-      }
-      return resp.json().then(body => {
-        var fullDB = body;
-        for(var i = 0; i < fullDB.length; i++) {
-          if (fullDB[i].Id == idiomIdStr){
-            console.log("Idiom #" + idiomIdStr + " found in Offline DB :)");
-            var idiom = fullDB[i];
-            return new Response( JSON.stringify(idiom) );
-          }
+    return withLocalIdiomsDB( (db) => {
+      for(var i = 0; i < db.length; i++) {
+        var idiom = db[i];
+        if (idiom.Id == idiomIdStr){
+          console.log("Idiom #" + idiomIdStr + " found in Offline DB :)");
+          return new Response( JSON.stringify(idiom) );
         }
-        console.log("Idiom #" + idiomIdStr + " not found in Offline DB of " + fullDB.length + " idioms.");
-        return;
-      });
+      }
+      console.log("Idiom #" + idiomIdStr + " not found in Offline DB of " + db.length + " idioms.");
+      return;
     });
   }
 
@@ -179,10 +157,11 @@ function withLocalIdiomsDB(f) {
 
 function matches(idiom, q) {
   q = q.toLowerCase();
-  if (idiom.Title.toLowerCase().indexOf(q) !== -1){
+  var fieldMatches = (str) => str.toLowerCase().indexOf(q) !== -1;
+  if (fieldMatches(idiom.Title)) {
     return true;
   }
-  if (idiom.LeadParagraph.toLowerCase().indexOf(q) !== -1){
+  if (fieldMatches(idiom.LeadParagraph)) {
     return true;
   }
   return false;
