@@ -8,11 +8,14 @@
             <h1>Programming Idioms</h1>
         </header>
         <div id="app">
-            <form action="/page/search-results.html" class="search">
+            <form action="/page/search-results.html" class="search center">
                 <label for="q">Search for:</label>
                 <input name="q" type="text" value=""></input>
             </form>
-            <div>
+            <div class="center">
+                <a href="#" v-on:click="gotoRandomIdiom" ><img src="/default/img/dice_64x64.png"/></a>
+            </div>
+            <div class="center">
                 Or <a href="#" v-on:click="gotoRandomIdiom" >go to random idiom</a>
             </div>
         </div>

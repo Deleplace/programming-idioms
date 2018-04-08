@@ -7,6 +7,10 @@ div {
     color: #334;
 }
 
+.center {
+    text-align: center;
+}
+
 .search input[type=text] {
     border-radius: 0.5rem;
     padding-left: 0.3rem;
@@ -14,6 +18,11 @@ div {
 
 .idiom {
     border-color: #666;
+}
+
+.variable {
+	font-weight: bold;
+	font-style: italic;
 }
 
 .idiom .id {
@@ -52,8 +61,16 @@ div {
     background-color: #DFD;
 }
 .idiom .impl .comment {
+    border: 2px solid #DDD;
+    border-radius: 15px;
     color: #444;
+    /*
     font-style: italic;
+    */
+    margin-left: 8rem;
+    padding-left: 1rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
 }
 .idiom .impl .link {
     display: inline-block;

@@ -1,12 +1,4 @@
-function getParameterByName(name, url) {
-  if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
+
 
 if ('serviceWorker' in navigator) {
   // Register a service worker hosted at the root of the
@@ -18,4 +10,25 @@ if ('serviceWorker' in navigator) {
   });
 } else {
   console.log('Service workers are not supported.');
+}
+
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+// Client-side formatting.
+function emphasize(raw){
+  // Emphasize the "underscored" identifier
+  //
+  // _x -> <span class="variable">x</span>
+  //
+  var refined = raw.replace( /\b_([\w$]*)/gm, "<span class=\"variable\">$1</span>");
+  refined = refined.replace(/\n/g,"<br/>");
+  return refined;
 }
