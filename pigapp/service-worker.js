@@ -108,6 +108,7 @@ function handleOffline(request) {
     // Warning: result matches and order may differ from the equivalent server search.
     var chunks = request.url.split("/");
     var q = chunks[chunks.length-1];  // TODO what if the original q contains a "/" ?
+    q = decodeURIComponent(q);
     console.log("Local search for " + q);
     return withLocalIdiomsDB( (db) => {
       var hits = [];
@@ -159,18 +160,43 @@ function withLocalIdiomsDB(f) {
 
 function matches(idiom, q) {
   q = q.toLowerCase();
-  var fieldMatches = (str) => str.toLowerCase().indexOf(q) !== -1;
+
+  // If more than 1 word, the rule is "all words must match, independently"
+  var words = q.split(/ +/);
+  for(var i=0;i<words.length;i++) {
+    var word = words[i];
+    if (!word)
+      continue;
+    if (!matchesWord(idiom, word))
+      return false;
+  }
+  return true;
+}
+
+function matchesWord(idiom, word) {
+  var fieldMatches = (str) => str.toLowerCase().indexOf(word) !== -1;
+
   if (fieldMatches(idiom.Title)) {
     return true;
   }
   if (fieldMatches(idiom.LeadParagraph)) {
     return true;
   }
+  for(var i=0;i<idiom.Implementations.length;i++){
+    var impl = idiom.Implementations[i];
+    if (fieldMatches(impl.LanguageName)) {
+      return true;
+    }
+    if (fieldMatches(impl.CodeBlock)) {
+      return true;
+    }
+    if (fieldMatches(impl.AuthorComment)) {
+      return true;
+    }
+  }
   return false;
   // TODO return a score, for ranking
-  // TODO search in implementations, too
-  // TODO split q into words, and test all words (instead of exact q string)
-  // TODO match with language names (and synonyms)
+  // TODO match with language names synonyms
 }
 
 function disconnectedResponse() {

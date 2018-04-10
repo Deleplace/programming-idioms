@@ -7,7 +7,10 @@ var app = new Vue({
     methods: {
       search() {
         this.$http.get('/api/search/' + this.q).then((response) => {
-          this.results = response.data;
+          var hits = response.data;
+          for (var i=0;i<hits.length;i++)
+            hits[i].LeadParagraphEmphasized = emphasize(hits[i].LeadParagraph);
+          this.results = hits;
         });
       },
       idiomURL(idiomId) {

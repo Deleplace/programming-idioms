@@ -11,7 +11,7 @@
                 <div class="summary">
                     <div class="id">#{{ idiom.Id }}</div>
                     <div class="title"><a v-bind:href="idiomURL(idiom.Id)">{{ idiom.Title }}</a></div>
-                    <div class="lead-paragraph">{{ idiom.LeadParagraph }}</div>
+                    <div class="lead-paragraph" v-html="idiom.LeadParagraphEmphasized"></div>
                     <div class="langs-count">{{ idiom.Implementations.length }} langs</div>
                 </div>
             </div>
