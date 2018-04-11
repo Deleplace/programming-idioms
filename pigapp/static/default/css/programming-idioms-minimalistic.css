@@ -59,6 +59,18 @@ div {
 }
 .idiom .impl .lang {
     background-color: #DFD;
+    font-weight: bold;
+}
+.idiom .impl .imports {
+    /*
+    border-bottom: dashed #DDD 2px;
+    */
+    color: #BBB;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+.idiom .impl .code {
+    margin-top: 0.5rem;
 }
 .idiom .impl .comment {
     border: 2px solid #DDD;

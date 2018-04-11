@@ -18,6 +18,7 @@
                 <div class="impls">
                     <div class="impl" v-for="impl in idiom.Implementations">
                         <div class="lang">{{ impl.LanguageName }}</div>
+                        <pre class="imports">{{ impl.ImportsBlock }}</pre>
                         <pre class="code">{{ impl.CodeBlock }}</pre>
                         <div class="comment" v-if="impl.AuthorCommentEmphasized" v-html="impl.AuthorCommentEmphasized"></div>
                         <div class="link demo" v-if="impl.DemoURL"><a v-bind:href="impl.DemoURL">Demo</a></div>
