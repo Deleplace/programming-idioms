@@ -63,8 +63,15 @@ func jsonAllIdioms(w http.ResponseWriter, r *http.Request) error {
 		log.Errorf(c, "%v", err)
 		return PiError{"Could not retrieve idioms.", http.StatusInternalServerError}
 	}
+
+	// Serialize only relevant fields, to minimize response payload.
+	cidioms := make([]CompactIdiom, len(idioms))
+	for i, idiom := range idioms {
+		cidioms[i] = compactIdiom(idiom)
+	}
+
 	// TODO cache the JSON form
-	return printJSON(w, idioms, true)
+	return printJSON(w, cidioms, false)
 }
 
 // Handle /api/search/{q}
