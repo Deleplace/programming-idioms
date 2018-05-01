@@ -5,9 +5,13 @@ self.addEventListener('install', function(event) {
       caches.open('v1').then(function(cache) {
         return cache.addAll([
           '/',
+          '/default/js/vue/programming-idioms.js',
           '/page/home.html',
           '/page/idiom-detail.html',
           '/page/search-results.html',
+          '/default/js/vue/home.js',
+          '/default/js/vue/idiom-detail.js',
+          '/default/js/vue/search-results.js',
           '/default_' + ThemeDate + '/css/bootstrap-combined.no-icons.min.css',
           '/default_' + ThemeDate + '/css/font-awesome/css/font-awesome.css',
           '/default_' + ThemeDate + '/css/prettify.css',
@@ -20,12 +24,15 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('fetch', (event) => {
+    console.log("Fetching: " + event.request.url);
     event.respondWith(
+      // Here we inspect the cache FIRST
       caches.match(event.request).then(function(resp) {
         if (resp) {
             console.log("Found in cache: " + event.request.url);
             return resp;
         }
+        // And then, if not in cache, we fetch the resource from server.
         return fetch(event.request).then(function(response) {
           console.log("Fetched " + event.request.url);
           if (cachable(event.request, response)) {
@@ -123,6 +130,27 @@ function handleOffline(request) {
     });
   }
 
+  var idiomDetailParams = request.url.match(/\/idiom\/(\d+)\/[^/]+\/(\d+)/);
+  if ( idiomDetailParams ) {
+    var idiomId = idiomDetailParams[1];
+    var implId = idiomDetailParams[2];
+    console.log("Asked for offline version of idiom #" + idiomId + ", impl #" + implId);
+    return caches.match("/page/idiom-detail.html");
+    // idiom-detail.js will figure out how to extract params from current nice URL
+  }
+
+  idiomDetailParams = request.url.match(/\/idiom\/(\d+)/);
+  if ( idiomDetailParams ) {
+    var idiomId = idiomDetailParams[1];
+    console.log("Asked for offline version of #" + idiomId);
+    return caches.match("/page/idiom-detail.html");
+    // idiom-detail.js will figure out how to extract params from current nice URL
+  }
+  
+  if (request.url.indexOf("/search/") != -1) {
+    return caches.match("/page/search-results.html");
+  }
+
   if (request.url.indexOf("/page/idiom-detail.html") != -1) {
     // Regarless the ?id=123 param, the HTML is in cache.
     return caches.match("/page/idiom-detail.html");
@@ -159,6 +187,11 @@ function withLocalIdiomsDB(f) {
 }
 
 function matches(idiom, q) {
+  if(!q) {
+    console.warn("Empty idiom filter :/")
+    return false;
+  }
+  
   q = q.toLowerCase();
 
   // If more than 1 word, the rule is "all words must match, independently"
@@ -174,7 +207,7 @@ function matches(idiom, q) {
 }
 
 function matchesWord(idiom, word) {
-  var fieldMatches = (str) => str.toLowerCase().indexOf(word) !== -1;
+  var fieldMatches = (str) => str && str.toLowerCase().indexOf(word) !== -1;
 
   if (fieldMatches(idiom.Title)) {
     return true;

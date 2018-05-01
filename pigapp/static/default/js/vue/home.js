@@ -1,6 +1,7 @@
 var app = new Vue({
     el: '#app',
     data: {
+        q: ""
     },
     methods: {
         gotoRandomIdiom(){
@@ -13,11 +14,24 @@ var app = new Vue({
             // instead of asking the server.
         },
         idiomURL(idiomId) {
-          return "/page/idiom-detail.html?id=" + idiomId;
+          //return "/page/idiom-detail.html?id=" + idiomId;
+          return "/idiom/" + idiomId;
+          // TODO return "/idiom/" + idiomId + "/" + normalize title;
+        },
+        search(event) {
+            if(!this.q) {
+                console.warn("No search term :/");
+                return;
+            }
+            console.log("Let's search for [" + this.q + "]");
+            // TODO normalize q
+            window.location = "/search/" + this.q;
+            event.preventDefault();
         }
     }
 });
 
 
 // Put the whole database in cache, for offline navigation
+console.log("Fetching the full DB");
 app.$http.get('/api/idioms/all');

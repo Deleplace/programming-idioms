@@ -28,7 +28,25 @@ function emphasize(raw){
   //
   // _x -> <span class="variable">x</span>
   //
+  if(!raw)
+    return "";
   var refined = raw.replace( /\b_([\w$]*)/gm, "<span class=\"variable\">$1</span>");
   refined = refined.replace(/\n/g,"<br/>");
   return refined;
+}
+
+function uriNormalize(s) {
+  if(!s)
+    return "";
+	s = s.trim();
+	s = s.replace(/\[/g, "-");
+	s = s.replace(/ /g, "-");
+	s = s.replace(/\]/g, "-");
+	s = s.replace(/,/g, "-");
+	s = s.replace(/;/g, "-");
+	s = s.replace(/--/g, "-");
+  s = s.replace(/--/g, "-"); // Again
+  s = s.replace(/[-\/ ]+$/, "");
+  s = s.toLowerCase();
+	return s
 }
