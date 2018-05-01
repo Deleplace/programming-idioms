@@ -50,3 +50,21 @@ function uriNormalize(s) {
   s = s.toLowerCase();
 	return s
 }
+
+// From https://stackoverflow.com/a/25490531/871134
+function getCookieValue(a) {
+  var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+  return b ? b.pop() : '';
+}
+
+function isFavLang(x) {
+  if(!x)
+    return false;
+  var favs = getCookieValue("my-languages");
+  if(!favs)
+    return false;
+  x = x.toLowerCase();
+  favs = favs.toLowerCase();
+  // This is fine as long as no lang is suffix of another lang...
+  return favs.indexOf(x + "_") !== -1;
+}

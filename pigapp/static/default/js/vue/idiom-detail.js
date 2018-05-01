@@ -19,6 +19,15 @@ var app = new Vue({
             console.log("done.");
           }, 1000);
           */
+          // Favlangs will be first!
+          this.idiom.Implementations.sort( (a,b) => {
+             if ( isFavLang(a.LanguageName) )
+               return -1;
+             if ( isFavLang(b.LanguageName) )
+               return 1;
+              
+            return a.LanguageName.localeCompare(b.LanguageName);
+         });
         });
       },
       fetchIdiomImpl(idiomId, implId) {
@@ -33,6 +42,7 @@ var app = new Vue({
           }
           // The selected impl will be first!
           // Other impls for same lang will be second!
+          // Favlangs will be third!
           this.idiom.Implementations.sort( (a,b) => {
              if ( a.Id == implId )
               return -1;
@@ -42,6 +52,11 @@ var app = new Vue({
                return -1;
               if ( b.LanguageName == implLang )
                return 1;
+              if ( isFavLang(a.LanguageName) )
+                return -1;
+              if ( isFavLang(b.LanguageName) )
+                return 1;
+               
              return a.LanguageName.localeCompare(b.LanguageName);
           });
         });
