@@ -10,6 +10,8 @@ var app = new Vue({
           this.idiom.LeadParagraphEmphasized = emphasize(this.idiom.LeadParagraph);
           for(var i=0; i<this.idiom.Implementations.length; i++){
             this.idiom.Implementations[i].AuthorCommentEmphasized = emphasize(this.idiom.Implementations[i].AuthorComment);
+            this.idiom.Implementations[i].PrettyClass = Object();
+            this.idiom.Implementations[i].PrettyClass["lang-" + this.idiom.Implementations[i].LanguageName.toLowerCase()] = true;
           }
           // Using a timer to trigger this late is ... probably wrong.
           /*

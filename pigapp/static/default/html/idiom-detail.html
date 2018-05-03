@@ -22,8 +22,8 @@
                 <div class="impls">
                     <div class="impl" v-for="impl in idiom.Implementations">
                         <div class="lang">{{ impl.LanguageName }}</div>
-                        <pre class="imports">{{ impl.ImportsBlock }}</pre>
-                        <pre class="code">{{ impl.CodeBlock }}</pre>
+                        <pre class="imports prettyprint" v-if="impl.ImportsBlock">{{ impl.ImportsBlock }}</pre>
+                        <pre class="code prettyprint" v-bind:class="impl.PrettyClass">{{ impl.CodeBlock }}</pre>
                         <div class="comment" v-if="impl.AuthorCommentEmphasized" v-html="impl.AuthorCommentEmphasized"></div>
                         <div class="link demo" v-if="impl.DemoURL"><a v-bind:href="impl.DemoURL">Demo</a></div>
                         <div class="link doc" v-if="impl.DocumentationURL"><a v-bind:href="impl.DocumentationURL">Doc</a></div>
@@ -33,9 +33,8 @@
             </div>
         </div>
 
-
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.0"></script>
+        <script src="/default/js/prettify.js"></script>
+        <script src="/default/js/prettify-extra-languages.js"></script>
         
         <script src="/default/js/vue/programming-idioms.js"></script>
         <script src="/default/js/vue/idiom-detail.js"></script>

@@ -12,6 +12,8 @@ self.addEventListener('install', function(event) {
           '/default/js/vue/home.js',
           '/default/js/vue/idiom-detail.js',
           '/default/js/vue/search-results.js',
+          '/default/js/prettify.js',
+          '/default/js/prettify-extra-languages.js',
           '/default_' + ThemeDate + '/css/bootstrap-combined.no-icons.min.css',
           '/default_' + ThemeDate + '/css/font-awesome/css/font-awesome.css',
           '/default_' + ThemeDate + '/css/prettify.css',
