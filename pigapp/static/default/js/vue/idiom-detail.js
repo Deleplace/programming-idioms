@@ -13,14 +13,6 @@ var app = new Vue({
             this.idiom.Implementations[i].PrettyClass = Object();
             this.idiom.Implementations[i].PrettyClass["lang-" + this.idiom.Implementations[i].LanguageName.toLowerCase()] = true;
           }
-          // Using a timer to trigger this late is ... probably wrong.
-          /*
-          window.setTimeout(function(){
-            console.log("prettyPrinting")
-            prettyPrint();
-            console.log("done.");
-          }, 1000);
-          */
           // Favlangs will be first!
           this.idiom.Implementations.sort( (a,b) => {
              if ( isFavLang(a.LanguageName) )
@@ -30,6 +22,7 @@ var app = new Vue({
               
             return a.LanguageName.localeCompare(b.LanguageName);
          });
+         this.$nextTick(prettyPrint);
         });
       },
       fetchIdiomImpl(idiomId, implId) {
@@ -61,6 +54,7 @@ var app = new Vue({
                
              return a.LanguageName.localeCompare(b.LanguageName);
           });
+          this.$nextTick(prettyPrint);
         });
       }
     }
