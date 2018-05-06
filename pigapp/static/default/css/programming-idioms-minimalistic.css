@@ -58,9 +58,26 @@ div {
     border-color: #AAA;
 }
 .idiom .impl .lang {
-    background-color: #DFD;
+    display: table;
+    /*
+    background-color: #468847;
+    */
+    background-color: #356736;
     font-weight: bold;
+    color: #F7F7F7;
+    margin-left: 0;
+    padding: 0.2rem 1rem 0 0.5rem;
+    border: 1px solid #888;
+    border-bottom: none;
+    border-radius: 0.5rem 1.2rem 0 0;
+    margin-bottom: 0;
+    z-index: 
 }
+.idiom .impl .imports-and-code {
+    display: table;
+    margin: -1px 0 0 0;
+}
+
 .idiom .impl .imports {
     /*
     border-bottom: dashed #DDD 2px;
@@ -77,10 +94,12 @@ div {
     border-top: none;
     padding-top: 0.6rem;
     padding-left: 0.3rem;
+    padding-right: 1rem;
     padding-bottom: 0.6rem;
     margin-bottom: 0;
 }
 .idiom .impl .comment {
+    display: table;
     border: 2px solid #DDD;
     border-radius: 15px;
     color: #444;
@@ -88,9 +107,7 @@ div {
     font-style: italic;
     */
     margin-left: 8rem;
-    padding-left: 1rem;
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
+    padding: 0.4rem 1rem 0.4rem 1rem;
 }
 .idiom .impl .link {
     display: inline-block;
