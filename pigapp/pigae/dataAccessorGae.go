@@ -172,6 +172,7 @@ var historyDelayer = delay.Func("save-history-item", func(c context.Context, idi
 	if err != nil {
 		return err
 	}
+	log.Infof(c, "Saving history for idiom %d %q", historyItem.Idiom.Id, historyItem.Idiom.Title)
 	historyItem.ComputeIdiomOrImplLastEditor()
 	// Saves a new IdiomHistory entity. This causes no contention on the original Idiom entity.
 	_, err = datastore.Put(c, newHistoryKey(c), &historyItem)

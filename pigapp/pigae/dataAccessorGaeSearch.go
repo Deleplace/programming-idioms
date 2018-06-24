@@ -111,6 +111,7 @@ func (lines cheatSheetLineDocs) Less(i, j int) bool {
 }
 
 func indexIdiomFullText(c context.Context, idiom *Idiom, idiomKey *datastore.Key) error {
+	log.Infof(c, "Reindex text of idiom %d %q", idiom.Id, idiom.Title)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return err
@@ -133,41 +134,43 @@ func indexIdiomFullText(c context.Context, idiom *Idiom, idiomKey *datastore.Key
 		return err
 	}
 
-	// Also index each impl individually,
-	// so we know what to highlight.
+	// Also index each impl, so we know what to highlight.
+	M := len(idiom.Implementations)
+	log.Infof(c, "Reindex %d impls of idiom %d", M, idiom.Id)
 	indexImpl, err := gaesearch.Open("impls")
 	if err != nil {
 		return err
 	}
-	for _, impl := range idiom.Implementations {
-		implDocID := fmt.Sprintf("%d_%d", idiom.Id, impl.Id)
+	implDocIDs := make([]string, M)
+	implDocs := make([]interface{}, M)
+	for i, impl := range idiom.Implementations {
+		implDocIDs[i] = fmt.Sprintf("%d_%d", idiom.Id, impl.Id)
 		w := impl.ExtractIndexableWords()
-		implDoc := &searchableImplDoc{
+		implDocs[i] = &searchableImplDoc{
 			Lang:    impl.LanguageName,
 			IdiomID: gaesearch.Atom(strconv.Itoa(idiom.Id)),
 			Bulk:    strings.Join(w, " "),
 		}
-		// Weird that the search API doesn't have batch queries.
-		// TODO: index each impl concurrently?
-		// TODO: index only last edited impl?
-		_, err = indexImpl.Put(c, implDocID, implDoc)
-		if err != nil {
-			return err
-		}
+		// TODO: how about indexing only last edited impl?
 	}
+	_, err = indexImpl.PutMulti(c, implDocIDs, implDocs)
 
-	return nil
+	return err
 }
 
 func indexIdiomCheatsheets(c context.Context, idiom *Idiom) error {
+	log.Infof(c, "Reindex cheatsheet of idiom %d %q", idiom.Id, idiom.Title)
 	index, err := gaesearch.Open("cheatsheets")
 	if err != nil {
 		return err
 	}
-	// Index each impl individually.
-	for _, impl := range idiom.Implementations {
-		docID := fmt.Sprintf("%d_%d", idiom.Id, impl.Id)
-		doc := &cheatSheetLineDoc{
+	// Index each impl.
+	M := len(idiom.Implementations)
+	docIDs := make([]string, M)
+	docs := make([]interface{}, M)
+	for i, impl := range idiom.Implementations {
+		docIDs[i] = fmt.Sprintf("%d_%d", idiom.Id, impl.Id)
+		docs[i] = &cheatSheetLineDoc{
 			Lang:                 gaesearch.Atom(impl.LanguageName),
 			IdiomID:              gaesearch.Atom(strconv.Itoa(idiom.Id)),
 			IdiomTitle:           gaesearch.Atom(idiom.Title),
@@ -177,15 +180,10 @@ func indexIdiomCheatsheets(c context.Context, idiom *Idiom) error {
 			ImplCodeBlock:        gaesearch.Atom(impl.CodeBlock),
 			ImplCodeBlockComment: gaesearch.Atom(impl.AuthorComment),
 		}
-		// Weird that the search API doesn't have batch queries.
-		// TODO: index each impl concurrently?
-		_, err = index.Put(c, docID, doc)
-		if err != nil {
-			return err
-		}
 	}
+	_, err = index.PutMulti(c, docIDs, docs)
 
-	return nil
+	return err
 }
 
 func (a *GaeDatastoreAccessor) unindexAll(c context.Context) error {
