@@ -58,6 +58,7 @@ func initTemplates() (*template.Template, error) {
 		"template",
 		"template/page",
 		"template/page/admin",
+		"template/page/hybrid",
 		"template/ajax-block",
 		"template/content/widget",
 		"template/content/block",

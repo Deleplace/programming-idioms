@@ -33,7 +33,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 
 	if userProfile.Empty() {
 		//
-		// Zero-preference ≡ anonymous visit ≡ cache enabled
+		// Zero-preference ≡ anonymous visit ≡ server cache enabled
 		//
 		path := r.URL.RequestURI()
 		if cachedPage := htmlCacheRead(c, path); cachedPage != nil {
@@ -165,7 +165,8 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	log.Debugf(c, "ExecuteTemplate start...")
-	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	// err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
 	log.Debugf(c, "ExecuteTemplate end.")
 	return err
 }
@@ -255,7 +256,8 @@ func generateIdiomDetailPage(c context.Context, w io.Writer, vars map[string]str
 	}
 
 	log.Debugf(c, "ExecuteTemplate start...")
-	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	// err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
 	log.Debugf(c, "ExecuteTemplate end.")
 	return err
 }

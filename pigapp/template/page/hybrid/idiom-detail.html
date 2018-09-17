@@ -1,0 +1,81 @@
+{{/*
+    This template aims at an hydrid, lightweight, hybrid stategy combining
+    server-side rendering and vanilla JS client-side work.
+
+    Server-side rendering should ensure fast first meaningful paint, and nice SEO.
+
+    Vanilla JS should enable page decoration, actions, and possibly a service worker
+    strategy.
+*/}}
+{{define "page-idiom-detail-minimal"}}
+<!DOCTYPE html>
+<html>
+    {{with .PageMeta}}
+        <head>
+            <meta charset="utf-8" />
+            <title>{{.PageTitle}}</title>
+            {{if .PageKeywords}}
+                <meta name="keywords" content="{{.PageKeywords}}">
+            {{end}}
+            <style type="text/css">
+                body { background-color: #EEE; }
+                header { min-height: 4rem; background-color: #448; color: white; }
+                header a { color: white; }
+                header > * { display: inline-block; }
+                h1, h2 { margin: 0.2rem;}
+                .tmp { margin-left: 48px; padding-left: 0.8rem; }
+                .implementation { background-color: #FFD; border: 1px solid #DDB; margin-bottom: 1rem;}
+                pre { margin: 1rem; background-color: #EEE; padding: 1rem; }
+                .piimports pre { margin-bottom: 0; }
+                .picode pre { margin-top: 0; }
+                .variable { font-weight: bold; font-style: italic; }
+                .external-links li { display: inline-block; }
+                footer { min-height: 2rem; background-color: #448; }
+            </style>
+        </head>
+    {{end}}
+    <body>
+        <header>
+            <h1 class="tmp"><a href="/">Programming-Idioms</a></h1>
+        </header>
+        {{with .Idiom}}
+            <div class="idiom" data-idiom-id="{{.Id}}" data-nb-impls="{{len .Implementations}}">
+                <div class="summary-large">
+                    <h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
+                    <p class="lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                </div>
+                <div class="implementations">
+                    {{range .Implementations}}
+                        {{if or (not $.SelectedImplLang) (eq .LanguageName $.SelectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages)}}
+                            <div class="implementation" id="impl-{{.Id}}">
+                                <h2>{{.LanguageName | printNiceLang}}</h2>
+                                {{template "implementation-code" .}}
+                                <div class="comment">
+                                    {{markup2CSS .AuthorComment}}
+                                </div>
+                                <div class="external-links">
+                                    <ul>
+                                        {{if .DemoURL}}<li class="active"><a href="{{.DemoURL}}" target="_blank" rel="nofollow">Demo 🗗</a></li>{{end}}
+                                        {{if .DocumentationURL}}<li class="active"><a href="{{.DocumentationURL}}" target="_blank" rel="nofollow">Doc 🗗</a></li>{{end}}
+                                        {{if .OriginalAttributionURL}}<li class="active"><a href="{{.OriginalAttributionURL}}" target="_blank" rel="nofollow">Origin 🗗</a></li>{{end}}
+                                    </ul>
+                                </div>
+                            </div>
+                        {{end}}
+                    {{end}}
+                    
+                </div>
+            </div>
+        {{end}}
+        <footer>
+        </footer>
+    </body>
+</html>
+{{/*
+*/}}
+<script>
+    var idiomPromise = fetch('/api/idiom/{{.Idiom.Id}}');
+</script>
+<script src="/default/js/pages/idiom-detail-minimal.js"></script>
+<link rel="stylesheet" type="text/css" href="/default/css/pages/idiom-detail-minimal.css" />
+{{end}}

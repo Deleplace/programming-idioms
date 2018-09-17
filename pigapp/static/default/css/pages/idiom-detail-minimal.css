@@ -1,0 +1,46 @@
+body {
+    background-color: #CEC;
+}
+header > * {
+    vertical-align: middle;
+    margin: 0.2rem;
+}
+header > h1 {
+    margin: 0.2rem 0.5rem 0.2rem 0.5rem;
+}
+h1 > a {
+    text-decoration: none;
+}
+.piimports pre {
+    color: #777;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+.picode pre {
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+.external-links li {
+    margin-left: 1rem;
+}
+.external-links a {
+    text-decoration: none;
+}
+.summary-large,
+.implementation {
+    position: relative;
+}
+.summary-large .edit,
+.implementation .edit {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+@media (max-width: 479px) {
+    .show-on-desktop, .show-on-tablets, .hide-on-mobile { display: none; }
+}
+@media (min-width: 480px) and (max-width: 979px) {
+    .show-on-desktop, .hide-on-tablets, .show-on-mobile { display: none; }
+}
+@media (min-width: 980px) {
+    .hide-on-desktop, .show-on-tablets, .show-on-mobile { display: none; }
+}

@@ -153,7 +153,8 @@ func listResults(w http.ResponseWriter, r *http.Request, q string, idioms []*Idi
 		Results:     idioms,
 	}
 
-	return templates.ExecuteTemplate(w, "page-list-results", data)
+	// return templates.ExecuteTemplate(w, "page-list-results", data)
+	return templates.ExecuteTemplate(w, "page-list-results-minimal", data)
 }
 
 func searchRedirect(w http.ResponseWriter, r *http.Request) error {

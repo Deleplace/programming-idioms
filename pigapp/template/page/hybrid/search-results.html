@@ -1,0 +1,65 @@
+{{/*
+    This template aims at an hydrid, lightweight strategy combining
+    server-side rendering and vanilla JS client-side work.
+
+    Server-side rendering should ensure fast first meaningful paint, and nice SEO.
+
+    Vanilla JS should enable page decoration, actions, and possibly a service worker
+    strategy.
+*/}}
+{{define "page-list-results-minimal"}}
+<!DOCTYPE html>
+<html>
+    {{with .PageMeta}}
+        <head>
+            <meta charset="utf-8" />
+            <title>{{.PageTitle}}</title>
+            {{if .PageKeywords}}
+                <meta name="keywords" content="{{.PageKeywords}}">
+            {{end}}
+            <style type="text/css">
+                body { background-color: #EEE; }
+                header { min-height: 4rem; background-color: #448; color: white; }
+                header a { color: white; }
+                header > * { display: inline-block; }
+                h1, h2 { margin: 0.2rem;}
+                .tmp { margin-left: 48px; padding-left: 0.8rem; }
+                .variable { font-weight: bold; font-style: italic; }
+                footer { min-height: 2rem; background-color: #448; }
+            </style>
+        </head>
+    {{end}}
+    <body>
+        <header>
+            <h1 class="tmp"><a href="/">Programming-Idioms</a></h1>
+        </header>
+        
+		<div class="results results-idioms" data-search-query="{{.PageMeta.SearchQuery}}">
+            {{if .Results}}
+                {{range .Results}}
+                <div class="idiom-summary-medium">
+                    <div>
+                        <div>
+                            <h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
+                            <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                        </div>
+                        <div class="span1">
+                            {{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
+                        </div>
+                        {{/*
+                            */}}
+                    </div>
+                </div>
+                {{end}}
+            {{else}}
+                No idioms found !
+            {{end}}
+        </div>
+
+        <footer>
+        </footer>
+    </body>
+</html>
+<script src="/default/js/pages/search-results-minimal.js"></script>
+<link rel="stylesheet" type="text/css" href="/default/css/pages/search-results-minimal.css" />
+{{end}}
