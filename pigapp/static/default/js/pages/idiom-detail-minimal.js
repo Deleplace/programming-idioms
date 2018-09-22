@@ -34,17 +34,18 @@ function renderImpl(impl) {
     var lg = elem("h2", "", impl.LanguageName);
     implNode.appendChild(lg);
 
+    var importsAndCode = elem("div", "imports-and-code");
     if(impl.ImportsBlock){
-        var piimports = elem("div", "piimports");
+        var imports = elem("div", "imports");
         var pre = elemText("pre", "", impl.ImportsBlock);
-        piimports.appendChild(pre);
-        implNode.appendChild(piimports);
+        imports.appendChild(pre);
+        importsAndCode.appendChild(imports);
     }
-
-    var picode = elem("div", "picode");
+    var code = elem("div", "code");
     var pre = elemText("pre", "", impl.CodeBlock);
-    picode.appendChild(pre);
-    implNode.appendChild(picode);
+    code.appendChild(pre);
+    importsAndCode.appendChild(code);
+    implNode.appendChild(importsAndCode);
 
     var comment = elem("div", "comment", emphasize(impl.AuthorComment));
     implNode.appendChild(comment);

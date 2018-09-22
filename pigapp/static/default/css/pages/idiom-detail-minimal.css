@@ -11,12 +11,23 @@ header > h1 {
 h1 > a {
     text-decoration: none;
 }
-.piimports pre {
+.implementation {
+    overflow-x: auto;
+}
+.imports-and-code {
+    margin-top: 0.5rem;
+    display: inline-block;
+    min-width: 30rem;
+}
+.imports pre {
+    margin-top: 0;
     color: #777;
     border-radius: 0.5rem 0.5rem 0 0;
+    padding-bottom: 0.5rem;
 }
-.picode pre {
-    border-radius: 0 0 0.5rem 0.5rem;
+.code pre {
+    margin-top: -0.3rem;
+    border-radius: 0.5rem;
 }
 .external-links li {
     margin-left: 1rem;

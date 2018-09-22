@@ -22,8 +22,8 @@
                 header { min-height: 4rem; background-color: #448; color: white; }
                 header a { color: white; }
                 header > * { display: inline-block; }
-                h1, h2 { margin: 0.2rem;}
-                .tmp { margin-left: 48px; padding-left: 0.8rem; }
+                h1, h3 { margin: 0.2rem;}
+                .tmp { margin-left: 48px; padding: 0.5rem 0 0 0.9rem; }
                 .variable { font-weight: bold; font-style: italic; }
                 footer { min-height: 2rem; background-color: #448; }
             </style>
@@ -40,7 +40,7 @@
                 <div class="idiom-summary-medium">
                     <div>
                         <div>
-                            <h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
+                            <h3>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h3>
                             <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
                         </div>
                         <div class="span1">

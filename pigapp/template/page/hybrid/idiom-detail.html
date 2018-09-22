@@ -23,11 +23,11 @@
                 header a { color: white; }
                 header > * { display: inline-block; }
                 h1, h2 { margin: 0.2rem;}
-                .tmp { margin-left: 48px; padding-left: 0.8rem; }
+                .tmp { margin-left: 48px; padding: 0.5rem 0 0 0.9rem; }
                 .implementation { background-color: #FFD; border: 1px solid #DDB; margin-bottom: 1rem;}
-                pre { margin: 1rem; background-color: #EEE; padding: 1rem; }
-                .piimports pre { margin-bottom: 0; }
-                .picode pre { margin-top: 0; }
+                pre { margin: 1rem; background-color: #EEE; padding: 1rem 2rem 1rem 1rem; }
+                .imports pre { margin-bottom: 0; }
+                .code pre { margin-top: 0; }
                 .variable { font-weight: bold; font-style: italic; }
                 .external-links li { display: inline-block; }
                 footer { min-height: 2rem; background-color: #448; }
@@ -49,7 +49,18 @@
                         {{if or (not $.SelectedImplLang) (eq .LanguageName $.SelectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages)}}
                             <div class="implementation" id="impl-{{.Id}}">
                                 <h2>{{.LanguageName | printNiceLang}}</h2>
-                                {{template "implementation-code" .}}
+                                <div class="imports-and-code">
+                                    <div class="imports">
+                                        {{with .ImportsBlock}}
+                                            <pre>{{.}}</pre>
+                                        {{end}}
+                                    </div>
+                                    <div class="code">
+                                        {{if trim .CodeBlock}}
+                                            <pre data-toggle="popover" class="prettyprint {{.LanguageName | prettifyCSSClass}}">{{.CodeBlock}}</pre>
+                                        {{end}}
+                                    </div>
+                                </div>
                                 <div class="comment">
                                     {{markup2CSS .AuthorComment}}
                                 </div>
