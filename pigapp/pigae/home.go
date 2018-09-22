@@ -53,5 +53,6 @@ func homeView(w http.ResponseWriter, c context.Context, userProfile UserProfile)
 		}
 	}
 
-	return templates.ExecuteTemplate(w, "page-home", data)
+	// return templates.ExecuteTemplate(w, "page-home", data)
+	return templates.ExecuteTemplate(w, "page-home-minimal", data)
 }

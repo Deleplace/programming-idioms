@@ -1,0 +1,71 @@
+{{/*
+    This template aims at an hydrid, lightweight, hybrid stategy combining
+    server-side rendering and vanilla JS client-side work.
+
+    Server-side rendering should ensure fast first meaningful paint, and nice SEO.
+
+    Vanilla JS should enable page decoration, actions, and possibly a service worker
+    strategy.
+*/}}
+{{define "page-home-minimal"}}
+<!DOCTYPE html>
+<html>
+    {{with .PageMeta}}
+        <head>
+            <meta charset="utf-8" />
+            <title>{{.PageTitle}}</title>
+            {{if .PageKeywords}}
+                <meta name="keywords" content="{{.PageKeywords}}">
+            {{end}}
+            <style type="text/css">
+                body { background-color: #EEE; }
+                header { min-height: 4rem; background-color: #448; color: white; }
+                header a { color: white; }
+                header > * { display: inline-block; }
+                .tmp { margin-left: 48px; padding: 0.5rem 0 0 0.9rem; }
+                h1, h2 { margin: 0.2rem;}
+                .content { text-align: center; }
+                .item { margin: 3rem; }
+                .item div { margin: 0.5rem; }
+                .form-search input, .form-search button { font-size: larger; }
+                footer { min-height: 2rem; background-color: #448; }
+            </style>
+        </head>
+    {{end}}
+    <body>
+        <header>
+            <h1 class="tmp"><a href="/">Programming-Idioms</a></h1>
+        </header>
+        <div class="content">
+
+            <div class="item">
+                <div>
+                    Show me an idiom
+                </div>
+                <a href="/random-idiom">
+                    <img src="{{hostPrefix}}{{themeDir}}/img/dice_64x64.png" 
+                        width="64" height="64" class="die" 
+                        title="Go to a random idiom"
+                        onmouseover="this.src='{{hostPrefix}}{{themeDir}}/img/dice_64x64_highlight.png';" onmouseout="this.src='\/default_20171211_/img/dice_64x64.png';">
+                </a>
+            </div>
+
+            <div class="item">
+                <div>
+                    Looking for something?
+                </div>
+                <form class="form-search" action="/search">
+                    <input type="text" class="search-query" placeholder="Keywords..." name="q" value="" required="required">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+        </div>
+        <footer>
+        </footer>
+    </body>
+</html>
+<script src="{{hostPrefix}}{{themeDir}}/js/pages/home-minimal.js"></script>
+<link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/home-minimal.css" />
+<link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/dice_64x64_highlight.png" as="image" />
+{{end}}

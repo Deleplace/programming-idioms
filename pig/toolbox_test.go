@@ -143,7 +143,7 @@ func TestFilterStrings(t *testing.T) {
 	for i, tt := range filterStringsTests {
 		filtered := FilterStrings(tt.in, tt.inF)
 		if !StringSliceEquals(filtered, tt.out) {
-			t.Errorf("%d. FilterStrings(%v, %v) => %v, want %v", i, tt.in, tt.inF, filtered, tt.out)
+			t.Errorf("%d. FilterStrings(%v, f) => %v, want %v", i, tt.in, filtered, tt.out)
 		}
 	}
 }
@@ -166,7 +166,7 @@ var mapStringsTests = []struct {
 func TestMapStrings(t *testing.T) {
 	for i, tt := range mapStringsTests {
 		if transformed := MapStrings(tt.in, tt.inF); !StringSliceEquals(transformed, tt.out) {
-			t.Errorf("%d. MapStrings(%v, %v) => %v, want %v", i, tt.in, tt.inF, transformed, tt.out)
+			t.Errorf("%d. MapStrings(%v, f) => %v, want %v", i, tt.in, transformed, tt.out)
 		}
 	}
 }

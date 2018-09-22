@@ -82,11 +82,12 @@
         </footer>
     </body>
 </html>
-{{/*
-*/}}
 <script>
-    var idiomPromise = fetch('/api/idiom/{{.Idiom.Id}}');
+    var idiomPromise;
+    {{if .SelectedImplID}}
+        idiomPromise = fetch('/api/idiom/{{.Idiom.Id}}');
+    {{end}}
 </script>
-<script src="/default/js/pages/idiom-detail-minimal.js"></script>
-<link rel="stylesheet" type="text/css" href="/default/css/pages/idiom-detail-minimal.css" />
+<script src="{{hostPrefix}}{{themeDir}}/js/pages/idiom-detail-minimal.js"></script>
+<link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/idiom-detail-minimal.css" />
 {{end}}
