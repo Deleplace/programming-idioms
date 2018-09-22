@@ -1033,3 +1033,64 @@ footer a.visited {
     border-radius: 0px;
   }
 }
+
+/*
+  2018-09 Transitioning to minimalistic JS & CSS
+*/
+
+body {
+    margin: 8px;
+}
+
+header { 
+	min-height: 4rem;
+	background-color: #448;
+	color: white;
+}
+header > * {
+	display: inline-block;
+    vertical-align: middle;
+    margin: 0.2rem;
+}
+header > h1 {
+    margin: 0.2rem 0.5rem 0.2rem 0.5rem;
+}
+header > h1 > a {
+	color: white;
+	font-size: 2rem;
+}
+header > h1 > a:visited {
+    text-decoration: none;
+	color: white;
+}
+h1 > a {
+    text-decoration: none;
+}
+header .form-search {
+    float: none;
+}
+
+footer {
+	min-height: 2rem;
+	background-color: #448;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+footer > * {
+    vertical-align: middle;
+}
+footer a {
+    color: white;
+}
+footer div {
+    margin: 0.5rem 2rem 0.5rem 2rem;
+}
+footer .about-link {
+    font-weight: bold;
+    font-size: xx-large;
+}
+footer a.about-link {
+    text-decoration: none;
+}

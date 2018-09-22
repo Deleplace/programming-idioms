@@ -1,38 +1,7 @@
 {{define "footer"}}
 <footer>
-	<div class="well">
-		<div class="container-fluid">
-			<div class="row-fluid">
-				{{if .PageMeta.Toggles.licenseDisclaimer}}
-				<div class="show-on-desktop">
-					<div class="span5">
-						Idioms are available under the <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">Creative Commons Attribution-ShareAlike License</a>.
-						<div class="hide-on-mobile hide-on-tablets">
-							Please do not paste any copyright violating resource to this website.
-						</div> 
-					</div>
-				</div>
-				<div class="hide-on-desktop">
-					<div class="span3">
-						All content <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">CC-BY-SA</a> 
-					</div>
-				</div> 
-				{{end}}
-				{{if not .PageMeta.Toggles.editing}}
-				{{if .PageMeta.Toggles.poweredBy}}
-				<div class="show-on-desktop">
-					<div class="span5">
-						{{template "powered-by"}}
-					</div>
-				</div>
-				{{end}}
-				<div class="span2">
-					<a href="{{hostPrefix}}/about" class="about-link"><i class="icon-question-sign icon-4x"></i></a>
-				</div>
-				{{end}}
-			</div>
-		</div>
-	</div>
+	<div>All content <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">CC-BY-SA</a></div>
+	<div><a href="/about" class="about-link">?</a></div>
 </footer>
 {{end}}
 
