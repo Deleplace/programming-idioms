@@ -8,6 +8,10 @@ header > * {
 header > h1 {
     margin: 0.2rem 0.5rem 0.2rem 0.5rem;
 }
+.picto.die {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
 h1 > a {
     text-decoration: none;
 }
@@ -15,4 +19,39 @@ h1 > a {
 .idiom-picture img {
     max-width: 9rem;
     max-height: 3rem;
+}
+
+.results {
+    margin: 1rem;
+}
+
+.results .idiom-summary-medium h3 {
+    color: #565;
+}
+.results .idiom-summary-medium h3 a {
+    text-decoration: none;
+}
+
+footer {    
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+footer > * {
+    vertical-align: middle;
+}
+footer a {
+    color: white;
+}
+footer div {
+    margin: 0.5rem 2rem 0.5rem 2rem;
+}
+footer .about-link {
+    font-weight: bold;
+    font-size: xx-large;
+}
+footer a.about-link {
+    text-decoration: none;
 }

@@ -18,12 +18,16 @@
                 <meta name="keywords" content="{{.PageKeywords}}">
             {{end}}
             <style type="text/css">
-                body { background-color: #EEE; }
-                header { min-height: 4rem; background-color: #448; color: white; }
+                body { background-color: #EEE;  margin: 0; }
+                header { min-height: 3.8rem; background-color: #448; color: white; }
                 header a { color: white; }
                 header > * { display: inline-block; }
                 h1, h3 { margin: 0.2rem;}
                 .tmp { margin-left: 48px; padding: 0.5rem 0 0 0.9rem; }
+                .results { margin: 1rem; }
+                .idiom-summary-medium{ margin-top: 1rem;}
+                .idiom-lead-paragraph { margin: 0; }
+                .idiom-picture { height: 3rem; }
                 .variable { font-weight: bold; font-style: italic; }
                 footer { min-height: 2rem; background-color: #448; }
             </style>
@@ -52,7 +56,7 @@
                 </div>
                 {{end}}
             {{else}}
-                No idioms found !
+                No idioms found ¯\_(ツ)_/¯
             {{end}}
         </div>
 
@@ -62,4 +66,5 @@
 </html>
 <script src="{{hostPrefix}}{{themeDir}}/js/pages/search-results-minimal.js"></script>
 <link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/search-results-minimal.css" />
+<link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/dice_32x32_highlight.png" as="image" />
 {{end}}

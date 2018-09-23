@@ -31,7 +31,7 @@ function emphasize(raw){
 function renderImpl(impl) {
     var implNode = elem("div", "implementation");
     implNode.id = "impl-" + impl.Id;
-    var lg = elem("h2", "", impl.LanguageName);
+    var lg = elem("h2", "lang", impl.LanguageName);
     implNode.appendChild(lg);
 
     var importsAndCode = elem("div", "imports-and-code");
@@ -168,6 +168,14 @@ function decorateSummary(idiom) {
         '" title="Edit the idiom statement" class="edit hide-on-mobile">Edit</a>');
 }
 
+function highlightDie(){
+    var die = document.querySelector(".die");
+    var src = die.src;
+    var hsrc = src.replace("dice_32x32.png", "dice_32x32_highlight.png");
+    die.onmouseover=function(){this.src=hsrc;};
+    die.onmouseout=function(){this.src=src;};
+}
+
 //
 // Execution!
 //
@@ -189,3 +197,4 @@ if(idiomPromise){
 }
 
 renderFooter();
+highlightDie();

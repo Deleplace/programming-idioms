@@ -8,6 +8,10 @@ header > * {
 header > h1 {
     margin: 0.2rem 0.5rem 0.2rem 0.5rem;
 }
+.picto.die {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
 h1 > a {
     text-decoration: none;
 }
@@ -30,7 +34,7 @@ h1 > a {
     border-radius: 0.5rem;
 }
 .external-links li {
-    margin-left: 1rem;
+    margin-right: 1rem;
 }
 .external-links a {
     text-decoration: none;
@@ -42,8 +46,8 @@ h1 > a {
 .summary-large .edit,
 .implementation .edit {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 2px;
+    right: 4px;
 }
 
 @media (max-width: 479px) {

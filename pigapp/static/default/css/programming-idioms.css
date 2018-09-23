@@ -1039,7 +1039,7 @@ footer a.visited {
 */
 
 header { 
-	min-height: 4rem;
+	min-height: 3.8rem;
 	background-color: #448;
 	color: white;
 }

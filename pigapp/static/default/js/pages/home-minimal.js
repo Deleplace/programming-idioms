@@ -84,10 +84,18 @@ function decorateSummary(idiom) {
         '" title="Edit the idiom statement" class="edit hide-on-mobile">Edit</a>');
 }
 
+function highlightDie(){
+    var die = document.querySelector(".die");
+    var src = die.src;
+    var hsrc = src.replace("dice_64x64.png", "dice_64x64_highlight.png");
+    die.onmouseover=function(){this.src=hsrc;};
+    die.onmouseout=function(){this.src=src;};
+}
+
 //
 // Execution!
 //
 
 renderHeader();
-
 renderFooter();
+highlightDie();

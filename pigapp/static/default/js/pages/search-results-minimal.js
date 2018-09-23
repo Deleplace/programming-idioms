@@ -33,16 +33,29 @@ function populateSearchQuery() {
 }
 
 function renderFooter() {
-    // TODO
+    var footerz = document.getElementsByTagName("footer");
+    var footer = footerz[0];
+    footer.insertAdjacentHTML('beforeend', '<div> \
+		All content <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">CC-BY-SA</a> \
+    </div>');
+    footer.insertAdjacentHTML('beforeend', '<div> \
+		<a href="/about" class="about-link">?</a> \
+	</div>');
 }
 
+function highlightDie(){
+    var die = document.querySelector(".die");
+    var src = die.src;
+    var hsrc = src.replace("dice_32x32.png", "dice_32x32_highlight.png");
+    die.onmouseover=function(){this.src=hsrc;};
+    die.onmouseout=function(){this.src=src;};
+}
 
 //
 // Execution!
 //
 
 renderHeader();
-
 populateSearchQuery();
-
 renderFooter();
+highlightDie();
