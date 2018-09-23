@@ -1038,10 +1038,6 @@ footer a.visited {
   2018-09 Transitioning to minimalistic JS & CSS
 */
 
-body {
-    margin: 8px;
-}
-
 header { 
 	min-height: 4rem;
 	background-color: #448;
@@ -1071,6 +1067,10 @@ header .form-search {
 }
 
 footer {
+    position: absolute;
+    left: 0;
+	bottom: 0;
+	width: 100%;
 	min-height: 2rem;
 	background-color: #448;
     display: flex;

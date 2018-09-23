@@ -111,7 +111,14 @@ function renderHeader() {
 }
 
 function renderFooter() {
-    // TODO
+    var footerz = document.getElementsByTagName("footer");
+    var footer = footerz[0];
+    footer.insertAdjacentHTML('beforeend', '<div> \
+		All content <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">CC-BY-SA</a> \
+    </div>');
+    footer.insertAdjacentHTML('beforeend', '<div> \
+		<a href="/about" class="about-link">?</a> \
+	</div>');
 }
 
 // Server-side rendering already includes the HTML for only
@@ -119,6 +126,13 @@ function renderFooter() {
 // populateOtherImpls does client-side rendering of all other
 // impls.
 function populateOtherImpls(idiom) {
+    // 1) Remove all "..." placeholders
+    var placeholders = document.querySelectorAll(".implementation.placeholder");
+    for (var ph of placeholders) {
+        ph.remove();
+    }
+
+    // 2) Add each impl (if it's not there yet)
     idiom.Implementations.forEach(function(impl) {
         var nodeId = "impl-" + impl.Id;
         if( document.getElementById(nodeId) ){

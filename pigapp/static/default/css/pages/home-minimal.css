@@ -22,7 +22,10 @@ h1 > a {
     .hide-on-desktop, .show-on-tablets, .show-on-mobile { display: none; }
 }
 
-footer {
+footer {    
+    position: absolute;
+    left: 0;
+    bottom: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;

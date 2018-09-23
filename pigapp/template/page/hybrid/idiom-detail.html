@@ -18,19 +18,19 @@
                 <meta name="keywords" content="{{.PageKeywords}}">
             {{end}}
             <style type="text/css">
-                body { background-color: #EEE; }
+                body { background-color: #EEE; margin: 0; }
                 header { min-height: 4rem; background-color: #448; color: white; }
                 header a { color: white; }
                 header > * { display: inline-block; }
                 h1, h2 { margin: 0.2rem;}
                 .tmp { margin-left: 48px; padding: 0.5rem 0 0 0.9rem; }
-                .implementation { background-color: #FFD; border: 1px solid #DDB; margin-bottom: 1rem;}
+                .implementation { background-color: #FFD; border: 1px solid #DDB; margin: 1rem;}
                 pre { margin: 1rem; background-color: #EEE; padding: 1rem 2rem 1rem 1rem; }
                 .imports pre { margin-bottom: 0; }
                 .code pre { margin-top: 0; }
                 .variable { font-weight: bold; font-style: italic; }
                 .external-links li { display: inline-block; }
-                footer { min-height: 2rem; background-color: #448; }
+                footer { min-height: 2rem; background-color: #448; width:100%; }
             </style>
         </head>
     {{end}}
@@ -79,6 +79,7 @@
             </div>
         {{end}}
         <footer>
+            x
         </footer>
     </body>
 </html>
@@ -87,6 +88,11 @@
     {{if .SelectedImplID}}
         idiomPromise = fetch('/api/idiom/{{.Idiom.Id}}');
     {{end}}
+
+    var M = {{len .Idiom.Implementations}} - 1; {{/* This is approximation, selected lang may have more than 1 impl. */}}
+    var impls = document.querySelector(".implementations");
+    for(var i=0;i<M;i++)
+        impls.insertAdjacentHTML('beforeend', '<div class="implementation placeholder"><h2>...</h2></div>');
 </script>
 <script src="{{hostPrefix}}{{themeDir}}/js/pages/idiom-detail-minimal.js"></script>
 <link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/idiom-detail-minimal.css" />
