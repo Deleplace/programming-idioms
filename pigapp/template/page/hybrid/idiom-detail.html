@@ -79,7 +79,6 @@
             </div>
         {{end}}
         <footer>
-            x
         </footer>
     </body>
 </html>
@@ -87,12 +86,12 @@
     var idiomPromise;
     {{if .SelectedImplID}}
         idiomPromise = fetch('/api/idiom/{{.Idiom.Id}}');
-    {{end}}
 
-    var M = {{len .Idiom.Implementations}} - 1; {{/* This is approximation, selected lang may have more than 1 impl. */}}
-    var impls = document.querySelector(".implementations");
-    for(var i=0;i<M;i++)
-        impls.insertAdjacentHTML('beforeend', '<div class="implementation placeholder"><h2>...</h2></div>');
+        var M = {{len .Idiom.Implementations}} - 1; {{/* This is approximation, selected lang may have more than 1 impl. */}}
+        var impls = document.querySelector(".implementations");
+        for(var i=0;i<M;i++)
+            impls.insertAdjacentHTML('beforeend', '<div class="implementation placeholder"><h2>...</h2></div>');
+    {{end}}
 </script>
 <script src="{{hostPrefix}}{{themeDir}}/js/pages/idiom-detail-minimal.js"></script>
 <link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/idiom-detail-minimal.css" />
