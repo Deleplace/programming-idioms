@@ -42,12 +42,14 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	// Note that we're redirecting to a *relative* URL
 	log.Infof(c, "Picked idiom url %s (out of %d)", url, len(urls))
 
-	// TODO when AppEngine has Go1.8:
+	// 2018-09 w doesn't seem to implement Pusher :(
 	// if pusher, ok := w.(http.Pusher); ok {
 	// 	if err := pusher.Push(url, nil); err != nil {
 	// 		log.Errorf("Failed to push %s: %v", url, err)
 	// 	}
 	// }
+	// Automagic "Link" header seems fine, thanks to GFE
+	w.Header().Set("Link", "<"+url+">; rel=preload; as=document")
 
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
