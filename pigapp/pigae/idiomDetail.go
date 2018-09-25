@@ -2,6 +2,7 @@ package pigae
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -31,6 +32,20 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	userProfile := readUserProfile(r)
 	favlangs := userProfile.FavoriteLanguages
 
+	pushResources := func() {
+		if _, err := r.Cookie("v"); err == nil {
+			log.Infof(c, "Returning visitor: no resource server push needed.")
+		} else {
+			log.Infof(c, "New visitor: server push resources!")
+			prefix := hostPrefix() + themeDirectory()
+			var links bytes.Buffer
+			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/js/pages/idiom-detail-minimal.js", "script")
+			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/css/pages/idiom-detail-minimal.css", "style")
+			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s", "/default/img/wheel_48x48.png", "image")
+			w.Header().Set("Link", links.String())
+		}
+	}
+
 	if userProfile.Empty() {
 		//
 		// Zero-preference ≡ anonymous visit ≡ server cache enabled
@@ -39,6 +54,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		if cachedPage := htmlCacheRead(c, path); cachedPage != nil {
 			// Using the whole HTML block from Memcache
 			log.Debugf(c, "%s from memcache!", path)
+			pushResources()
 			_, err := w.Write(cachedPage)
 			return err
 		}
@@ -53,6 +69,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			}
 			return err
 		}
+		pushResources()
 		_, err = w.Write(buffer.Bytes())
 		if err != nil {
 			return err
@@ -164,6 +181,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		SelectedImplLang: selectedImplLang,
 	}
 
+	pushResources()
 	log.Debugf(c, "ExecuteTemplate start...")
 	// err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
 	err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
