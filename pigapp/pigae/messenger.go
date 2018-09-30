@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"google.golang.org/appengine"
+	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 )
 
-func userMessageBoxAjax(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
-	userProfile := readUserProfile(r)
+func userMessageBoxAjax(c context.Context, w http.ResponseWriter, r *http.Request) error {
+	userProfile := readUserProfile(c, r)
 	username := userProfile.Nickname
 	keys, messages, err := dao.getMessagesForUser(c, username)
 	if err != nil {
@@ -35,8 +34,7 @@ func userMessageBoxAjax(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func dismissUserMessage(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func dismissUserMessage(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	keyStr := r.FormValue("key")
 	log.Infof(c, "Dismissing user message for key %v", keyStr)
 	key, err := datastore.DecodeKey(keyStr)

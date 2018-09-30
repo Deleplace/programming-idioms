@@ -7,12 +7,12 @@ import (
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
-func implSave(w http.ResponseWriter, r *http.Request) error {
+func implSave(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := r.FormValue("idiom_id")
 	existingIDStr := r.FormValue("impl_id")
 	username := r.FormValue("user_nickname")
@@ -27,12 +27,12 @@ func implSave(w http.ResponseWriter, r *http.Request) error {
 	setNicknameCookie(w, username)
 
 	if existingIDStr == "" {
-		return newImplSave(w, r, username, idiomIDStr)
+		return newImplSave(c, w, r, username, idiomIDStr)
 	}
-	return existingImplSave(w, r, username, idiomIDStr, existingIDStr)
+	return existingImplSave(c, w, r, username, idiomIDStr, existingIDStr)
 }
 
-func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomIDStr string) error {
+func newImplSave(c context.Context, w http.ResponseWriter, r *http.Request, username string, idiomIDStr string) error {
 	if err := togglesMissing(w, r, "implAddition"); err != nil {
 		return err
 	}
@@ -40,7 +40,6 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		return err
 	}
 
-	c := appengine.NewContext(r)
 	language := NormLang(r.FormValue("impl_language"))
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
@@ -103,7 +102,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		VersionDate:            now,
 	}
 
-	if IsAdmin(r) {
+	if IsAdmin(c, r) {
 		// 2016-10: only Admin may set an impl picture
 		newImpl.PictureURL = r.FormValue("impl_picture_url")
 	}
@@ -121,7 +120,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	return nil
 }
 
-func existingImplSave(w http.ResponseWriter, r *http.Request, username string, idiomIDStr string, existingImplIDStr string) error {
+func existingImplSave(c context.Context, w http.ResponseWriter, r *http.Request, username string, idiomIDStr string, existingImplIDStr string) error {
 	if err := togglesMissing(w, r, "implEditing"); err != nil {
 		return err
 	}
@@ -129,7 +128,6 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		return err
 	}
 
-	c := appengine.NewContext(r)
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
 	comment := r.FormValue("impl_comment")
@@ -163,7 +161,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 
 	_, impl, _ := idiom.FindImplInIdiom(implID)
 
-	isAdmin := IsAdmin(r)
+	isAdmin := IsAdmin(c, r)
 	if idiom.Protected && !isAdmin {
 		return PiError{"Can't edit protected idiom " + idiomIDStr, http.StatusUnauthorized}
 	}

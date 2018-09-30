@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
 	"github.com/gorilla/mux"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/user"
 )
@@ -45,22 +45,21 @@ func seeNonFavorite(r *http.Request) bool {
 	return true
 }
 
-func readUserProfile(r *http.Request) UserProfile {
+func readUserProfile(c context.Context, r *http.Request) UserProfile {
 	u := UserProfile{
 		Nickname:          lookForNickname(r),
 		FavoriteLanguages: lookForFavoriteLanguages(r),
 		SeeNonFavorite:    seeNonFavorite(r),
-		IsAdmin:           IsAdmin(r),
+		IsAdmin:           IsAdmin(c, r),
 	}
 	if u.Nickname != "" || len(u.FavoriteLanguages) > 0 {
-		c := appengine.NewContext(r)
 		log.Infof(c, "%v", u)
 	}
 	return u
 }
 
-func mustUserProfile(r *http.Request, w http.ResponseWriter) (UserProfile, error) {
-	profile := readUserProfile(r)
+func mustUserProfile(c context.Context, r *http.Request, w http.ResponseWriter) (UserProfile, error) {
+	profile := readUserProfile(c, r)
 	if profile.Nickname == "" {
 		return profile, PiError{"You must already have a nickname.", http.StatusBadRequest}
 	}
@@ -97,10 +96,9 @@ func setLanguagesCookie(w http.ResponseWriter, langs string) http.Cookie {
 //
 // "langs" parameter must be an underscore-separated list.
 //
-func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
+func bookmarkableUserURL(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	userProfile := readUserProfile(r)
-	c := appengine.NewContext(r)
+	userProfile := readUserProfile(c, r)
 
 	// Todo : encode/decode nickname with special chars
 	nickname := vars["nickname"]
@@ -130,9 +128,8 @@ func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 //
 // Not used yet.
 // TODO To be adapted to : Handle optional user strong auth
-func handleAuth(w http.ResponseWriter, r *http.Request) error {
+func handleAuth(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	// Cf https://developers.google.com/appengine/docs/go/users/
-	c := appengine.NewContext(r)
 	u := user.Current(c)
 	if u == nil {
 		url, err := user.LoginURL(c, "/")

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 )
 
 // WallFacade is the Facade for the Wall page.
@@ -15,7 +16,7 @@ type WallFacade struct {
 
 // From a message, creates a handler
 func makeWall(msg string) betterHandler {
-	return func(w http.ResponseWriter, r *http.Request) error {
+	return func(c context.Context, w http.ResponseWriter, r *http.Request) error {
 		return wall(w, r, msg)
 	}
 }

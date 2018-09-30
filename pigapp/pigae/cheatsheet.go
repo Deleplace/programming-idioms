@@ -5,7 +5,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
-	"google.golang.org/appengine"
+	"golang.org/x/net/context"
 	gaesearch "google.golang.org/appengine/search"
 )
 
@@ -22,10 +22,9 @@ type CheatSheetFacade struct {
 	CheatsheetLines []cheatSheetLineDoc
 }
 
-func cheatsheet(w http.ResponseWriter, r *http.Request) error {
+func cheatsheet(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	lang := vars["lang"]
-	c := appengine.NewContext(r)
 
 	// Security belt. Might be changed if needed.
 	limit := 1000
@@ -51,7 +50,7 @@ func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 			PageTitle: PrintNiceLang(lang) + " cheat sheet",
 			Toggles:   toggles,
 		},
-		UserProfile:     readUserProfile(r),
+		UserProfile:     readUserProfile(c, r),
 		Lang:            lang,
 		CheatsheetLines: cheatsheetLines,
 	}

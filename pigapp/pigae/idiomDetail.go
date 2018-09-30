@@ -13,7 +13,6 @@ import (
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -26,10 +25,9 @@ type IdiomDetailFacade struct {
 	SelectedImplLang string
 }
 
-func idiomDetail(w http.ResponseWriter, r *http.Request) error {
+func idiomDetail(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	c := appengine.NewContext(r)
-	userProfile := readUserProfile(r)
+	userProfile := readUserProfile(c, r)
 	favlangs := userProfile.FavoriteLanguages
 
 	pushResources := func() {
@@ -166,9 +164,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	myToggles := copyToggles(toggles)
-	myToggles["actionEditIdiom"] = !idiom.Protected || IsAdmin(r)
+	myToggles["actionEditIdiom"] = !idiom.Protected || IsAdmin(c, r)
 	myToggles["actionIdiomHistory"] = true
-	myToggles["actionAddImpl"] = !idiom.Protected || IsAdmin(r)
+	myToggles["actionAddImpl"] = !idiom.Protected || IsAdmin(c, r)
 	data := &IdiomDetailFacade{
 		PageMeta: PageMeta{
 			PageTitle:    pageTitle,

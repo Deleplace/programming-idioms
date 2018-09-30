@@ -4,10 +4,9 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // IdiomHistoryFacade is the Facade for the Idiom History page.
@@ -19,10 +18,8 @@ type IdiomHistoryFacade struct {
 	HistoryList []*IdiomHistory
 }
 
-func idiomHistory(w http.ResponseWriter, r *http.Request) error {
+func idiomHistory(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-
-	c := appengine.NewContext(r)
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -49,7 +46,7 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	userProfile := readUserProfile(r)
+	userProfile := readUserProfile(c, r)
 	myToggles := copyToggles(toggles)
 	myToggles["actionEditIdiom"] = false
 	myToggles["actionIdiomHistory"] = false
@@ -66,12 +63,11 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "page-history", data)
 }
 
-func revertIdiomVersion(w http.ResponseWriter, r *http.Request) error {
+func revertIdiomVersion(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
 	versionStr := r.FormValue("version")
 	version := String2Int(versionStr)
-	c := appengine.NewContext(r)
 
 	_, err := dao.revert(c, idiomID, version)
 	if err != nil {
@@ -83,12 +79,11 @@ func revertIdiomVersion(w http.ResponseWriter, r *http.Request) error {
 	// Unfortunately, the redirect page doesn't see the history deletion, yet.
 }
 
-func restoreIdiomVersion(w http.ResponseWriter, r *http.Request) error {
+func restoreIdiomVersion(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
 	versionStr := r.FormValue("version")
 	version := String2Int(versionStr)
-	c := appengine.NewContext(r)
 
 	idiom, err := dao.historyRestore(c, idiomID, version)
 	if err != nil {

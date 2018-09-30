@@ -6,10 +6,9 @@ import (
 	"sort"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // VersionDiffFacade is the Facade for the Diff page.
@@ -23,10 +22,8 @@ type VersionDiffFacade struct {
 	DeletionImplIDs       map[int]bool
 }
 
-func versionDiff(w http.ResponseWriter, r *http.Request) error {
+func versionDiff(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-
-	c := appengine.NewContext(r)
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -76,7 +73,7 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	// Recently created... first?
 	sort.Sort(sort.Reverse(sort.IntSlice(implIDs)))
 
-	userProfile := readUserProfile(r)
+	userProfile := readUserProfile(c, r)
 	myToggles := copyToggles(toggles)
 	myToggles["writable"] = false
 	myToggles["actionEditIdiom"] = false

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -185,7 +186,7 @@ var neededToggles = map[string][]string{
 }
 
 type standardHandler func(w http.ResponseWriter, r *http.Request)
-type betterHandler func(w http.ResponseWriter, r *http.Request) error
+type betterHandler func(c context.Context, w http.ResponseWriter, r *http.Request) error
 
 // Wrap HandleFunc with
 // - error handling
@@ -195,39 +196,39 @@ type betterHandler func(w http.ResponseWriter, r *http.Request) error
 func handle(path string, h betterHandler) {
 	r.HandleFunc(path,
 		func(w http.ResponseWriter, r *http.Request) {
-			if isSpam(w, r) {
+			c := namespaceData(r)
+
+			if isSpam(c, w, r) {
 				return
 			}
 
-			// r = namespaceData(r)
 			defer func() {
 				if msg := recover(); msg != nil {
 					msgStr := fmt.Sprintf("%v", msg)
-					errorPage(w, r, PiError{msgStr, http.StatusInternalServerError})
+					errorPage(c, w, r, PiError{msgStr, http.StatusInternalServerError})
 					return
 				}
 			}()
 			if configTime == "0" {
-				c := appengine.NewContext(r)
 				_ = refreshToggles(c)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}
 
 			if err := muxVarsMissing(w, r, neededPathVariables[path]...); err != nil {
-				errorPage(w, r, err)
+				errorPage(c, w, r, err)
 				return
 			}
 			if err := togglesMissing(w, r, neededToggles[path]...); err != nil {
-				errorPage(w, r, err)
+				errorPage(c, w, r, err)
 				return
 			}
 			if err := parametersMissing(w, r, neededParameters[path]...); err != nil {
-				errorPage(w, r, err)
+				errorPage(c, w, r, err)
 				return
 			}
-			err := h(w, r)
+			err := h(c, w, r)
 			if err != nil {
-				errorPage(w, r, err)
+				errorPage(c, w, r, err)
 			}
 		})
 }
@@ -235,39 +236,39 @@ func handle(path string, h betterHandler) {
 func handleAjax(path string, h betterHandler) {
 	r.HandleFunc(path,
 		func(w http.ResponseWriter, r *http.Request) {
-			if isSpam(w, r) {
+			c := namespaceData(r)
+
+			if isSpam(c, w, r) {
 				return
 			}
 
-			// r = namespaceData(r)
 			defer func() {
 				if msg := recover(); msg != nil {
 					msgStr := fmt.Sprintf("%v", msg)
-					errorJSON(w, r, PiError{msgStr, http.StatusInternalServerError})
+					errorJSON(c, w, r, PiError{msgStr, http.StatusInternalServerError})
 					return
 				}
 			}()
 			if configTime == "0" {
-				c := appengine.NewContext(r)
 				_ = refreshToggles(c)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}
 
 			if err := muxVarsMissing(w, r, neededPathVariables[path]...); err != nil {
-				errorJSON(w, r, err)
+				errorJSON(c, w, r, err)
 				return
 			}
 			if err := togglesMissing(w, r, neededToggles[path]...); err != nil {
-				errorJSON(w, r, err)
+				errorJSON(c, w, r, err)
 				return
 			}
 			if err := parametersMissing(w, r, neededParameters[path]...); err != nil {
-				errorJSON(w, r, err)
+				errorJSON(c, w, r, err)
 				return
 			}
-			err := h(w, r)
+			err := h(c, w, r)
 			if err != nil {
-				errorJSON(w, r, err)
+				errorJSON(c, w, r, err)
 			}
 		})
 }
@@ -343,18 +344,29 @@ func logIf(err error, logfunc func(c context.Context, format string, args ...int
 // of confusion of the Datastore data, the Memcache data, the Search indexes, and the
 // delayed Tasks.
 // Make sure that alternative versions can never mess up with the prod data.
-func namespaceData(r *http.Request) *http.Request {
+//
+// Requests, Contexts, and the GAE runtime sometimes interact in imperfect ways.
+// A *http.Request has no setter for its Context.
+// Instead, (*http.Request).WithContext creates a new *Request.
+// Unfortunately, a new unregistered *Request object is unusable in GAE:
+//    panic: appengine: NewContext passed an unknown http.Request
+// In order to use a namespaced Context, we must now pass it as explicit argument
+// of all handlers... and refrain from using (*Request).Context or appengine.NewContext
+// inside the handlers.
+func namespaceData(r *http.Request) context.Context {
 	c := appengine.NewContext(r)
 	const mainVersion = `1-0`
 	currentVersion := appengine.VersionID(c)
 	if currentVersion == mainVersion {
 		// 2018-09: let's say the main version is the only one with the
 		// default namespace
-		return r
+		return c
 	}
 	normalizeName := func(v string) string {
 		re := regexp.MustCompile("[^0-9A-Za-z._-]")
-		return re.ReplaceAllLiteralString(v, "")
+		norm := re.ReplaceAllLiteralString(v, "")
+		parts := strings.Split(norm, ".")
+		return parts[0]
 	}
 	ns := normalizeName(currentVersion)
 	log.Debugf(c, "Namespacing to %q", ns)
@@ -362,6 +374,5 @@ func namespaceData(r *http.Request) *http.Request {
 	if err != nil {
 		panic(fmt.Sprintf("Failed namespacing to %q", ns))
 	}
-	r2 := r.WithContext(c2)
-	return r2
+	return c2
 }

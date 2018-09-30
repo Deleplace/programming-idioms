@@ -11,7 +11,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -42,12 +41,12 @@ func separateLangKeywords(terms []string) (words, langs []string) {
 }
 
 // This is a "word by word" search, not a rdbms "like" filter
-func search(w http.ResponseWriter, r *http.Request) error {
+func search(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
 	q := vars["q"]
 	//q := url.QueryUnescape(q)  Not needed, so it seems.
-	hits, normalizedQ, err := findResults(r, q)
+	hits, normalizedQ, err := findResults(c, r, q)
 	if err != nil {
 		if err == errEmptyQ {
 			redirURL := hostPrefix() + "/about#about-block-all-idioms"
@@ -57,14 +56,12 @@ func search(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	return listResults(w, r, normalizedQ, hits)
+	return listResults(c, w, r, normalizedQ, hits)
 }
 
 var errEmptyQ = fmt.Errorf("Empty search query")
 
-func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ string, err error) {
-	c := appengine.NewContext(r)
-
+func findResults(c context.Context, r *http.Request, q string) (results []*Idiom, normalizedQ string, err error) {
 	// Maybe someday we find a graceful way to handle "c++", "c#", etc. but...
 	q = strings.Replace(q, "C++", "Cpp", -1)
 	q = strings.Replace(q, "c++", "cpp", -1)
@@ -104,7 +101,7 @@ func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ strin
 
 	// Note that this currently depends on userProfile.FavoriteLanguages
 	// (not the best for caching and for SAP)
-	userProfile := readUserProfile(r)
+	userProfile := readUserProfile(c, r)
 	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
 
 	matchingImplIDs := <-matchingPromise
@@ -141,14 +138,14 @@ func matchingImplPromise(c context.Context, words, typedLangs []string) chan map
 	return ch
 }
 
-func listResults(w http.ResponseWriter, r *http.Request, q string, idioms []*Idiom) error {
+func listResults(c context.Context, w http.ResponseWriter, r *http.Request, q string, idioms []*Idiom) error {
 	data := &SearchResultsFacade{
 		PageMeta: PageMeta{
 			PageTitle:   "Idioms for \"" + q + "\"",
 			Toggles:     toggles,
 			SearchQuery: q,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		Q:           q,
 		Results:     idioms,
 	}
@@ -157,7 +154,7 @@ func listResults(w http.ResponseWriter, r *http.Request, q string, idioms []*Idi
 	return templates.ExecuteTemplate(w, "page-list-results-minimal", data)
 }
 
-func searchRedirect(w http.ResponseWriter, r *http.Request) error {
+func searchRedirect(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	q := r.FormValue("q")
 	if q == "" {
 		// Small hack for own convenience: empty search -> homepage
@@ -170,12 +167,11 @@ func searchRedirect(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func listByLanguage(w http.ResponseWriter, r *http.Request) error {
+func listByLanguage(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	userProfile := readUserProfile(r)
+	userProfile := readUserProfile(c, r)
 
-	c := appengine.NewContext(r)
 	langsStr := vars["langs"]
 	langs := strings.Split(langsStr, "_")
 	langs = MapStrings(langs, NormLang)
@@ -192,5 +188,5 @@ func listByLanguage(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	niceLangs := MapStrings(langs, PrintNiceLang)
-	return listResults(w, r, fmt.Sprintf("Language=%v", niceLangs), hits)
+	return listResults(c, w, r, fmt.Sprintf("Language=%v", niceLangs), hits)
 }

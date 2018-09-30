@@ -5,13 +5,10 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
-
-	"google.golang.org/appengine"
+	"golang.org/x/net/context"
 )
 
-func idiomDelete(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
-
+func idiomDelete(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
 
@@ -31,9 +28,7 @@ func idiomDelete(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func implDelete(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
-
+func implDelete(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
 

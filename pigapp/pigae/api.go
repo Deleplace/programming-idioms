@@ -6,7 +6,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
-	"google.golang.org/appengine"
+	"golang.org/x/net/context"
 	"google.golang.org/appengine/log"
 )
 
@@ -36,9 +36,8 @@ func printJSON(w http.ResponseWriter, data interface{}, pretty bool) error {
 }
 
 // Handle /api/idiom/{idiomId}
-func jsonIdiom(w http.ResponseWriter, r *http.Request) error {
+func jsonIdiom(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	c := appengine.NewContext(r)
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -54,8 +53,7 @@ func jsonIdiom(w http.ResponseWriter, r *http.Request) error {
 
 // Handle /api/idioms/all
 // jsonAllIdioms is redundant with adminImportAjax
-func jsonAllIdioms(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func jsonAllIdioms(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	_, idioms, err := dao.getAllIdioms(c, 0, "Id")
 	if err != nil {
 		log.Errorf(c, "%v", err)
@@ -66,11 +64,11 @@ func jsonAllIdioms(w http.ResponseWriter, r *http.Request) error {
 }
 
 // Handle /api/search/{q}
-func jsonSearch(w http.ResponseWriter, r *http.Request) error {
+func jsonSearch(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	q := vars["q"]
 
-	hits, _, err := findResults(r, q)
+	hits, _, err := findResults(c, r, q)
 	if err != nil {
 		return err
 	}

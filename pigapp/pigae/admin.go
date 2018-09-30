@@ -7,15 +7,14 @@ import (
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/user"
 )
 
 // IsAdmin determines whether the current user is regarded as Admin by the Google auth provider.
-func IsAdmin(r *http.Request) bool {
-	c := appengine.NewContext(r) // TODO check if NewContext is expensive
+func IsAdmin(c context.Context, r *http.Request) bool {
 	u := user.Current(c)
 	return u != nil && u.Admin
 }
@@ -26,7 +25,7 @@ type AdminFacade struct {
 	UserProfile UserProfile
 }
 
-func admin(w http.ResponseWriter, r *http.Request) error {
+func admin(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	data := &AdminFacade{
 		PageMeta: PageMeta{
 			ExtraJs: []string{hostPrefix() + themeDirectory() + "/js/programming-idioms-admin.js"},
@@ -37,8 +36,7 @@ func admin(w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "page-admin", data)
 }
 
-func ajaxRefreshToggles(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func ajaxRefreshToggles(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := dao.deleteCache(c)
 	if err != nil {
 		return err
@@ -46,8 +44,7 @@ func ajaxRefreshToggles(w http.ResponseWriter, r *http.Request) error {
 	return refreshToggles(c)
 }
 
-func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func ajaxSetToggle(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	name := r.FormValue("toggle")
 	valueAsString := r.FormValue("value")
 
@@ -73,8 +70,7 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 }
 
 // For related idioms (i.e. linked idioms)
-func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func ajaxCreateRelation(c context.Context, w http.ResponseWriter, r *http.Request) error {
 
 	idiomAIdStr := r.FormValue("idiomAId")
 	idiomAId := String2Int(idiomAIdStr)
@@ -102,8 +98,7 @@ func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func sendMessageForUserAjax(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func sendMessageForUserAjax(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	msg := MessageForUser{
 		Username:     r.FormValue("username"),
 		Message:      r.FormValue("message"),

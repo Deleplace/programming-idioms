@@ -5,10 +5,9 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // ImplEditFacade is the Facade for the Implementation Edit page
@@ -19,10 +18,8 @@ type ImplEditFacade struct {
 	Impl        *Impl
 }
 
-func implEdit(w http.ResponseWriter, r *http.Request) error {
+func implEdit(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-
-	c := appengine.NewContext(r)
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -55,7 +52,7 @@ func implEdit(w http.ResponseWriter, r *http.Request) error {
 			Toggles:               myToggles,
 			PreventIndexingRobots: true,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		Idiom:       idiom,
 		Impl:        &implCopy,
 	}

@@ -5,10 +5,9 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 //
@@ -24,13 +23,12 @@ type IdiomAddPictureFacade struct {
 	Idiom       *Idiom
 }
 
-func idiomAddPicture(w http.ResponseWriter, r *http.Request) error {
-	if !IsAdmin(r) {
+func idiomAddPicture(c context.Context, w http.ResponseWriter, r *http.Request) error {
+	if !IsAdmin(c, r) {
 		return fmt.Errorf("For now, only the Admin may add an idiom picture.")
 	}
 
 	vars := mux.Vars(r)
-	c := appengine.NewContext(r)
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -51,20 +49,19 @@ func idiomAddPicture(w http.ResponseWriter, r *http.Request) error {
 			PageTitle: fmt.Sprintf("Adding picture to Idiom %d : %s", idiom.Id, idiom.Title),
 			Toggles:   myToggles,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		Idiom:       idiom,
 	}
 
 	return templates.ExecuteTemplate(w, "page-idiom-add-picture", data)
 }
 
-func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
-	if !IsAdmin(r) {
+func idiomSavePicture(c context.Context, w http.ResponseWriter, r *http.Request) error {
+	if !IsAdmin(c, r) {
 		return fmt.Errorf("For now, only the Admin may add an idiom picture.")
 	}
 
-	c := appengine.NewContext(r)
-	userProfile := readUserProfile(r)
+	userProfile := readUserProfile(c, r)
 
 	idiomIDStr := r.FormValue("idiom_id")
 	pictureURL := r.FormValue("picture_url")

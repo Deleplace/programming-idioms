@@ -6,14 +6,14 @@ import (
 	"strconv"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
 // Save an new idiom OR an existing idiom, depending on
 // parameter "idiom_id"
-func idiomSave(w http.ResponseWriter, r *http.Request) error {
+func idiomSave(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	existingIDStr := r.FormValue("idiom_id")
 	title := r.FormValue("idiom_title")
 	username := r.FormValue("user_nickname")
@@ -28,12 +28,12 @@ func idiomSave(w http.ResponseWriter, r *http.Request) error {
 	setNicknameCookie(w, username)
 
 	if existingIDStr == "" {
-		return newIdiomSave(w, r, username, title)
+		return newIdiomSave(c, w, r, username, title)
 	}
-	return existingIdiomSave(w, r, username, existingIDStr, title)
+	return existingIdiomSave(c, w, r, username, existingIDStr, title)
 }
 
-func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title string) error {
+func newIdiomSave(c context.Context, w http.ResponseWriter, r *http.Request, username string, title string) error {
 	if err := togglesMissing(w, r, "idiomCreation"); err != nil {
 		return err
 	}
@@ -41,7 +41,6 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		return err
 	}
 
-	c := appengine.NewContext(r)
 	lead := r.FormValue("idiom_lead")
 	keywords := r.FormValue("idiom_keywords")
 	picture := r.FormValue("idiom_picture") /* TODO upload file ?! */
@@ -128,14 +127,13 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	return nil
 }
 
-func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, existingIDStr string, title string) error {
+func existingIdiomSave(c context.Context, w http.ResponseWriter, r *http.Request, username string, existingIDStr string, title string) error {
 	if err := togglesMissing(w, r, "idiomEditing"); err != nil {
 		return err
 	}
 	if err := parametersMissing(w, r, "idiom_version"); err != nil {
 		return err
 	}
-	c := appengine.NewContext(r)
 	log.Infof(c, "[%v] is updating statement of idiom %v", username, existingIDStr)
 
 	idiomID := String2Int(existingIDStr)
@@ -148,7 +146,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 		return PiError{"Could not find idiom " + existingIDStr, http.StatusNotFound}
 	}
 
-	isAdmin := IsAdmin(r)
+	isAdmin := IsAdmin(c, r)
 	if idiom.Protected && !isAdmin {
 		return PiError{"Can't edit protected idiom " + existingIDStr, http.StatusUnauthorized}
 	}

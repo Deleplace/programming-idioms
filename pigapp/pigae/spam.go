@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -41,13 +41,12 @@ func init() {
 	// fmt.Println("Registered list of", len(spammerSet), "spam IPs.")
 }
 
-func isSpam(w http.ResponseWriter, r *http.Request) (busted bool) {
+func isSpam(c context.Context, w http.ResponseWriter, r *http.Request) (busted bool) {
 	var motive string
 	ip := r.RemoteAddr
 
 	defer func() {
 		if busted {
-			c := appengine.NewContext(r)
 			log.Infof(c, "Detected spammer %v : %v", ip, motive)
 			// Let's return a nice 200 ... nothing to see here
 			fmt.Fprintln(w, "<html><body>This site is under construction</body></html>")

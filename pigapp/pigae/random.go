@@ -8,14 +8,12 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
-func randomIdiom(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
-
+func randomIdiom(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	var urls []string
 	cachedUrls, err := dao.readCache(c, "all-idioms-urls")
 	if err == nil && cachedUrls != nil {
@@ -56,8 +54,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 }
 
 // Among idioms having an impl in this language
-func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func randomIdiomHaving(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
 	havingLang := vars["havingLang"]
@@ -88,8 +85,7 @@ func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
 }
 
 // Among idioms not having an impl in this language
-func randomIdiomNotHaving(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func randomIdiomNotHaving(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
 	notHavingLang := vars["notHavingLang"]

@@ -9,8 +9,7 @@ import (
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
-
-	"google.golang.org/appengine"
+	"golang.org/x/net/context"
 )
 
 // Response is a generic container suitable to be directly converted into a JSON HTTP response.
@@ -27,8 +26,8 @@ func (r Response) String() (s string) {
 	return
 }
 
-func ajaxIdiomVote(w http.ResponseWriter, r *http.Request) error {
-	profile, err := mustUserProfile(r, w)
+func ajaxIdiomVote(c context.Context, w http.ResponseWriter, r *http.Request) error {
+	profile, err := mustUserProfile(c, r, w)
 	if err != nil {
 		return err
 	}
@@ -49,7 +48,6 @@ func ajaxIdiomVote(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		return PiError{"Vote choice should be up or down", http.StatusBadRequest}
 	}
-	c := appengine.NewContext(r)
 	idiomID := String2Int(idiomIDStr)
 
 	vote := IdiomVoteLog{
@@ -71,8 +69,8 @@ func ajaxIdiomVote(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func ajaxImplVote(w http.ResponseWriter, r *http.Request) error {
-	profile, err := mustUserProfile(r, w)
+func ajaxImplVote(c context.Context, w http.ResponseWriter, r *http.Request) error {
+	profile, err := mustUserProfile(c, r, w)
 	if err != nil {
 		return err
 	}
@@ -93,7 +91,6 @@ func ajaxImplVote(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		return PiError{"Vote choice should be up or down", http.StatusInternalServerError}
 	}
-	c := appengine.NewContext(r)
 	implID := String2Int(implIDStr)
 
 	vote := ImplVoteLog{
@@ -129,7 +126,7 @@ func demoSiteSuggest(lang string) string {
 	return suggestion
 }
 
-func ajaxDemoSiteSuggest(w http.ResponseWriter, r *http.Request) error {
+func ajaxDemoSiteSuggest(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	lang := r.FormValue("lang")
 	suggestion := demoSiteSuggest(lang)
 	w.Header().Set("Content-Type", "application/json")
@@ -137,7 +134,7 @@ func ajaxDemoSiteSuggest(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func typeaheadLanguages(w http.ResponseWriter, r *http.Request) error {
+func typeaheadLanguages(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	userInput := r.FormValue("userInput")
 	suggestions := LanguageAutoComplete(userInput)
 	w.Header().Set("Content-Type", "application/json")

@@ -5,10 +5,9 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // ImplCreateFacade is the Facade for the New Implementation page.
@@ -19,11 +18,10 @@ type ImplCreateFacade struct {
 	LanguageSingleSelector LanguageSingleSelector
 }
 
-func implCreate(w http.ResponseWriter, r *http.Request) error {
+func implCreate(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := appengine.NewContext(r)
-	userProfile := readUserProfile(r)
+	userProfile := readUserProfile(c, r)
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -47,7 +45,7 @@ func implCreate(w http.ResponseWriter, r *http.Request) error {
 			Toggles:               myToggles,
 			PreventIndexingRobots: true,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		Idiom:       idiom,
 		LanguageSingleSelector: LanguageSingleSelector{
 			FieldName: "impl_language",
@@ -73,9 +71,7 @@ func excludeImpl(idiom *Idiom, excludedImplID int) {
 //
 // 2015-12-23  ajax fetch deactivated because doesn't play well with escaping
 // of bubbles text.
-func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
-
-	c := appengine.NewContext(r)
+func ajaxOtherImplementations(c context.Context, w http.ResponseWriter, r *http.Request) error {
 
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
@@ -93,7 +89,7 @@ func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
 
 	myToggles := copyToggles(toggles)
 	myToggles["editing"] = true
-	userProfile := readUserProfile(r)
+	userProfile := readUserProfile(c, r)
 
 	if excludedImplID != -1 {
 		excludeImpl(idiom, excludedImplID)

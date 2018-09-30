@@ -14,11 +14,10 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
-func adminExport(w http.ResponseWriter, r *http.Request) error {
+func adminExport(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	format := "json" // TODO read FormValue
 
 	switch format {
@@ -26,15 +25,14 @@ func adminExport(w http.ResponseWriter, r *http.Request) error {
 		w.Header().Set("Content-Type", "application/octet-stream")
 		d := time.Now().Format("2006-01-02_15-04")
 		w.Header().Set("Content-Disposition", "attachment; filename=\"programming-idioms.org."+d+".json\"")
-		return exportIdiomsAsJSON(r, w, true)
+		return exportIdiomsAsJSON(c, r, w, true)
 	default:
 		return errors.New("Not implemented: " + format)
 	}
 
 }
 
-func adminImportAjax(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func adminImportAjax(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	file, fileHeader, err := r.FormFile("importData")
 	if err != nil {
 		return err
@@ -180,8 +178,7 @@ func importFromCSV(file multipart.File) ([]*Idiom, error) {
 	return idioms, nil
 }
 
-func exportIdiomsAsJSON(r *http.Request, w io.Writer, pretty bool) error {
-	c := appengine.NewContext(r)
+func exportIdiomsAsJSON(c context.Context, r *http.Request, w io.Writer, pretty bool) error {
 	_, idioms, err := dao.getAllIdioms(c, 0, "Id")
 	if err != nil {
 		return err
@@ -215,8 +212,7 @@ func exportIdiomsAsJSON(r *http.Request, w io.Writer, pretty bool) error {
 }
 
 // Not used anymore. See adminImportAjax.
-func adminImport(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func adminImport(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	var err error
 	file, fileHeader, err := r.FormFile("importData")
 	_, err = importFile(c, file, fileHeader)

@@ -5,17 +5,15 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // This screen shows, for a given language, which implementations
 // don't have a DemoURL and/or a DocumentationURL.
 
-func missingList(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func missingList(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	lang := vars["lang"]
 	lang = NormLang(lang)
@@ -56,7 +54,7 @@ func missingList(w http.ResponseWriter, r *http.Request) error {
 			PageTitle: "Idioms missing data for the " + lang + " implementation",
 			Toggles:   toggles,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		Lang:        lang,
 		Results:     results,
 	}

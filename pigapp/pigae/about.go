@@ -8,7 +8,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -36,7 +35,7 @@ type CoverageFacade struct {
 	LangImplScore map[string]int
 }
 
-func about(w http.ResponseWriter, r *http.Request) error {
+func about(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	data := AboutFacade{
 		PageMeta: PageMeta{
 			PageTitle: "About Programming-Idioms",
@@ -44,7 +43,7 @@ func about(w http.ResponseWriter, r *http.Request) error {
 			ExtraCss:  []string{hostPrefix() + themeDirectory() + "/css/docs.css"},
 			ExtraJs:   []string{hostPrefix() + themeDirectory() + "/js/pages/about.js"},
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 	}
 
 	if err := templates.ExecuteTemplate(w, "page-about", data); err != nil {
@@ -53,23 +52,21 @@ func about(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func ajaxAboutProject(w http.ResponseWriter, r *http.Request) error {
+func ajaxAboutProject(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "block-about-project", nil)
 }
 
-func ajaxAboutSeeAlso(w http.ResponseWriter, r *http.Request) error {
+func ajaxAboutSeeAlso(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "block-about-see-also", nil)
 }
 
-func ajaxAboutContact(w http.ResponseWriter, r *http.Request) error {
+func ajaxAboutContact(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "block-about-contact", nil)
 }
 
-func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
-
+func ajaxAboutAllIdioms(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	log.Debugf(c, "retrieveAllIdioms start...")
-	allIdioms, err := retrieveAllIdioms(r)
+	allIdioms, err := retrieveAllIdioms(c, r)
 	if err != nil {
 		return err
 	}
@@ -79,7 +76,7 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 		PageMeta: PageMeta{
 			Toggles: toggles,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		AllIdioms:   allIdioms,
 	}
 
@@ -91,8 +88,7 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+func ajaxAboutLanguageCoverage(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	favlangs := lookForFavoriteLanguages(r)
 
 	if len(favlangs) == 0 {
@@ -115,7 +111,7 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 		PageMeta: PageMeta{
 			Toggles: toggles,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		Coverage:    coverage,
 	}
 
@@ -136,7 +132,7 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 	return err
 }
 
-func ajaxAboutRss(w http.ResponseWriter, r *http.Request) error {
+func ajaxAboutRss(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "block-about-rss", nil)
 }
 
@@ -145,9 +141,9 @@ type AboutCheatsheetsFacade struct {
 	Langs       []string
 }
 
-func ajaxAboutCheatsheets(w http.ResponseWriter, r *http.Request) error {
+func ajaxAboutCheatsheets(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	data := AboutCheatsheetsFacade{
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		Langs:       AllLanguages(),
 	}
 	return templates.ExecuteTemplate(w, "block-about-cheatsheets", data)

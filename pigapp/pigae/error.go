@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -28,8 +28,8 @@ type ErrorFacade struct {
 	ErrorCode   int
 }
 
-func errorPage(w http.ResponseWriter, r *http.Request, err error) {
-	userProfile := readUserProfile(r)
+func errorPage(c context.Context, w http.ResponseWriter, r *http.Request, err error) {
+	userProfile := readUserProfile(c, r)
 	var text string
 	var code int
 
@@ -43,7 +43,6 @@ func errorPage(w http.ResponseWriter, r *http.Request, err error) {
 		code = http.StatusInternalServerError
 	}
 
-	c := appengine.NewContext(r)
 	log.Errorf(c, text)
 
 	data := &ErrorFacade{
@@ -63,7 +62,7 @@ func errorPage(w http.ResponseWriter, r *http.Request, err error) {
 	}
 }
 
-func errorJSON(w http.ResponseWriter, r *http.Request, err error) {
+func errorJSON(c context.Context, w http.ResponseWriter, r *http.Request, err error) {
 	var text string
 	var code int
 
@@ -77,7 +76,6 @@ func errorJSON(w http.ResponseWriter, r *http.Request, err error) {
 		code = http.StatusInternalServerError
 	}
 
-	c := appengine.NewContext(r)
 	log.Errorf(c, text)
 
 	w.WriteHeader(code)

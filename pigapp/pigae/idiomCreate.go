@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"golang.org/x/net/context"
 )
 
 // IdiomCreateFacade if the Facade for the New Idiom page.
@@ -13,7 +14,7 @@ type IdiomCreateFacade struct {
 	LanguageSingleSelector LanguageSingleSelector
 }
 
-func idiomCreate(w http.ResponseWriter, r *http.Request) error {
+func idiomCreate(c context.Context, w http.ResponseWriter, r *http.Request) error {
 	myToggles := copyToggles(toggles)
 	myToggles["editing"] = true
 
@@ -22,7 +23,7 @@ func idiomCreate(w http.ResponseWriter, r *http.Request) error {
 			PageTitle: "New Idiom",
 			Toggles:   myToggles,
 		},
-		UserProfile: readUserProfile(r),
+		UserProfile: readUserProfile(c, r),
 		LanguageSingleSelector: LanguageSingleSelector{
 			FieldName: "impl_language",
 			Selected:  "",
