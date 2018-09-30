@@ -5,12 +5,14 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"regexp"
 	"time"
 
 	"github.com/gorilla/mux"
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 // ThemeVersion is the version of the current CSS-JS theme.
@@ -197,6 +199,7 @@ func handle(path string, h betterHandler) {
 				return
 			}
 
+			// r = namespaceData(r)
 			defer func() {
 				if msg := recover(); msg != nil {
 					msgStr := fmt.Sprintf("%v", msg)
@@ -236,6 +239,7 @@ func handleAjax(path string, h betterHandler) {
 				return
 			}
 
+			// r = namespaceData(r)
 			defer func() {
 				if msg := recover(); msg != nil {
 					msgStr := fmt.Sprintf("%v", msg)
@@ -332,4 +336,32 @@ func logIf(err error, logfunc func(c context.Context, format string, args ...int
 	if err != nil {
 		logfunc(c, "Problem on %v: %v", when, err.Error())
 	}
+}
+
+// issues/86
+// Any alternative "version" of the backend, even assigned 0% traffic, poses a risk
+// of confusion of the Datastore data, the Memcache data, the Search indexes, and the
+// delayed Tasks.
+// Make sure that alternative versions can never mess up with the prod data.
+func namespaceData(r *http.Request) *http.Request {
+	c := appengine.NewContext(r)
+	const mainVersion = `1-0`
+	currentVersion := appengine.VersionID(c)
+	if currentVersion == mainVersion {
+		// 2018-09: let's say the main version is the only one with the
+		// default namespace
+		return r
+	}
+	normalizeName := func(v string) string {
+		re := regexp.MustCompile("[^0-9A-Za-z._-]")
+		return re.ReplaceAllLiteralString(v, "")
+	}
+	ns := normalizeName(currentVersion)
+	log.Debugf(c, "Namespacing to %q", ns)
+	c2, err := appengine.Namespace(c, ns)
+	if err != nil {
+		panic(fmt.Sprintf("Failed namespacing to %q", ns))
+	}
+	r2 := r.WithContext(c2)
+	return r2
 }
