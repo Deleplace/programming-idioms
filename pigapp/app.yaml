@@ -22,9 +22,9 @@ handlers:
   expiration: "364d"
   secure: always
 - url: /admin.*
-  script: _go_app
+  script: auto
   login: admin
   secure: always
 - url: /.*
-  script: _go_app
+  script: auto
   secure: always
