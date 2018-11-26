@@ -1,7 +1,4 @@
-application: programming-idioms
-version: 1-0
-runtime: go
-api_version: go1
+runtime: go111
 
 handlers:
 - url: /favicon\.ico
