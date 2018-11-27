@@ -8,7 +8,6 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
 )
 
@@ -45,7 +44,7 @@ func resaveAllIdiomHistory(c context.Context) error {
 	nbEntities := len(keys)
 
 	defer func() {
-		log.Infof(c, "Resaved %d IdiomHistory entities out of %d.", saved, nbEntities)
+		infof(c, "Resaved %d IdiomHistory entities out of %d.", saved, nbEntities)
 	}()
 
 	for len(keys) > 0 {
@@ -82,7 +81,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 
 	// Warning: fetching the whole history of 1 idiom
 	// may have quite a big memory footprint
-	log.Infof(c, "Repairing versions for idiom: %v", idiomID)
+	infof(c, "Repairing versions for idiom: %v", idiomID)
 
 	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
@@ -102,7 +101,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		histories[i].Version = 1 + i
 	}
 	lastVersion := len(histories)
-	log.Infof(c, "\tSaving %v history entities.", len(histories))
+	infof(c, "\tSaving %v history entities.", len(histories))
 	for len(historyKeys) > 0 {
 		bunch := 10
 		if len(historyKeys) < 10 {
@@ -124,9 +123,9 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	if idiom.Version == lastVersion {
-		log.Infof(c, "\tIdiom version %v already clean", idiom.Version)
+		infof(c, "\tIdiom version %v already clean", idiom.Version)
 	} else {
-		log.Infof(c, "\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
+		infof(c, "\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
 		idiom.Version = lastVersion
 		_, err = datastore.Put(c, idiomKey, &idiom)
 		if err != nil {

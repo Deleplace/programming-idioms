@@ -14,7 +14,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/log"
 )
 
 func adminExport(w http.ResponseWriter, r *http.Request) error {
@@ -75,7 +74,7 @@ func importFile(c context.Context, file multipart.File, fileHeader *multipart.Fi
 	n := 0
 	for _, idiom := range idioms {
 		if fixNewlines(idiom) {
-			log.Infof(c, "Fixed newlines in idiom #%d", idiom.Id)
+			infof(c, "Fixed newlines in idiom #%d", idiom.Id)
 		}
 		if _, err = dao.saveNewIdiom(c, idiom); err != nil {
 			return n, err

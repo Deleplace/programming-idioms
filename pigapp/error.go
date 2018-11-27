@@ -5,8 +5,6 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
-
-	"google.golang.org/appengine/log"
 )
 
 // PiError is a custom error type, which embeds a HTTP error code.
@@ -43,7 +41,7 @@ func errorPage(w http.ResponseWriter, r *http.Request, err error) {
 	}
 
 	c := r.Context()
-	log.Errorf(c, text)
+	errorf(c, text)
 
 	data := &ErrorFacade{
 		PageMeta: PageMeta{
@@ -58,7 +56,7 @@ func errorPage(w http.ResponseWriter, r *http.Request, err error) {
 	w.WriteHeader(code)
 	errt := templates.ExecuteTemplate(w, "page-error", data)
 	if errt != nil {
-		log.Errorf(c, "Problem rendering error page: %v", errt.Error())
+		errorf(c, "Problem rendering error page: %v", errt.Error())
 	}
 }
 
@@ -77,7 +75,7 @@ func errorJSON(w http.ResponseWriter, r *http.Request, err error) {
 	}
 
 	c := r.Context()
-	log.Errorf(c, text)
+	errorf(c, text)
 
 	w.WriteHeader(code)
 	fmt.Fprint(w, Response{

@@ -10,18 +10,17 @@ import (
 
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/delay"
-	"google.golang.org/appengine/log"
 )
 
 func adminReindexAjax(w http.ResponseWriter, r *http.Request) error {
 	c := r.Context()
 	err := dao.deleteCache(c)
 	if err != nil {
-		log.Warningf(c, "Problem deleting cache: %v", err.Error())
+		warningf(c, "Problem deleting cache: %v", err.Error())
 	}
 	err = dao.unindexAll(c)
 	if err != nil {
-		log.Warningf(c, "Problem deleting cache: %v", err.Error())
+		warningf(c, "Problem deleting cache: %v", err.Error())
 	}
 
 	err = reindexDelayer.Call(c, "")
@@ -43,7 +42,7 @@ func init() {
 	reindexDelayer = delay.Func("reindex-idioms", func(c context.Context, cursorStr string) error {
 		q := datastore.NewQuery("Idiom")
 		if cursorStr != "" {
-			log.Infof(c, "Starting at cursor %v", cursorStr)
+			infof(c, "Starting at cursor %v", cursorStr)
 			cursor, err := datastore.DecodeCursor(cursorStr)
 			if err != nil {
 				return err
@@ -54,14 +53,14 @@ func init() {
 
 		reindexedIDs := make([]int, 0, reindexBatchSize)
 		defer func() {
-			log.Infof(c, "Reindexed idioms %v", reindexedIDs)
+			infof(c, "Reindexed idioms %v", reindexedIDs)
 		}()
 
 		for i := 0; i < reindexBatchSize; i++ {
 			var idiom Idiom
 			key, err := iterator.Next(&idiom)
 			if err == datastore.Done {
-				log.Infof(c, "Reindexing completed.")
+				infof(c, "Reindexing completed.")
 				return nil
 			} else if err != nil {
 				// ouch :(
@@ -70,11 +69,11 @@ func init() {
 
 			err = indexIdiomFullText(c, &idiom, key)
 			if err != nil {
-				log.Errorf(c, "Reindexing full text idiom %d : %v", idiom.Id, err)
+				errorf(c, "Reindexing full text idiom %d : %v", idiom.Id, err)
 			}
 			err = indexIdiomCheatsheets(c, &idiom)
 			if err != nil {
-				log.Errorf(c, "Reindexing cheatsheet of idiom %d : %v", idiom.Id, err)
+				errorf(c, "Reindexing cheatsheet of idiom %d : %v", idiom.Id, err)
 			}
 
 			reindexedIDs = append(reindexedIDs, idiom.Id)
@@ -85,7 +84,7 @@ func init() {
 			// ouch :(
 			return err
 		}
-		log.Infof(c, "Stopping at cursor %v", cursor.String())
+		infof(c, "Stopping at cursor %v", cursor.String())
 		reindexDelayer.Call(c, cursor.String())
 		return nil
 	})

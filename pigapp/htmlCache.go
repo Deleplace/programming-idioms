@@ -11,7 +11,6 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/delay"
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
 	"google.golang.org/appengine/taskqueue"
 )
@@ -64,15 +63,15 @@ func htmlCacheZipRead(c context.Context, key string) []byte {
 	zipbuffer := bytes.NewBuffer(zipdata)
 	zipreader, err := gzip.NewReader(zipbuffer)
 	if err != nil {
-		log.Errorf(c, "Reading zip memcached entry %q: %v", key, err)
+		errorf(c, "Reading zip memcached entry %q: %v", key, err)
 		// Ignore failure
 		return nil
 	}
 	buffer, err := ioutil.ReadAll(zipreader)
 	if err != nil {
-		log.Errorf(c, "Reading zip memcached entry %q: %v", key, err)
+		errorf(c, "Reading zip memcached entry %q: %v", key, err)
 	}
-	log.Debugf(c, "Reading %d bytes out of %d gzip bytes for entry %q", len(buffer), len(zipdata), key)
+	debugf(c, "Reading %d bytes out of %d gzip bytes for entry %q", len(buffer), len(zipdata), key)
 	return buffer
 }
 
@@ -82,12 +81,12 @@ func htmlCacheZipWrite(c context.Context, key string, data []byte, duration time
 	zipwriter := gzip.NewWriter(&zipbuffer)
 	_, err := zipwriter.Write(data)
 	if err != nil {
-		log.Errorf(c, "Writing zip memcached entry %q: %v", key, err)
+		errorf(c, "Writing zip memcached entry %q: %v", key, err)
 		// Ignore failure
 		return
 	}
 	_ = zipwriter.Close()
-	log.Debugf(c, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), len(data), key)
+	debugf(c, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), len(data), key)
 	htmlCacheWrite(c, key, zipbuffer.Bytes(), duration)
 }
 
@@ -95,7 +94,7 @@ func htmlUncacheIdiomAndImpls(c context.Context, idiom *Idiom) {
 	//
 	// There are only two hard things in Computer Science: cache invalidation and naming things.
 	//
-	log.Infof(c, "Evicting HTML cached pages for idiom %d %q", idiom.Id, idiom.Title)
+	infof(c, "Evicting HTML cached pages for idiom %d %q", idiom.Id, idiom.Title)
 
 	cachekeys := make([]string, 0, 1+len(idiom.Implementations))
 	cachekeys = append(cachekeys, NiceIdiomRelativeURL(idiom))
@@ -104,14 +103,14 @@ func htmlUncacheIdiomAndImpls(c context.Context, idiom *Idiom) {
 	}
 	err := memcache.DeleteMulti(c, cachekeys)
 	if err != nil {
-		// log.Errorf(c, "Uncaching idiom %d: %v", idiom.Id, err)
+		// errorf(c, "Uncaching idiom %d: %v", idiom.Id, err)
 		// A lot of impl HTML paages won't be in cache, which will cause
 		// en error. Never mind, just ignore.
 	}
 }
 
 func htmlRecacheNowAndTomorrow(c context.Context, idiomID int) error {
-	log.Debugf(c, "Creating html recache tasks for idiom %d", idiomID)
+	debugf(c, "Creating html recache tasks for idiom %d", idiomID)
 	// These 2 task submissions may take several 10s of ms,
 	// thus we decide to submit them as a small batch.
 
@@ -136,10 +135,10 @@ var recacheHtmlIdiom, recacheHtmlImpl *delay.Function
 
 func init() {
 	recacheHtmlIdiom = delay.Func("recache-html-idiom", func(c context.Context, idiomID int) {
-		log.Infof(c, "Start recaching HTML for idiom %d", idiomID)
+		infof(c, "Start recaching HTML for idiom %d", idiomID)
 		_, idiom, err := dao.getIdiom(c, idiomID)
 		if err != nil {
-			log.Errorf(c, "recacheHtmlIdiom: %v", err)
+			errorf(c, "recacheHtmlIdiom: %v", err)
 			return
 		}
 
@@ -151,7 +150,7 @@ func init() {
 		}
 		err = generateIdiomDetailPage(c, &buffer, vars)
 		if err != nil {
-			log.Errorf(c, "recacheHtmlIdiom: %v", err)
+			errorf(c, "recacheHtmlIdiom: %v", err)
 			return
 		}
 		htmlCacheWrite(c, path, buffer.Bytes(), 24*time.Hour)
@@ -172,7 +171,7 @@ func init() {
 		implID int,
 		implLang string,
 	) {
-		log.Infof(c, "Recaching HTML for %s", implPath)
+		infof(c, "Recaching HTML for %s", implPath)
 		// TODO call idiomDetail(fakeWriter, fakeRequest)
 
 		var buffer bytes.Buffer
@@ -184,7 +183,7 @@ func init() {
 		}
 		err := generateIdiomDetailPage(c, &buffer, vars)
 		if err != nil {
-			log.Errorf(c, "recacheHtmlImpl: %v", err)
+			errorf(c, "recacheHtmlImpl: %v", err)
 			return
 		}
 		htmlCacheWrite(c, implPath, buffer.Bytes(), 24*time.Hour)

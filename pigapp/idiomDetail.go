@@ -11,8 +11,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
-
-	"google.golang.org/appengine/log"
 )
 
 // IdiomDetailFacade is the Facade for the Idiom Detail page.
@@ -37,11 +35,11 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		path := r.URL.RequestURI()
 		if cachedPage := htmlCacheRead(c, path); cachedPage != nil {
 			// Using the whole HTML block from Memcache
-			log.Debugf(c, "%s from memcache!", path)
+			debugf(c, "%s from memcache!", path)
 			_, err := w.Write(cachedPage)
 			return err
 		}
-		log.Debugf(c, "%s not in memcache.", path)
+		debugf(c, "%s not in memcache.", path)
 
 		var buffer bytes.Buffer
 		err := generateIdiomDetailPage(c, &buffer, vars)
@@ -111,7 +109,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	includeNonFav := seeNonFavorite(r)
-	log.Debugf(c, "Reorder impls start...")
+	debugf(c, "Reorder impls start...")
 	implFavoriteLanguagesFirstWithOrder(idiom, favlangs, selectedImplLang, includeNonFav)
 
 	// Selected impl as very first element
@@ -124,7 +122,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			break
 		}
 	}
-	log.Debugf(c, "Reorder impls end.")
+	debugf(c, "Reorder impls end.")
 
 	implLangInURL := vars["implLang"]
 	if implLangInURL != "" && strings.ToLower(selectedImplLang) != strings.ToLower(implLangInURL) {
@@ -135,9 +133,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	log.Debugf(c, "Decorate with votes start...")
+	debugf(c, "Decorate with votes start...")
 	daoVotes.decorateIdiom(c, idiom, userProfile.Nickname)
-	log.Debugf(c, "Decorate with votes end.")
+	debugf(c, "Decorate with votes end.")
 
 	pageTitle := idiom.Title
 	if selectedImplLang != "" {
@@ -163,9 +161,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		SelectedImplLang: selectedImplLang,
 	}
 
-	log.Debugf(c, "ExecuteTemplate start...")
+	debugf(c, "ExecuteTemplate start...")
 	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
-	log.Debugf(c, "ExecuteTemplate end.")
+	debugf(c, "ExecuteTemplate end.")
 	return err
 }
 
@@ -253,9 +251,9 @@ func generateIdiomDetailPage(c context.Context, w io.Writer, vars map[string]str
 		SelectedImplLang: selectedImplLang,
 	}
 
-	log.Debugf(c, "ExecuteTemplate start...")
+	debugf(c, "ExecuteTemplate start...")
 	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
-	log.Debugf(c, "ExecuteTemplate end.")
+	debugf(c, "ExecuteTemplate end.")
 	return err
 }
 

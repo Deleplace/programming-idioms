@@ -8,7 +8,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/log"
 )
 
 // ApplicationConfig is a global configuration container.
@@ -52,21 +51,21 @@ func refreshToggles(c context.Context) error {
 		// Nothing in Memcache, nothing in Datastore!
 		// Then, init default (hard-coded) toggle values and persist them.
 		initToggles()
-		log.Infof(c, "Saving default Toggles to Datastore...")
+		infof(c, "Saving default Toggles to Datastore...")
 		err := dao.saveAppConfig(c, ApplicationConfig{Id: 0, Toggles: toggles})
 		if err == nil {
-			log.Infof(c, "Default Toggles saved to Datastore.")
+			infof(c, "Default Toggles saved to Datastore.")
 			configTime = time.Now().Format("2006-01-02_15-04")
 		}
 		return err
 	}
 	if err != nil {
-		log.Errorf(c, "Error while loading ApplicationConfig from datastore: %v", err)
+		errorf(c, "Error while loading ApplicationConfig from datastore: %v", err)
 		return err
 	}
 	toggles = appConfig.Toggles
 	configTime = time.Now().Format("2006-01-02_15-04")
-	log.Infof(c, "Updated Toggles from memcached or datastore\n")
+	infof(c, "Updated Toggles from memcached or datastore\n")
 	// _ = appConfig
 
 	return err

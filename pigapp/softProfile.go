@@ -9,7 +9,6 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/user"
 )
 
@@ -53,7 +52,7 @@ func readUserProfile(r *http.Request) UserProfile {
 	}
 	if u.Nickname != "" || len(u.FavoriteLanguages) > 0 {
 		c := r.Context()
-		log.Infof(c, "%v", u)
+		infof(c, "%v", u)
 	}
 	return u
 }

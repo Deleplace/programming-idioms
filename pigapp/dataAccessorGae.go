@@ -12,7 +12,6 @@ import (
 	"google.golang.org/appengine/blobstore"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/delay"
-	"google.golang.org/appengine/log"
 )
 
 // GaeDatastoreAccessor is a dataAccessor that works on the Google App Engine Datastore
@@ -101,7 +100,7 @@ func (a *GaeDatastoreAccessor) revert(c context.Context, idiomID int, version in
 	if histories[0].Version != version {
 		return nil, PiError{ErrorText: fmt.Sprintf("Can't revert idiom %v: last version is not %v", idiomID, version), Code: 400}
 	}
-	log.Infof(c, "Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
+	infof(c, "Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
 	idiomKey := newIdiomKey(c, idiomID)
 	idiom := &histories[1].Idiom
 	_, err = datastore.Put(c, idiomKey, idiom)
@@ -147,7 +146,7 @@ func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, ve
 	}
 	currentVersion := idiom.Version
 	newVersion := idiom.Version + 1
-	log.Infof(c, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
+	infof(c, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
 
 	historyIdiom.Version = currentVersion // will be incremented
 	historyIdiom.EditSummary = fmt.Sprintf("Restored version %v", version)
@@ -172,7 +171,7 @@ var historyDelayer = delay.Func("save-history-item", func(c context.Context, idi
 	if err != nil {
 		return err
 	}
-	log.Infof(c, "Saving history for idiom %d %q", historyItem.Idiom.Id, historyItem.Idiom.Title)
+	infof(c, "Saving history for idiom %d %q", historyItem.Idiom.Id, historyItem.Idiom.Title)
 	historyItem.ComputeIdiomOrImplLastEditor()
 	// Saves a new IdiomHistory entity. This causes no contention on the original Idiom entity.
 	_, err = datastore.Put(c, newHistoryKey(c), &historyItem)
@@ -315,7 +314,7 @@ func (a *GaeDatastoreAccessor) deleteIdiom(c context.Context, idiomID int, why s
 	// Remove from text search index
 	err = a.unindex(c, idiomID)
 	if err != nil {
-		log.Errorf(c, "Failed to unindex idiom %d: %v", idiomID, err)
+		errorf(c, "Failed to unindex idiom %d: %v", idiomID, err)
 	}
 	return datastore.Delete(c, key)
 	// The why param is ignored for now, because idiom doesn't exist anymore.
@@ -639,7 +638,7 @@ func (a *GaeDatastoreAccessor) getMessagesForUser(c context.Context, username st
 	}
 	_, err = datastore.PutMulti(c, keys, messages)
 	if err != nil {
-		log.Warningf(c, "Could not save messages view dates: %v", err)
+		warningf(c, "Could not save messages view dates: %v", err)
 	}
 
 	return keys, messages, err

@@ -11,7 +11,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/log"
 )
 
 //
@@ -121,7 +120,7 @@ func matchingImplPromise(c context.Context, words, typedLangs []string) chan map
 		if err == nil {
 			ch <- matchingImplIDs
 		} else {
-			log.Errorf(c, "problem fetching impl highlights: %v", err)
+			errorf(c, "problem fetching impl highlights: %v", err)
 			ch <- map[string]bool{}
 		}
 		close(ch)

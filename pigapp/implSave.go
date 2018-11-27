@@ -7,8 +7,6 @@ import (
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
-
-	"google.golang.org/appengine/log"
 )
 
 func implSave(w http.ResponseWriter, r *http.Request) error {
@@ -56,7 +54,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	log.Infof(c, "[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
+	infof(c, "[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
 
 	if !StringSliceContains(AllLanguages(), language) {
 		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs), http.StatusBadRequest}
@@ -143,7 +141,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	log.Infof(c, "[%v] is updating impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+	infof(c, "[%v] is updating impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
 
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
@@ -174,10 +172,10 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		impl.Protected = r.FormValue("impl_protected") != ""
 
 		if wasProtected && !impl.Protected {
-			log.Infof(c, "[%v] unprotects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+			infof(c, "[%v] unprotects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
 		}
 		if !wasProtected && impl.Protected {
-			log.Infof(c, "[%v] protects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+			infof(c, "[%v] protects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
 		}
 	}
 

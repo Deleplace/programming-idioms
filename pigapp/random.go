@@ -8,8 +8,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine/log"
 )
 
 func randomIdiom(w http.ResponseWriter, r *http.Request) error {
@@ -22,7 +20,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		// Not found (or Memcache failed)
 		// Let's fetch in the Datastore
-		log.Infof(c, "Fetching all idiom titles from Datastore")
+		infof(c, "Fetching all idiom titles from Datastore")
 		idiomHeads, err := dao.getAllIdiomTitles(c)
 		if err != nil {
 			return err
@@ -33,18 +31,18 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		}
 		err = dao.cacheValue(c, "all-idioms-urls", urls, 24*time.Hour)
 		if err != nil {
-			log.Errorf(c, "Failed idioms URLs list in Memcache: %v", err)
+			errorf(c, "Failed idioms URLs list in Memcache: %v", err)
 		}
 	}
 	k := rand.Intn(len(urls))
 	url := urls[k]
 	// Note that we're redirecting to a *relative* URL
-	log.Infof(c, "Picked idiom url %s (out of %d)", url, len(urls))
+	infof(c, "Picked idiom url %s (out of %d)", url, len(urls))
 
 	// TODO when AppEngine has Go1.8:
 	// if pusher, ok := w.(http.Pusher); ok {
 	// 	if err := pusher.Push(url, nil); err != nil {
-	// 		log.Errorf("Failed to push %s: %v", url, err)
+	// 		errorf("Failed to push %s: %v", url, err)
 	// 	}
 	// }
 
@@ -67,7 +65,7 @@ func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
 	var url string
 	var err error
 
-	log.Infof(c, "Going to a random idiom having lang %v", havingLang)
+	infof(c, "Going to a random idiom having lang %v", havingLang)
 	_, idiom, err = dao.randomIdiomHaving(c, havingLang)
 	if err != nil {
 		return err
@@ -79,7 +77,7 @@ func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	log.Infof(c, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
+	infof(c, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }
@@ -99,14 +97,14 @@ func randomIdiomNotHaving(w http.ResponseWriter, r *http.Request) error {
 	var url string
 	var err error
 
-	log.Infof(c, "Going to a random idiom having lang %v", notHavingLang)
+	infof(c, "Going to a random idiom having lang %v", notHavingLang)
 	_, idiom, err = dao.randomIdiomNotHaving(c, notHavingLang)
 	if err != nil {
 		return err
 	}
 	url = NiceIdiomURL(idiom)
 
-	log.Infof(c, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
+	infof(c, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }

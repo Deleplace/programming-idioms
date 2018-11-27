@@ -8,7 +8,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/user"
 )
 
@@ -108,7 +107,7 @@ func sendMessageForUserAjax(w http.ResponseWriter, r *http.Request) error {
 		Message:      r.FormValue("message"),
 		CreationDate: time.Now(),
 	}
-	log.Infof(c, "Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
+	infof(c, "Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
 	_, err := dao.saveNewMessage(c, &msg)
 	if err != nil {
 		return err

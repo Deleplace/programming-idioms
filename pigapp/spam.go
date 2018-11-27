@@ -8,8 +8,6 @@ import (
 	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
-
-	"google.golang.org/appengine/log"
 )
 
 // Bad stuff started 2015-10...
@@ -47,7 +45,7 @@ func isSpam(w http.ResponseWriter, r *http.Request) (busted bool) {
 	defer func() {
 		if busted {
 			c := r.Context()
-			log.Infof(c, "Detected spammer %v : %v", ip, motive)
+			infof(c, "Detected spammer %v : %v", ip, motive)
 			// Let's return a nice 200 ... nothing to see here
 			fmt.Fprintln(w, "<html><body>This site is under construction</body></html>")
 		}
