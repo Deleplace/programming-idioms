@@ -3,8 +3,8 @@ package main
 import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
+	"cloud.google.com/go/datastore"
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/datastore"
 )
 
 // GaeVotesAccessor is a votesAccessor designed for the Google App Engine Datastore.
@@ -53,13 +53,13 @@ func (va GaeVotesAccessor) implVote(c context.Context, vote ImplVoteLog, nicknam
 // This ancestor (voting booth) is specific to a nickname.
 // Thus it should not lead to much contention.
 func (va GaeVotesAccessor) createVoteIdiomLogNicknameAncestorKey(c context.Context, nickname string) (key *datastore.Key) {
-	return datastore.NewKey(c, "IdiomVoteLog", nickname, 0, nil)
+	return datastore.NameKey("IdiomVoteLog", nickname, nil)
 }
 
 func (va GaeVotesAccessor) getIdiomVotes(c context.Context, nickname string) (keys []*datastore.Key, votes []*IdiomVoteLog, err error) {
 	q := datastore.NewQuery("IdiomVoteLog").Ancestor(va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
 	votes = make([]*IdiomVoteLog, 0, 1)
-	keys, err = q.GetAll(c, &votes)
+	keys, err = ds.GetAll(c, q, &votes)
 	if err != nil {
 		return keys, votes, err
 	}
@@ -70,7 +70,7 @@ func (va GaeVotesAccessor) getIdiomVote(c context.Context, nickname string, idio
 	q := datastore.NewQuery("IdiomVoteLog").Ancestor(va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
 	q = q.Filter("IdiomId = ", idiomID)
 	votes := make([]*IdiomVoteLog, 0, 1)
-	keys, err := q.GetAll(c, &votes)
+	keys, err := ds.GetAll(c, q, &votes)
 	if err != nil {
 		return key, vote, err
 	}
@@ -87,7 +87,7 @@ func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c context.Context, vote IdiomVo
 	}
 	if existing != nil {
 		// Well, this means the user has decided to click it again, it order to take back her vote
-		err = datastore.Delete(c, key)
+		err = ds.Delete(c, key)
 		if err == nil {
 			delta = -existing.Value
 			storedVote = nil
@@ -95,8 +95,8 @@ func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c context.Context, vote IdiomVo
 			storedVote = existing
 		}
 	} else {
-		key = datastore.NewIncompleteKey(c, "IdiomVoteLog", va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
-		key, err = datastore.Put(c, key, &vote)
+		key = datastore.IncompleteKey("IdiomVoteLog", va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
+		key, err = ds.Put(c, key, &vote)
 		if err == nil {
 			delta = vote.Value
 			storedVote = &vote
@@ -108,13 +108,13 @@ func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c context.Context, vote IdiomVo
 // This ancestor (voting booth) is specific to a nickname.
 // Thus it should not lead to much contention.
 func (va GaeVotesAccessor) createVoteImplLogNicknameAncestorKey(c context.Context, nickname string) (key *datastore.Key) {
-	return datastore.NewKey(c, "ImplVoteLog", nickname, 0, nil)
+	return datastore.NameKey("ImplVoteLog", nickname, nil)
 }
 
 func (va GaeVotesAccessor) getImplVotes(c context.Context, nickname string) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
 	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
 	votes = make([]*ImplVoteLog, 0, 1)
-	keys, err = q.GetAll(c, &votes)
+	keys, err = ds.GetAll(c, q, &votes)
 	if err != nil {
 		return keys, votes, err
 	}
@@ -125,7 +125,7 @@ func (va GaeVotesAccessor) getImplVote(c context.Context, nickname string, implI
 	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
 	q = q.Filter("ImplId = ", implID)
 	votes := make([]*ImplVoteLog, 0, 1)
-	keys, err := q.GetAll(c, &votes)
+	keys, err := ds.GetAll(c, q, &votes)
 	if err != nil {
 		return key, vote, err
 	}
@@ -138,7 +138,7 @@ func (va GaeVotesAccessor) getImplVote(c context.Context, nickname string, implI
 func (va GaeVotesAccessor) getImplVotesForIdiom(c context.Context, nickname string, idiomID int) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
 	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
 	q = q.Filter("IdiomId = ", idiomID)
-	keys, err = q.GetAll(c, &votes)
+	keys, err = ds.GetAll(c, q, &votes)
 	return
 }
 
@@ -149,7 +149,7 @@ func (va GaeVotesAccessor) saveImplVoteOrRemove(c context.Context, vote ImplVote
 	}
 	if existing != nil {
 		// Well, this means the user has decided to click it again, it order to take back her vote
-		err = datastore.Delete(c, key)
+		err = ds.Delete(c, key)
 		if err == nil {
 			delta = -existing.Value
 			storedVote = nil
@@ -157,8 +157,8 @@ func (va GaeVotesAccessor) saveImplVoteOrRemove(c context.Context, vote ImplVote
 			storedVote = existing
 		}
 	} else {
-		key = datastore.NewIncompleteKey(c, "ImplVoteLog", va.createVoteImplLogNicknameAncestorKey(c, nickname))
-		key, err = datastore.Put(c, key, &vote)
+		key = datastore.IncompleteKey("ImplVoteLog", va.createVoteImplLogNicknameAncestorKey(c, nickname))
+		key, err = ds.Put(c, key, &vote)
 		if err == nil {
 			delta = vote.Value
 			storedVote = &vote
