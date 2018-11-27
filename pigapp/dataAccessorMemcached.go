@@ -10,7 +10,6 @@ import (
 
 	"cloud.google.com/go/datastore"
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
 )
 
@@ -248,7 +247,7 @@ func (a *MemcacheDatastoreAccessor) getIdiom(c context.Context, idiomID int) (*d
 		key, idiom, err := a.GaeDatastoreAccessor.getIdiom(c, idiomID)
 		if err == nil {
 			err2 := a.recacheIdiom(c, key, idiom, false)
-			logIf(err2, log.Errorf, c, "recaching idiom")
+			logIf(err2, errorf, c, "recaching idiom")
 		}
 		return key, idiom, err
 	}
@@ -272,7 +271,7 @@ func (a *MemcacheDatastoreAccessor) getIdiomByImplID(c context.Context, implID i
 		key, idiom, err := a.GaeDatastoreAccessor.getIdiomByImplID(c, implID)
 		if err == nil {
 			err2 := a.cacheKeyValue(c, cacheKey, key, idiom, 24*time.Hour)
-			logIf(err2, log.Errorf, c, "caching idiom")
+			logIf(err2, errorf, c, "caching idiom")
 		}
 		return key, idiom, err
 	}
@@ -287,7 +286,7 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom
 	key, err := a.GaeDatastoreAccessor.saveNewIdiom(c, idiom)
 	if err == nil {
 		err2 := a.recacheIdiom(c, key, idiom, false)
-		logIf(err2, log.Errorf, c, "saving new idiom")
+		logIf(err2, errorf, c, "saving new idiom")
 	}
 	htmlCacheEvict(c, "about-block-language-coverage")
 	return key, err
@@ -304,7 +303,7 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *da
 	if err == nil {
 		infof(c, "Saved idiom #%v, version %v", idiom.Id, idiom.Version)
 		err2 := a.recacheIdiom(c, key, idiom, false)
-		logIf(err2, log.Errorf, c, "saving existing idiom")
+		logIf(err2, errorf, c, "saving existing idiom")
 	}
 	htmlCacheEvict(c, "about-block-language-coverage")
 	return err
@@ -313,14 +312,14 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(c context.Context, key *da
 func (a *MemcacheDatastoreAccessor) stealthIncrementIdiomRating(c context.Context, idiomID int, delta int) (*datastore.Key, *Idiom, error) {
 	key, idiom, err := a.GaeDatastoreAccessor.stealthIncrementIdiomRating(c, idiomID, delta)
 	err2 := a.recacheIdiom(c, key, idiom, true)
-	logIf(err2, log.Errorf, c, "updating idiom rating")
+	logIf(err2, errorf, c, "updating idiom rating")
 	return key, idiom, err
 }
 
 func (a *MemcacheDatastoreAccessor) stealthIncrementImplRating(c context.Context, idiomID, implID int, delta int) (key *datastore.Key, idiom *Idiom, newImplRating int, err error) {
 	key, idiom, newImplRating, err = a.GaeDatastoreAccessor.stealthIncrementImplRating(c, idiomID, implID, delta)
 	err2 := a.recacheIdiom(c, key, idiom, true)
-	logIf(err2, log.Errorf, c, "updating impl rating")
+	logIf(err2, errorf, c, "updating impl rating")
 	return
 }
 
@@ -340,7 +339,7 @@ func (a *MemcacheDatastoreAccessor) getAllIdioms(c context.Context, limit int, o
 			//a.cachePair(c, cacheKey, keys, idioms, 10*time.Minute)
 			// For now, it might mange too often
 			err2 := a.cachePair(c, cacheKey, keys, idioms, 30*time.Second)
-			logIf(err2, log.Errorf, c, "caching all idioms")
+			logIf(err2, errorf, c, "caching all idioms")
 		}
 		return keys, idioms, err
 	}
@@ -373,7 +372,7 @@ func (a *MemcacheDatastoreAccessor) deleteIdiom(c context.Context, idiomID int, 
 	_, idiom, err := a.GaeDatastoreAccessor.getIdiom(c, idiomID)
 	if err == nil {
 		err2 := a.uncacheIdiom(c, idiom)
-		logIf(err2, log.Errorf, c, "deleting idiom")
+		logIf(err2, errorf, c, "deleting idiom")
 	} else {
 		errorf(c, "Failed to load idiom %d to uncache: %v", idiomID, err)
 	}
@@ -387,7 +386,7 @@ func (a *MemcacheDatastoreAccessor) deleteImpl(c context.Context, idiomID int, i
 	_, idiom, err := a.GaeDatastoreAccessor.getIdiom(c, idiomID)
 	if err == nil {
 		err2 := a.uncacheIdiom(c, idiom)
-		logIf(err2, log.Errorf, c, "deleting impl")
+		logIf(err2, errorf, c, "deleting impl")
 	}
 
 	// Delete in datastore
@@ -420,7 +419,7 @@ func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(c context.Context, langs
 		if err == nil {
 			// Search results will have a 10mn lag after an idiom/impl creation/update.
 			err2 := a.cacheValue(c, cacheKey, idioms, 10*time.Minute)
-			logIf(err2, log.Errorf, c, "caching search results by langs")
+			logIf(err2, errorf, c, "caching search results by langs")
 		}
 		return idioms, err
 	}
@@ -444,7 +443,7 @@ func (a *MemcacheDatastoreAccessor) recentIdioms(c context.Context, favoriteLang
 		if err == nil {
 			// "Popular idioms" will have a 10mn lag after an idiom/impl creation.
 			err2 := a.cacheValue(c, cacheKey, idioms, 10*time.Minute)
-			logIf(err2, log.Errorf, c, "caching recent idioms")
+			logIf(err2, errorf, c, "caching recent idioms")
 		}
 		return idioms, err
 	}
@@ -468,7 +467,7 @@ func (a *MemcacheDatastoreAccessor) popularIdioms(c context.Context, favoriteLan
 		if err == nil {
 			// "Popular idioms" will have a 10mn lag after an idiom/impl creation.
 			err2 := a.cacheValue(c, cacheKey, idioms, 10*time.Minute)
-			logIf(err2, log.Errorf, c, "caching popular idioms")
+			logIf(err2, errorf, c, "caching popular idioms")
 		}
 		return idioms, err
 	}
@@ -497,7 +496,7 @@ func (a *MemcacheDatastoreAccessor) getAppConfig(c context.Context) (Application
 		if err == nil {
 			infof(c, "Retrieved ApplicationConfig (Toggles) from Datastore")
 			err2 := a.cacheValue(c, cacheKey, appConfig, 24*time.Hour)
-			logIf(err2, log.Errorf, c, "caching app config")
+			logIf(err2, errorf, c, "caching app config")
 		}
 		return appConfig, err
 	}
@@ -534,7 +533,7 @@ func (a *MemcacheDatastoreAccessor) revert(c context.Context, idiomID int, versi
 		return idiom, err
 	}
 	err2 := a.uncacheIdiom(c, idiom)
-	logIf(err2, log.Errorf, c, "uncaching idiom")
+	logIf(err2, errorf, c, "uncaching idiom")
 	return idiom, err
 }
 
@@ -547,7 +546,7 @@ func (a *MemcacheDatastoreAccessor) historyRestore(c context.Context, idiomID in
 	if err != nil {
 		return idiom, err
 	}
-	logIf(errUCI, log.Errorf, c, "uncaching idiom")
+	logIf(errUCI, errorf, c, "uncaching idiom")
 	return idiom, err
 }
 
@@ -579,7 +578,7 @@ func (a *MemcacheDatastoreAccessor) getMessagesForUser(c context.Context, userna
 		keys, messages, err := a.GaeDatastoreAccessor.getMessagesForUser(c, username)
 		if err == nil {
 			err2 := a.cachePair(c, cacheKey, keys, messages, 2*time.Hour)
-			logIf(err2, log.Errorf, c, "caching user messages")
+			logIf(err2, errorf, c, "caching user messages")
 		}
 		return keys, messages, err
 	}
