@@ -10,11 +10,7 @@ func init() {
 	log.SetFlags(0)
 }
 
-func debugf(c context.Context, msg string, args ...interface{}) {
-	infof(c, msg, args...)
-}
-
-func infof(c context.Context, msg string, args ...interface{}) {
+func logf(c context.Context, level, msg string, args ...interface{}) {
 	// "cloud.google.com/go/logging" doesn't work yet?
 	// Actually it logs under "Google Project", not under "GAE Application"
 
@@ -34,13 +30,21 @@ func infof(c context.Context, msg string, args ...interface{}) {
 	// logger := client.Logger(logName).StandardLogger(logging.Info)
 	// logger.Printf(msg, args...)
 
-	log.Printf(msg, args...)
+	log.Printf(level+" "+msg, args...)
+}
+
+func debugf(c context.Context, msg string, args ...interface{}) {
+	logf(c, "DEBUG", msg, args...)
+}
+
+func infof(c context.Context, msg string, args ...interface{}) {
+	logf(c, "INFO", msg, args...)
 }
 
 func warningf(c context.Context, msg string, args ...interface{}) {
-	infof(c, msg, args...)
+	logf(c, "WARN", msg, args...)
 }
 
 func errorf(c context.Context, msg string, args ...interface{}) {
-	infof(c, msg, args...)
+	logf(c, "ERROR", msg, args...)
 }
