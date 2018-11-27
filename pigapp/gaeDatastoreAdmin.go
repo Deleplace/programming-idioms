@@ -6,8 +6,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
+	"cloud.google.com/go/datastore"
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/memcache"
 )
 
@@ -37,7 +37,8 @@ func adminResaveEntities(w http.ResponseWriter, r *http.Request) error {
 func resaveAllIdiomHistory(c context.Context) error {
 	defer memcache.Flush(c)
 	saved := 0
-	keys, err := datastore.NewQuery("IdiomHistory").KeysOnly().GetAll(c, nil)
+	q := datastore.NewQuery("IdiomHistory").KeysOnly()
+	keys, err := ds.GetAll(c, q, nil)
 	if err != nil {
 		return err
 	}
@@ -53,11 +54,11 @@ func resaveAllIdiomHistory(c context.Context) error {
 			bunch = len(keys)
 		}
 		histories := make([]*IdiomHistory, bunch)
-		err := datastore.GetMulti(c, keys[:bunch], histories)
+		err := ds.GetMulti(c, keys[:bunch], histories)
 		if err != nil {
 			return err
 		}
-		_, err = datastore.PutMulti(c, keys[:bunch], histories)
+		_, err = ds.PutMulti(c, keys[:bunch], histories)
 		if err != nil {
 			return err
 		}
@@ -87,7 +88,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		Filter("Id =", idiomID).
 		Order("VersionDate")
 	histories := make([]*IdiomHistory, 0)
-	historyKeys, err := q.GetAll(c, &histories)
+	historyKeys, err := ds.GetAll(c, q, &histories)
 	if err != nil {
 		return err
 	}
@@ -107,7 +108,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		if len(historyKeys) < 10 {
 			bunch = len(historyKeys)
 		}
-		_, err = datastore.PutMulti(c, historyKeys[:bunch], histories[:bunch])
+		_, err = ds.PutMulti(c, historyKeys[:bunch], histories[:bunch])
 		if err != nil {
 			return err
 		}
@@ -118,7 +119,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 
 	var idiom Idiom
 	idiomKey := newIdiomKey(c, idiomID)
-	err = datastore.Get(c, idiomKey, &idiom)
+	err = ds.Get(c, idiomKey, &idiom)
 	if err != nil {
 		return err
 	}
@@ -127,7 +128,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		infof(c, "\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
 		idiom.Version = lastVersion
-		_, err = datastore.Put(c, idiomKey, &idiom)
+		_, err = ds.Put(c, idiomKey, &idiom)
 		if err != nil {
 			return err
 		}

@@ -8,8 +8,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
+	"cloud.google.com/go/datastore"
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
 )

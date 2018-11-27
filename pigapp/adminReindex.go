@@ -8,7 +8,8 @@ import (
 
 	"golang.org/x/net/context"
 
-	"google.golang.org/appengine/datastore"
+	"cloud.google.com/go/datastore"
+	"google.golang.org/api/iterator"
 	"google.golang.org/appengine/delay"
 )
 
@@ -49,7 +50,7 @@ func init() {
 			}
 			q = q.Start(cursor)
 		}
-		iterator := q.Run(c)
+		idiomIterator := ds.Run(c, q)
 
 		reindexedIDs := make([]int, 0, reindexBatchSize)
 		defer func() {
@@ -58,8 +59,8 @@ func init() {
 
 		for i := 0; i < reindexBatchSize; i++ {
 			var idiom Idiom
-			key, err := iterator.Next(&idiom)
-			if err == datastore.Done {
+			key, err := idiomIterator.Next(&idiom)
+			if err == iterator.Done {
 				infof(c, "Reindexing completed.")
 				return nil
 			} else if err != nil {
@@ -79,7 +80,7 @@ func init() {
 			reindexedIDs = append(reindexedIDs, idiom.Id)
 		}
 
-		cursor, err := iterator.Cursor()
+		cursor, err := idiomIterator.Cursor()
 		if err != nil {
 			// ouch :(
 			return err
