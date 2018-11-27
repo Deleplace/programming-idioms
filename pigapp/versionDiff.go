@@ -8,8 +8,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // VersionDiffFacade is the Facade for the Diff page.
@@ -26,7 +24,7 @@ type VersionDiffFacade struct {
 func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)

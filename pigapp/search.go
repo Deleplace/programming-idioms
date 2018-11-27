@@ -11,7 +11,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -47,7 +46,7 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	userProfile := readUserProfile(r)
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	q := vars["q"]
 	//q := url.QueryUnescape(q)  Not needed, so it seems.
 
@@ -163,7 +162,7 @@ func listByLanguage(w http.ResponseWriter, r *http.Request) error {
 
 	userProfile := readUserProfile(r)
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	langsStr := vars["langs"]
 	langs := strings.Split(langsStr, "_")
 	langs = MapStrings(langs, NormLang)

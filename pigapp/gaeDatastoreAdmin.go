@@ -7,7 +7,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
@@ -18,7 +17,7 @@ import (
 // Useful for patches or migration.
 
 func adminResaveEntities(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	var err error
 	switch r.FormValue("kind") {
 	case "IdiomHistory":
@@ -72,7 +71,7 @@ func resaveAllIdiomHistory(c context.Context) error {
 }
 
 func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	defer memcache.Flush(c)
 
 	idiomIDStr := r.FormValue("idiomId")

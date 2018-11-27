@@ -10,7 +10,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 )
 
 // RssItem is a news.
@@ -59,7 +58,7 @@ type RssFacade struct {
 }
 
 func rssRecentlyUpdated(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	_, idioms, _ := dao.getAllIdioms(c, nbItemsUpdated, "-VersionDate")
 	dateUpdate := func(idiom *Idiom) string { return idiom.VersionDate.Format(rssPubDatelayout) }
 	idiomVersionGuidation := func(idiom *Idiom) string {
@@ -69,7 +68,7 @@ func rssRecentlyUpdated(w http.ResponseWriter, r *http.Request) error {
 }
 
 func rssRecentlyCreated(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	_, idioms, _ := dao.getAllIdioms(c, nbItemsCreated, "-Id")
 	dateCreation := func(idiom *Idiom) string { return idiom.CreationDate.Format(rssPubDatelayout) }
 	idiomGuidation := func(idiom *Idiom) string { return fmt.Sprintf("%v/guid/idiom/%v", env.Host, idiom.Id) }

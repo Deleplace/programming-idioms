@@ -6,7 +6,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -43,7 +42,7 @@ func errorPage(w http.ResponseWriter, r *http.Request, err error) {
 		code = http.StatusInternalServerError
 	}
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	log.Errorf(c, text)
 
 	data := &ErrorFacade{
@@ -77,7 +76,7 @@ func errorJSON(w http.ResponseWriter, r *http.Request, err error) {
 		code = http.StatusInternalServerError
 	}
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	log.Errorf(c, text)
 
 	w.WriteHeader(code)

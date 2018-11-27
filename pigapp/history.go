@@ -6,8 +6,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // IdiomHistoryFacade is the Facade for the Idiom History page.
@@ -22,7 +20,7 @@ type IdiomHistoryFacade struct {
 func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -71,7 +69,7 @@ func revertIdiomVersion(w http.ResponseWriter, r *http.Request) error {
 	idiomID := String2Int(idiomIDStr)
 	versionStr := r.FormValue("version")
 	version := String2Int(versionStr)
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	_, err := dao.revert(c, idiomID, version)
 	if err != nil {
@@ -88,7 +86,7 @@ func restoreIdiomVersion(w http.ResponseWriter, r *http.Request) error {
 	idiomID := String2Int(idiomIDStr)
 	versionStr := r.FormValue("version")
 	version := String2Int(versionStr)
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	idiom, err := dao.historyRestore(c, idiomID, version)
 	if err != nil {

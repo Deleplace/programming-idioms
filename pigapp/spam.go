@@ -9,7 +9,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -47,7 +46,7 @@ func isSpam(w http.ResponseWriter, r *http.Request) (busted bool) {
 
 	defer func() {
 		if busted {
-			c := appengine.NewContext(r)
+			c := r.Context()
 			log.Infof(c, "Detected spammer %v : %v", ip, motive)
 			// Let's return a nice 200 ... nothing to see here
 			fmt.Fprintln(w, "<html><body>This site is under construction</body></html>")

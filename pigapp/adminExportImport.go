@@ -14,7 +14,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -34,7 +33,7 @@ func adminExport(w http.ResponseWriter, r *http.Request) error {
 }
 
 func adminImportAjax(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	file, fileHeader, err := r.FormFile("importData")
 	if err != nil {
 		return err
@@ -181,7 +180,7 @@ func importFromCSV(file multipart.File) ([]*Idiom, error) {
 }
 
 func exportIdiomsAsJSON(r *http.Request, w io.Writer, pretty bool) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	_, idioms, err := dao.getAllIdioms(c, 0, "Id")
 	if err != nil {
 		return err
@@ -216,7 +215,7 @@ func exportIdiomsAsJSON(r *http.Request, w io.Writer, pretty bool) error {
 
 // Not used anymore. See adminImportAjax.
 func adminImport(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	var err error
 	file, fileHeader, err := r.FormFile("importData")
 	_, err = importFile(c, file, fileHeader)

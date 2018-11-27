@@ -7,8 +7,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // IdiomEditFacade is the Facade for the Add Idiom Picture page.
@@ -20,7 +18,7 @@ type IdiomEditFacade struct {
 
 func idiomEdit(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)

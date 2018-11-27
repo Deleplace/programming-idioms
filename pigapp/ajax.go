@@ -9,8 +9,6 @@ import (
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
-
-	"google.golang.org/appengine"
 )
 
 // Response is a generic container suitable to be directly converted into a JSON HTTP response.
@@ -49,7 +47,7 @@ func ajaxIdiomVote(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		return PiError{"Vote choice should be up or down", http.StatusBadRequest}
 	}
-	c := appengine.NewContext(r)
+	c := r.Context()
 	idiomID := String2Int(idiomIDStr)
 
 	vote := IdiomVoteLog{
@@ -93,7 +91,7 @@ func ajaxImplVote(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		return PiError{"Vote choice should be up or down", http.StatusInternalServerError}
 	}
-	c := appengine.NewContext(r)
+	c := r.Context()
 	implID := String2Int(implIDStr)
 
 	vote := ImplVoteLog{

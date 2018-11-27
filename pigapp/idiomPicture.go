@@ -7,8 +7,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 //
@@ -30,7 +28,7 @@ func idiomAddPicture(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	vars := mux.Vars(r)
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -63,7 +61,7 @@ func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("For now, only the Admin may add an idiom picture.")
 	}
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	userProfile := readUserProfile(r)
 
 	idiomIDStr := r.FormValue("idiom_id")

@@ -8,14 +8,13 @@ import (
 
 	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/delay"
 	"google.golang.org/appengine/log"
 )
 
 func adminReindexAjax(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	err := dao.deleteCache(c)
 	if err != nil {
 		log.Warningf(c, "Problem deleting cache: %v", err.Error())

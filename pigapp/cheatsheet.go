@@ -5,7 +5,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
-	"google.golang.org/appengine"
 	gaesearch "google.golang.org/appengine/search"
 )
 
@@ -25,7 +24,7 @@ type CheatSheetFacade struct {
 func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	lang := vars["lang"]
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	// Security belt. Might be changed if needed.
 	limit := 1000

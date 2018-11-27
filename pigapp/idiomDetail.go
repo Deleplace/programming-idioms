@@ -12,7 +12,6 @@ import (
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -27,7 +26,7 @@ type IdiomDetailFacade struct {
 
 func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	c := appengine.NewContext(r)
+	c := r.Context()
 	userProfile := readUserProfile(r)
 	favlangs := userProfile.FavoriteLanguages
 

@@ -8,7 +8,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -40,7 +39,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		return err
 	}
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	language := NormLang(r.FormValue("impl_language"))
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
@@ -129,7 +128,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		return err
 	}
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
 	comment := r.FormValue("impl_comment")

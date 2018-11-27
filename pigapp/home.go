@@ -6,7 +6,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 )
 
 // HomeFacade is the Facade for the homepage.
@@ -18,7 +17,7 @@ type HomeFacade struct {
 }
 
 func home(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	userProfile := readUserProfile(r)
 	return homeView(w, c, userProfile)
 }

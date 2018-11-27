@@ -8,7 +8,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -66,7 +65,7 @@ func ajaxAboutContact(w http.ResponseWriter, r *http.Request) error {
 }
 
 func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	log.Debugf(c, "retrieveAllIdioms start...")
 	allIdioms, err := retrieveAllIdioms(r)
@@ -92,7 +91,7 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 }
 
 func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	favlangs := lookForFavoriteLanguages(r)
 
 	if len(favlangs) == 0 {

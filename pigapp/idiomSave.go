@@ -7,7 +7,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -41,7 +40,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		return err
 	}
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	lead := r.FormValue("idiom_lead")
 	keywords := r.FormValue("idiom_keywords")
 	picture := r.FormValue("idiom_picture") /* TODO upload file ?! */
@@ -135,7 +134,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	if err := parametersMissing(w, r, "idiom_version"); err != nil {
 		return err
 	}
-	c := appengine.NewContext(r)
+	c := r.Context()
 	log.Infof(c, "[%v] is updating statement of idiom %v", username, existingIDStr)
 
 	idiomID := String2Int(existingIDStr)

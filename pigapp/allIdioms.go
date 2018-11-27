@@ -4,8 +4,6 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
-
-	"google.golang.org/appengine"
 )
 
 // AllIdiomsFacade is the Facade for block All Idioms of the About page.
@@ -38,7 +36,7 @@ func allIdioms(w http.ResponseWriter, r *http.Request) error {
 }
 
 func retrieveAllIdioms(r *http.Request) ([]*Idiom, error) {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	// TODO sort by popularity desc
 	// TODO limit to 50, + button [See more...]  or pagination
 

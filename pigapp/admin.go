@@ -8,14 +8,13 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/user"
 )
 
 // IsAdmin determines whether the current user is regarded as Admin by the Google auth provider.
 func IsAdmin(r *http.Request) bool {
-	c := appengine.NewContext(r) // TODO check if NewContext is expensive
+	c := r.Context() // TODO check if NewContext is expensive
 	u := user.Current(c)
 	return u != nil && u.Admin
 }
@@ -38,7 +37,7 @@ func admin(w http.ResponseWriter, r *http.Request) error {
 }
 
 func ajaxRefreshToggles(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	err := dao.deleteCache(c)
 	if err != nil {
 		return err
@@ -47,7 +46,7 @@ func ajaxRefreshToggles(w http.ResponseWriter, r *http.Request) error {
 }
 
 func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	name := r.FormValue("toggle")
 	valueAsString := r.FormValue("value")
 
@@ -74,7 +73,7 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 
 // For related idioms (i.e. linked idioms)
 func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	idiomAIdStr := r.FormValue("idiomAId")
 	idiomAId := String2Int(idiomAIdStr)
@@ -103,7 +102,7 @@ func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
 }
 
 func sendMessageForUserAjax(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	msg := MessageForUser{
 		Username:     r.FormValue("username"),
 		Message:      r.FormValue("message"),

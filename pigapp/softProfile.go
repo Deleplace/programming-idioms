@@ -9,7 +9,6 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/user"
 )
@@ -53,7 +52,7 @@ func readUserProfile(r *http.Request) UserProfile {
 		IsAdmin:           IsAdmin(r),
 	}
 	if u.Nickname != "" || len(u.FavoriteLanguages) > 0 {
-		c := appengine.NewContext(r)
+		c := r.Context()
 		log.Infof(c, "%v", u)
 	}
 	return u
@@ -100,7 +99,7 @@ func setLanguagesCookie(w http.ResponseWriter, langs string) http.Cookie {
 func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	userProfile := readUserProfile(r)
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	// Todo : encode/decode nickname with special chars
 	nickname := vars["nickname"]
@@ -132,7 +131,7 @@ func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 // TODO To be adapted to : Handle optional user strong auth
 func handleAuth(w http.ResponseWriter, r *http.Request) error {
 	// Cf https://developers.google.com/appengine/docs/go/users/
-	c := appengine.NewContext(r)
+	c := r.Context()
 	u := user.Current(c)
 	if u == nil {
 		url, err := user.LoginURL(c, "/")

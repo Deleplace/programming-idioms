@@ -7,8 +7,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // ImplCreateFacade is the Facade for the New Implementation page.
@@ -22,7 +20,7 @@ type ImplCreateFacade struct {
 func implCreate(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 	userProfile := readUserProfile(r)
 
 	idiomIDStr := vars["idiomId"]
@@ -75,7 +73,7 @@ func excludeImpl(idiom *Idiom, excludedImplID int) {
 // of bubbles text.
 func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
 
-	c := appengine.NewContext(r)
+	c := r.Context()
 
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)

@@ -10,7 +10,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"golang.org/x/net/context"
-	"google.golang.org/appengine"
 )
 
 // ThemeVersion is the version of the current CSS-JS theme.
@@ -201,7 +200,7 @@ func handle(path string, h betterHandler) {
 				}
 			}()
 			if configTime == "0" {
-				c := appengine.NewContext(r)
+				c := r.Context()
 				_ = refreshToggles(c)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}
@@ -240,7 +239,7 @@ func handleAjax(path string, h betterHandler) {
 				}
 			}()
 			if configTime == "0" {
-				c := appengine.NewContext(r)
+				c := r.Context()
 				_ = refreshToggles(c)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}

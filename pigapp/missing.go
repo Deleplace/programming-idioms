@@ -7,15 +7,13 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine"
 )
 
 // This screen shows, for a given language, which implementations
 // don't have a DemoURL and/or a DocumentationURL.
 
 func missingList(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
+	c := r.Context()
 	vars := mux.Vars(r)
 	lang := vars["lang"]
 	lang = NormLang(lang)
