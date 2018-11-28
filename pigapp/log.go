@@ -16,7 +16,6 @@ func logf(c context.Context, level, msg string, args ...interface{}) {
 
 	// Sets your Google Cloud Platform project ID.
 	// projectID := appengine.AppID(c)
-	// projectID := "pi-go111"
 
 	// Creates a client.
 	// client, err := logging.NewClient(c, projectID)
