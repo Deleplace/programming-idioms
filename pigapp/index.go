@@ -264,8 +264,8 @@ func handleAjax(path string, h betterHandler) {
 }
 
 var datastoreDao = GaeDatastoreAccessor{}
-var memcachedDao = MemcacheDatastoreAccessor{datastoreDao}
-var dao = memcachedDao
+var cachedDao = CacheDatastoreAccessor{datastoreDao}
+var dao = cachedDao
 
 var daoVotes = GaeVotesAccessor{}
 

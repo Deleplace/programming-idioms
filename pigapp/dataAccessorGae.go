@@ -167,7 +167,7 @@ func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, ve
 // TODO take real Idiom as parameter, not a Key or a pointer
 var historyDelayer = delay.Func("save-history-item", func(c context.Context, idiomKey *datastore.Key) error {
 	var historyItem IdiomHistory
-	// TODO check Memcache first
+	// TODO check cache first
 	err := ds.Get(c, idiomKey, &historyItem.Idiom)
 	if err != nil {
 		return err
@@ -181,7 +181,7 @@ var historyDelayer = delay.Func("save-history-item", func(c context.Context, idi
 
 var indexDelayer = delay.Func("index-text-idiom", func(c context.Context, idiomKey *datastore.Key) error {
 	var idiom Idiom
-	// TODO check Memcache first
+	// TODO check cache first
 	err := ds.Get(c, idiomKey, &idiom)
 	if err != nil {
 		return err

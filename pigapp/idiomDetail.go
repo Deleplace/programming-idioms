@@ -34,12 +34,12 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		//
 		path := r.URL.RequestURI()
 		if cachedPage := htmlCacheRead(c, path); cachedPage != nil {
-			// Using the whole HTML block from Memcache
-			debugf(c, "%s from memcache!", path)
+			// Using the whole HTML block from cache
+			debugf(c, "%s from cache!", path)
 			_, err := w.Write(cachedPage)
 			return err
 		}
-		debugf(c, "%s not in memcache.", path)
+		debugf(c, "%s not in cache.", path)
 
 		var buffer bytes.Buffer
 		err := generateIdiomDetailPage(c, &buffer, vars)
@@ -61,7 +61,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 
 		// Here we just cached 1 HTML page for 1 day.
 		// We tried previously to agressively trigger htmlRecacheNowAndTomorrow,
-		// but it didn't lead to great results in shared memcache.
+		// but it didn't lead to great results in shared cache.
 
 		return nil
 	}

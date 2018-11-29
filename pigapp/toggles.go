@@ -48,7 +48,7 @@ var configTime = "0" //time.Now().Format("2006-01-02_15-04")
 func refreshToggles(c context.Context) error {
 	appConfig, err := dao.getAppConfig(c)
 	if err == appConfigPropertyNotFound {
-		// Nothing in Memcache, nothing in Datastore!
+		// Nothing in cache, nothing in Datastore!
 		// Then, init default (hard-coded) toggle values and persist them.
 		initToggles()
 		infof(c, "Saving default Toggles to Datastore...")
@@ -65,7 +65,7 @@ func refreshToggles(c context.Context) error {
 	}
 	toggles = appConfig.Toggles
 	configTime = time.Now().Format("2006-01-02_15-04")
-	infof(c, "Updated Toggles from memcached or datastore\n")
+	infof(c, "Updated Toggles from cached or datastore\n")
 	// _ = appConfig
 
 	return err

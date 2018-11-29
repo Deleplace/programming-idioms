@@ -11,7 +11,6 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/delay"
-	"google.golang.org/appengine/memcache"
 	"google.golang.org/appengine/taskqueue"
 )
 
@@ -19,38 +18,33 @@ import (
 // into HTML, and serve it again later.
 
 // htmlCacheRead returns previously saved bytes for this key,
-// It returns nil if not found, or expired, or on memcache error.
+// It returns nil if not found, or expired, or on cache error.
 //
 // There is no guarantee that previously cached data will be found,
-// because memcache entries may vanish anytime, even before expiration.
+// because cache entries may vanish anytime, even before expiration.
 func htmlCacheRead(c context.Context, key string) []byte {
-	cacheItem, err := memcache.Get(c, key)
-	if err == memcache.ErrCacheMiss {
-		// Item not in the cache
-		return nil
-	}
+	value, err := cache.read(c, key)
 	if err != nil {
-		// Memcache failure. Ignore.
-		return nil
+		errorf(c, "Reading cache for %q: %v", key, err)
 	}
-	// Found :)
-	return cacheItem.Value
+	return value
 }
 
 // htmlCacheWrite saves bytes for given key.
 // Failures are ignored.
 func htmlCacheWrite(c context.Context, key string, data []byte, duration time.Duration) {
-	cacheItem := &memcache.Item{
-		Key:        key,
-		Value:      data,
-		Expiration: duration,
+	err := cache.write(c, key, data, duration)
+	if err != nil {
+		errorf(c, "Writing cache for %q: %v", key, err)
 	}
-	_ = memcache.Set(c, cacheItem)
 }
 
 // Data changes should lead to cache entries invalidation.
 func htmlCacheEvict(c context.Context, key string) {
-	_ = memcache.Delete(c, key)
+	err := cache.evict(c, key)
+	if err != nil {
+		errorf(c, "Evicting cache for %q: %v", key, err)
+	}
 	// See also htmlUncacheIdiomAndImpls
 }
 
@@ -63,13 +57,13 @@ func htmlCacheZipRead(c context.Context, key string) []byte {
 	zipbuffer := bytes.NewBuffer(zipdata)
 	zipreader, err := gzip.NewReader(zipbuffer)
 	if err != nil {
-		errorf(c, "Reading zip memcached entry %q: %v", key, err)
+		errorf(c, "Reading zip cached entry %q: %v", key, err)
 		// Ignore failure
 		return nil
 	}
 	buffer, err := ioutil.ReadAll(zipreader)
 	if err != nil {
-		errorf(c, "Reading zip memcached entry %q: %v", key, err)
+		errorf(c, "Reading zip cached entry %q: %v", key, err)
 	}
 	debugf(c, "Reading %d bytes out of %d gzip bytes for entry %q", len(buffer), len(zipdata), key)
 	return buffer
@@ -81,7 +75,7 @@ func htmlCacheZipWrite(c context.Context, key string, data []byte, duration time
 	zipwriter := gzip.NewWriter(&zipbuffer)
 	_, err := zipwriter.Write(data)
 	if err != nil {
-		errorf(c, "Writing zip memcached entry %q: %v", key, err)
+		errorf(c, "Writing zip cached entry %q: %v", key, err)
 		// Ignore failure
 		return
 	}
@@ -101,11 +95,10 @@ func htmlUncacheIdiomAndImpls(c context.Context, idiom *Idiom) {
 	for _, impl := range idiom.Implementations {
 		cachekeys = append(cachekeys, NiceImplRelativeURL(idiom, impl.Id, impl.LanguageName))
 	}
-	err := memcache.DeleteMulti(c, cachekeys)
-	if err != nil {
-		// errorf(c, "Uncaching idiom %d: %v", idiom.Id, err)
-		// A lot of impl HTML paages won't be in cache, which will cause
-		// en error. Never mind, just ignore.
+	for _, key := range cachekeys {
+		err := cache.evict(c, key)
+		// Note that here we're ignoring potential cache errors
+		_ = err
 	}
 }
 

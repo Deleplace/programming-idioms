@@ -1,7 +1,5 @@
 package main
 
-import "google.golang.org/appengine"
-
 // Env encapsulates a Programming-Idioms webapp environment.
 type Env struct {
 	// Host depends on the target environment.
@@ -18,8 +16,9 @@ type Env struct {
 //
 
 var envProd = Env{
-	IsDev:           false,
-	Host:            "https://www.programming-idioms.org",
+	IsDev: false,
+	// Host:            "https://www.programming-idioms.org",
+	Host:            "https://pi-go111.appspot.com",
 	UseAbsoluteUrls: false,
 	UseMinifiedCss:  true,
 	UseMinifiedJs:   true,
@@ -42,7 +41,7 @@ var envDev = Env{
 var env Env
 
 func initEnv() {
-	if appengine.IsDevAppServer() {
+	if isAppengineDevServer() {
 		env = envDev
 	} else {
 		env = envProd

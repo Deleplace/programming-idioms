@@ -18,7 +18,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	if err == nil && cachedUrls != nil {
 		urls = cachedUrls.([]string)
 	} else {
-		// Not found (or Memcache failed)
+		// Not found (or cache failed)
 		// Let's fetch in the Datastore
 		infof(c, "Fetching all idiom titles from Datastore")
 		idiomHeads, err := dao.getAllIdiomTitles(c)
@@ -31,7 +31,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		}
 		err = dao.cacheValue(c, "all-idioms-urls", urls, 24*time.Hour)
 		if err != nil {
-			errorf(c, "Failed idioms URLs list in Memcache: %v", err)
+			errorf(c, "Failed idioms URLs list in cache: %v", err)
 		}
 	}
 	k := rand.Intn(len(urls))

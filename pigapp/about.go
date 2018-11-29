@@ -95,8 +95,8 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 
 	if len(favlangs) == 0 {
 		if coverageHtml := htmlCacheZipRead(c, "about-block-language-coverage"); coverageHtml != nil {
-			// Using the whole HTML block from Memcache
-			debugf(c, "block-about-language-coverage from memcache!")
+			// Using the whole HTML block from cache
+			debugf(c, "block-about-language-coverage from cache!")
 			_, err := w.Write(coverageHtml)
 			return err
 		}
