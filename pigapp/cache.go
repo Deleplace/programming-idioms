@@ -10,8 +10,16 @@ import (
 // We must not rely on any persistence.
 // We must still work correctly if an object is not found in cache.
 
-// var cache picache = memcacheCache{}
-var cache picache = makeRedisCache()
+var cache picache
+
+func init() {
+	if isAppengineDevServer() {
+		// Let's not pollute the prod Redis db!
+		cache = memcacheCache{}
+	} else {
+		cache = makeRedisCache()
+	}
+}
 
 type picache interface {
 	read(c context.Context, key string) (value []byte, err error)
