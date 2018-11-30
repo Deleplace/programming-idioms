@@ -41,7 +41,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	c := r.Context()
 	lead := r.FormValue("idiom_lead")
 	keywords := r.FormValue("idiom_keywords")
-	picture := r.FormValue("idiom_picture") /* TODO upload file ?! */
+	picture := r.FormValue("idiom_picture")
 	language := NormLang(r.FormValue("impl_language"))
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
@@ -96,7 +96,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		Title:            title,
 		LeadParagraph:    lead,
 		ExtraKeywords:    keywords,
-		Picture:          picture, /* TODO upload file ?! */
+		Picture:          picture,
 		Author:           username,
 		LastEditor:       username,
 		LastEditedImplID: implID,
@@ -171,12 +171,6 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	idiom.LeadParagraph = r.FormValue("idiom_lead")
 	idiom.ExtraKeywords = r.FormValue("idiom_keywords")
 	idiom.EditSummary = r.FormValue("edit_summary")
-	/* idiomPicture.go
-	idiom.Picture, err = processUploadFile(r, "idiom_picture")
-	if err != nil {
-		return err
-	}
-	*/
 	idiom.LeadParagraph = Truncate(idiom.LeadParagraph, 500)
 	idiom.ExtraKeywords = Truncate(idiom.ExtraKeywords, 250)
 	idiom.EditSummary = Truncate(idiom.EditSummary, 120)

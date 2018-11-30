@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"net/http"
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
@@ -11,7 +10,6 @@ import (
 	"cloud.google.com/go/datastore"
 	"golang.org/x/net/context"
 	"google.golang.org/api/iterator"
-	"google.golang.org/appengine/blobstore"
 	"google.golang.org/appengine/delay"
 )
 
@@ -333,33 +331,6 @@ func (a *GaeDatastoreAccessor) deleteImpl(c context.Context, idiomID int, implID
 		return a.saveExistingIdiom(c, key, idiom)
 	}
 	return fmt.Errorf("Could not find impl %v in idiom %v", idiom.Id, implID)
-}
-
-func (a *GaeDatastoreAccessor) processUploadFile(r *http.Request, name string) (string, map[string][]string, error) {
-	// See https://developers.google.com/appengine/docs/go/blobstore/#Uploading_a_Blob
-	blobs, otherParams, err := blobstore.ParseUpload(r)
-	if err != nil {
-		return "", nil, err
-	}
-	file := blobs[name]
-	if len(file) == 0 {
-		return "", otherParams, nil
-	}
-	return string(file[0].BlobKey), otherParams, nil
-}
-
-func (a *GaeDatastoreAccessor) processUploadFiles(r *http.Request, names []string) ([]string, map[string][]string, error) {
-	blobs, otherParams, err := blobstore.ParseUpload(r)
-	if err != nil {
-		return nil, nil, err
-	}
-	blobKeys := []string{}
-	for _, name := range names {
-		if file := blobs[name]; len(file) > 0 {
-			blobKeys = append(blobKeys, string(file[0].BlobKey))
-		}
-	}
-	return blobKeys, otherParams, nil
 }
 
 func (a *GaeDatastoreAccessor) nextIdiomID(c context.Context) (int, error) {

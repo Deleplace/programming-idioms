@@ -59,7 +59,6 @@ func initRoutes() {
 		handle("/search/{q}", search)
 		handle("/list-by-language/{langs}", listByLanguage)
 		handle("/missing-fields/{lang}", missingList)
-		handle("/idiom-picture", idiomPicture)
 		handle("/rss-recently-created", rssRecentlyCreated)
 		handle("/rss-recently-updated", rssRecentlyUpdated)
 		handle("/my/{nickname}/{langs}", bookmarkableUserURL)

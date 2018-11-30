@@ -18,7 +18,7 @@ import (
 
 // CacheDatastoreAccessor accessor uses an in-memory cache for standard CRUD.
 //
-// Some methods are not redefined : randomIdiom, nextIdiomID, nextImplID, processUploadFile, processUploadFiles
+// Some methods are not redefined : randomIdiom, nextIdiomID, nextImplID
 type CacheDatastoreAccessor struct {
 	GaeDatastoreAccessor
 }
