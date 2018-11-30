@@ -106,9 +106,6 @@ func initRoutes() {
 			handleAjax("/admin-impl-delete", implDelete)
 			handleAjax("/admin-send-message-for-user", sendMessageForUserAjax)
 		}
-
-		handle("/auth", handleAuth)
-		handle("/_ah/login_required", handleAuth)
 	}
 	http.Handle("/", r)
 }

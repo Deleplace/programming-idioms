@@ -1,15 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine/user"
 )
 
 func lookForNickname(r *http.Request) string {
@@ -122,25 +119,4 @@ func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 
 	// Display homepage, with updated profile
 	return homeView(w, c, userProfile)
-}
-
-// Hard profiles?
-//
-// Not used yet.
-// TODO To be adapted to : Handle optional user strong auth
-func handleAuth(w http.ResponseWriter, r *http.Request) error {
-	// Cf https://developers.google.com/appengine/docs/go/users/
-	c := r.Context()
-	u := user.Current(c)
-	if u == nil {
-		url, err := user.LoginURL(c, "/")
-		if err != nil {
-			return err
-		}
-		w.Header().Set("Location", url)
-		w.WriteHeader(http.StatusFound)
-		return nil
-	}
-	fmt.Fprintf(w, "Hello, %v!", u)
-	return nil
 }
