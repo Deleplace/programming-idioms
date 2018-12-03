@@ -24,16 +24,22 @@ func newIdiomKey(c context.Context, idiomID int) *datastore.Key {
 }
 
 func (a *GaeDatastoreAccessor) getIdiom(c context.Context, idiomID int) (*datastore.Key, *Idiom, error) {
+	c2, endSpan := startSpanf(c, "datastore getIdiom(%d)", idiomID)
+	defer endSpan()
+
 	var idiom Idiom
-	key := newIdiomKey(c, idiomID)
-	err := ds.Get(c, key, &idiom)
+	key := newIdiomKey(c2, idiomID)
+	err := ds.Get(c2, key, &idiom)
 	return key, &idiom, err
 }
 
 func (a *GaeDatastoreAccessor) getIdiomByImplID(c context.Context, implID int) (*datastore.Key, *Idiom, error) {
+	c2, endSpan := startSpanf(c, "datastore getIdiomByImplID(%d)", implID)
+	defer endSpan()
+
 	q := datastore.NewQuery("Idiom").Filter("Implementations.Id =", implID)
 	idioms := make([]*Idiom, 0, 1)
-	keys, err := ds.GetAll(c, q, &idioms)
+	keys, err := ds.GetAll(c2, q, &idioms)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -49,11 +55,14 @@ func (a *GaeDatastoreAccessor) getIdiomByImplID(c context.Context, implID int) (
 }
 
 func (a *GaeDatastoreAccessor) getIdiomHistory(c context.Context, idiomID int, version int) (*datastore.Key, *IdiomHistory, error) {
+	c2, endSpan := startSpanf(c, "datastore getIdiomHistory(%d, %d)", idiomID, version)
+	defer endSpan()
+
 	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
 		Filter("Version =", version)
 	idioms := make([]*IdiomHistory, 0, 1)
-	keys, err := ds.GetAll(c, q, &idioms)
+	keys, err := ds.GetAll(c2, q, &idioms)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -69,13 +78,16 @@ func (a *GaeDatastoreAccessor) getIdiomHistory(c context.Context, idiomID int, v
 }
 
 func (a *GaeDatastoreAccessor) getIdiomHistoryList(c context.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error) {
+	c2, endSpan := startSpanf(c, "datastore getIdiomHistoryList(%d)", idiomID)
+	defer endSpan()
+
 	q := datastore.NewQuery("IdiomHistory").
 		Project("Version", "VersionDate", "IdiomOrImplLastEditor", "EditSummary").
 		// Project("Version", "VersionDate", "LastEditor", "EditSummary").
 		Filter("Id =", idiomID).
 		Order("-Version")
 	historyList := make([]*IdiomHistory, 0)
-	keys, err := ds.GetAll(c, q, &historyList)
+	keys, err := ds.GetAll(c2, q, &historyList)
 	return keys, historyList, err
 }
 
@@ -279,6 +291,9 @@ func implementedLanguagesConcat(idiom *Idiom) string {
 }
 
 func (a *GaeDatastoreAccessor) getAllIdioms(c context.Context, limit int, order string) ([]*datastore.Key, []*Idiom, error) {
+	c2, endSpan := startSpanf(c, "datastore getAllIdioms()")
+	defer endSpan()
+
 	q := datastore.NewQuery("Idiom")
 	if order != "" {
 		q = q.Order(order)
@@ -287,7 +302,7 @@ func (a *GaeDatastoreAccessor) getAllIdioms(c context.Context, limit int, order 
 		q = q.Limit(limit)
 	}
 	idioms := make([]*Idiom, 0, 500)
-	keys, err := ds.GetAll(c, q, &idioms)
+	keys, err := ds.GetAll(c2, q, &idioms)
 	return keys, idioms, err
 }
 

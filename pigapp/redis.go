@@ -79,6 +79,9 @@ func (rc redisCache) read(c context.Context, key string) (value []byte, err erro
 }
 
 func (rc redisCache) write(c context.Context, key string, value []byte, duration time.Duration) error {
+	_, endSpan := startSpanf(c, "redisCache.write %q", key)
+	defer endSpan()
+
 	redisConn := rc.pool.Get()
 	defer redisConn.Close()
 
@@ -91,6 +94,9 @@ func (rc redisCache) write(c context.Context, key string, value []byte, duration
 }
 
 func (rc redisCache) evict(c context.Context, key string) error {
+	_, endSpan := startSpanf(c, "redisCache.evict %q", key)
+	defer endSpan()
+
 	redisConn := rc.pool.Get()
 	defer redisConn.Close()
 
@@ -99,6 +105,9 @@ func (rc redisCache) evict(c context.Context, key string) error {
 }
 
 func (rc redisCache) flush(c context.Context) error {
+	_, endSpan := startSpanf(c, "redisCache.flush")
+	defer endSpan()
+
 	redisConn := rc.pool.Get()
 	defer redisConn.Close()
 
@@ -108,6 +117,9 @@ func (rc redisCache) flush(c context.Context) error {
 }
 
 func (rc redisCache) readMulti(c context.Context, keys []string) (values [][]byte, err1 error) {
+	_, endSpan := startSpanf(c, "redisCache.readMulti")
+	defer endSpan()
+
 	// TODO more efficient batch?
 	values = make([][]byte, len(keys))
 	for i, key := range keys {
@@ -124,6 +136,9 @@ func (rc redisCache) readMulti(c context.Context, keys []string) (values [][]byt
 }
 
 func (rc redisCache) writeMulti(c context.Context, keys []string, values [][]byte, duration time.Duration) error {
+	_, endSpan := startSpanf(c, "redisCache.writeMulti")
+	defer endSpan()
+
 	n := len(keys)
 	if len(values) != n {
 		panic("Inconsistent keys/values")
@@ -142,6 +157,9 @@ func (rc redisCache) writeMulti(c context.Context, keys []string, values [][]byt
 }
 
 func (rc redisCache) evictMulti(c context.Context, keys []string) error {
+	_, endSpan := startSpanf(c, "redisCache.evictMulti")
+	defer endSpan()
+
 	// TODO more efficient batch?
 	var err1 error
 	// Try to evict *all* keys
