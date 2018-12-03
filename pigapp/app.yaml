@@ -28,3 +28,8 @@ handlers:
 - url: /.*
   script: auto
   secure: always
+
+env_variables:
+  REDIS_ADDR: "redis-19845.c1.us-central1-2.gce.cloud.redislabs.com:19845"
+  REDIS_PASSWORD: "<PUT SECRET PASSWORD HERE>"
+
