@@ -15,7 +15,10 @@ type memcacheCache struct{}
 
 // If not found in cache, returns nil.
 func (memcacheCache) read(c context.Context, key string) (value []byte, err error) {
-	cacheItem, err := memcache.Get(c, key)
+	c2, endSpan := startSpanf(c, "memcacheCache.read %q", key)
+	defer endSpan()
+
+	cacheItem, err := memcache.Get(c2, key)
 	if err == memcache.ErrCacheMiss {
 		// Item not in the cache
 		return nil, nil

@@ -47,6 +47,9 @@ type redisCache struct {
 
 // If not found in cache, returns nil.
 func (rc redisCache) read(c context.Context, key string) (value []byte, err error) {
+	_, endSpan := startSpanf(c, "redisCache.read %q", key)
+	defer endSpan()
+
 	redisConn := rc.pool.Get()
 	defer redisConn.Close()
 

@@ -188,6 +188,10 @@ func handle(path string, h betterHandler) {
 				return
 			}
 
+			c2, endSpan := startSpanfWRT(r, "handling %q", r.URL.Path)
+			defer endSpan()
+			r = r.WithContext(c2)
+
 			defer func() {
 				if msg := recover(); msg != nil {
 					msgStr := fmt.Sprintf("%v", msg)
@@ -196,8 +200,7 @@ func handle(path string, h betterHandler) {
 				}
 			}()
 			if configTime == "0" {
-				c := r.Context()
-				_ = refreshToggles(c)
+				_ = refreshToggles(c2)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}
 

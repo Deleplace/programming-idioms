@@ -5,5 +5,8 @@ import (
 )
 
 func main() {
+	// "It is imperative to invoke flush before your main function exits"
+	defer sd.Flush()
+
 	appengine.Main()
 }
