@@ -162,14 +162,23 @@ $(function() {
 	}
 	
 	 $(".ajax-generic-action").on("click", function(){
-		 if( $(this).hasClass("confirm-needed") )
-			 if( ! window.confirm("Are you sure?") )
-				 return;
+		if( $(this).hasClass("confirm-needed") )
+			if( ! window.confirm("Are you sure?") )
+				return;
+
+		var data = {};
+		if( $(this).hasClass("reason-needed") ) {
+			var reason = window.prompt("Why?");
+		 	if( reason===null )
+				return; // Clicked Cancel
+			data = {reason: reason};
+		}
 		
 		var url = $(this).attr("data-url");
 	    $.ajax({
 	        url: url,
-	        type: 'POST',
+			type: 'POST',
+			data: data,
 	        xhr: function() {
 	            var myXhr = $.ajaxSettings.xhr();
 	            return myXhr;
@@ -182,6 +191,7 @@ $(function() {
 	        },
 	    });
 	 });
+	 
 	
 	// 
 	// Identification
