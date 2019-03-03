@@ -38,9 +38,12 @@ func implDelete(w http.ResponseWriter, r *http.Request) error {
 	implIDStr := r.FormValue("implId")
 	implID := String2Int(implIDStr)
 
+	// Answer to the "Why?" prompt on delete
+	reason := r.FormValue("reason")
+
 	why := r.FormValue("why")
 	if why == "" {
-		why = fmt.Sprintf("Admin deletes impl %d", implID)
+		why = fmt.Sprintf("Admin deletes impl %d: %s", implID, reason)
 	}
 	err := dao.deleteImpl(c, idiomID, implID, why)
 
