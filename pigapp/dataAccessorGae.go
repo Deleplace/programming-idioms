@@ -8,7 +8,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"golang.org/x/net/context"
+	"context"
 	"google.golang.org/appengine/blobstore"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/delay"

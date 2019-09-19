@@ -8,7 +8,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"golang.org/x/net/context"
+	"context"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	gaesearch "google.golang.org/appengine/search"

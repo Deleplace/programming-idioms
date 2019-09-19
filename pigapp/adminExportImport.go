@@ -13,7 +13,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"golang.org/x/net/context"
+	"context"
 	"google.golang.org/appengine/log"
 )
 

@@ -9,7 +9,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"golang.org/x/net/context"
+	"context"
 )
 
 // ThemeVersion is the version of the current CSS-JS theme.
