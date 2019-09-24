@@ -1,7 +1,4 @@
-application: programming-idioms
-version: 1-0
-runtime: go
-api_version: go1
+runtime: go111
 
 handlers:
 - url: /favicon\.ico
@@ -25,9 +22,9 @@ handlers:
   expiration: "364d"
   secure: always
 - url: /admin.*
-  script: _go_app
+  script: auto
   login: admin
   secure: always
 - url: /.*
-  script: _go_app
+  script: auto
   secure: always
