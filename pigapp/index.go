@@ -18,7 +18,7 @@ const ThemeVersion = "default"
 
 // ThemeDate is the prefix used for "revving" the static files and enable long-term HTTP cache.
 // It MUST end with underscore _ (see app.yaml)
-const ThemeDate = "20190927_"
+const ThemeDate = "20190928_"
 
 var r = mux.NewRouter()
 
