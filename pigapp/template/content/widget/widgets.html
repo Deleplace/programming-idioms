@@ -481,12 +481,12 @@
 
 {{define "admin-lmgtfy"}}
 	<div>
-		<a href="http://google.com/search?q={{.LanguageSingleSelector.Selected}}+{{.Idiom.Title}}" target="_blank"><strong>LMGTFY {{.LanguageSingleSelector.Selected}} {{.Idiom.Title}}</strong></a>
+		<a href="https://google.com/search?q={{.LanguageSingleSelector.Selected}}+{{.Idiom.Title}}" target="_blank"><strong>LMGTFY {{.LanguageSingleSelector.Selected}} {{.Idiom.Title}}</strong></a>
 		<br/>
 		<br/>
 		<br/>
 		{{/*  Not possible because of "X-Frame-Options: SAMEORIGIN" response header
-		<iframe width="100%" height="800px" src="http://google.com/search?q={{.LanguageSingleSelector.Selected}}+{{.Idiom.Title}}"></iframe>
+		<iframe width="100%" height="800px" src="https://google.com/search?q={{.LanguageSingleSelector.Selected}}+{{.Idiom.Title}}"></iframe>
 		*/}}
 	</div>
 {{end}}
