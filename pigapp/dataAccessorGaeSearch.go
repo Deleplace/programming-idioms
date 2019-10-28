@@ -9,6 +9,8 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"context"
+
+	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	gaesearch "google.golang.org/appengine/search"
@@ -182,6 +184,17 @@ func indexIdiomCheatsheets(c context.Context, idiom *Idiom) error {
 		}
 	}
 	_, err = index.PutMulti(c, docIDs, docs)
+
+	if err != nil {
+		if multierr, ok := err.(appengine.MultiError); ok {
+			log.Warningf(c, "PutMulti returned %d errors", len(multierr))
+			for i, singleerr := range multierr {
+				log.Warningf(c, "  error %d: %v", i, singleerr)
+			}
+		} else {
+			log.Warningf(c, "Can't convert PutMulti error into []error")
+		}
+	}
 
 	return err
 }
