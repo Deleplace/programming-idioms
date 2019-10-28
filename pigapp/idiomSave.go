@@ -53,11 +53,11 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	docURL := r.FormValue("impl_doc_url")
 	editSummary := fmt.Sprintf("Idiom creation by user [%v]", username)
 
-	lead = Truncate(lead, 500)
+	lead = TruncateBytes(lead, 500)
 	keywords = Truncate(keywords, 250)
 	imports = Truncate(imports, 200)
-	code = Truncate(NoCR(code), 500)
-	comment = Truncate(comment, 500)
+	code = TruncateBytes(NoCR(code), 500)
+	comment = TruncateBytes(comment, 500)
 	attributionURL = Truncate(attributionURL, 250)
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
@@ -179,7 +179,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 		return err
 	}
 	*/
-	idiom.LeadParagraph = Truncate(idiom.LeadParagraph, 500)
+	idiom.LeadParagraph = TruncateBytes(idiom.LeadParagraph, 500)
 	idiom.ExtraKeywords = Truncate(idiom.ExtraKeywords, 250)
 	idiom.EditSummary = Truncate(idiom.EditSummary, 120)
 
