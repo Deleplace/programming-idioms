@@ -780,7 +780,7 @@ $(function() {
 		var src = $(this).attr('src');
 		if(src.indexOf('_highlight') !== -1)
 			return;
-		var srcHighlight = src.replace('.png', '_highlight.png')
+		var srcHighlight = src.replace('.png', '_highlight.png').replace('.svg', '_highlight.svg');
 		preload([
 			srcHighlight
 		]);
