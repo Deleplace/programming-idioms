@@ -608,6 +608,10 @@ textarea.impl-code{
 	margin-right: 10px;
 }
 
+.help-inline.under-the-value {
+	display: block;
+}
+
 /* Contribution rules bla bla bla */
 .contribution-rules-small {
   color: #555555;

@@ -144,3 +144,9 @@ func typeaheadLanguages(w http.ResponseWriter, r *http.Request) error {
 	fmt.Fprint(w, Response{"options": suggestions})
 	return nil
 }
+
+func supportedLanguages(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprint(w, Response{"languages": AllNiceLangs})
+	return nil
+}
