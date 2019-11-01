@@ -47,7 +47,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
-	editSummary := fmt.Sprintf("New %v implementation by user [%v]", language, username)
+	editSummary := fmt.Sprintf("New %s implementation by user [%s]", PrintNiceLang(language), username)
 
 	imports = Truncate(imports, 200)
 	code = TruncateBytes(NoCR(code), 500)
@@ -56,7 +56,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	log.Infof(c, "[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
+	log.Infof(c, "[%s] is creating new %s impl for idiom %v", username, PrintNiceLang(language), idiomIDStr)
 
 	if !StringSliceContains(AllLanguages(), language) {
 		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs), http.StatusBadRequest}
@@ -143,7 +143,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	log.Infof(c, "[%v] is updating impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+	log.Infof(c, "[%s] is updating impl %s of idiom %s", username, existingImplIDStr, idiomIDStr)
 
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
@@ -193,7 +193,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		return PiError{"Can't accept URL [" + demoURL + "]", http.StatusBadRequest}
 	}
 
-	idiom.EditSummary = "[" + impl.LanguageName + "] " + r.FormValue("edit_summary")
+	idiom.EditSummary = "[" + PrintNiceLang(impl.LanguageName) + "] " + r.FormValue("edit_summary")
 	idiom.LastEditedImplID = implID
 	impl.ImportsBlock = imports
 	impl.CodeBlock = code
