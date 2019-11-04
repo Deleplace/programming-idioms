@@ -8,6 +8,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"context"
+
 	"google.golang.org/appengine/log"
 )
 
@@ -102,12 +103,12 @@ func initToggles() {
 	toggles["implAddition"] = true
 	toggles["implEditing"] = true
 	toggles["pictureEditing"] = false
-	toggles["idiomVotingUp"] = true
-	toggles["idiomVotingDown"] = true
-	toggles["showIdiomRating"] = true
-	toggles["implVotingUp"] = true
-	toggles["implVotingDown"] = true
-	toggles["showImplRating"] = true
+	toggles["idiomVotingUp"] = false
+	toggles["idiomVotingDown"] = false
+	toggles["showIdiomRating"] = false
+	toggles["implVotingUp"] = false
+	toggles["implVotingDown"] = false
+	toggles["showImplRating"] = false
 	toggles["languageCreation"] = false
 
 	// Homepage
