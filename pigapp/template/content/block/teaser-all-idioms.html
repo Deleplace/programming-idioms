@@ -7,7 +7,11 @@
 	</h3>
 	<div class="well idiom-summary-small">
 		<a href="{{hostPrefix}}/about#about-block-all-idioms">
-			<img src="{{hostPrefix}}{{themeDir}}/img/all_idioms_peek_t.png" />
+			<picture>
+				<source srcset="{{hostPrefix}}{{themeDir}}/img/all_idioms_peek_t.webp" type="image/webp">
+				<source srcset="{{hostPrefix}}{{themeDir}}/img/all_idioms_peek_t.png" type="image/png">
+				<img src="{{hostPrefix}}{{themeDir}}/img/all_idioms_peek_t.png" />
+			</picture>
 		</a>
 	</div>
 </section>
