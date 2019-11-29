@@ -20,7 +20,7 @@ type ImplCreateFacade struct {
 func implCreate(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := r.Context()
+	ctx := r.Context()
 	userProfile := readUserProfile(r)
 
 	idiomIDStr := vars["idiomId"]
@@ -28,7 +28,7 @@ func implCreate(w http.ResponseWriter, r *http.Request) error {
 
 	preSelectedLanguage := NormLang(vars["lang"])
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}
@@ -73,7 +73,7 @@ func excludeImpl(idiom *Idiom, excludedImplID int) {
 // of bubbles text.
 func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
 
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
@@ -84,7 +84,7 @@ func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
 	// w.Write([]byte("123 456 789"))
 	// return nil
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}

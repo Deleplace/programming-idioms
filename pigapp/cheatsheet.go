@@ -24,13 +24,13 @@ type CheatSheetFacade struct {
 func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	lang := vars["lang"]
-	c := r.Context()
+	ctx := r.Context()
 
 	// Security belt. Might be changed if needed.
 	limit := 1000
 
 	// This uses the Search API to retrieve just the data we need.
-	cheatsheetLines, err := dao.getCheatSheet(c, lang, limit)
+	cheatsheetLines, err := dao.getCheatSheet(ctx, lang, limit)
 	if err != nil {
 		return PiError{err.Error(), http.StatusInternalServerError}
 	}

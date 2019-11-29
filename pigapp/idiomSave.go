@@ -40,7 +40,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		return err
 	}
 
-	c := r.Context()
+	ctx := r.Context()
 	lead := r.FormValue("idiom_lead")
 	keywords := r.FormValue("idiom_keywords")
 	picture := r.FormValue("idiom_picture") /* TODO upload file ?! */
@@ -62,18 +62,18 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	log.Infof(c, "[%v] is creating new idiom [%v]", username, title)
+	log.Infof(ctx, "[%v] is creating new idiom [%v]", username, title)
 
 	if !StringSliceContains(AllLanguages(), language) {
 		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs), http.StatusBadRequest}
 	}
 
 	// TODO put that in a transaction!
-	idiomID, err := dao.nextIdiomID(c)
+	idiomID, err := dao.nextIdiomID(ctx)
 	if err != nil {
 		return err
 	}
-	implID, err := dao.nextImplID(c)
+	implID, err := dao.nextImplID(ctx)
 	if err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		Authenticated user name not needed here, as of 2015.
 		Especially not for the Admin.
 
-		if u := user.Current(c); u != nil {
+		if u := user.Current(ctx); u != nil {
 			idiom.Author = u.String()
 			idiom.LastEditor = u.String()
 			implementations[0].Author = u.String()
@@ -118,7 +118,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 		}
 	*/
 
-	_, err = dao.saveNewIdiom(c, idiom)
+	_, err = dao.saveNewIdiom(ctx, idiom)
 	if err != nil {
 		return err
 	}
@@ -134,15 +134,15 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	if err := parametersMissing(w, r, "idiom_version"); err != nil {
 		return err
 	}
-	c := r.Context()
-	log.Infof(c, "[%v] is updating statement of idiom %v", username, existingIDStr)
+	ctx := r.Context()
+	log.Infof(ctx, "[%v] is updating statement of idiom %v", username, existingIDStr)
 
 	idiomID := String2Int(existingIDStr)
 	if idiomID == -1 {
 		return PiError{existingIDStr + " is not a valid idiom id.", http.StatusBadRequest}
 	}
 
-	key, idiom, err := dao.getIdiom(c, idiomID)
+	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + existingIDStr, http.StatusNotFound}
 	}
@@ -156,10 +156,10 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 		idiom.Protected = r.FormValue("idiom_protected") != ""
 
 		if wasProtected && !idiom.Protected {
-			log.Infof(c, "[%v] unprotects idiom %v", username, existingIDStr)
+			log.Infof(ctx, "[%v] unprotects idiom %v", username, existingIDStr)
 		}
 		if !wasProtected && idiom.Protected {
-			log.Infof(c, "[%v] protects idiom %v", username, existingIDStr)
+			log.Infof(ctx, "[%v] protects idiom %v", username, existingIDStr)
 		}
 	}
 
@@ -183,7 +183,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	idiom.ExtraKeywords = Truncate(idiom.ExtraKeywords, 250)
 	idiom.EditSummary = Truncate(idiom.EditSummary, 120)
 
-	err = dao.saveExistingIdiom(c, key, idiom)
+	err = dao.saveExistingIdiom(ctx, key, idiom)
 	if err != nil {
 		return err
 	}

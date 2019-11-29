@@ -21,21 +21,21 @@ type GaeDatastoreAccessor struct {
 
 var appConfigPropertyNotFound = fmt.Errorf("Found zero AppConfigProperty in the datastore.")
 
-func newIdiomKey(c context.Context, idiomID int) *datastore.Key {
-	return datastore.NewKey(c, "Idiom", "", int64(idiomID), nil)
+func newIdiomKey(ctx context.Context, idiomID int) *datastore.Key {
+	return datastore.NewKey(ctx, "Idiom", "", int64(idiomID), nil)
 }
 
-func (a *GaeDatastoreAccessor) getIdiom(c context.Context, idiomID int) (*datastore.Key, *Idiom, error) {
+func (a *GaeDatastoreAccessor) getIdiom(ctx context.Context, idiomID int) (*datastore.Key, *Idiom, error) {
 	var idiom Idiom
-	key := newIdiomKey(c, idiomID)
-	err := datastore.Get(c, key, &idiom)
+	key := newIdiomKey(ctx, idiomID)
+	err := datastore.Get(ctx, key, &idiom)
 	return key, &idiom, err
 }
 
-func (a *GaeDatastoreAccessor) getIdiomByImplID(c context.Context, implID int) (*datastore.Key, *Idiom, error) {
+func (a *GaeDatastoreAccessor) getIdiomByImplID(ctx context.Context, implID int) (*datastore.Key, *Idiom, error) {
 	q := datastore.NewQuery("Idiom").Filter("Implementations.Id =", implID)
 	idioms := make([]*Idiom, 0, 1)
-	keys, err := q.GetAll(c, &idioms)
+	keys, err := q.GetAll(ctx, &idioms)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -50,12 +50,12 @@ func (a *GaeDatastoreAccessor) getIdiomByImplID(c context.Context, implID int) (
 	return keys[0], idioms[0], nil
 }
 
-func (a *GaeDatastoreAccessor) getIdiomHistory(c context.Context, idiomID int, version int) (*datastore.Key, *IdiomHistory, error) {
+func (a *GaeDatastoreAccessor) getIdiomHistory(ctx context.Context, idiomID int, version int) (*datastore.Key, *IdiomHistory, error) {
 	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
 		Filter("Version =", version)
 	idioms := make([]*IdiomHistory, 0, 1)
-	keys, err := q.GetAll(c, &idioms)
+	keys, err := q.GetAll(ctx, &idioms)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -70,25 +70,25 @@ func (a *GaeDatastoreAccessor) getIdiomHistory(c context.Context, idiomID int, v
 	return keys[0], idioms[0], nil
 }
 
-func (a *GaeDatastoreAccessor) getIdiomHistoryList(c context.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error) {
+func (a *GaeDatastoreAccessor) getIdiomHistoryList(ctx context.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error) {
 	q := datastore.NewQuery("IdiomHistory").
 		Project("Version", "VersionDate", "IdiomOrImplLastEditor", "EditSummary").
 		// Project("Version", "VersionDate", "LastEditor", "EditSummary").
 		Filter("Id =", idiomID).
 		Order("-Version")
 	historyList := make([]*IdiomHistory, 0)
-	keys, err := q.GetAll(c, &historyList)
+	keys, err := q.GetAll(ctx, &historyList)
 	return keys, historyList, err
 }
 
 // revert modifies Idiom and deletes IdiomHistory, but not in a transaction (for now)
-func (a *GaeDatastoreAccessor) revert(c context.Context, idiomID int, version int) (*Idiom, error) {
+func (a *GaeDatastoreAccessor) revert(ctx context.Context, idiomID int, version int) (*Idiom, error) {
 	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
 		Order("-Version").
 		Limit(2)
 	histories := make([]*IdiomHistory, 0)
-	historyKeys, err := q.GetAll(c, &histories)
+	historyKeys, err := q.GetAll(ctx, &histories)
 	if err != nil {
 		return nil, err
 	}
@@ -101,23 +101,23 @@ func (a *GaeDatastoreAccessor) revert(c context.Context, idiomID int, version in
 	if histories[0].Version != version {
 		return nil, PiError{ErrorText: fmt.Sprintf("Can't revert idiom %v: last version is not %v", idiomID, version), Code: 400}
 	}
-	log.Infof(c, "Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
-	idiomKey := newIdiomKey(c, idiomID)
+	log.Infof(ctx, "Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
+	idiomKey := newIdiomKey(ctx, idiomID)
 	idiom := &histories[1].Idiom
-	_, err = datastore.Put(c, idiomKey, idiom)
+	_, err = datastore.Put(ctx, idiomKey, idiom)
 	if err != nil {
 		return nil, err
 	}
-	return idiom, datastore.Delete(c, historyKeys[0])
+	return idiom, datastore.Delete(ctx, historyKeys[0])
 }
 
-func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, version int) (*Idiom, error) {
+func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, version int) (*Idiom, error) {
 	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
 		Filter("Version =", version).
 		Limit(2)
 	histories := make([]*IdiomHistory, 0)
-	_, err := q.GetAll(c, &histories)
+	_, err := q.GetAll(ctx, &histories)
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +138,7 @@ func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, ve
 		}
 	}
 
-	idiomKey, idiom, err := a.getIdiom(c, idiomID)
+	idiomKey, idiom, err := a.getIdiom(ctx, idiomID)
 	if err != nil {
 		return nil, err
 	}
@@ -147,11 +147,11 @@ func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, ve
 	}
 	currentVersion := idiom.Version
 	newVersion := idiom.Version + 1
-	log.Infof(c, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
+	log.Infof(ctx, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
 
 	historyIdiom.Version = currentVersion // will be incremented
 	historyIdiom.EditSummary = fmt.Sprintf("Restored version %v", version)
-	err = a.saveExistingIdiom(c, idiomKey, historyIdiom)
+	err = a.saveExistingIdiom(ctx, idiomKey, historyIdiom)
 	if err != nil {
 		return nil, err
 	}
@@ -165,37 +165,37 @@ func (a *GaeDatastoreAccessor) historyRestore(c context.Context, idiomID int, ve
 // Delayers registered at init time
 
 // TODO take real Idiom as parameter, not a Key or a pointer
-var historyDelayer = delay.Func("save-history-item", func(c context.Context, idiomKey *datastore.Key) error {
+var historyDelayer = delay.Func("save-history-item", func(ctx context.Context, idiomKey *datastore.Key) error {
 	var historyItem IdiomHistory
 	// TODO check Memcache first
-	err := datastore.Get(c, idiomKey, &historyItem.Idiom)
+	err := datastore.Get(ctx, idiomKey, &historyItem.Idiom)
 	if err != nil {
 		return err
 	}
-	log.Infof(c, "Saving history for idiom %d %q", historyItem.Idiom.Id, historyItem.Idiom.Title)
+	log.Infof(ctx, "Saving history for idiom %d %q", historyItem.Idiom.Id, historyItem.Idiom.Title)
 	historyItem.ComputeIdiomOrImplLastEditor()
 	// Saves a new IdiomHistory entity. This causes no contention on the original Idiom entity.
-	_, err = datastore.Put(c, newHistoryKey(c), &historyItem)
+	_, err = datastore.Put(ctx, newHistoryKey(ctx), &historyItem)
 	return err
 })
 
-var indexDelayer = delay.Func("index-text-idiom", func(c context.Context, idiomKey *datastore.Key) error {
+var indexDelayer = delay.Func("index-text-idiom", func(ctx context.Context, idiomKey *datastore.Key) error {
 	var idiom Idiom
 	// TODO check Memcache first
-	err := datastore.Get(c, idiomKey, &idiom)
+	err := datastore.Get(ctx, idiomKey, &idiom)
 	if err != nil {
 		return err
 	}
 	// Full text API causes no contention on the original Idiom entity.
-	err = indexIdiomFullText(c, &idiom, idiomKey)
+	err = indexIdiomFullText(ctx, &idiom, idiomKey)
 	if err != nil {
 		return err
 	}
-	err = indexIdiomCheatsheets(c, &idiom)
+	err = indexIdiomCheatsheets(ctx, &idiom)
 	return err
 })
 
-func (a *GaeDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom) (*datastore.Key, error) {
+func (a *GaeDatastoreAccessor) saveNewIdiom(ctx context.Context, idiom *Idiom) (*datastore.Key, error) {
 	now := time.Now()
 	idiom.CreationDate = now
 	idiom.Version = 1
@@ -207,53 +207,53 @@ func (a *GaeDatastoreAccessor) saveNewIdiom(c context.Context, idiom *Idiom) (*d
 		idiom.Implementations[i].VersionDate = now
 	}
 
-	key, err := datastore.Put(c, newIdiomKey(c, idiom.Id), idiom)
+	key, err := datastore.Put(ctx, newIdiomKey(ctx, idiom.Id), idiom)
 	if err != nil {
 		return key, err
 	}
 
 	// Index full-text : asynchronously
-	indexDelayer.Call(c, key)
+	indexDelayer.Call(ctx, key)
 
 	// Save an history item : asynchronously
 	// TODO give real Idiom as parameter, not a Key or a pointer
-	historyDelayer.Call(c, key)
+	historyDelayer.Call(ctx, key)
 
 	return key, err
 }
 
-func (a *GaeDatastoreAccessor) saveExistingIdiom(c context.Context, key *datastore.Key, idiom *Idiom) error {
+func (a *GaeDatastoreAccessor) saveExistingIdiom(ctx context.Context, key *datastore.Key, idiom *Idiom) error {
 	idiom.Version = idiom.Version + 1
 	idiom.VersionDate = time.Now()
 	idiom.ImplCount = len(idiom.Implementations)
-	_, err := datastore.Put(c, key, idiom)
+	_, err := datastore.Put(ctx, key, idiom)
 
 	// Index full-text : asynchronously
-	indexDelayer.Call(c, key)
+	indexDelayer.Call(ctx, key)
 
 	// Save an history item : asynchronously
 	// TODO give real Idiom as parameter, not a Key or a pointer
-	historyDelayer.Call(c, key)
+	historyDelayer.Call(ctx, key)
 
 	return err
 }
 
 // stealthIncrementIdiomRating doesn't update Version and VersionDate
-func (a *GaeDatastoreAccessor) stealthIncrementIdiomRating(c context.Context, idiomID int, delta int) (*datastore.Key, *Idiom, error) {
-	key, idiom, err := dao.getIdiom(c, idiomID)
+func (a *GaeDatastoreAccessor) stealthIncrementIdiomRating(ctx context.Context, idiomID int, delta int) (*datastore.Key, *Idiom, error) {
+	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	idiom.Rating += delta
 
-	_, err = datastore.Put(c, key, idiom)
+	_, err = datastore.Put(ctx, key, idiom)
 	return key, idiom, err
 }
 
 // stealthIncrementImplRating doesn't update Version and VersionDate
-func (a *GaeDatastoreAccessor) stealthIncrementImplRating(c context.Context, idiomID, implID int, delta int) (key *datastore.Key, idiom *Idiom, newImplRating int, err error) {
-	key, idiom, err = dao.getIdiom(c, idiomID)
+func (a *GaeDatastoreAccessor) stealthIncrementImplRating(ctx context.Context, idiomID, implID int, delta int) (key *datastore.Key, idiom *Idiom, newImplRating int, err error) {
+	key, idiom, err = dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return nil, nil, 0, err
 	}
@@ -262,12 +262,12 @@ func (a *GaeDatastoreAccessor) stealthIncrementImplRating(c context.Context, idi
 	_, impl, _ := idiom.FindImplInIdiom(implID)
 	impl.Rating += delta
 
-	_, err = datastore.Put(c, key, idiom)
+	_, err = datastore.Put(ctx, key, idiom)
 	return key, idiom, impl.Rating, err
 }
 
-func newHistoryKey(c context.Context) *datastore.Key {
-	return datastore.NewIncompleteKey(c, "IdiomHistory", nil)
+func newHistoryKey(ctx context.Context) *datastore.Key {
+	return datastore.NewIncompleteKey(ctx, "IdiomHistory", nil)
 }
 
 // implementedLanguages may return duplicates, which is ok
@@ -280,7 +280,7 @@ func implementedLanguagesConcat(idiom *Idiom) string {
 	return langs
 }
 
-func (a *GaeDatastoreAccessor) getAllIdioms(c context.Context, limit int, order string) ([]*datastore.Key, []*Idiom, error) {
+func (a *GaeDatastoreAccessor) getAllIdioms(ctx context.Context, limit int, order string) ([]*datastore.Key, []*Idiom, error) {
 	q := datastore.NewQuery("Idiom")
 	if order != "" {
 		q = q.Order(order)
@@ -289,47 +289,47 @@ func (a *GaeDatastoreAccessor) getAllIdioms(c context.Context, limit int, order 
 		q = q.Limit(limit)
 	}
 	idioms := make([]*Idiom, 0, 500)
-	keys, err := q.GetAll(c, &idioms)
+	keys, err := q.GetAll(ctx, &idioms)
 	return keys, idioms, err
 }
 
-func (a *GaeDatastoreAccessor) deleteAllIdioms(c context.Context) error {
-	keys, err := datastore.NewQuery("Idiom").KeysOnly().GetAll(c, nil)
+func (a *GaeDatastoreAccessor) deleteAllIdioms(ctx context.Context) error {
+	keys, err := datastore.NewQuery("Idiom").KeysOnly().GetAll(ctx, nil)
 	if err != nil {
 		return err
 	}
 
-	err = a.unindexAll(c)
+	err = a.unindexAll(ctx)
 	if err != nil {
 		return err
 	}
 
-	return datastore.DeleteMulti(c, keys)
+	return datastore.DeleteMulti(ctx, keys)
 }
 
-func (a *GaeDatastoreAccessor) deleteIdiom(c context.Context, idiomID int, why string) error {
-	key, _, err := a.getIdiom(c, idiomID)
+func (a *GaeDatastoreAccessor) deleteIdiom(ctx context.Context, idiomID int, why string) error {
+	key, _, err := a.getIdiom(ctx, idiomID)
 	if err != nil {
 		return err
 	}
 	// Remove from text search index
-	err = a.unindex(c, idiomID)
+	err = a.unindex(ctx, idiomID)
 	if err != nil {
-		log.Errorf(c, "Failed to unindex idiom %d: %v", idiomID, err)
+		log.Errorf(ctx, "Failed to unindex idiom %d: %v", idiomID, err)
 	}
-	return datastore.Delete(c, key)
+	return datastore.Delete(ctx, key)
 	// The why param is ignored for now, because idiom doesn't exist anymore.
 }
 
-func (a *GaeDatastoreAccessor) deleteImpl(c context.Context, idiomID int, implID int, why string) error {
-	key, idiom, err := a.getIdiom(c, idiomID)
+func (a *GaeDatastoreAccessor) deleteImpl(ctx context.Context, idiomID int, implID int, why string) error {
+	key, idiom, err := a.getIdiom(ctx, idiomID)
 	if err != nil {
 		return err
 	}
 	idiom.EditSummary = why
 	if i, _, found := idiom.FindImplInIdiom(implID); found {
 		idiom.Implementations = append(idiom.Implementations[:i], idiom.Implementations[i+1:]...)
-		return a.saveExistingIdiom(c, key, idiom)
+		return a.saveExistingIdiom(ctx, key, idiom)
 	}
 	return fmt.Errorf("Could not find impl %v in idiom %v", idiom.Id, implID)
 }
@@ -361,9 +361,9 @@ func (a *GaeDatastoreAccessor) processUploadFiles(r *http.Request, names []strin
 	return blobKeys, otherParams, nil
 }
 
-func (a *GaeDatastoreAccessor) nextIdiomID(c context.Context) (int, error) {
+func (a *GaeDatastoreAccessor) nextIdiomID(ctx context.Context) (int, error) {
 	q := datastore.NewQuery("Idiom").Order("-Id"). /*.Project("Id")*/ Limit(1)
-	it := q.Run(c)
+	it := q.Run(ctx)
 	var maxIdiom Idiom
 	_, err := it.Next(&maxIdiom)
 	if err == datastore.Done {
@@ -376,12 +376,12 @@ func (a *GaeDatastoreAccessor) nextIdiomID(c context.Context) (int, error) {
 	return newID, nil
 }
 
-func (a *GaeDatastoreAccessor) nextImplID(c context.Context) (int, error) {
+func (a *GaeDatastoreAccessor) nextImplID(ctx context.Context) (int, error) {
 	// This is not scalable and may yield the same id twice.
 	// TODO cleanup this mess.
 	// order by implId desc : is it still ok with multi-valued implId ...?
 	q := datastore.NewQuery("Idiom").Order("-Implementations.Id"). /*.Project("Implementations.Id")*/ Limit(1)
-	it := q.Run(c)
+	it := q.Run(ctx)
 	var maxIdiom Idiom
 	_, err := it.Next(&maxIdiom)
 	if err == datastore.Done {
@@ -401,14 +401,14 @@ func (a *GaeDatastoreAccessor) nextImplID(c context.Context) (int, error) {
 	}
 	newID := maxImplID + 1
 
-	if _, _, err := a.getIdiomByImplID(c, newID); err == nil {
+	if _, _, err := a.getIdiomByImplID(ctx, newID); err == nil {
 		return 0, fmt.Errorf("Impl %d already exists :(", newID)
 	}
 	return newID, nil
 }
 
-func (a *GaeDatastoreAccessor) recentIdioms(c context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
-	idioms, err := a.idiomsFilterOrder(c, favoriteLangs, n, showOther, "-VersionDate")
+func (a *GaeDatastoreAccessor) recentIdioms(ctx context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
+	idioms, err := a.idiomsFilterOrder(ctx, favoriteLangs, n, showOther, "-VersionDate")
 	if err != nil {
 		return idioms, err
 	}
@@ -419,8 +419,8 @@ func (a *GaeDatastoreAccessor) recentIdioms(c context.Context, favoriteLangs []s
 	return idioms, err
 }
 
-func (a *GaeDatastoreAccessor) popularIdioms(c context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
-	idioms, err := a.idiomsFilterOrder(c, favoriteLangs, n, showOther, "-Rating")
+func (a *GaeDatastoreAccessor) popularIdioms(ctx context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
+	idioms, err := a.idiomsFilterOrder(ctx, favoriteLangs, n, showOther, "-Rating")
 	if err != nil {
 		return idioms, err
 	}
@@ -433,7 +433,7 @@ func (a *GaeDatastoreAccessor) popularIdioms(c context.Context, favoriteLangs []
 
 // Makes one datastore Query for each favorite language with specified sortOrder, then one Query without a language filter.
 // Then concatenates the results (eliminating duplicates).
-func (a *GaeDatastoreAccessor) idiomsFilterOrder(c context.Context, favoriteLangs []string, limitEachLang int, showOther bool, sortOrder string) ([]*Idiom, error) {
+func (a *GaeDatastoreAccessor) idiomsFilterOrder(ctx context.Context, favoriteLangs []string, limitEachLang int, showOther bool, sortOrder string) ([]*Idiom, error) {
 	idiomsResult := make([]*Idiom, 0, limitEachLang*len(favoriteLangs))
 
 	langFilters := make([]string, len(favoriteLangs))
@@ -451,7 +451,7 @@ func (a *GaeDatastoreAccessor) idiomsFilterOrder(c context.Context, favoriteLang
 		}
 		q = q.Order(sortOrder).Order("-Id").Limit(limitEachLang)
 		idioms := make([]*Idiom, 0, limitEachLang)
-		if _, err := q.GetAll(c, &idioms); err != nil {
+		if _, err := q.GetAll(ctx, &idioms); err != nil {
 			return nil, err
 		}
 		for _, idiom := range idioms {
@@ -471,11 +471,11 @@ func (a *GaeDatastoreAccessor) idiomsFilterOrder(c context.Context, favoriteLang
 	return idiomsResult, nil
 }
 
-func (a *GaeDatastoreAccessor) randomIdiom(c context.Context) (*datastore.Key, *Idiom, error) {
+func (a *GaeDatastoreAccessor) randomIdiom(ctx context.Context) (*datastore.Key, *Idiom, error) {
 	q := datastore.NewQuery("Idiom")
 	//q := q.KeysOnly()
-	//keys, err := q.GetAll(c, nil)
-	count, err := q.Count(c)
+	//keys, err := q.GetAll(ctx, nil)
+	count, err := q.Count(ctx)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -483,7 +483,7 @@ func (a *GaeDatastoreAccessor) randomIdiom(c context.Context) (*datastore.Key, *
 	// This is really slow: ~100ms. TODO find a better way.
 	q = q.Offset(k).Limit(1)
 	idioms := make([]*Idiom, 0, 1)
-	keys, err := q.GetAll(c, &idioms)
+	keys, err := q.GetAll(ctx, &idioms)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -491,10 +491,10 @@ func (a *GaeDatastoreAccessor) randomIdiom(c context.Context) (*datastore.Key, *
 }
 
 // Similar to randomIdiom, but with a lang filter.
-func (a *GaeDatastoreAccessor) randomIdiomHaving(c context.Context, havingLang string) (*datastore.Key, *Idiom, error) {
+func (a *GaeDatastoreAccessor) randomIdiomHaving(ctx context.Context, havingLang string) (*datastore.Key, *Idiom, error) {
 	q := datastore.NewQuery("Idiom")
 	q = q.Filter("Implementations.LanguageName =", havingLang)
-	count, err := q.Count(c)
+	count, err := q.Count(ctx)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -504,7 +504,7 @@ func (a *GaeDatastoreAccessor) randomIdiomHaving(c context.Context, havingLang s
 	k := rand.Intn(count)
 	q = q.Offset(k).Limit(1)
 	idioms := make([]*Idiom, 0, 1)
-	keys, err := q.GetAll(c, &idioms)
+	keys, err := q.GetAll(ctx, &idioms)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -516,11 +516,11 @@ func (a *GaeDatastoreAccessor) randomIdiomHaving(c context.Context, havingLang s
 
 // randomIdiomNotHaving uses big lists of keys, because the Datastore
 // doesn't handle natively the query "All idioms not having this language".
-func (a *GaeDatastoreAccessor) randomIdiomNotHaving(c context.Context, notHavingLang string) (*datastore.Key, *Idiom, error) {
+func (a *GaeDatastoreAccessor) randomIdiomNotHaving(ctx context.Context, notHavingLang string) (*datastore.Key, *Idiom, error) {
 	// All keys
 	q1 := datastore.NewQuery("Idiom")
 	q1 = q1.KeysOnly()
-	keys1, err := q1.GetAll(c, nil)
+	keys1, err := q1.GetAll(ctx, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -529,7 +529,7 @@ func (a *GaeDatastoreAccessor) randomIdiomNotHaving(c context.Context, notHaving
 	q2 := datastore.NewQuery("Idiom")
 	q2 = q2.Filter("Implementations.LanguageName =", notHavingLang)
 	q2 = q2.KeysOnly()
-	keys2, err := q2.GetAll(c, nil)
+	keys2, err := q2.GetAll(ctx, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -559,7 +559,7 @@ func (a *GaeDatastoreAccessor) randomIdiomNotHaving(c context.Context, notHaving
 	key := keys3[k]
 
 	var idiom Idiom
-	err = datastore.Get(c, key, &idiom)
+	err = datastore.Get(ctx, key, &idiom)
 	return key, &idiom, err
 }
 
@@ -570,10 +570,10 @@ type AppConfigProperty struct {
 	Value       bool
 }
 
-func (a *GaeDatastoreAccessor) getAppConfig(c context.Context) (ApplicationConfig, error) {
+func (a *GaeDatastoreAccessor) getAppConfig(ctx context.Context) (ApplicationConfig, error) {
 	q := datastore.NewQuery("AppConfigProperty") // TODO .Filter("AppConfigId =", appConfigId)
 	properties := make([]*AppConfigProperty, 0, 100)
-	_, err := q.GetAll(c, &properties)
+	_, err := q.GetAll(ctx, &properties)
 	if err != nil {
 		return ApplicationConfig{}, err
 	}
@@ -591,7 +591,7 @@ func (a *GaeDatastoreAccessor) getAppConfig(c context.Context) (ApplicationConfi
 	return appConfig, nil
 }
 
-func (a *GaeDatastoreAccessor) saveAppConfig(c context.Context, appConfig ApplicationConfig) error {
+func (a *GaeDatastoreAccessor) saveAppConfig(ctx context.Context, appConfig ApplicationConfig) error {
 	keys := make([]*datastore.Key, len(appConfig.Toggles))
 	properties := make([]*AppConfigProperty, len(appConfig.Toggles))
 	i := 0
@@ -602,32 +602,32 @@ func (a *GaeDatastoreAccessor) saveAppConfig(c context.Context, appConfig Applic
 			Value:       value,
 		}
 		keystr := fmt.Sprintf("%d_%s", prop.AppConfigId, prop.Name)
-		keys[i] = datastore.NewKey(c, "AppConfigProperty", keystr, 0, nil)
+		keys[i] = datastore.NewKey(ctx, "AppConfigProperty", keystr, 0, nil)
 		properties[i] = &prop
 		i++
 	}
-	_, err := datastore.PutMulti(c, keys, properties)
+	_, err := datastore.PutMulti(ctx, keys, properties)
 	return err
 }
 
-func (a *GaeDatastoreAccessor) saveAppConfigProperty(c context.Context, prop AppConfigProperty) error {
+func (a *GaeDatastoreAccessor) saveAppConfigProperty(ctx context.Context, prop AppConfigProperty) error {
 	keystr := fmt.Sprintf("%d_%s", prop.AppConfigId, prop.Name)
-	key := datastore.NewKey(c, "AppConfigProperty", keystr, 0, nil)
-	_, err := datastore.Put(c, key, &prop)
+	key := datastore.NewKey(ctx, "AppConfigProperty", keystr, 0, nil)
+	_, err := datastore.Put(ctx, key, &prop)
 	return err
 }
 
-func (a *GaeDatastoreAccessor) saveNewMessage(c context.Context, message *MessageForUser) (*datastore.Key, error) {
-	return datastore.Put(c, datastore.NewIncompleteKey(c, "MessageForUser", nil), message)
+func (a *GaeDatastoreAccessor) saveNewMessage(ctx context.Context, message *MessageForUser) (*datastore.Key, error) {
+	return datastore.Put(ctx, datastore.NewIncompleteKey(ctx, "MessageForUser", nil), message)
 }
 
-func (a *GaeDatastoreAccessor) getMessagesForUser(c context.Context, username string) ([]*datastore.Key, []*MessageForUser, error) {
+func (a *GaeDatastoreAccessor) getMessagesForUser(ctx context.Context, username string) ([]*datastore.Key, []*MessageForUser, error) {
 	var dateZero time.Time
 	q := datastore.NewQuery("MessageForUser").
 		Filter("Username =", username).
 		Filter("DismissalDate =", dateZero)
 	messages := make([]*MessageForUser, 0)
-	keys, err := q.GetAll(c, &messages)
+	keys, err := q.GetAll(ctx, &messages)
 
 	// Mark as seen
 	now := time.Now()
@@ -637,28 +637,28 @@ func (a *GaeDatastoreAccessor) getMessagesForUser(c context.Context, username st
 			msg.FirstViewDate = now
 		}
 	}
-	_, err = datastore.PutMulti(c, keys, messages)
+	_, err = datastore.PutMulti(ctx, keys, messages)
 	if err != nil {
-		log.Warningf(c, "Could not save messages view dates: %v", err)
+		log.Warningf(ctx, "Could not save messages view dates: %v", err)
 	}
 
 	return keys, messages, err
 }
 
-func (a *GaeDatastoreAccessor) dismissMessage(c context.Context, key *datastore.Key) (*MessageForUser, error) {
+func (a *GaeDatastoreAccessor) dismissMessage(ctx context.Context, key *datastore.Key) (*MessageForUser, error) {
 	var userMessage MessageForUser
-	err := datastore.Get(c, key, &userMessage)
+	err := datastore.Get(ctx, key, &userMessage)
 	if err != nil {
 		return nil, err
 	}
 	userMessage.DismissalDate = time.Now()
-	_, err = datastore.Put(c, key, &userMessage)
+	_, err = datastore.Put(ctx, key, &userMessage)
 	return &userMessage, err
 }
 
-func (a *GaeDatastoreAccessor) getAllIdiomTitles(c context.Context) ([]*Idiom, error) {
+func (a *GaeDatastoreAccessor) getAllIdiomTitles(ctx context.Context) ([]*Idiom, error) {
 	q := datastore.NewQuery("Idiom").Project("Id", "Title")
 	idioms := make([]*Idiom, 0, 10)
-	_, err := q.GetAll(c, &idioms)
+	_, err := q.GetAll(ctx, &idioms)
 	return idioms, err
 }

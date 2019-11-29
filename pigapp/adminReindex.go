@@ -14,17 +14,17 @@ import (
 )
 
 func adminReindexAjax(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
-	err := dao.deleteCache(c)
+	ctx := r.Context()
+	err := dao.deleteCache(ctx)
 	if err != nil {
-		log.Warningf(c, "Problem deleting cache: %v", err.Error())
+		log.Warningf(ctx, "Problem deleting cache: %v", err.Error())
 	}
-	err = dao.unindexAll(c)
+	err = dao.unindexAll(ctx)
 	if err != nil {
-		log.Warningf(c, "Problem deleting cache: %v", err.Error())
+		log.Warningf(ctx, "Problem deleting cache: %v", err.Error())
 	}
 
-	err = reindexDelayer.Call(c, "")
+	err = reindexDelayer.Call(ctx, "")
 	if err != nil {
 		return err
 	}
@@ -40,41 +40,41 @@ const reindexBatchSize = 5
 var reindexDelayer *delay.Function
 
 func init() {
-	reindexDelayer = delay.Func("reindex-idioms", func(c context.Context, cursorStr string) error {
+	reindexDelayer = delay.Func("reindex-idioms", func(ctx context.Context, cursorStr string) error {
 		q := datastore.NewQuery("Idiom")
 		if cursorStr != "" {
-			log.Infof(c, "Starting at cursor %v", cursorStr)
+			log.Infof(ctx, "Starting at cursor %v", cursorStr)
 			cursor, err := datastore.DecodeCursor(cursorStr)
 			if err != nil {
 				return err
 			}
 			q = q.Start(cursor)
 		}
-		iterator := q.Run(c)
+		iterator := q.Run(ctx)
 
 		reindexedIDs := make([]int, 0, reindexBatchSize)
 		defer func() {
-			log.Infof(c, "Reindexed idioms %v", reindexedIDs)
+			log.Infof(ctx, "Reindexed idioms %v", reindexedIDs)
 		}()
 
 		for i := 0; i < reindexBatchSize; i++ {
 			var idiom Idiom
 			key, err := iterator.Next(&idiom)
 			if err == datastore.Done {
-				log.Infof(c, "Reindexing completed.")
+				log.Infof(ctx, "Reindexing completed.")
 				return nil
 			} else if err != nil {
 				// ouch :(
 				return err
 			}
 
-			err = indexIdiomFullText(c, &idiom, key)
+			err = indexIdiomFullText(ctx, &idiom, key)
 			if err != nil {
-				log.Errorf(c, "Reindexing full text idiom %d : %v", idiom.Id, err)
+				log.Errorf(ctx, "Reindexing full text idiom %d : %v", idiom.Id, err)
 			}
-			err = indexIdiomCheatsheets(c, &idiom)
+			err = indexIdiomCheatsheets(ctx, &idiom)
 			if err != nil {
-				log.Errorf(c, "Reindexing cheatsheet of idiom %d : %v", idiom.Id, err)
+				log.Errorf(ctx, "Reindexing cheatsheet of idiom %d : %v", idiom.Id, err)
 			}
 
 			reindexedIDs = append(reindexedIDs, idiom.Id)
@@ -85,8 +85,8 @@ func init() {
 			// ouch :(
 			return err
 		}
-		log.Infof(c, "Stopping at cursor %v", cursor.String())
-		reindexDelayer.Call(c, cursor.String())
+		log.Infof(ctx, "Stopping at cursor %v", cursor.String())
+		reindexDelayer.Call(ctx, cursor.String())
 		return nil
 	})
 }

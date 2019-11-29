@@ -201,8 +201,8 @@ func handle(path string, h betterHandler) {
 				}
 			}()
 			if configTime == "0" {
-				c := r.Context()
-				_ = refreshToggles(c)
+				ctx := r.Context()
+				_ = refreshToggles(ctx)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}
 
@@ -240,8 +240,8 @@ func handleAjax(path string, h betterHandler) {
 				}
 			}()
 			if configTime == "0" {
-				c := r.Context()
-				_ = refreshToggles(c)
+				ctx := r.Context()
+				_ = refreshToggles(ctx)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}
 
@@ -324,8 +324,8 @@ func logIf(err error, logfunc func(format string, args ...interface{}), when str
 }
 */
 
-func logIf(err error, logfunc func(c context.Context, format string, args ...interface{}), c context.Context, when string) {
+func logIf(err error, logfunc func(ctx context.Context, format string, args ...interface{}), ctx context.Context, when string) {
 	if err != nil {
-		logfunc(c, "Problem on %v: %v", when, err.Error())
+		logfunc(ctx, "Problem on %v: %v", when, err.Error())
 	}
 }

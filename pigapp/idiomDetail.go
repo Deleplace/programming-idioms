@@ -9,8 +9,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
-	"github.com/gorilla/mux"
 	"context"
+	"github.com/gorilla/mux"
 
 	"google.golang.org/appengine/log"
 )
@@ -26,7 +26,7 @@ type IdiomDetailFacade struct {
 
 func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	c := r.Context()
+	ctx := r.Context()
 	userProfile := readUserProfile(r)
 	favlangs := userProfile.FavoriteLanguages
 
@@ -35,16 +35,16 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		// Zero-preference ≡ anonymous visit ≡ cache enabled
 		//
 		path := r.URL.RequestURI()
-		if cachedPage := htmlCacheRead(c, path); cachedPage != nil {
+		if cachedPage := htmlCacheRead(ctx, path); cachedPage != nil {
 			// Using the whole HTML block from Memcache
-			log.Debugf(c, "%s from memcache!", path)
+			log.Debugf(ctx, "%s from memcache!", path)
 			_, err := w.Write(cachedPage)
 			return err
 		}
-		log.Debugf(c, "%s not in memcache.", path)
+		log.Debugf(ctx, "%s not in memcache.", path)
 
 		var buffer bytes.Buffer
-		err := generateIdiomDetailPage(c, &buffer, vars)
+		err := generateIdiomDetailPage(ctx, &buffer, vars)
 		if err != nil {
 			if properURL, ok := err.(needRedirectError); ok {
 				http.Redirect(w, r, string(properURL), 302)
@@ -57,7 +57,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 
-		htmlCacheWrite(c, path, buffer.Bytes(), 24*time.Hour)
+		htmlCacheWrite(ctx, path, buffer.Bytes(), 24*time.Hour)
 		// Note that this cache entry must be later invalidated in case
 		// of any modification in this idiom.
 
@@ -78,7 +78,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}
@@ -111,7 +111,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	includeNonFav := seeNonFavorite(r)
-	log.Debugf(c, "Reorder impls start...")
+	log.Debugf(ctx, "Reorder impls start...")
 	implFavoriteLanguagesFirstWithOrder(idiom, favlangs, selectedImplLang, includeNonFav)
 
 	// Selected impl as very first element
@@ -124,7 +124,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			break
 		}
 	}
-	log.Debugf(c, "Reorder impls end.")
+	log.Debugf(ctx, "Reorder impls end.")
 
 	implLangInURL := vars["implLang"]
 	if implLangInURL != "" && strings.ToLower(selectedImplLang) != strings.ToLower(implLangInURL) {
@@ -135,9 +135,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	log.Debugf(c, "Decorate with votes start...")
-	daoVotes.decorateIdiom(c, idiom, userProfile.Nickname)
-	log.Debugf(c, "Decorate with votes end.")
+	log.Debugf(ctx, "Decorate with votes start...")
+	daoVotes.decorateIdiom(ctx, idiom, userProfile.Nickname)
+	log.Debugf(ctx, "Decorate with votes end.")
 
 	pageTitle := idiom.Title
 	if selectedImplLang != "" {
@@ -163,13 +163,13 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		SelectedImplLang: selectedImplLang,
 	}
 
-	log.Debugf(c, "ExecuteTemplate start...")
+	log.Debugf(ctx, "ExecuteTemplate start...")
 	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
-	log.Debugf(c, "ExecuteTemplate end.")
+	log.Debugf(ctx, "ExecuteTemplate end.")
 	return err
 }
 
-func generateIdiomDetailPage(c context.Context, w io.Writer, vars map[string]string) error {
+func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]string) error {
 	//
 	// WARNING this code is currently very redundant with the second part of idiomDetail.
 	// Please try to not diverge.
@@ -178,7 +178,7 @@ func generateIdiomDetailPage(c context.Context, w io.Writer, vars map[string]str
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}
@@ -253,9 +253,9 @@ func generateIdiomDetailPage(c context.Context, w io.Writer, vars map[string]str
 		SelectedImplLang: selectedImplLang,
 	}
 
-	log.Debugf(c, "ExecuteTemplate start...")
+	log.Debugf(ctx, "ExecuteTemplate start...")
 	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
-	log.Debugf(c, "ExecuteTemplate end.")
+	log.Debugf(ctx, "ExecuteTemplate end.")
 	return err
 }
 

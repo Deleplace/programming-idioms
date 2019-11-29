@@ -24,8 +24,8 @@ import (
 //
 // There is no guarantee that previously cached data will be found,
 // because memcache entries may vanish anytime, even before expiration.
-func htmlCacheRead(c context.Context, key string) []byte {
-	cacheItem, err := memcache.Get(c, key)
+func htmlCacheRead(ctx context.Context, key string) []byte {
+	cacheItem, err := memcache.Get(ctx, key)
 	if err == memcache.ErrCacheMiss {
 		// Item not in the cache
 		return nil
@@ -40,78 +40,78 @@ func htmlCacheRead(c context.Context, key string) []byte {
 
 // htmlCacheWrite saves bytes for given key.
 // Failures are ignored.
-func htmlCacheWrite(c context.Context, key string, data []byte, duration time.Duration) {
+func htmlCacheWrite(ctx context.Context, key string, data []byte, duration time.Duration) {
 	cacheItem := &memcache.Item{
 		Key:        key,
 		Value:      data,
 		Expiration: duration,
 	}
-	_ = memcache.Set(c, cacheItem)
+	_ = memcache.Set(ctx, cacheItem)
 }
 
 // Data changes should lead to cache entries invalidation.
-func htmlCacheEvict(c context.Context, key string) {
-	_ = memcache.Delete(c, key)
+func htmlCacheEvict(ctx context.Context, key string) {
+	_ = memcache.Delete(ctx, key)
 	// See also htmlUncacheIdiomAndImpls
 }
 
 // When expected data may be >1MB.
-func htmlCacheZipRead(c context.Context, key string) []byte {
-	zipdata := htmlCacheRead(c, key)
+func htmlCacheZipRead(ctx context.Context, key string) []byte {
+	zipdata := htmlCacheRead(ctx, key)
 	if zipdata == nil {
 		return nil
 	}
 	zipbuffer := bytes.NewBuffer(zipdata)
 	zipreader, err := gzip.NewReader(zipbuffer)
 	if err != nil {
-		log.Errorf(c, "Reading zip memcached entry %q: %v", key, err)
+		log.Errorf(ctx, "Reading zip memcached entry %q: %v", key, err)
 		// Ignore failure
 		return nil
 	}
 	buffer, err := ioutil.ReadAll(zipreader)
 	if err != nil {
-		log.Errorf(c, "Reading zip memcached entry %q: %v", key, err)
+		log.Errorf(ctx, "Reading zip memcached entry %q: %v", key, err)
 	}
-	log.Debugf(c, "Reading %d bytes out of %d gzip bytes for entry %q", len(buffer), len(zipdata), key)
+	log.Debugf(ctx, "Reading %d bytes out of %d gzip bytes for entry %q", len(buffer), len(zipdata), key)
 	return buffer
 }
 
 // When expected data may be >1MB.
-func htmlCacheZipWrite(c context.Context, key string, data []byte, duration time.Duration) {
+func htmlCacheZipWrite(ctx context.Context, key string, data []byte, duration time.Duration) {
 	var zipbuffer bytes.Buffer
 	zipwriter := gzip.NewWriter(&zipbuffer)
 	_, err := zipwriter.Write(data)
 	if err != nil {
-		log.Errorf(c, "Writing zip memcached entry %q: %v", key, err)
+		log.Errorf(ctx, "Writing zip memcached entry %q: %v", key, err)
 		// Ignore failure
 		return
 	}
 	_ = zipwriter.Close()
-	log.Debugf(c, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), len(data), key)
-	htmlCacheWrite(c, key, zipbuffer.Bytes(), duration)
+	log.Debugf(ctx, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), len(data), key)
+	htmlCacheWrite(ctx, key, zipbuffer.Bytes(), duration)
 }
 
-func htmlUncacheIdiomAndImpls(c context.Context, idiom *Idiom) {
+func htmlUncacheIdiomAndImpls(ctx context.Context, idiom *Idiom) {
 	//
 	// There are only two hard things in Computer Science: cache invalidation and naming things.
 	//
-	log.Infof(c, "Evicting HTML cached pages for idiom %d %q", idiom.Id, idiom.Title)
+	log.Infof(ctx, "Evicting HTML cached pages for idiom %d %q", idiom.Id, idiom.Title)
 
 	cachekeys := make([]string, 0, 1+len(idiom.Implementations))
 	cachekeys = append(cachekeys, NiceIdiomRelativeURL(idiom))
 	for _, impl := range idiom.Implementations {
 		cachekeys = append(cachekeys, NiceImplRelativeURL(idiom, impl.Id, impl.LanguageName))
 	}
-	err := memcache.DeleteMulti(c, cachekeys)
+	err := memcache.DeleteMulti(ctx, cachekeys)
 	if err != nil {
-		// log.Errorf(c, "Uncaching idiom %d: %v", idiom.Id, err)
+		// log.Errorf(ctx, "Uncaching idiom %d: %v", idiom.Id, err)
 		// A lot of impl HTML paages won't be in cache, which will cause
 		// en error. Never mind, just ignore.
 	}
 }
 
-func htmlRecacheNowAndTomorrow(c context.Context, idiomID int) error {
-	log.Debugf(c, "Creating html recache tasks for idiom %d", idiomID)
+func htmlRecacheNowAndTomorrow(ctx context.Context, idiomID int) error {
+	log.Debugf(ctx, "Creating html recache tasks for idiom %d", idiomID)
 	// These 2 task submissions may take several 10s of ms,
 	// thus we decide to submit them as a small batch.
 
@@ -128,18 +128,18 @@ func htmlRecacheNowAndTomorrow(c context.Context, idiomID int) error {
 	}
 	t2.Delay = 24*time.Hour + 10*time.Minute
 
-	_, err := taskqueue.AddMulti(c, []*taskqueue.Task{t1, t2}, "")
+	_, err := taskqueue.AddMulti(ctx, []*taskqueue.Task{t1, t2}, "")
 	return err
 }
 
 var recacheHtmlIdiom, recacheHtmlImpl *delay.Function
 
 func init() {
-	recacheHtmlIdiom = delay.Func("recache-html-idiom", func(c context.Context, idiomID int) {
-		log.Infof(c, "Start recaching HTML for idiom %d", idiomID)
-		_, idiom, err := dao.getIdiom(c, idiomID)
+	recacheHtmlIdiom = delay.Func("recache-html-idiom", func(ctx context.Context, idiomID int) {
+		log.Infof(ctx, "Start recaching HTML for idiom %d", idiomID)
+		_, idiom, err := dao.getIdiom(ctx, idiomID)
 		if err != nil {
-			log.Errorf(c, "recacheHtmlIdiom: %v", err)
+			log.Errorf(ctx, "recacheHtmlIdiom: %v", err)
 			return
 		}
 
@@ -149,30 +149,30 @@ func init() {
 			"idiomId":    strconv.Itoa(idiomID),
 			"idiomTitle": uriNormalize(idiom.Title),
 		}
-		err = generateIdiomDetailPage(c, &buffer, vars)
+		err = generateIdiomDetailPage(ctx, &buffer, vars)
 		if err != nil {
-			log.Errorf(c, "recacheHtmlIdiom: %v", err)
+			log.Errorf(ctx, "recacheHtmlIdiom: %v", err)
 			return
 		}
-		htmlCacheWrite(c, path, buffer.Bytes(), 24*time.Hour)
+		htmlCacheWrite(ctx, path, buffer.Bytes(), 24*time.Hour)
 
 		// Then, create async task for each impl to be HTML-recached
 		for _, impl := range idiom.Implementations {
 			implPath := NiceImplRelativeURL(idiom, impl.Id, impl.LanguageName)
-			recacheHtmlImpl.Call(c, implPath, idiom.Id, idiom.Title, impl.Id, impl.LanguageName)
+			recacheHtmlImpl.Call(ctx, implPath, idiom.Id, idiom.Title, impl.Id, impl.LanguageName)
 		}
 
 	})
 
 	recacheHtmlImpl = delay.Func("recache-html-impl", func(
-		c context.Context,
+		ctx context.Context,
 		implPath string,
 		idiomID int,
 		idiomTitle string,
 		implID int,
 		implLang string,
 	) {
-		log.Infof(c, "Recaching HTML for %s", implPath)
+		log.Infof(ctx, "Recaching HTML for %s", implPath)
 		// TODO call idiomDetail(fakeWriter, fakeRequest)
 
 		var buffer bytes.Buffer
@@ -182,11 +182,11 @@ func init() {
 			"implId":     strconv.Itoa(implID),
 			"implLang":   implLang,
 		}
-		err := generateIdiomDetailPage(c, &buffer, vars)
+		err := generateIdiomDetailPage(ctx, &buffer, vars)
 		if err != nil {
-			log.Errorf(c, "recacheHtmlImpl: %v", err)
+			log.Errorf(ctx, "recacheHtmlImpl: %v", err)
 			return
 		}
-		htmlCacheWrite(c, implPath, buffer.Bytes(), 24*time.Hour)
+		htmlCacheWrite(ctx, implPath, buffer.Bytes(), 24*time.Hour)
 	})
 }

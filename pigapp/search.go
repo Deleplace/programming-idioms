@@ -46,7 +46,7 @@ func search(w http.ResponseWriter, r *http.Request) error {
 
 	userProfile := readUserProfile(r)
 
-	c := r.Context()
+	ctx := r.Context()
 	q := vars["q"]
 	//q := url.QueryUnescape(q)  Not needed, so it seems.
 
@@ -85,10 +85,10 @@ func search(w http.ResponseWriter, r *http.Request) error {
 		typedLangsSet[lang] = true
 	}
 
-	matchingPromise := matchingImplPromise(c, words, typedLangs)
+	matchingPromise := matchingImplPromise(ctx, words, typedLangs)
 
 	numberMaxResults := 20
-	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
+	hits, err := dao.searchIdiomsByWordsWithFavorites(ctx, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
 	if err != nil {
 		return err
 	}
@@ -113,15 +113,15 @@ func search(w http.ResponseWriter, r *http.Request) error {
 	return listResults(w, r, normalizedQ, hits)
 }
 
-func matchingImplPromise(c context.Context, words, typedLangs []string) chan map[string]bool {
+func matchingImplPromise(ctx context.Context, words, typedLangs []string) chan map[string]bool {
 	ch := make(chan map[string]bool)
 	go func() {
 		// Highlight matching impls :)
-		matchingImplIDs, err := dao.searchImplIDs(c, words, typedLangs)
+		matchingImplIDs, err := dao.searchImplIDs(ctx, words, typedLangs)
 		if err == nil {
 			ch <- matchingImplIDs
 		} else {
-			log.Errorf(c, "problem fetching impl highlights: %v", err)
+			log.Errorf(ctx, "problem fetching impl highlights: %v", err)
 			ch <- map[string]bool{}
 		}
 		close(ch)
@@ -162,14 +162,14 @@ func listByLanguage(w http.ResponseWriter, r *http.Request) error {
 
 	userProfile := readUserProfile(r)
 
-	c := r.Context()
+	ctx := r.Context()
 	langsStr := vars["langs"]
 	langs := strings.Split(langsStr, "_")
 	langs = MapStrings(langs, NormLang)
 	langs = RemoveEmptyStrings(langs)
 
 	numberMaxResults := 20
-	hits, err := dao.searchIdiomsByLangs(c, langs, numberMaxResults)
+	hits, err := dao.searchIdiomsByLangs(ctx, langs, numberMaxResults)
 	if err != nil {
 		return err
 	}

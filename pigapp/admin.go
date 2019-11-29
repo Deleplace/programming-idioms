@@ -14,8 +14,8 @@ import (
 
 // IsAdmin determines whether the current user is regarded as Admin by the Google auth provider.
 func IsAdmin(r *http.Request) bool {
-	c := r.Context() // TODO check if NewContext is expensive
-	u := user.Current(c)
+	ctx := r.Context() // TODO check if NewContext is expensive
+	u := user.Current(ctx)
 	return u != nil && u.Admin
 }
 
@@ -37,16 +37,16 @@ func admin(w http.ResponseWriter, r *http.Request) error {
 }
 
 func ajaxRefreshToggles(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
-	err := dao.deleteCache(c)
+	ctx := r.Context()
+	err := dao.deleteCache(ctx)
 	if err != nil {
 		return err
 	}
-	return refreshToggles(c)
+	return refreshToggles(ctx)
 }
 
 func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	name := r.FormValue("toggle")
 	valueAsString := r.FormValue("value")
 
@@ -57,7 +57,7 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 	toggles[name] = value
 
 	// Save config in distributed Datastore and Memcached
-	err = dao.saveAppConfigProperty(c, AppConfigProperty{
+	err = dao.saveAppConfigProperty(ctx, AppConfigProperty{
 		AppConfigId: 0, // TODO meaningful AppConfigId
 		Name:        name,
 		Value:       value,
@@ -73,28 +73,28 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 
 // For related idioms (i.e. linked idioms)
 func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomAIdStr := r.FormValue("idiomAId")
 	idiomAId := String2Int(idiomAIdStr)
 	idiomBIdStr := r.FormValue("idiomBId")
 	idiomBId := String2Int(idiomBIdStr)
 
-	keyA, idiomA, err := dao.getIdiom(c, idiomAId)
+	keyA, idiomA, err := dao.getIdiom(ctx, idiomAId)
 	if err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
 	}
 
-	keyB, idiomB, err := dao.getIdiom(c, idiomBId)
+	keyB, idiomB, err := dao.getIdiom(ctx, idiomBId)
 	if err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
 	}
 
 	idiomA.AddRelation(idiomB)
-	if err := dao.saveExistingIdiom(c, keyA, idiomA); err != nil {
+	if err := dao.saveExistingIdiom(ctx, keyA, idiomA); err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
 	}
-	if err := dao.saveExistingIdiom(c, keyB, idiomB); err != nil {
+	if err := dao.saveExistingIdiom(ctx, keyB, idiomB); err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
 	}
 	w.WriteHeader(http.StatusNoContent)
@@ -102,14 +102,14 @@ func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
 }
 
 func sendMessageForUserAjax(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	msg := MessageForUser{
 		Username:     r.FormValue("username"),
 		Message:      r.FormValue("message"),
 		CreationDate: time.Now(),
 	}
-	log.Infof(c, "Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
-	_, err := dao.saveNewMessage(c, &msg)
+	log.Infof(ctx, "Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
+	_, err := dao.saveNewMessage(ctx, &msg)
 	if err != nil {
 		return err
 	}

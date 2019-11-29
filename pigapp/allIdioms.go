@@ -36,11 +36,11 @@ func allIdioms(w http.ResponseWriter, r *http.Request) error {
 }
 
 func retrieveAllIdioms(r *http.Request) ([]*Idiom, error) {
-	c := r.Context()
+	ctx := r.Context()
 	// TODO sort by popularity desc
 	// TODO limit to 50, + button [See more...]  or pagination
 
-	_, idioms, err := dao.getAllIdioms(c, 0, "Id")
+	_, idioms, err := dao.getAllIdioms(ctx, 0, "Id")
 	if err != nil {
 		return nil, err
 	}

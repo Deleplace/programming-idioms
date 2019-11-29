@@ -20,7 +20,7 @@ type ImplEditFacade struct {
 func implEdit(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -28,7 +28,7 @@ func implEdit(w http.ResponseWriter, r *http.Request) error {
 	implIDStr := vars["implId"]
 	implID := String2Int(implIDStr)
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}

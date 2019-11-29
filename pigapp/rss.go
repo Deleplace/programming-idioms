@@ -58,28 +58,28 @@ type RssFacade struct {
 }
 
 func rssRecentlyUpdated(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
-	_, idioms, _ := dao.getAllIdioms(c, nbItemsUpdated, "-VersionDate")
+	ctx := r.Context()
+	_, idioms, _ := dao.getAllIdioms(ctx, nbItemsUpdated, "-VersionDate")
 	dateUpdate := func(idiom *Idiom) string { return idiom.VersionDate.Format(rssPubDatelayout) }
 	idiomVersionGuidation := func(idiom *Idiom) string {
 		return fmt.Sprintf("%v/guid/idiom/%v/version/%v", env.Host, idiom.Id, idiom.Version)
 	}
-	return rss(w, c, r, idioms, dateUpdate, idiomVersionGuidation, "/rss-recently-updated", "Programming Idioms recently updated idioms", "Idioms recently modified or having new implementations", "<br/><br/>Last updated in ")
+	return rss(w, ctx, r, idioms, dateUpdate, idiomVersionGuidation, "/rss-recently-updated", "Programming Idioms recently updated idioms", "Idioms recently modified or having new implementations", "<br/><br/>Last updated in ")
 }
 
 func rssRecentlyCreated(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
-	_, idioms, _ := dao.getAllIdioms(c, nbItemsCreated, "-Id")
+	ctx := r.Context()
+	_, idioms, _ := dao.getAllIdioms(ctx, nbItemsCreated, "-Id")
 	dateCreation := func(idiom *Idiom) string { return idiom.CreationDate.Format(rssPubDatelayout) }
 	idiomGuidation := func(idiom *Idiom) string { return fmt.Sprintf("%v/guid/idiom/%v", env.Host, idiom.Id) }
-	return rss(w, c, r, idioms, dateCreation, idiomGuidation, "/rss-recently-created", "Programming Idioms recently created idioms", "Idioms recently created", "<br/><br/>Implemented in ")
+	return rss(w, ctx, r, idioms, dateCreation, idiomGuidation, "/rss-recently-created", "Programming Idioms recently created idioms", "Idioms recently created", "<br/><br/>Implemented in ")
 }
 
 // TODO an interface IdiomRssFeeder, 2 implementations (1 for updates, 1 for creations),
 // and func rss takes a IdiomRssFeeder as param.
 
 func rss(w http.ResponseWriter,
-	c context.Context,
+	ctx context.Context,
 	r *http.Request,
 	idioms []*Idiom,
 	datation func(*Idiom) string,

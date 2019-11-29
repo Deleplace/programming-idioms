@@ -24,7 +24,7 @@ type VersionDiffFacade struct {
 func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -39,11 +39,11 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 		return PiError{fmt.Sprintf("Won't compare v%v with itself", v1), http.StatusBadRequest}
 	}
 
-	_, left, err := dao.getIdiomHistory(c, idiomID, v1)
+	_, left, err := dao.getIdiomHistory(ctx, idiomID, v1)
 	if err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
 	}
-	_, right, err := dao.getIdiomHistory(c, idiomID, v2)
+	_, right, err := dao.getIdiomHistory(ctx, idiomID, v2)
 	if err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
 	}

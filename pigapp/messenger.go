@@ -9,10 +9,10 @@ import (
 )
 
 func userMessageBoxAjax(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	userProfile := readUserProfile(r)
 	username := userProfile.Nickname
-	keys, messages, err := dao.getMessagesForUser(c, username)
+	keys, messages, err := dao.getMessagesForUser(ctx, username)
 	if err != nil {
 		return err
 	}
@@ -35,14 +35,14 @@ func userMessageBoxAjax(w http.ResponseWriter, r *http.Request) error {
 }
 
 func dismissUserMessage(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	keyStr := r.FormValue("key")
-	log.Infof(c, "Dismissing user message for key %v", keyStr)
+	log.Infof(ctx, "Dismissing user message for key %v", keyStr)
 	key, err := datastore.DecodeKey(keyStr)
 	if err != nil {
 		return err
 	}
-	_, err = dao.dismissMessage(c, key)
+	_, err = dao.dismissMessage(ctx, key)
 	if err != nil {
 		return err
 	}
