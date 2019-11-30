@@ -81,6 +81,16 @@ func (a *GaeDatastoreAccessor) getIdiomHistoryList(ctx context.Context, idiomID 
 	return keys, historyList, err
 }
 
+func (a *GaeDatastoreAccessor) getGlobalHistoryList(ctx context.Context, n int) ([]*datastore.Key, []*IdiomHistory, error) {
+	q := datastore.NewQuery("IdiomHistory").
+		Project("Id", "Version", "VersionDate", "IdiomOrImplLastEditor", "Title", "EditSummary").
+		Order("-VersionDate").
+		Limit(n)
+	historyList := make([]*IdiomHistory, 0)
+	keys, err := q.GetAll(ctx, &historyList)
+	return keys, historyList, err
+}
+
 // revert modifies Idiom and deletes IdiomHistory, but not in a transaction (for now)
 func (a *GaeDatastoreAccessor) revert(ctx context.Context, idiomID int, version int) (*Idiom, error) {
 	q := datastore.NewQuery("IdiomHistory").

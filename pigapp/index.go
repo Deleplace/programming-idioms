@@ -62,6 +62,7 @@ func initRoutes() {
 		handle("/idiom-picture", idiomPicture)
 		handle("/rss-recently-created", rssRecentlyCreated)
 		handle("/rss-recently-updated", rssRecentlyUpdated)
+		handle("/rss-recent-changes", rssRecentChanges)
 		handle("/my/{nickname}/{langs}", bookmarkableUserURL)
 		handle("/my/{langs}", bookmarkableUserURL)
 		handle("/cheatsheet/{lang}", cheatsheet)

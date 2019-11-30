@@ -39,9 +39,17 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 		return PiError{fmt.Sprintf("Won't compare v%v with itself", v1), http.StatusBadRequest}
 	}
 
-	_, left, err := dao.getIdiomHistory(ctx, idiomID, v1)
-	if err != nil {
-		return PiError{err.Error(), http.StatusNotFound}
+	var err error
+	var left *IdiomHistory
+	if v1 == 0 {
+		// Dummy empty object, to show an idiom creation
+		left = &IdiomHistory{}
+		left.Idiom.Id = idiomID
+	} else {
+		_, left, err = dao.getIdiomHistory(ctx, idiomID, v1)
+		if err != nil {
+			return PiError{err.Error(), http.StatusNotFound}
+		}
 	}
 	_, right, err := dao.getIdiomHistory(ctx, idiomID, v2)
 	if err != nil {
