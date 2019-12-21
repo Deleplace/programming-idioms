@@ -6,7 +6,9 @@
 	{{template "header-small" .}}  
 	<div class="page-content container-fluid">
 
-		{{template "language-bar" .}}
+		<h4>
+			History</a> of <a href="{{niceIdiomURL .Idiom}}">Idiom {{.Idiom.Id}}</a>
+		</h4>
 		{{template "idiom-summary-medium"  decorate .Idiom .UserProfile}}
 
 		<div>
