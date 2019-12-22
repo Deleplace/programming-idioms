@@ -258,6 +258,14 @@
 		<div class="span6 next">
 			{{if .NextChangePath}}
 				<a href="{{hostPrefix}}{{.NextChangePath}}">Next change ↷</a>
+			{{else}}
+				{{if .UserProfile.IsAdmin}}
+					<form method="POST" action="/history-restore">
+						<input type="hidden" name="idiomId" value="{{.IdiomLeft.Id}}" />
+						<input type="hidden" name="version" value="{{.IdiomLeft.Version}}" />
+						<input type="submit" value="Revert v{{.IdiomRight.Version}} and restore v{{.IdiomLeft.Version}}" class="btn btn-danger ajax-generic-action" /> 
+					</form>
+				{{end}}
 			{{end}}
 		</div>
 	</div>

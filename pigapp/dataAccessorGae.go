@@ -159,8 +159,8 @@ func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, 
 	newVersion := idiom.Version + 1
 	log.Infof(ctx, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
 
-	historyIdiom.Version = currentVersion // will be incremented
-	historyIdiom.EditSummary = fmt.Sprintf("Restored version %v", version)
+	historyIdiom.Version = currentVersion                                  // will be incremented
+	historyIdiom.EditSummary = fmt.Sprintf("Restored version %v", version) // TODO append reverter's reason here
 	err = a.saveExistingIdiom(ctx, idiomKey, historyIdiom)
 	if err != nil {
 		return nil, err
