@@ -12,13 +12,14 @@ import (
 
 // VersionDiffFacade is the Facade for the Diff page.
 type VersionDiffFacade struct {
-	PageMeta              PageMeta
-	UserProfile           UserProfile
-	IdiomLeft, IdiomRight *IdiomHistory
-	ImplIDs               []int
-	ImplLeft, ImplRight   map[int]Impl
-	CreationImplIDs       map[int]bool
-	DeletionImplIDs       map[int]bool
+	PageMeta                           PageMeta
+	UserProfile                        UserProfile
+	IdiomLeft, IdiomRight              *IdiomHistory
+	ImplIDs                            []int
+	ImplLeft, ImplRight                map[int]Impl
+	CreationImplIDs                    map[int]bool
+	DeletionImplIDs                    map[int]bool
+	PreviousChangePath, NextChangePath string
 }
 
 func versionDiff(w http.ResponseWriter, r *http.Request) error {
@@ -103,6 +104,15 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 		ImplRight:       implRight,
 		CreationImplIDs: creationImplIDs,
 		DeletionImplIDs: deletionImplIDs,
+	}
+	// Note: the Prev/Next links wouldn't work in a case where version numbers
+	// wouldn't be perfectly sequential.
+	if left.Version >= 2 {
+		data.PreviousChangePath = fmt.Sprintf("/idiom/%d/diff/%d/%d", left.Id, left.Version-1, left.Version)
+	}
+	_, _, errNext := dao.getIdiomHistory(ctx, right.Id, right.Version+1)
+	if errNext == nil {
+		data.NextChangePath = fmt.Sprintf("/idiom/%d/diff/%d/%d", right.Id, right.Version, right.Version+1)
 	}
 	return templates.ExecuteTemplate(w, "page-idiom-version-diff", data)
 }

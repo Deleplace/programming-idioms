@@ -248,6 +248,19 @@
 		{{end}}
 
 	{{end}}
+
+	<div class="row-fluid diff-nav">
+		<div class="span6 previous">
+			{{if .PreviousChangePath}}
+				<a href="{{hostPrefix}}{{.PreviousChangePath}}">↶ Previous change</a>
+			{{end}}
+		</div>
+		<div class="span6 next">
+			{{if .NextChangePath}}
+				<a href="{{hostPrefix}}{{.NextChangePath}}">Next change ↷</a>
+			{{end}}
+		</div>
+	</div>
 	
 	</div>
 {{template "footer" .}}

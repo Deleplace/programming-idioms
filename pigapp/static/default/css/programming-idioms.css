@@ -913,6 +913,14 @@ footer a.visited {
 	background-color: white;
 }
 
+.diff-nav {
+	margin-top: 1.5rem;
+}
+
+.diff-nav .next {
+	text-align: right;
+}
+
 /* Missing fields list */
 
 .idioms-missing-fields td.mark {
