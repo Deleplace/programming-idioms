@@ -12,7 +12,6 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -64,7 +63,7 @@ func search(w http.ResponseWriter, r *http.Request) error {
 var errEmptyQ = fmt.Errorf("Empty search query")
 
 func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ string, err error) {
-	c := appengine.NewContext(r)
+	ctx := r.Context()
 
 	// Maybe someday we find a graceful way to handle "c++", "c#", etc. but...
 	q = strings.Replace(q, "C++", "Cpp", -1)
@@ -99,14 +98,16 @@ func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ strin
 		typedLangsSet[lang] = true
 	}
 
-	matchingPromise := matchingImplPromise(c, words, typedLangs)
+	matchingPromise := matchingImplPromise(ctx, words, typedLangs)
 
 	numberMaxResults := 20
-
 	// Note that this currently depends on userProfile.FavoriteLanguages
 	// (not the best for caching and for SAP)
 	userProfile := readUserProfile(r)
-	hits, err := dao.searchIdiomsByWordsWithFavorites(c, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
+	hits, err := dao.searchIdiomsByWordsWithFavorites(ctx, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
+	if err != nil {
+		return nil, "", err
+	}
 
 	matchingImplIDs := <-matchingPromise
 
@@ -126,15 +127,15 @@ func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ strin
 	return hits, strings.Join(terms, " "), nil
 }
 
-func matchingImplPromise(c context.Context, words, typedLangs []string) chan map[string]bool {
+func matchingImplPromise(ctx context.Context, words, typedLangs []string) chan map[string]bool {
 	ch := make(chan map[string]bool)
 	go func() {
 		// Highlight matching impls :)
-		matchingImplIDs, err := dao.searchImplIDs(c, words, typedLangs)
+		matchingImplIDs, err := dao.searchImplIDs(ctx, words, typedLangs)
 		if err == nil {
 			ch <- matchingImplIDs
 		} else {
-			log.Errorf(c, "problem fetching impl highlights: %v", err)
+			log.Errorf(ctx, "problem fetching impl highlights: %v", err)
 			ch <- map[string]bool{}
 		}
 		close(ch)
@@ -176,14 +177,14 @@ func listByLanguage(w http.ResponseWriter, r *http.Request) error {
 
 	userProfile := readUserProfile(r)
 
-	c := r.Context()
+	ctx := r.Context()
 	langsStr := vars["langs"]
 	langs := strings.Split(langsStr, "_")
 	langs = MapStrings(langs, NormLang)
 	langs = RemoveEmptyStrings(langs)
 
 	numberMaxResults := 20
-	hits, err := dao.searchIdiomsByLangs(c, langs, numberMaxResults)
+	hits, err := dao.searchIdiomsByLangs(ctx, langs, numberMaxResults)
 	if err != nil {
 		return err
 	}

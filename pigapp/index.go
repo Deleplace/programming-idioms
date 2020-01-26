@@ -18,7 +18,7 @@ const ThemeVersion = "default"
 
 // ThemeDate is the prefix used for "revving" the static files and enable long-term HTTP cache.
 // It MUST end with underscore _ (see app.yaml)
-const ThemeDate = "20190303_"
+const ThemeDate = "20191222_"
 
 var r = mux.NewRouter()
 
@@ -62,10 +62,12 @@ func initRoutes() {
 		handle("/idiom-picture", idiomPicture)
 		handle("/rss-recently-created", rssRecentlyCreated)
 		handle("/rss-recently-updated", rssRecentlyUpdated)
+		handle("/rss-recent-changes", rssRecentChanges)
 		handle("/my/{nickname}/{langs}", bookmarkableUserURL)
 		handle("/my/{langs}", bookmarkableUserURL)
 		handle("/cheatsheet/{lang}", cheatsheet)
 		handleAjax("/typeahead-languages", typeaheadLanguages)
+		handleAjax("/supported-languages", supportedLanguages)
 		handleAjax("/ajax-other-implementations", ajaxOtherImplementations)
 		if toggles["writable"] {
 			// When not in "read-only" mode
@@ -204,8 +206,8 @@ func handle(path string, h betterHandler) {
 				}
 			}()
 			if configTime == "0" {
-				c := r.Context()
-				_ = refreshToggles(c)
+				ctx := r.Context()
+				_ = refreshToggles(ctx)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}
 
@@ -243,8 +245,8 @@ func handleAjax(path string, h betterHandler) {
 				}
 			}()
 			if configTime == "0" {
-				c := r.Context()
-				_ = refreshToggles(c)
+				ctx := r.Context()
+				_ = refreshToggles(ctx)
 				// If it fails... well, ignore for now and continue with non-fresh toggles.
 			}
 
@@ -327,8 +329,8 @@ func logIf(err error, logfunc func(format string, args ...interface{}), when str
 }
 */
 
-func logIf(err error, logfunc func(c context.Context, format string, args ...interface{}), c context.Context, when string) {
+func logIf(err error, logfunc func(ctx context.Context, format string, args ...interface{}), ctx context.Context, when string) {
 	if err != nil {
-		logfunc(c, "Problem on %v: %v", when, err.Error())
+		logfunc(ctx, "Problem on %v: %v", when, err.Error())
 	}
 }

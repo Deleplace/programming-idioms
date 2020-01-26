@@ -33,7 +33,7 @@ func adminExport(w http.ResponseWriter, r *http.Request) error {
 }
 
 func adminImportAjax(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	file, fileHeader, err := r.FormFile("importData")
 	if err != nil {
 		return err
@@ -41,13 +41,13 @@ func adminImportAjax(w http.ResponseWriter, r *http.Request) error {
 	// TODO import in 1 transaction
 	// unless 6+ entity groups in 1 transaction is impossible
 	if purge := r.FormValue("purge"); purge != "" {
-		err = dao.deleteAllIdioms(c)
+		err = dao.deleteAllIdioms(ctx)
 		if err != nil {
 			return err
 		}
 	}
-	_ = dao.deleteCache(c)
-	count, err := importFile(c, file, fileHeader)
+	_ = dao.deleteCache(ctx)
+	count, err := importFile(ctx, file, fileHeader)
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func adminImportAjax(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func importFile(c context.Context, file multipart.File, fileHeader *multipart.FileHeader) (int, error) {
+func importFile(ctx context.Context, file multipart.File, fileHeader *multipart.FileHeader) (int, error) {
 	chunks := strings.Split(fileHeader.Filename, ".")
 	extension := Last(chunks)
 	var err error
@@ -75,9 +75,9 @@ func importFile(c context.Context, file multipart.File, fileHeader *multipart.Fi
 	n := 0
 	for _, idiom := range idioms {
 		if fixNewlines(idiom) {
-			log.Infof(c, "Fixed newlines in idiom #%d", idiom.Id)
+			log.Infof(ctx, "Fixed newlines in idiom #%d", idiom.Id)
 		}
-		if _, err = dao.saveNewIdiom(c, idiom); err != nil {
+		if _, err = dao.saveNewIdiom(ctx, idiom); err != nil {
 			return n, err
 		}
 		n++
@@ -180,8 +180,8 @@ func importFromCSV(file multipart.File) ([]*Idiom, error) {
 }
 
 func exportIdiomsAsJSON(r *http.Request, w io.Writer, pretty bool) error {
-	c := r.Context()
-	_, idioms, err := dao.getAllIdioms(c, 0, "Id")
+	ctx := r.Context()
+	_, idioms, err := dao.getAllIdioms(ctx, 0, "Id")
 	if err != nil {
 		return err
 	}
@@ -215,10 +215,10 @@ func exportIdiomsAsJSON(r *http.Request, w io.Writer, pretty bool) error {
 
 // Not used anymore. See adminImportAjax.
 func adminImport(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	var err error
 	file, fileHeader, err := r.FormFile("importData")
-	_, err = importFile(c, file, fileHeader)
+	_, err = importFile(ctx, file, fileHeader)
 	if err != nil {
 		return err
 	}

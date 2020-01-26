@@ -47,7 +47,7 @@ func ajaxIdiomVote(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		return PiError{"Vote choice should be up or down", http.StatusBadRequest}
 	}
-	c := r.Context()
+	ctx := r.Context()
 	idiomID := String2Int(idiomIDStr)
 
 	vote := IdiomVoteLog{
@@ -60,7 +60,7 @@ func ajaxIdiomVote(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "application/json")
 	var newRating int
 	var myVote int
-	if newRating, myVote, err = daoVotes.idiomVote(c, vote, profile.Nickname); err != nil {
+	if newRating, myVote, err = daoVotes.idiomVote(ctx, vote, profile.Nickname); err != nil {
 		// w.WriteHeader(500)
 		// fmt.Fprint(w, Response{"success": false, "message": err.Error()})
 		return err
@@ -91,7 +91,7 @@ func ajaxImplVote(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		return PiError{"Vote choice should be up or down", http.StatusInternalServerError}
 	}
-	c := r.Context()
+	ctx := r.Context()
 	implID := String2Int(implIDStr)
 
 	vote := ImplVoteLog{
@@ -104,7 +104,7 @@ func ajaxImplVote(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "application/json")
 	var newRating int
 	var myVote int
-	if newRating, myVote, err = daoVotes.implVote(c, vote, profile.Nickname); err != nil {
+	if newRating, myVote, err = daoVotes.implVote(ctx, vote, profile.Nickname); err != nil {
 		// w.WriteHeader(500)
 		// fmt.Fprint(w, Response{"success": false, "message": err.Error()})
 		return err
@@ -142,5 +142,11 @@ func typeaheadLanguages(w http.ResponseWriter, r *http.Request) error {
 	// TODO browser cache 2d
 	// TODO server cache 2d
 	fmt.Fprint(w, Response{"options": suggestions})
+	return nil
+}
+
+func supportedLanguages(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprint(w, Response{"languages": AllNiceLangs})
 	return nil
 }

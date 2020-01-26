@@ -87,3 +87,13 @@ indexes:
   properties:
   - name: Id
   - name: VersionDate
+
+- kind: IdiomHistory
+  properties:
+  - name: VersionDate
+    direction: desc
+  - name: EditSummary
+  - name: Id
+  - name: IdiomOrImplLastEditor
+  - name: Title
+  - name: Version

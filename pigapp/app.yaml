@@ -8,6 +8,10 @@ handlers:
 - url: /sitemap\.xml
   static_files: static/default/xml/sitemap.xml
   upload: static/default/xml/sitemap\.xml
+- url: /\.well-known/security\.txt
+  static_files: static/default/.well-known/security.txt
+  upload: static/default/\.well-known/security\.txt
+  expiration: "1d"
 - url: /default/img
   static_dir: static/default/img
   expiration: "15d"

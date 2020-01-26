@@ -39,7 +39,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		return err
 	}
 
-	c := r.Context()
+	ctx := r.Context()
 	language := NormLang(r.FormValue("impl_language"))
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
@@ -47,16 +47,16 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
-	editSummary := fmt.Sprintf("New %v implementation by user [%v]", language, username)
+	editSummary := fmt.Sprintf("New %s implementation by user [%s]", PrintNiceLang(language), username)
 
 	imports = Truncate(imports, 200)
-	code = Truncate(NoCR(code), 500)
-	comment = Truncate(comment, 500)
+	code = TruncateBytes(NoCR(code), 500)
+	comment = TruncateBytes(comment, 500)
 	attributionURL = Truncate(attributionURL, 250)
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	log.Infof(c, "[%v] is creating new %v impl for idiom %v", username, language, idiomIDStr)
+	log.Infof(ctx, "[%s] is creating new %s impl for idiom %v", username, PrintNiceLang(language), idiomIDStr)
 
 	if !StringSliceContains(AllLanguages(), language) {
 		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs), http.StatusBadRequest}
@@ -67,7 +67,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		return PiError{idiomIDStr + " is not a valid idiom id.", http.StatusBadRequest}
 	}
 
-	key, idiom, err := dao.getIdiom(c, idiomID)
+	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}
@@ -80,7 +80,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 		return PiError{"Can't accept URL [" + demoURL + "]", http.StatusBadRequest}
 	}
 
-	implID, err := dao.nextImplID(c)
+	implID, err := dao.nextImplID(ctx)
 	if err != nil {
 		return err
 	}
@@ -111,7 +111,7 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	idiom.EditSummary = editSummary
 	idiom.LastEditedImplID = implID
 
-	err = dao.saveExistingIdiom(c, key, idiom)
+	err = dao.saveExistingIdiom(ctx, key, idiom)
 	if err != nil {
 		return err
 	}
@@ -128,7 +128,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		return err
 	}
 
-	c := r.Context()
+	ctx := r.Context()
 	imports := r.FormValue("impl_imports")
 	code := r.FormValue("impl_code")
 	comment := r.FormValue("impl_comment")
@@ -137,20 +137,20 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	docURL := r.FormValue("impl_doc_url")
 
 	imports = Truncate(imports, 200)
-	code = Truncate(NoCR(code), 500)
-	comment = Truncate(comment, 500)
+	code = TruncateBytes(NoCR(code), 500)
+	comment = TruncateBytes(comment, 500)
 	attributionURL = Truncate(attributionURL, 250)
 	demoURL = Truncate(demoURL, 250)
 	docURL = Truncate(docURL, 250)
 
-	log.Infof(c, "[%v] is updating impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+	log.Infof(ctx, "[%s] is updating impl %s of idiom %s", username, existingImplIDStr, idiomIDStr)
 
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
 		return PiError{idiomIDStr + " is not a valid idiom id.", http.StatusBadRequest}
 	}
 
-	key, idiom, err := dao.getIdiom(c, idiomID)
+	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find implementation " + existingImplIDStr + " for idiom " + idiomIDStr, http.StatusNotFound}
 	}
@@ -174,10 +174,10 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		impl.Protected = r.FormValue("impl_protected") != ""
 
 		if wasProtected && !impl.Protected {
-			log.Infof(c, "[%v] unprotects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+			log.Infof(ctx, "[%v] unprotects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
 		}
 		if !wasProtected && impl.Protected {
-			log.Infof(c, "[%v] protects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
+			log.Infof(ctx, "[%v] protects impl %v of idiom %v", username, existingImplIDStr, idiomIDStr)
 		}
 	}
 
@@ -193,7 +193,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		return PiError{"Can't accept URL [" + demoURL + "]", http.StatusBadRequest}
 	}
 
-	idiom.EditSummary = "[" + impl.LanguageName + "] " + r.FormValue("edit_summary")
+	idiom.EditSummary = "[" + PrintNiceLang(impl.LanguageName) + "] " + r.FormValue("edit_summary")
 	idiom.LastEditedImplID = implID
 	impl.ImportsBlock = imports
 	impl.CodeBlock = code
@@ -210,7 +210,7 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 		impl.PictureURL = r.FormValue("impl_picture_url")
 	}
 
-	err = dao.saveExistingIdiom(c, key, idiom)
+	err = dao.saveExistingIdiom(ctx, key, idiom)
 	if err != nil {
 		return err
 	}

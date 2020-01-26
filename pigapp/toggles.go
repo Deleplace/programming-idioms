@@ -8,6 +8,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"context"
+
 	"google.golang.org/appengine/log"
 )
 
@@ -46,27 +47,27 @@ func (ac *ApplicationConfig) Save(ch chan<- datastore.Property) error {
 // TODO: use this to estimate config freshness. Maybe use type time.Time instead.
 var configTime = "0" //time.Now().Format("2006-01-02_15-04")
 
-func refreshToggles(c context.Context) error {
-	appConfig, err := dao.getAppConfig(c)
+func refreshToggles(ctx context.Context) error {
+	appConfig, err := dao.getAppConfig(ctx)
 	if err == appConfigPropertyNotFound {
 		// Nothing in Memcache, nothing in Datastore!
 		// Then, init default (hard-coded) toggle values and persist them.
 		initToggles()
-		log.Infof(c, "Saving default Toggles to Datastore...")
-		err := dao.saveAppConfig(c, ApplicationConfig{Id: 0, Toggles: toggles})
+		log.Infof(ctx, "Saving default Toggles to Datastore...")
+		err := dao.saveAppConfig(ctx, ApplicationConfig{Id: 0, Toggles: toggles})
 		if err == nil {
-			log.Infof(c, "Default Toggles saved to Datastore.")
+			log.Infof(ctx, "Default Toggles saved to Datastore.")
 			configTime = time.Now().Format("2006-01-02_15-04")
 		}
 		return err
 	}
 	if err != nil {
-		log.Errorf(c, "Error while loading ApplicationConfig from datastore: %v", err)
+		log.Errorf(ctx, "Error while loading ApplicationConfig from datastore: %v", err)
 		return err
 	}
 	toggles = appConfig.Toggles
 	configTime = time.Now().Format("2006-01-02_15-04")
-	log.Infof(c, "Updated Toggles from memcached or datastore\n")
+	log.Infof(ctx, "Updated Toggles from memcached or datastore\n")
 	// _ = appConfig
 
 	return err
@@ -102,12 +103,12 @@ func initToggles() {
 	toggles["implAddition"] = true
 	toggles["implEditing"] = true
 	toggles["pictureEditing"] = false
-	toggles["idiomVotingUp"] = true
-	toggles["idiomVotingDown"] = true
-	toggles["showIdiomRating"] = true
-	toggles["implVotingUp"] = true
-	toggles["implVotingDown"] = true
-	toggles["showImplRating"] = true
+	toggles["idiomVotingUp"] = false
+	toggles["idiomVotingDown"] = false
+	toggles["showIdiomRating"] = false
+	toggles["implVotingUp"] = false
+	toggles["implVotingDown"] = false
+	toggles["showImplRating"] = false
 	toggles["languageCreation"] = false
 
 	// Homepage

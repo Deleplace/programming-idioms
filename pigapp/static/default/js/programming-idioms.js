@@ -124,9 +124,11 @@ $(function() {
 	        		'/typeahead-languages', 
 	        		{ userInput: query }, 
 	        		function (data) {
-	        			//console.log( "Before process:"+ JSON.stringify(data) );
-	        			var processedData = process(data.options)
-	        			//console.log( "After process:"+ JSON.stringify(processedData) );
+						let processedData = {};
+						// console.log( "Before process:"+ JSON.stringify(data) );
+						if(data && data.options)
+	        				processedData = process(data.options);
+	        			// console.log( "After process:"+ JSON.stringify(processedData) );
 	        			return processedData;
 	        		});
 	    },    
@@ -471,7 +473,8 @@ $(function() {
 	$('.selector-language').on('click', function(){
 		var lg = $(this).closest("li").attr("data-language");
 		var nicelg = niceLang(lg);
-		$(this).closest(".language-single-select").find("input[type=text]").val(nicelg);
+		$(this).closest(".language-single-select").find("input[type=text]").val(nicelg).change();
+		return false;
 	});
 		
 	// Lame client-side trick.
@@ -502,6 +505,42 @@ $(function() {
 				function(response) {
 					if( response.suggestion )
 						form.find("input[name=impl_demo_url]").attr("placeholder", response.suggestion)
+				});
+	});
+
+	$("input[name=impl_language]").on("autocompletechange", function(event,ui) {
+		alert("autocompletechange");
+	 });
+
+	$("input[name=impl_language]").change(function() {
+		let inputField = $(this);
+		let userinput = inputField.val();
+		let userinputlower = userinput.toLowerCase();
+		let group = inputField.closest(".control-group");
+		if(group.size() == 0)
+			return;
+		let message = group.find(".help-inline");
+		if(userinput === "") {
+			// Input is empty, not worth an error message right now.
+			// Field is still required though, and submitting the form would be explicitly denied.
+			group.removeClass("error");
+			message.text("");
+			return;
+		}
+		$.get('/supported-languages', 
+				{}, 
+				function(response) {
+					if( response.languages ) {
+						if( response.languages.find( function(lang) { return lang.toLowerCase() === userinputlower; }) ){
+							group.removeClass("error");
+							message.text("");
+						}else{
+							console.warn( userinput + " is currently not a supported language");
+							group.addClass("error");
+							message.text(userinput + " is currently not a supported language. Supported languages are " + response.languages.join(", "));
+							group.find(".language-single-select").popover("hide");
+						}
+					}
 				});
 	});
 	
@@ -780,7 +819,7 @@ $(function() {
 		var src = $(this).attr('src');
 		if(src.indexOf('_highlight') !== -1)
 			return;
-		var srcHighlight = src.replace('.png', '_highlight.png')
+		var srcHighlight = src.replace('.png', '_highlight.png').replace('.svg', '_highlight.svg');
 		preload([
 			srcHighlight
 		]);

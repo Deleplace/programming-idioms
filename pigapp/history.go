@@ -20,12 +20,12 @@ type IdiomHistoryFacade struct {
 func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
 
-	_, list, err := dao.getIdiomHistoryList(c, idiomID)
+	_, list, err := dao.getIdiomHistoryList(ctx, idiomID)
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 		list = list[1:]
 	}
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return err
 	}
@@ -69,9 +69,9 @@ func revertIdiomVersion(w http.ResponseWriter, r *http.Request) error {
 	idiomID := String2Int(idiomIDStr)
 	versionStr := r.FormValue("version")
 	version := String2Int(versionStr)
-	c := r.Context()
+	ctx := r.Context()
 
-	_, err := dao.revert(c, idiomID, version)
+	_, err := dao.revert(ctx, idiomID, version)
 	if err != nil {
 		return err
 	}
@@ -86,9 +86,9 @@ func restoreIdiomVersion(w http.ResponseWriter, r *http.Request) error {
 	idiomID := String2Int(idiomIDStr)
 	versionStr := r.FormValue("version")
 	version := String2Int(versionStr)
-	c := r.Context()
+	ctx := r.Context()
 
-	idiom, err := dao.historyRestore(c, idiomID, version)
+	idiom, err := dao.historyRestore(ctx, idiomID, version)
 	if err != nil {
 		return err
 	}

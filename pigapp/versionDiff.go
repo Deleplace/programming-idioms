@@ -12,19 +12,20 @@ import (
 
 // VersionDiffFacade is the Facade for the Diff page.
 type VersionDiffFacade struct {
-	PageMeta              PageMeta
-	UserProfile           UserProfile
-	IdiomLeft, IdiomRight *IdiomHistory
-	ImplIDs               []int
-	ImplLeft, ImplRight   map[int]Impl
-	CreationImplIDs       map[int]bool
-	DeletionImplIDs       map[int]bool
+	PageMeta                           PageMeta
+	UserProfile                        UserProfile
+	IdiomLeft, IdiomRight              *IdiomHistory
+	ImplIDs                            []int
+	ImplLeft, ImplRight                map[int]Impl
+	CreationImplIDs                    map[int]bool
+	DeletionImplIDs                    map[int]bool
+	PreviousChangePath, NextChangePath string
 }
 
 func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -39,11 +40,19 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 		return PiError{fmt.Sprintf("Won't compare v%v with itself", v1), http.StatusBadRequest}
 	}
 
-	_, left, err := dao.getIdiomHistory(c, idiomID, v1)
-	if err != nil {
-		return PiError{err.Error(), http.StatusNotFound}
+	var err error
+	var left *IdiomHistory
+	if v1 == 0 {
+		// Dummy empty object, to show an idiom creation
+		left = &IdiomHistory{}
+		left.Idiom.Id = idiomID
+	} else {
+		_, left, err = dao.getIdiomHistory(ctx, idiomID, v1)
+		if err != nil {
+			return PiError{err.Error(), http.StatusNotFound}
+		}
 	}
-	_, right, err := dao.getIdiomHistory(c, idiomID, v2)
+	_, right, err := dao.getIdiomHistory(ctx, idiomID, v2)
 	if err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
 	}
@@ -95,6 +104,15 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 		ImplRight:       implRight,
 		CreationImplIDs: creationImplIDs,
 		DeletionImplIDs: deletionImplIDs,
+	}
+	// Note: the Prev/Next links wouldn't work in a case where version numbers
+	// wouldn't be perfectly sequential.
+	if left.Version >= 2 {
+		data.PreviousChangePath = fmt.Sprintf("/idiom/%d/diff/%d/%d", left.Id, left.Version-1, left.Version)
+	}
+	_, _, errNext := dao.getIdiomHistory(ctx, right.Id, right.Version+1)
+	if errNext == nil {
+		data.NextChangePath = fmt.Sprintf("/idiom/%d/diff/%d/%d", right.Id, right.Version, right.Version+1)
 	}
 	return templates.ExecuteTemplate(w, "page-idiom-version-diff", data)
 }

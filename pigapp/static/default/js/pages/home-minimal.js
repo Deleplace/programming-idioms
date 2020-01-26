@@ -87,7 +87,7 @@ function decorateSummary(idiom) {
 function highlightDie(){
     var die = document.querySelector(".die");
     var src = die.src;
-    var hsrc = src.replace("dice_64x64.png", "dice_64x64_highlight.png");
+    var hsrc = src.replace("die.svg", "die_highlight.svg");
     die.onmouseover=function(){this.src=hsrc;};
     die.onmouseout=function(){this.src=src;};
 }

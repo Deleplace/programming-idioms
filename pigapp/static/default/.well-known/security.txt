@@ -1,0 +1,3 @@
+Contact: deleplace2015@gmail.com
+Preferred-Languages: en
+Canonical: https://www.programming-idioms.org/.well-known/security.txt

@@ -18,12 +18,12 @@ type IdiomEditFacade struct {
 
 func idiomEdit(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Idiom " + idiomIDStr + " not found : " + err.Error(), http.StatusNotFound}
 	}

@@ -17,13 +17,13 @@ type HomeFacade struct {
 }
 
 func home(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	userProfile := readUserProfile(r)
-	return homeView(w, c, userProfile)
+	return homeView(w, ctx, userProfile)
 }
 
 // Possible controllers include : home(), bookmarkableUserURL()
-func homeView(w http.ResponseWriter, c context.Context, userProfile UserProfile) error {
+func homeView(w http.ResponseWriter, ctx context.Context, userProfile UserProfile) error {
 
 	homeToggles := copyToggles(toggles)
 
@@ -39,14 +39,14 @@ func homeView(w http.ResponseWriter, c context.Context, userProfile UserProfile)
 
 	var err error
 	if homeToggles["homeBlockLastUpdated"] {
-		data.LastUpdatedIdioms, err = dao.recentIdioms(c, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, 5)
+		data.LastUpdatedIdioms, err = dao.recentIdioms(ctx, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, 5)
 		if err != nil {
 			return err
 		}
 	}
 
 	if homeToggles["homeBlockPopular"] {
-		data.PopularIdioms, err = dao.popularIdioms(c, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, 3)
+		data.PopularIdioms, err = dao.popularIdioms(ctx, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, 3)
 		if err != nil {
 			return err
 		}

@@ -8,7 +8,7 @@ import (
 )
 
 func idiomDelete(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
@@ -18,7 +18,7 @@ func idiomDelete(w http.ResponseWriter, r *http.Request) error {
 		why = fmt.Sprintf("Admin deletes idiom %d", idiomID)
 	}
 
-	err := dao.deleteIdiom(c, idiomID, why)
+	err := dao.deleteIdiom(ctx, idiomID, why)
 
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
@@ -30,7 +30,7 @@ func idiomDelete(w http.ResponseWriter, r *http.Request) error {
 }
 
 func implDelete(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := r.FormValue("idiomId")
 	idiomID := String2Int(idiomIDStr)
@@ -45,7 +45,7 @@ func implDelete(w http.ResponseWriter, r *http.Request) error {
 	if why == "" {
 		why = fmt.Sprintf("Admin deletes impl %d: %s", implID, reason)
 	}
-	err := dao.deleteImpl(c, idiomID, implID, why)
+	err := dao.deleteImpl(ctx, idiomID, implID, why)
 
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {

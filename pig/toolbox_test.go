@@ -192,3 +192,51 @@ func TestSha1hash(t *testing.T) {
 }
 
 // ---
+
+func TestTruncate(t *testing.T) {
+	for input, expected := range map[string]string{
+		"":        "",
+		"a":       "a",
+		"ab":      "ab",
+		"abcd":    "abcd",
+		"abcde":   "abcde",
+		"abcdef":  "abcde",
+		"abcdefg": "abcde",
+		"abcdé":   "abcdé",
+		"ééééé":   "ééééé",
+		"abcdéf":  "abcdé",
+		"éééééf":  "ééééé",
+		"abcdᾲ":   "abcdᾲ",
+		"ᾲᾲᾲᾲᾲ":   "ᾲᾲᾲᾲᾲ",
+		"abcdᾲf":  "abcdᾲ",
+		"ᾲᾲᾲᾲᾲf":  "ᾲᾲᾲᾲᾲ",
+	} {
+		if result := Truncate(input, 5); result != expected {
+			t.Errorf("want %q (%d bytes), got %q (%d bytes)", expected, len(expected), result, len(result))
+		}
+	}
+}
+
+func TestTruncateBytes(t *testing.T) {
+	for input, expected := range map[string]string{
+		"":        "",
+		"a":       "a",
+		"ab":      "ab",
+		"abcd":    "abcd",
+		"abcde":   "abcde",
+		"abcdef":  "abcde",
+		"abcdefg": "abcde",
+		"abcdé":   "abcd",
+		"ééééé":   "éé",
+		"abcdéf":  "abcd",
+		"éééééf":  "éé",
+		"abcdᾲ":   "abcd",
+		"ᾲᾲᾲᾲᾲ":   "ᾲ",
+		"abcdᾲf":  "abcd",
+		"ᾲᾲᾲᾲᾲf":  "ᾲ",
+	} {
+		if result := TruncateBytes(input, 5); result != expected {
+			t.Errorf("TruncateBytes(%q, 5): want %q (%d bytes), got %q (%d bytes)", input, expected, len(expected), result, len(result))
+		}
+	}
+}

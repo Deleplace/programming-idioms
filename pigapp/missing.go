@@ -13,7 +13,7 @@ import (
 // don't have a DemoURL and/or a DocumentationURL.
 
 func missingList(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	vars := mux.Vars(r)
 	lang := vars["lang"]
 	lang = NormLang(lang)
@@ -23,7 +23,7 @@ func missingList(w http.ResponseWriter, r *http.Request) error {
 	// TODO: get IDs only, then substract IDs of those having DemoURL + DocumentationURL,
 	// then get the idioms by IDs.
 	maxFetch := 200
-	hits, err := dao.searchIdiomsByLangs(c, langs, maxFetch)
+	hits, err := dao.searchIdiomsByLangs(ctx, langs, maxFetch)
 	if err != nil {
 		return err
 	}

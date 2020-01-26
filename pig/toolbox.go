@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"unicode/utf8"
 )
 
 // StringSliceContains determines whether this slice contain this string?
@@ -160,6 +161,28 @@ func Truncate(s string, maxChars int) string {
 		return s
 	}
 	return string(runes[:maxChars])
+}
+
+func TruncateBytes(s string, maxBytes int) string {
+	if len(s) <= maxBytes {
+		// Common case: return fast
+		return s
+	}
+
+	buf := []byte(s)
+	runes := make([]rune, 0, len(s))
+	written := 0
+	for len(buf) > 0 {
+		rune, n := utf8.DecodeRune(buf)
+		if written+n <= maxBytes {
+			runes = append(runes, rune)
+			written += n
+			buf = buf[n:]
+		} else {
+			return string(runes)
+		}
+	}
+	return string(runes)
 }
 
 // Concurrent launches provided funcs, and waits for their completion.

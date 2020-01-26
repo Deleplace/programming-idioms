@@ -28,7 +28,7 @@ func idiomAddPicture(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	vars := mux.Vars(r)
-	c := r.Context()
+	ctx := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
@@ -36,7 +36,7 @@ func idiomAddPicture(w http.ResponseWriter, r *http.Request) error {
 		return PiError{idiomIDStr + " is not a valid idiom id.", http.StatusBadRequest}
 	}
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}
@@ -61,7 +61,7 @@ func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("For now, only the Admin may add an idiom picture.")
 	}
 
-	c := r.Context()
+	ctx := r.Context()
 	userProfile := readUserProfile(r)
 
 	idiomIDStr := r.FormValue("idiom_id")
@@ -72,7 +72,7 @@ func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
 		return PiError{idiomIDStr + " is not a valid idiom id.", http.StatusBadRequest}
 	}
 
-	key, idiom, err := dao.getIdiom(c, idiomID)
+	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
 	}
@@ -81,7 +81,7 @@ func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
 	idiom.EditSummary = "Updated picture URL by user [" + userProfile.Nickname + "]"
 	idiom.LastEditor = userProfile.Nickname
 
-	err = dao.saveExistingIdiom(c, key, idiom)
+	err = dao.saveExistingIdiom(ctx, key, idiom)
 	if err != nil {
 		return err
 	}

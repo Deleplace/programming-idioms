@@ -42,8 +42,8 @@ func errorPage(w http.ResponseWriter, r *http.Request, err error) {
 		code = http.StatusInternalServerError
 	}
 
-	c := r.Context()
-	log.Errorf(c, text)
+	ctx := r.Context()
+	log.Errorf(ctx, text)
 
 	data := &ErrorFacade{
 		PageMeta: PageMeta{
@@ -58,7 +58,7 @@ func errorPage(w http.ResponseWriter, r *http.Request, err error) {
 	w.WriteHeader(code)
 	errt := templates.ExecuteTemplate(w, "page-error", data)
 	if errt != nil {
-		log.Errorf(c, "Problem rendering error page: %v", errt.Error())
+		log.Errorf(ctx, "Problem rendering error page: %v", errt.Error())
 	}
 }
 
@@ -76,8 +76,8 @@ func errorJSON(w http.ResponseWriter, r *http.Request, err error) {
 		code = http.StatusInternalServerError
 	}
 
-	c := r.Context()
-	log.Errorf(c, text)
+	ctx := r.Context()
+	log.Errorf(ctx, text)
 
 	w.WriteHeader(code)
 	fmt.Fprint(w, Response{

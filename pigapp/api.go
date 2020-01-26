@@ -6,7 +6,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -38,12 +37,12 @@ func printJSON(w http.ResponseWriter, data interface{}, pretty bool) error {
 // Handle /api/idiom/{idiomId}
 func jsonIdiom(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	c := appengine.NewContext(r)
+	ctx := r.Context()
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
 
-	_, idiom, err := dao.getIdiom(c, idiomID)
+	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		// TODO distinguish "not found" from "server error"
 		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
@@ -55,10 +54,10 @@ func jsonIdiom(w http.ResponseWriter, r *http.Request) error {
 // Handle /api/idioms/all
 // jsonAllIdioms is redundant with adminImportAjax
 func jsonAllIdioms(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
-	_, idioms, err := dao.getAllIdioms(c, 0, "Id")
+	ctx := r.Context()
+	_, idioms, err := dao.getAllIdioms(ctx, 0, "Id")
 	if err != nil {
-		log.Errorf(c, "%v", err)
+		log.Errorf(ctx, "%v", err)
 		return PiError{"Could not retrieve idioms.", http.StatusInternalServerError}
 	}
 	// TODO cache the JSON form

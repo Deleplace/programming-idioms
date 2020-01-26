@@ -137,6 +137,11 @@ header .form-search {
 	padding: 0px;
 }
 
+h3 a {
+	/* See #95 */
+	color: inherit;
+}
+
 /* Blue background, white text */
 .header .navbar,.header-small .navbar{
 	margin-bottom: 2px;
@@ -603,6 +608,10 @@ textarea.impl-code{
 	margin-right: 10px;
 }
 
+.help-inline.under-the-value {
+	display: block;
+}
+
 /* Contribution rules bla bla bla */
 .contribution-rules-small {
   color: #555555;
@@ -902,6 +911,14 @@ footer a.visited {
 	border: 1px solid #BBB;
 	border-radius: 2px;
 	background-color: white;
+}
+
+.diff-nav {
+	margin-top: 1.5rem;
+}
+
+.diff-nav .next {
+	text-align: right;
 }
 
 /* Missing fields list */

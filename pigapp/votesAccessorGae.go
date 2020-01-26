@@ -11,40 +11,40 @@ import (
 type GaeVotesAccessor struct {
 }
 
-func (va GaeVotesAccessor) idiomVote(c context.Context, vote IdiomVoteLog, nickname string) (newRating int, myVote int, err error) {
+func (va GaeVotesAccessor) idiomVote(ctx context.Context, vote IdiomVoteLog, nickname string) (newRating int, myVote int, err error) {
 	// TODO: a transaction to make sure the counter is safely incremented
 
-	delta, _, storedVote, errsave := va.saveIdiomVoteOrRemove(c, vote, nickname)
+	delta, _, storedVote, errsave := va.saveIdiomVoteOrRemove(ctx, vote, nickname)
 	err = errsave
 	if storedVote != nil {
 		myVote = storedVote.Value
 	}
 
 	if delta != 0 {
-		_, idiom, errinc := dao.stealthIncrementIdiomRating(c, vote.IdiomId, delta)
+		_, idiom, errinc := dao.stealthIncrementIdiomRating(ctx, vote.IdiomId, delta)
 		newRating, err = idiom.Rating, errinc
 	}
 	return
 }
 
-func (va GaeVotesAccessor) implVote(c context.Context, vote ImplVoteLog, nickname string) (newRating int, myVote int, err error) {
+func (va GaeVotesAccessor) implVote(ctx context.Context, vote ImplVoteLog, nickname string) (newRating int, myVote int, err error) {
 	// TODO a transaction for (vote save + idiom save).  Note that rating data is redundant as rating could be recomputed.
 
-	_, idiom, errget := dao.getIdiomByImplID(c, vote.ImplId)
+	_, idiom, errget := dao.getIdiomByImplID(ctx, vote.ImplId)
 	if err != nil {
 		err = errget
 		return
 	}
 
 	vote.IdiomId = idiom.Id
-	delta, _, storedVote, errsave := va.saveImplVoteOrRemove(c, vote, nickname)
+	delta, _, storedVote, errsave := va.saveImplVoteOrRemove(ctx, vote, nickname)
 	err = errsave
 	if storedVote != nil {
 		myVote = storedVote.Value
 	}
 
 	if delta != 0 {
-		_, _, newRating, err = dao.stealthIncrementImplRating(c, vote.IdiomId, vote.ImplId, delta)
+		_, _, newRating, err = dao.stealthIncrementImplRating(ctx, vote.IdiomId, vote.ImplId, delta)
 	}
 
 	return
@@ -52,25 +52,25 @@ func (va GaeVotesAccessor) implVote(c context.Context, vote ImplVoteLog, nicknam
 
 // This ancestor (voting booth) is specific to a nickname.
 // Thus it should not lead to much contention.
-func (va GaeVotesAccessor) createVoteIdiomLogNicknameAncestorKey(c context.Context, nickname string) (key *datastore.Key) {
-	return datastore.NewKey(c, "IdiomVoteLog", nickname, 0, nil)
+func (va GaeVotesAccessor) createVoteIdiomLogNicknameAncestorKey(ctx context.Context, nickname string) (key *datastore.Key) {
+	return datastore.NewKey(ctx, "IdiomVoteLog", nickname, 0, nil)
 }
 
-func (va GaeVotesAccessor) getIdiomVotes(c context.Context, nickname string) (keys []*datastore.Key, votes []*IdiomVoteLog, err error) {
-	q := datastore.NewQuery("IdiomVoteLog").Ancestor(va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
+func (va GaeVotesAccessor) getIdiomVotes(ctx context.Context, nickname string) (keys []*datastore.Key, votes []*IdiomVoteLog, err error) {
+	q := datastore.NewQuery("IdiomVoteLog").Ancestor(va.createVoteIdiomLogNicknameAncestorKey(ctx, nickname))
 	votes = make([]*IdiomVoteLog, 0, 1)
-	keys, err = q.GetAll(c, &votes)
+	keys, err = q.GetAll(ctx, &votes)
 	if err != nil {
 		return keys, votes, err
 	}
 	return keys, votes, nil
 }
 
-func (va GaeVotesAccessor) getIdiomVote(c context.Context, nickname string, idiomID int) (key *datastore.Key, vote *IdiomVoteLog, err error) {
-	q := datastore.NewQuery("IdiomVoteLog").Ancestor(va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
+func (va GaeVotesAccessor) getIdiomVote(ctx context.Context, nickname string, idiomID int) (key *datastore.Key, vote *IdiomVoteLog, err error) {
+	q := datastore.NewQuery("IdiomVoteLog").Ancestor(va.createVoteIdiomLogNicknameAncestorKey(ctx, nickname))
 	q = q.Filter("IdiomId = ", idiomID)
 	votes := make([]*IdiomVoteLog, 0, 1)
-	keys, err := q.GetAll(c, &votes)
+	keys, err := q.GetAll(ctx, &votes)
 	if err != nil {
 		return key, vote, err
 	}
@@ -80,14 +80,14 @@ func (va GaeVotesAccessor) getIdiomVote(c context.Context, nickname string, idio
 	return keys[0], votes[0], nil
 }
 
-func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c context.Context, vote IdiomVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *IdiomVoteLog, err error) {
-	key, existing, err := va.getIdiomVote(c, nickname, vote.IdiomId)
+func (va GaeVotesAccessor) saveIdiomVoteOrRemove(ctx context.Context, vote IdiomVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *IdiomVoteLog, err error) {
+	key, existing, err := va.getIdiomVote(ctx, nickname, vote.IdiomId)
 	if err != nil {
 		return
 	}
 	if existing != nil {
 		// Well, this means the user has decided to click it again, it order to take back her vote
-		err = datastore.Delete(c, key)
+		err = datastore.Delete(ctx, key)
 		if err == nil {
 			delta = -existing.Value
 			storedVote = nil
@@ -95,8 +95,8 @@ func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c context.Context, vote IdiomVo
 			storedVote = existing
 		}
 	} else {
-		key = datastore.NewIncompleteKey(c, "IdiomVoteLog", va.createVoteIdiomLogNicknameAncestorKey(c, nickname))
-		key, err = datastore.Put(c, key, &vote)
+		key = datastore.NewIncompleteKey(ctx, "IdiomVoteLog", va.createVoteIdiomLogNicknameAncestorKey(ctx, nickname))
+		key, err = datastore.Put(ctx, key, &vote)
 		if err == nil {
 			delta = vote.Value
 			storedVote = &vote
@@ -107,25 +107,25 @@ func (va GaeVotesAccessor) saveIdiomVoteOrRemove(c context.Context, vote IdiomVo
 
 // This ancestor (voting booth) is specific to a nickname.
 // Thus it should not lead to much contention.
-func (va GaeVotesAccessor) createVoteImplLogNicknameAncestorKey(c context.Context, nickname string) (key *datastore.Key) {
-	return datastore.NewKey(c, "ImplVoteLog", nickname, 0, nil)
+func (va GaeVotesAccessor) createVoteImplLogNicknameAncestorKey(ctx context.Context, nickname string) (key *datastore.Key) {
+	return datastore.NewKey(ctx, "ImplVoteLog", nickname, 0, nil)
 }
 
-func (va GaeVotesAccessor) getImplVotes(c context.Context, nickname string) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
-	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
+func (va GaeVotesAccessor) getImplVotes(ctx context.Context, nickname string) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
+	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(ctx, nickname))
 	votes = make([]*ImplVoteLog, 0, 1)
-	keys, err = q.GetAll(c, &votes)
+	keys, err = q.GetAll(ctx, &votes)
 	if err != nil {
 		return keys, votes, err
 	}
 	return keys, votes, nil
 }
 
-func (va GaeVotesAccessor) getImplVote(c context.Context, nickname string, implID int) (key *datastore.Key, vote *ImplVoteLog, err error) {
-	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
+func (va GaeVotesAccessor) getImplVote(ctx context.Context, nickname string, implID int) (key *datastore.Key, vote *ImplVoteLog, err error) {
+	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(ctx, nickname))
 	q = q.Filter("ImplId = ", implID)
 	votes := make([]*ImplVoteLog, 0, 1)
-	keys, err := q.GetAll(c, &votes)
+	keys, err := q.GetAll(ctx, &votes)
 	if err != nil {
 		return key, vote, err
 	}
@@ -135,21 +135,21 @@ func (va GaeVotesAccessor) getImplVote(c context.Context, nickname string, implI
 	return keys[0], votes[0], nil
 }
 
-func (va GaeVotesAccessor) getImplVotesForIdiom(c context.Context, nickname string, idiomID int) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
-	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(c, nickname))
+func (va GaeVotesAccessor) getImplVotesForIdiom(ctx context.Context, nickname string, idiomID int) (keys []*datastore.Key, votes []*ImplVoteLog, err error) {
+	q := datastore.NewQuery("ImplVoteLog").Ancestor(va.createVoteImplLogNicknameAncestorKey(ctx, nickname))
 	q = q.Filter("IdiomId = ", idiomID)
-	keys, err = q.GetAll(c, &votes)
+	keys, err = q.GetAll(ctx, &votes)
 	return
 }
 
-func (va GaeVotesAccessor) saveImplVoteOrRemove(c context.Context, vote ImplVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *ImplVoteLog, err error) {
-	key, existing, err := va.getImplVote(c, nickname, vote.ImplId)
+func (va GaeVotesAccessor) saveImplVoteOrRemove(ctx context.Context, vote ImplVoteLog, nickname string) (delta int, key *datastore.Key, storedVote *ImplVoteLog, err error) {
+	key, existing, err := va.getImplVote(ctx, nickname, vote.ImplId)
 	if err != nil {
 		return
 	}
 	if existing != nil {
 		// Well, this means the user has decided to click it again, it order to take back her vote
-		err = datastore.Delete(c, key)
+		err = datastore.Delete(ctx, key)
 		if err == nil {
 			delta = -existing.Value
 			storedVote = nil
@@ -157,8 +157,8 @@ func (va GaeVotesAccessor) saveImplVoteOrRemove(c context.Context, vote ImplVote
 			storedVote = existing
 		}
 	} else {
-		key = datastore.NewIncompleteKey(c, "ImplVoteLog", va.createVoteImplLogNicknameAncestorKey(c, nickname))
-		key, err = datastore.Put(c, key, &vote)
+		key = datastore.NewIncompleteKey(ctx, "ImplVoteLog", va.createVoteImplLogNicknameAncestorKey(ctx, nickname))
+		key, err = datastore.Put(ctx, key, &vote)
 		if err == nil {
 			delta = vote.Value
 			storedVote = &vote
@@ -167,7 +167,7 @@ func (va GaeVotesAccessor) saveImplVoteOrRemove(c context.Context, vote ImplVote
 	return
 }
 
-func (va GaeVotesAccessor) decorateIdiom(c context.Context, idiom *Idiom, username string) error {
+func (va GaeVotesAccessor) decorateIdiom(ctx context.Context, idiom *Idiom, username string) error {
 	if username == "" {
 		return nil
 	}
@@ -176,7 +176,7 @@ func (va GaeVotesAccessor) decorateIdiom(c context.Context, idiom *Idiom, userna
 
 		// Mark idiom already upvoted or downvoted by current user, if she did.
 		func() error {
-			_, vote, err := va.getIdiomVote(c, username, idiom.Id)
+			_, vote, err := va.getIdiomVote(ctx, username, idiom.Id)
 			if vote != nil {
 				switch vote.Value {
 				case -1:
@@ -190,7 +190,7 @@ func (va GaeVotesAccessor) decorateIdiom(c context.Context, idiom *Idiom, userna
 
 		// Mark each impl already upvoted or downvoted by current user, if she did.
 		func() error {
-			_, votes, err := va.getImplVotesForIdiom(c, username, idiom.Id)
+			_, votes, err := va.getImplVotesForIdiom(ctx, username, idiom.Id)
 			voteMap := make(map[int]int, len(votes))
 			for _, vote := range votes {
 				voteMap[vote.ImplId] = vote.Value

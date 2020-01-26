@@ -17,11 +17,11 @@ import (
 // Useful for patches or migration.
 
 func adminResaveEntities(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	var err error
 	switch r.FormValue("kind") {
 	case "IdiomHistory":
-		err = resaveAllIdiomHistory(c)
+		err = resaveAllIdiomHistory(ctx)
 	default:
 		return PiError{ErrorText: "Wrong kind [" + r.FormValue("kind") + "]"}
 	}
@@ -35,17 +35,17 @@ func adminResaveEntities(w http.ResponseWriter, r *http.Request) error {
 }
 
 // 2015-11-06 to force field EditSummary (even if empty) on every IdiomHistory persisted entity.
-func resaveAllIdiomHistory(c context.Context) error {
-	defer memcache.Flush(c)
+func resaveAllIdiomHistory(ctx context.Context) error {
+	defer memcache.Flush(ctx)
 	saved := 0
-	keys, err := datastore.NewQuery("IdiomHistory").KeysOnly().GetAll(c, nil)
+	keys, err := datastore.NewQuery("IdiomHistory").KeysOnly().GetAll(ctx, nil)
 	if err != nil {
 		return err
 	}
 	nbEntities := len(keys)
 
 	defer func() {
-		log.Infof(c, "Resaved %d IdiomHistory entities out of %d.", saved, nbEntities)
+		log.Infof(ctx, "Resaved %d IdiomHistory entities out of %d.", saved, nbEntities)
 	}()
 
 	for len(keys) > 0 {
@@ -54,11 +54,11 @@ func resaveAllIdiomHistory(c context.Context) error {
 			bunch = len(keys)
 		}
 		histories := make([]*IdiomHistory, bunch)
-		err := datastore.GetMulti(c, keys[:bunch], histories)
+		err := datastore.GetMulti(ctx, keys[:bunch], histories)
 		if err != nil {
 			return err
 		}
-		_, err = datastore.PutMulti(c, keys[:bunch], histories)
+		_, err = datastore.PutMulti(ctx, keys[:bunch], histories)
 		if err != nil {
 			return err
 		}
@@ -71,8 +71,8 @@ func resaveAllIdiomHistory(c context.Context) error {
 }
 
 func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
-	defer memcache.Flush(c)
+	ctx := r.Context()
+	defer memcache.Flush(ctx)
 
 	idiomIDStr := r.FormValue("idiomId")
 	if idiomIDStr == "" {
@@ -82,13 +82,13 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 
 	// Warning: fetching the whole history of 1 idiom
 	// may have quite a big memory footprint
-	log.Infof(c, "Repairing versions for idiom: %v", idiomID)
+	log.Infof(ctx, "Repairing versions for idiom: %v", idiomID)
 
 	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
 		Order("VersionDate")
 	histories := make([]*IdiomHistory, 0)
-	historyKeys, err := q.GetAll(c, &histories)
+	historyKeys, err := q.GetAll(ctx, &histories)
 	if err != nil {
 		return err
 	}
@@ -102,13 +102,13 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		histories[i].Version = 1 + i
 	}
 	lastVersion := len(histories)
-	log.Infof(c, "\tSaving %v history entities.", len(histories))
+	log.Infof(ctx, "\tSaving %v history entities.", len(histories))
 	for len(historyKeys) > 0 {
 		bunch := 10
 		if len(historyKeys) < 10 {
 			bunch = len(historyKeys)
 		}
-		_, err = datastore.PutMulti(c, historyKeys[:bunch], histories[:bunch])
+		_, err = datastore.PutMulti(ctx, historyKeys[:bunch], histories[:bunch])
 		if err != nil {
 			return err
 		}
@@ -118,17 +118,17 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	var idiom Idiom
-	idiomKey := newIdiomKey(c, idiomID)
-	err = datastore.Get(c, idiomKey, &idiom)
+	idiomKey := newIdiomKey(ctx, idiomID)
+	err = datastore.Get(ctx, idiomKey, &idiom)
 	if err != nil {
 		return err
 	}
 	if idiom.Version == lastVersion {
-		log.Infof(c, "\tIdiom version %v already clean", idiom.Version)
+		log.Infof(ctx, "\tIdiom version %v already clean", idiom.Version)
 	} else {
-		log.Infof(c, "\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
+		log.Infof(ctx, "\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
 		idiom.Version = lastVersion
-		_, err = datastore.Put(c, idiomKey, &idiom)
+		_, err = datastore.Put(ctx, idiomKey, &idiom)
 		if err != nil {
 			return err
 		}

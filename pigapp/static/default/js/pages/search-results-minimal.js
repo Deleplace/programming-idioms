@@ -14,7 +14,7 @@ function renderHeader() {
     }
     hadd('<a href="/"><img src="/default/img/wheel_48x48.png" width="48" height="48" class="header_picto" /></a>');
     hadd('<h1><a href="/">Programming-Idioms</a></h1>');
-    hadd('<a href="/random-idiom"><img src="/default/img/dice_32x32.png" width="32" height="32" class="picto die" title="Go to a random idiom" /></a>');
+    hadd('<a href="/random-idiom"><img src="/default/img/die.svg" width="32" height="32" class="picto die" title="Go to a random idiom" /></a>');
     hadd('<form class="form-search" action="/search"> \
             <input type="text" class="search-query" placeholder="Keywords..." name="q" value="" required="required"> \
             <button type="submit">Search</button> \
@@ -46,7 +46,7 @@ function renderFooter() {
 function highlightDie(){
     var die = document.querySelector(".die");
     var src = die.src;
-    var hsrc = src.replace("dice_32x32.png", "dice_32x32_highlight.png");
+    var hsrc = src.replace("die.svg", "die_highlight.svg");
     die.onmouseover=function(){this.src=hsrc;};
     die.onmouseout=function(){this.src=src;};
 }

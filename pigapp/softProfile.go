@@ -52,8 +52,8 @@ func readUserProfile(r *http.Request) UserProfile {
 		IsAdmin:           IsAdmin(r),
 	}
 	if u.Nickname != "" || len(u.FavoriteLanguages) > 0 {
-		c := r.Context()
-		log.Infof(c, "%v", u)
+		ctx := r.Context()
+		log.Infof(ctx, "%v", u)
 	}
 	return u
 }
@@ -99,7 +99,7 @@ func setLanguagesCookie(w http.ResponseWriter, langs string) http.Cookie {
 func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	userProfile := readUserProfile(r)
-	c := r.Context()
+	ctx := r.Context()
 
 	// Todo : encode/decode nickname with special chars
 	nickname := vars["nickname"]
@@ -122,7 +122,7 @@ func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 	userProfile.FavoriteLanguages = langsArray
 
 	// Display homepage, with updated profile
-	return homeView(w, c, userProfile)
+	return homeView(w, ctx, userProfile)
 }
 
 // Hard profiles?
@@ -131,10 +131,10 @@ func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 // TODO To be adapted to : Handle optional user strong auth
 func handleAuth(w http.ResponseWriter, r *http.Request) error {
 	// Cf https://developers.google.com/appengine/docs/go/users/
-	c := r.Context()
-	u := user.Current(c)
+	ctx := r.Context()
+	u := user.Current(ctx)
 	if u == nil {
-		url, err := user.LoginURL(c, "/")
+		url, err := user.LoginURL(ctx, "/")
 		if err != nil {
 			return err
 		}

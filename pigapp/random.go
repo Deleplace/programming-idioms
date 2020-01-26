@@ -13,17 +13,17 @@ import (
 )
 
 func randomIdiom(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 
 	var urls []string
-	cachedUrls, err := dao.readCache(c, "all-idioms-urls")
+	cachedUrls, err := dao.readCache(ctx, "all-idioms-urls")
 	if err == nil && cachedUrls != nil {
 		urls = cachedUrls.([]string)
 	} else {
 		// Not found (or Memcache failed)
 		// Let's fetch in the Datastore
-		log.Infof(c, "Fetching all idiom titles from Datastore")
-		idiomHeads, err := dao.getAllIdiomTitles(c)
+		log.Infof(ctx, "Fetching all idiom titles from Datastore")
+		idiomHeads, err := dao.getAllIdiomTitles(ctx)
 		if err != nil {
 			return err
 		}
@@ -31,15 +31,15 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		for i, head := range idiomHeads {
 			urls[i] = NiceIdiomRelativeURL(head)
 		}
-		err = dao.cacheValue(c, "all-idioms-urls", urls, 24*time.Hour)
+		err = dao.cacheValue(ctx, "all-idioms-urls", urls, 24*time.Hour)
 		if err != nil {
-			log.Errorf(c, "Failed idioms URLs list in Memcache: %v", err)
+			log.Errorf(ctx, "Failed idioms URLs list in Memcache: %v", err)
 		}
 	}
 	k := rand.Intn(len(urls))
 	url := urls[k]
 	// Note that we're redirecting to a *relative* URL
-	log.Infof(c, "Picked idiom url %s (out of %d)", url, len(urls))
+	log.Infof(ctx, "Picked idiom url %s (out of %d)", url, len(urls))
 
 	// 2018-09 w doesn't seem to implement Pusher :(
 	// if pusher, ok := w.(http.Pusher); ok {
@@ -56,7 +56,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 
 // Among idioms having an impl in this language
 func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	vars := mux.Vars(r)
 
 	havingLang := vars["havingLang"]
@@ -69,8 +69,8 @@ func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
 	var url string
 	var err error
 
-	log.Infof(c, "Going to a random idiom having lang %v", havingLang)
-	_, idiom, err = dao.randomIdiomHaving(c, havingLang)
+	log.Infof(ctx, "Going to a random idiom having lang %v", havingLang)
+	_, idiom, err = dao.randomIdiomHaving(ctx, havingLang)
 	if err != nil {
 		return err
 	}
@@ -81,14 +81,14 @@ func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	log.Infof(c, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
+	log.Infof(ctx, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }
 
 // Among idioms not having an impl in this language
 func randomIdiomNotHaving(w http.ResponseWriter, r *http.Request) error {
-	c := r.Context()
+	ctx := r.Context()
 	vars := mux.Vars(r)
 
 	notHavingLang := vars["notHavingLang"]
@@ -101,14 +101,14 @@ func randomIdiomNotHaving(w http.ResponseWriter, r *http.Request) error {
 	var url string
 	var err error
 
-	log.Infof(c, "Going to a random idiom having lang %v", notHavingLang)
-	_, idiom, err = dao.randomIdiomNotHaving(c, notHavingLang)
+	log.Infof(ctx, "Going to a random idiom having lang %v", notHavingLang)
+	_, idiom, err = dao.randomIdiomNotHaving(ctx, notHavingLang)
 	if err != nil {
 		return err
 	}
 	url = NiceIdiomURL(idiom)
 
-	log.Infof(c, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
+	log.Infof(ctx, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }
