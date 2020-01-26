@@ -3,7 +3,7 @@
 		{{if not .PageMeta.Toggles.editing}}
 			<form class="form-search" action="{{hostPrefix}}/search">
 				<div class="input-append">
-					<input type="text" class="search-query input-medium" placeholder="Keywords..." name="q" value="{{.PageMeta.SearchQuery}}" required="required">
+					<input type="search" class="search-query input-medium" placeholder="Keywords..." name="q" value="{{.PageMeta.SearchQuery}}" required="required">
 					<button type="submit" class="btn"><i class="icon-search"></i></button>
 				</div>
 			</form>
