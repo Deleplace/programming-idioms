@@ -1101,6 +1101,9 @@ footer > * {
 footer a {
     color: white;
 }
+footer a:visited {
+    color: white;
+}
 footer div {
     margin: 0.5rem 2rem 0.5rem 2rem;
 }
