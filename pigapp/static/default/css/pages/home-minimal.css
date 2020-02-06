@@ -40,6 +40,10 @@ footer a {
 footer div {
     margin: 0.5rem 2rem 0.5rem 2rem;
 }
+footer img.coverage {
+    width: 2rem;
+    height: 2rem;
+}
 footer .about-link {
     font-weight: bold;
     font-size: xx-large;

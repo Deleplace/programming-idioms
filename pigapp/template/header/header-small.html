@@ -4,13 +4,14 @@
 		<img src="{{hostPrefix}}{{themeDir}}/img/wheel_48x48.png" width="48" height="48" class="header_picto">
 	</a>
 	<h1><a href="/">Programming-Idioms</a></h1>
-	<a href="/random-idiom">
+	<a href="/random-idiom" class="random">
 		<img src="{{hostPrefix}}{{themeDir}}/img/die.svg" width="32" height="32" class="header_picto dice" title="Go to a random idiom" onmouseover="this.src='{{hostPrefix}}{{themeDir}}/img/die_highlight.svg';" onmouseout="this.src='{{hostPrefix}}{{themeDir}}/img/die.svg';" />
 	</a>
 	<form class="form-search" action="/search">
-		<input type="text" class="search-query" placeholder="Keywords..." name="q" value="" required="required">
-		<button type="submit">Search</button>
+		<input type="text" placeholder="Keywords..." name="q" value="" required="required">
+		<button type="submit">🔍 Search</button>
 	</form>
+	{{template "greetings" .}}
 </header>
 {{template "message-zone"}}
 {{end}}

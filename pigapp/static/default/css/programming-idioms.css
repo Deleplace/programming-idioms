@@ -1052,7 +1052,7 @@ footer a.visited {
 }
 
 /*
-  2018-09 Transitioning to minimalistic JS & CSS
+  2018-09, 2020-02 Transitioning to minimalistic JS & CSS
 */
 
 header { 
@@ -1079,8 +1079,22 @@ header > h1 > a:visited {
 h1 > a {
     text-decoration: none;
 }
+header .random {
+	margin-left: 1rem;
+}
 header .form-search {
     float: none;
+	margin-top: 0.5rem;
+	margin-left: 1rem;
+	margin-bottom: 0.5rem;
+}
+
+header .greetings {
+	margin-left: 1rem;
+	margin-bottom: 0.5rem;
+}
+header .greetings a {
+	color: #bbbbbb;
 }
 
 footer {
@@ -1107,10 +1121,19 @@ footer a:visited {
 footer div {
     margin: 0.5rem 2rem 0.5rem 2rem;
 }
+footer img.coverage {
+    width: 2rem;
+    height: 2rem;
+}
 footer .about-link {
     font-weight: bold;
     font-size: xx-large;
 }
 footer a.about-link {
     text-decoration: none;
+}
+
+.about-central-zone {
+	margin-left: 1rem;
+	margin-right: 1rem;
 }

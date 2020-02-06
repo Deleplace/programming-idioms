@@ -40,7 +40,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			var links bytes.Buffer
 			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/js/pages/idiom-detail-minimal.js", "script")
 			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/css/pages/idiom-detail-minimal.css", "style")
-			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s", "/default/img/wheel_48x48.png", "image")
+			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s", "/default_20200205_/img/wheel_48x48.png", "image")
 			w.Header().Set("Link", links.String())
 		}
 	}
@@ -181,8 +181,8 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 
 	pushResources()
 	log.Debugf(ctx, "ExecuteTemplate start...")
-	// err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
-	err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
+	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	// err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
 	log.Debugf(ctx, "ExecuteTemplate end.")
 	return err
 }
@@ -272,8 +272,8 @@ func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]s
 	}
 
 	log.Debugf(ctx, "ExecuteTemplate start...")
-	// err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
-	err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
+	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
+	// err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
 	log.Debugf(ctx, "ExecuteTemplate end.")
 	return err
 }
