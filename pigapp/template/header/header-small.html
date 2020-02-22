@@ -8,7 +8,7 @@
 		<img src="{{hostPrefix}}{{themeDir}}/img/die.svg" width="32" height="32" class="header_picto dice" title="Go to a random idiom" onmouseover="this.src='{{hostPrefix}}{{themeDir}}/img/die_highlight.svg';" onmouseout="this.src='{{hostPrefix}}{{themeDir}}/img/die.svg';" />
 	</a>
 	<form class="form-search" action="/search">
-		<input type="text" placeholder="Keywords..." name="q" value="" required="required">
+		<input type="text" placeholder="Keywords..." name="q" value="{{.PageMeta.SearchQuery}}" required="required">
 		<button type="submit">🔍 Search</button>
 	</form>
 	{{template "greetings" .}}
