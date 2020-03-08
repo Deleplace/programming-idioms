@@ -334,11 +334,19 @@ h3 a {
 }
 
 /* Right column */
-.right_column {
+.right_column, .right_column a:link, .right_column a:visited {
 	color: #888;
 }
 .right_column h3{
 	margin-bottom: 0px;
+}
+
+.right_column .created_by h4 {
+	margin-bottom: 0;
+}
+
+.right_column > div {
+	margin-bottom: 1em;
 }
 
 /* Idiom navigation lists */

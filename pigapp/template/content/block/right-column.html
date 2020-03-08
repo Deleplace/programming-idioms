@@ -4,6 +4,11 @@
 		<h4>Idiom created by</h4>
 		{{.Author}}
 	</div>
+
+	<div>
+		{{/* TODO should check .PageMeta.Toggles.actionIdiomHistory */}}
+		<a href="{{hostPrefix}}/history/{{.Id}}">View history</a>
+	</div>
 	
 	{{if .RelatedIdiomIds}}
 		<h4>Related idioms</h4>
