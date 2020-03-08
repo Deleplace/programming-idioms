@@ -44,6 +44,7 @@
 		{{if .Toggles.isDev}}
 			{{/* This green header, as a reminder this is DEV (not PROD) */}}
 			<style>
+				/*
 				.header .navbar-inner,.header-small .navbar-inner, footer .well{
 					background-color:#004400;
 					background-image:-moz-linear-gradient(top, #004400, #227722);
@@ -55,6 +56,11 @@
 				.blue-to-white{
 					background-color: #070;
 					background-image: linear-gradient(to bottom, #227722, #ffffff);
+				}
+				*/
+				.header .navbar-inner,.header-small .navbar-inner, footer .well{
+					background-color: #185619;
+					background-image: none;
 				}
 				header, footer {
 					background-color: #185619;

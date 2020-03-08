@@ -147,6 +147,7 @@ h3 a {
 	margin-bottom: 2px;
 }
 .header .navbar-inner,.header-small .navbar-inner{
+	/*
 	background-color:#0000aa;
 	background-image:-moz-linear-gradient(top, #0000aa, #3333dd);
 	background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#0000aa), to(#3333dd));
@@ -154,6 +155,9 @@ h3 a {
 	background-image:-o-linear-gradient(top, #0000aa, #3333dd);
 	background-image:linear-gradient(to bottom, #0000aa, #3333dd);
 	background-repeat:repeat-x;
+	*/
+	background-color:#448;
+	background-image: none;
 	
 	border-width: 0px;
 	-webkit-border-radius: 0px;
@@ -1064,6 +1068,9 @@ header > * {
 	display: inline-block;
     vertical-align: middle;
     margin: 0.2rem;
+}
+.header_picto {
+    margin-left: 0.6rem;
 }
 header > h1 {
     margin: 0.2rem 0.5rem 0.2rem 0.5rem;

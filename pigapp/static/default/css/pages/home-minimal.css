@@ -5,6 +5,9 @@ header > * {
     vertical-align: middle;
     margin: 0.2rem;
 }
+.header_picto {
+    margin-left: 0.6rem;
+}
 header > h1 {
     margin: 0.2rem 0.5rem 0.2rem 0.5rem;
 }
