@@ -23,6 +23,7 @@
                 header a { color: white; }
                 header > * { display: inline-block; }
                 .tmp { margin-left: 48px; padding: 0.5rem 0 0 0.9rem; }
+                .square-loading { background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAAAAABHZ8InAAAAHUlEQVQI12NUYcAELAxrMcSCmbAoZBgqgozYvAkAE9oBYb7HOuIAAAAASUVORK5CYII=") no-repeat center/75%;}
                 h1, h2 { margin: 0.2rem;}
                 .content { text-align: center; }
                 .item { margin: 3rem; }
@@ -41,7 +42,7 @@
     {{end}}
     <body>
         <header>
-            <h1 class="tmp"><a href="/">Programming-Idioms</a></h1>
+            <h1 class="tmp">Programming-Idioms</h1>
         </header>
         <div class="content">
 
@@ -51,7 +52,7 @@
                 </div>
                 <a href="/random-idiom">
                     <img src="{{hostPrefix}}{{themeDir}}/img/die.svg" 
-                        width="64" height="64" class="die" 
+                        width="64" height="64" class="die square-loading" 
                         title="Go to a random idiom" >
                 </a>
             </div>
@@ -74,5 +75,6 @@
 </html>
 <script src="{{hostPrefix}}{{themeDir}}/js/pages/home-minimal.js"></script>
 <link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/home-minimal.css" />
-<link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/dice_64x64_highlight.png" as="image" />
+<link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/wheel_48x48.png" as="image" />
+<link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/die_highlight.svg" as="image" />
 {{end}}
