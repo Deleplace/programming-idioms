@@ -24,6 +24,11 @@ function renderHeader() {
     }
     hadd('<a href="/"><img src="/default_20200205_/img/wheel_48x48.png" width="48" height="48" class="header_picto" /></a>');
     hadd('<h1><a href="/">Programming-Idioms</a></h1>');
+
+    let nick = getCookie("Nickname");
+    if(nick)
+        hadd(`<span class="greeting">${nick}</span>`);
+    // TODO user can click/view/remove profile cookie data
 }
 
 function renderFooter() {
@@ -47,6 +52,13 @@ function highlightDie(){
     var hsrc = src.replace("die.svg", "die_highlight.svg");
     die.onmouseover=function(){this.src=hsrc;};
     die.onmouseout=function(){this.src=src;};
+}
+
+function getCookie(name) {
+    // From https://gomakethings.com/working-with-cookies-in-vanilla-js/
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
 //
