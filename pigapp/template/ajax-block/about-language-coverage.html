@@ -4,5 +4,11 @@
 		<h5><i class="icon-check-sign"></i> Checked implementations already exist</h5>
 		<h5><i class="icon-circle-blank"></i> Click on a missing implementation to create it</h5>
 		{{template "project-language-coverage" .}}
+
+		
+		{{if .PageMeta.Toggles.writable}}
+			<br/>
+			<a href="{{hostPrefix}}/idiom-create" class="btn btn-primary"><i class="icon-plus-sign"></i> Create new idiom...</a>
+		{{end}}
 	</div>
 {{end}}
