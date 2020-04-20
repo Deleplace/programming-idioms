@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -35,6 +36,9 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		if err != nil {
 			log.Errorf(ctx, "Failed idioms URLs list in Memcache: %v", err)
 		}
+	}
+	if len(urls) == 0 {
+		return errors.New("There are no idioms in the database, yet")
 	}
 	k := rand.Intn(len(urls))
 	url := urls[k]
