@@ -117,7 +117,7 @@
 				{{if $right.LanguageName}}
 				    <ul class="nav nav-tabs">
 							<li class="active">
-								<a href="#" class="lang-tab"><span class="label badge-lang">{{$right.LanguageName | printNiceLang}}</span></a>
+								<a href="/idiom/{{$.IdiomRight.Id}}/impl/{{$right.Id}}" class="lang-tab goto-impl"><span class="label badge-lang">{{$right.LanguageName | printNiceLang}}</span></a>
 					    </li>
 					</ul>
 				{{end}}

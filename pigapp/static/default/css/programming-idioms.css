@@ -930,6 +930,10 @@ footer a.visited {
 	background-color: white;
 }
 
+.version-diff a.goto-impl span {
+	cursor: pointer;
+}
+
 .diff-nav {
 	margin-top: 1.5rem;
 }
