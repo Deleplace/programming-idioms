@@ -628,6 +628,11 @@ textarea.impl-code{
 .contribution-rules-small {
   color: #555555;
 }
+
+.impl-edit-rules a {
+	color: #8c6f3c;
+}
+
 /* Footer */
 footer {
   color: #555555;
