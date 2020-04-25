@@ -35,13 +35,15 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		if _, err := r.Cookie("v"); err == nil {
 			log.Infof(ctx, "Returning visitor: no resource server push needed.")
 		} else {
-			log.Infof(ctx, "New visitor: server push resources!")
-			prefix := hostPrefix() + themeDirectory()
-			var links bytes.Buffer
-			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/js/pages/idiom-detail-minimal.js", "script")
-			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/css/pages/idiom-detail-minimal.css", "style")
-			fmt.Fprintf(&links, "<%s>; rel=preload; as=%s", "/default_20200205_/img/wheel_48x48.png", "image")
-			w.Header().Set("Link", links.String())
+			// TODO enable when page-idiom-detail-minimal is default, and cookie "v" is in use
+			//
+			// log.Infof(ctx, "New visitor: server push resources!")
+			// prefix := hostPrefix() + themeDirectory()
+			// var links bytes.Buffer
+			// fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/js/pages/idiom-detail-minimal.js", "script")
+			// fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/css/pages/idiom-detail-minimal.css", "style")
+			// fmt.Fprintf(&links, "<%s>; rel=preload; as=%s", "/default_20200205_/img/wheel_48x48.png", "image")
+			// w.Header().Set("Link", links.String())
 		}
 	}
 
