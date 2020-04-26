@@ -415,7 +415,10 @@ $(function() {
 
 	function hasFavlangInCookie(lg) {
 		lg = normLang(lg);
-		let favlangsConcat = $.cookie("my-languages").toLowerCase();
+		let cookielangs = $.cookie("my-languages");
+		if(!cookielangs)
+			return false;
+		let favlangsConcat = cookielangs.toLowerCase();
 		let favlangs = favlangsConcat.split("_");
 		return favlangs.indexOf(lg.toLowerCase()) !== -1;
 	}
