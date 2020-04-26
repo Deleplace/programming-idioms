@@ -703,6 +703,7 @@ footer a.visited {
 	margin-left: 5px;
 }
 
+/* Deprecated
 .all-idioms .idiom-cell {
 	margin-left: 0px;
 	margin-bottom: 5px;
@@ -719,6 +720,22 @@ footer a.visited {
 	padding-left: 8px;
 	padding-right: 5px;
 	margin: 3px;
+}
+*/
+
+.all-idioms ul {
+	margin-top: 1rem;
+}
+
+.all-idioms li {
+	list-style-type: none;
+	margin-bottom: 0.3rem;
+}
+
+.all-idioms .idiom_id {
+	min-width: 1.8rem;
+	text-align: right;
+	margin-right: 0.3rem;
 }
 
 /* About : language coverage */
