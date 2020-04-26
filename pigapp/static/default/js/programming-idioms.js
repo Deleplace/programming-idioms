@@ -111,11 +111,7 @@ $(function() {
 		    return true;
 		},
 		updater : function(item){
-			var lgDisplay = item;
-			var lg = normLang(item);
-			var li = $('<li class="active" data-language="'+lg+'"><span class="badge badge-success">'+lgDisplay+' <a href="#" class="favorite-language-remove icon-remove"></a></span></li>');
-			li.appendTo($(".favorite-languages"));
-	    	updateFavlangCookie();
+			addFavlang(item);
 		}
 	});
 	$('.language-single-select .typeahead').typeahead({
@@ -387,6 +383,20 @@ $(function() {
 	// Favorite languages
 	//
 
+	function addFavlang(lg) {
+		let lgDisplay = niceLang(lg);
+		lg = normLang(lg);
+		var li = $('\
+			<li class="active" data-language="' + lg + '"> \
+				<span class="badge badge-success"> \
+					' + lgDisplay + '\
+					<a href="#" class="favorite-language-remove icon-remove"></a> \
+				</span> \
+			</li>');
+		li.appendTo($(".favorite-languages"));
+		updateFavlangCookie();
+	}
+
 	var updateFavlangCookie = function(){
 		var container = $(".favorite-languages")[0];
 		var langs = "";
@@ -402,13 +412,22 @@ $(function() {
 			$.cookie("see-non-favorite", "1", { expires : 100, path: '/' });
 		}
 	};
+
+	function hasFavlangInCookie(lg) {
+		lg = normLang(lg);
+		let favlangsConcat = $.cookie("my-languages").toLowerCase();
+		let favlangs = favlangsConcat.split("_");
+		return favlangs.indexOf(lg.toLowerCase()) !== -1;
+	}
 	
 	var normLang = function(lang){
-		switch(lang){
-		case "C++":
+		switch(lang.toLowerCase()){
+		case "c++":
 			return "Cpp";
-		case "C#":
+		case "c#":
 			return "Csharp";
+		case "golang":
+			return "go";
 		}
 		return lang;
 	}
@@ -476,6 +495,26 @@ $(function() {
 		$(this).closest(".language-single-select").find("input[type=text]").val(nicelg).change();
 		return false;
 	});
+
+	function isIdiomDetailWithLang() {
+		// E.g. "/idiom/52/check-if-map-contains-value/2870/csharp"
+		return /\/idiom\/[0-9]+\/[^/]+\/[0-9]+\/[^/]+/.test(window.location.pathname);
+	}
+
+	function capitalizeFirstLetter(string) {
+		// https://stackoverflow.com/a/1026087
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+	if( isIdiomDetailWithLang() ) {
+		// #112 Auto add favorite languages
+		let parts = window.location.pathname.split(/\//);
+		let lang = parts[parts.length-1];
+		lang = capitalizeFirstLetter(lang);
+		if(!hasFavlangInCookie(lang)) {
+			addFavlang(lang);
+		}
+	}
 		
 	// Lame client-side trick.
 	// We should be able to set first tab as "active" server-side.

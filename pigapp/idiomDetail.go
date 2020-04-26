@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -11,6 +10,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"context"
+
 	"github.com/gorilla/mux"
 
 	"google.golang.org/appengine/log"
@@ -47,10 +47,22 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
+	// #112 Auto add favorite languages
+	// Nah, let's do this in the frontend instead
+	// if implLangInURL := vars["implLang"]; implLangInURL != "" {
+	// 	if favlangs := lookForFavoriteLanguages(r); !StringSliceContainsCaseInsensitive(favlangs, implLangInURL) {
+	// 		log.Infof(ctx, "Adding welcome lang in cookie: %q", implLangInURL)
+	// 		favlangs = append(favlangs, implLangInURL)
+	// 		langsList := strings.Join(favlangs, "_") + "_"
+	// 		setLanguagesCookie(w, langsList)
+	// 	}
+	// }
+
 	if userProfile.Empty() {
 		//
 		// Zero-preference ≡ anonymous visit ≡ server cache enabled
 		//
+
 		path := r.URL.RequestURI()
 		if cachedPage := htmlCacheRead(ctx, path); cachedPage != nil {
 			// Using the whole HTML block from Memcache

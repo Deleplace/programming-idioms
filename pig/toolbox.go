@@ -10,9 +10,21 @@ import (
 	"unicode/utf8"
 )
 
-// StringSliceContains determines whether this slice contain this string?
+// StringSliceContains determines whether this slice contains this string
 func StringSliceContains(hay []string, needle string) bool {
 	for _, straw := range hay {
+		if straw == needle {
+			return true
+		}
+	}
+	return false
+}
+
+// StringSliceContainsCaseInsensitive determines whether this slice contains this string, regardless the case
+func StringSliceContainsCaseInsensitive(hay []string, needle string) bool {
+	needle = strings.ToLower(needle)
+	for _, straw := range hay {
+		straw = strings.ToLower(straw)
 		if straw == needle {
 			return true
 		}
