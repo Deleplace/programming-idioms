@@ -26,10 +26,10 @@ $(function() {
 	$('button').button();
 	$(".sortable-y").sortable({
 		handle : ".handle",
-        cursor: 'move'
+        // cursor: 'move'
 	});
 	$(".sortable-lang").sortable({
-        cursor: 'move',
+        // cursor: 'move',
         update: function( event, ui ) {
         	updateFavlangCookie();
         }
