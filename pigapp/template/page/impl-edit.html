@@ -73,8 +73,12 @@
 									data-content="<textarea name='impl_comment' placeholder='Put your comments here
 									(not in the code)' rows='4' maxlength='500'>{{.Impl.AuthorComment}}</textarea><div>To emphasize a name: <span>_x &rarr; <b><i>x</b></i></span></div>"
 									maxlength="500"
-									required="required">{{.Impl.CodeBlock}}</textarea>
+									required="required"
+									data-variables="{{.Idiom.VariablesComma}}">{{.Impl.CodeBlock}}</textarea>
+								<div class="warning-code-cromulence alert">
+								</div>
 							</div>
+
 						</div>
 						<div class="control-group">
 							<label class="control-label" for="impl_doc_url">Documentation URL</label>

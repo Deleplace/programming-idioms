@@ -624,6 +624,11 @@ textarea.impl-code{
 	display: block;
 }
 
+.warning-code-cromulence {
+	/* Hidden at first. Displayed on code change. */
+	display: none;
+}
+
 /* Contribution rules bla bla bla */
 .contribution-rules-small {
   color: #555555;

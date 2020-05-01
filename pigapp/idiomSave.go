@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -160,6 +161,12 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 		}
 		if !wasProtected && idiom.Protected {
 			log.Infof(ctx, "[%v] protects idiom %v", username, existingIDStr)
+		}
+
+		if vars := strings.Replace(r.FormValue("idiom_variables"), " ", "", -1); vars == "" {
+			idiom.Variables = nil
+		} else {
+			idiom.Variables = strings.Split(vars, ",")
 		}
 	}
 

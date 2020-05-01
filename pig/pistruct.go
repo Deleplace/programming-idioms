@@ -96,8 +96,12 @@ type Idiom struct {
 	// NoSQL-style : store directly some data from other objects
 	RelatedIdiomTitles []string
 
-	// Proctected when "only admin can edit"
+	// Protected when "only admin can edit"
 	Protected bool
+
+	// Variables from the lead paragraph, that we'd like every
+	// impl snippet to contain
+	Variables []string
 }
 
 // Impl is a specific implementation of one Idiom in one programming language.
@@ -166,7 +170,7 @@ type Impl struct {
 	// PictureURL to illustrate this impl.
 	PictureURL string
 
-	// Proctected when "only admin can edit"
+	// Protected when "only admin can edit"
 	Protected bool
 }
 
@@ -455,4 +459,9 @@ func (idiom *Idiom) AddRelation(other *Idiom) {
 		other.RelatedIdiomTitles = append(other.RelatedIdiomTitles, idiom.Title)
 		other.EditSummary = fmt.Sprintf("Linked to idiom #%d [%v]", idiom.Id, idiom.Title)
 	}
+}
+
+// VariablesComma e.g. ["x", "result"] -> "x,result"
+func (idiom *Idiom) VariablesComma() string {
+	return strings.Join(idiom.Variables, ",")
 }

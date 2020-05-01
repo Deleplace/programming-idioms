@@ -46,6 +46,15 @@
 									maxlength="500">{{.Idiom.LeadParagraph}}</textarea>
 							</div>
 						</div>
+						{{if .UserProfile.IsAdmin}}
+					   <div class="control-group">
+						   <label class="control-label" for="idiom_variables">Variables</label>
+						   <div class="controls">
+							   <input type="text" name="idiom_variables" 
+							   	placeholder="Formal variables, comma-separated" value="{{.Idiom.VariablesComma}}" />
+						   </div>
+					   </div>
+					   {{end}}
 						<div class="control-group">
 							<label class="control-label" for="idiom_keywords">Extra keywords</label>
 							<div class="controls">
