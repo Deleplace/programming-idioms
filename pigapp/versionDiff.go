@@ -93,8 +93,9 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	// in deeply nested templates...
 	data := &VersionDiffFacade{
 		PageMeta: PageMeta{
-			PageTitle: right.Title,
-			Toggles:   myToggles,
+			PageTitle:             right.Title,
+			Toggles:               myToggles,
+			PreventIndexingRobots: true,
 		},
 		UserProfile:     userProfile,
 		IdiomLeft:       left,

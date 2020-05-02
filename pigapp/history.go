@@ -54,8 +54,9 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 	myToggles["actionAddImpl"] = false
 	data := &IdiomHistoryFacade{
 		PageMeta: PageMeta{
-			PageTitle: "Idiom " + idiomIDStr + " history",
-			Toggles:   myToggles,
+			PageTitle:             "Idiom " + idiomIDStr + " history",
+			Toggles:               myToggles,
+			PreventIndexingRobots: true,
 		},
 		UserProfile: userProfile,
 		Idiom:       idiom,
