@@ -587,30 +587,34 @@ $(function() {
 	});
 
 	$("textarea[name=impl_code").change(function() {
+		let warnZone = $(".warning-code-cromulence");
+		warnZone.hide().empty();
+		function warn(line) {
+			warnZone.append( $("<div>").html(line) ).show();
+		}
 		let code = $(this).val();
+
 		let expectedVarsComma = $(this).attr("data-variables");
 		expectedVarsComma = expectedVarsComma.replace(/[_ ]/g,"");
-		if(!expectedVarsComma) {
-			$(".warning-code-cromulence").hide();
-			return;
-		}
-		let vars = expectedVarsComma.split(",");
-		let missing = [];
-		for(let i=0;i<vars.length;i++) {
-			if ( !new RegExp('\\b' + vars[i].toLowerCase() + '\\b').test(code.toLowerCase()) ) {
-				missing.push(vars[i]);
+		if(expectedVarsComma) {
+			let vars = expectedVarsComma.split(",");
+			let missing = [];
+			for(let i=0;i<vars.length;i++) {
+				if ( !new RegExp('\\b' + vars[i].toLowerCase() + '\\b').test(code.toLowerCase()) ) {
+					missing.push(vars[i]);
+				}
+			}
+			if(missing.length >= 1) {
+				let plural = (missing.length) >= 2 ? "s" : "";
+				let missingBold = missing.map(function(v){return "<span class=\"variable\">" + v + "</span>" });
+				let warning = "The code <i>should</i> contain identifier" + plural + " " + missingBold.join(", ") + ".";
+				warn(warning);
 			}
 		}
-		if(missing.length >= 1) {
-			let plural = (missing.length) >= 2 ? "s" : "";
-			let missingBold = missing.map(function(v){return "<span class=\"variable\">" + v + "</span>" });
-			let warning = "The code <i>should</i> contain identifier" + plural + " " + missingBold.join(", ") + ".";
-			$(".warning-code-cromulence").html(warning).show();
-		} else {
-			$(".warning-code-cromulence").hide();
+		
+		if( /\bmain\b/.test(code) ) {
+			warn("Are you sure about <span class=\"variable\">main</span>? We usually don't want a whole program.");
 		}
-
-		// TODO warn about unnecessary  `int main() {...}` ?
 	});
 	
 	// Being able to insert <tab> characters in code
