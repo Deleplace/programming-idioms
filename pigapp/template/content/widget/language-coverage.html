@@ -13,7 +13,9 @@
 					<th></th>
 					{{range $j, $lang := .Languages}}
 						{{$class := hiddenizeExtraColumns $j "" "hidden"}}
-						<th data-lang="{{$lang}}" class="{{$class}}" title="{{printNiceLang $lang}}">{{printShortLang $lang}}</th>
+						<th data-lang="{{$lang}}" class="{{$class}} {{langCoverageClass $lang $favlangs}}" title="{{printNiceLang $lang}}">
+							<span>{{printNiceLang $lang}}</span>
+						</th>
 					{{end}}
 					<th class="fold-unfold"><i class="icon-double-angle-right icon-large"></i></th>
 				</tr>

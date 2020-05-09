@@ -750,7 +750,23 @@ footer a.visited {
 	padding-right: 3px;	
 	width: 2.0em;
 	overflow-x: visible;
-	vertical-align: top;
+	vertical-align: bottom;
+}
+
+.language-coverage th[data-lang] span {
+	writing-mode: vertical-rl;
+	text-orientation: upright;
+	letter-spacing: -0.23em;
+	font-size: 24px;
+	color: white;
+	padding: 0.1em;
+	border-radius: 6px;
+	background-color: #0088cc;
+	padding-bottom: 0.3em;
+}
+
+.language-coverage th[data-lang].coverage-fav-lang span {
+	background-color: #468847;
 }
 
 .language-coverage th.idiom-title{

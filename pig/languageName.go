@@ -90,39 +90,6 @@ func PrintNiceLangs(langs []string) []string {
 	return nice
 }
 
-func PrintShortLang(lang string) string {
-	switch strings.TrimSpace(strings.ToLower(lang)) {
-	case "clojure":
-		return "Clj"
-	case "cobol":
-		return "Co bol"
-	case "cpp":
-		return "C++"
-	case "csharp":
-		return "C#"
-	case "erlang":
-		return "Er lang"
-	case "elixir":
-		return "Eli xir"
-	case "fortran":
-		return "For tran"
-	case "haskell":
-		return "Has kell"
-	case "obj-c":
-		return "Obj C"
-	case "pascal":
-		return "Pas"
-	case "python":
-		return "Py"
-	case "scheme":
-		return "scm"
-	case "prolog":
-		return "Pro log"
-	default:
-		return lang
-	}
-}
-
 func indexByLowerCase(langs []string) map[string]string {
 	m := map[string]string{}
 	for _, lg := range langs {
