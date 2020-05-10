@@ -32,7 +32,6 @@ html, body{
 }
 .right {
 	float: right;
-	text-align: right;
 }
 
 @media (max-width: 479px) {
@@ -877,6 +876,10 @@ footer a.visited {
 .version-diff .summary .bigicon {
 	font-size: 48px;
 	margin-top: 6px;
+}
+
+.version-diff .right {
+	text-align: right;
 }
 
 .version-diff h4.version-number {
