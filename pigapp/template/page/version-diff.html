@@ -32,12 +32,14 @@
 	<div class="row-fluid">
 		<div class="span6 idiom-left">
 			<div class="right">
-				<h4>Version {{.IdiomLeft.Version}}</h4>
+				<h4 class="version-number">Version {{.IdiomLeft.Version}}</h4>
+				<div class="version-date">{{.IdiomLeft.VersionDate.Format "2006-01-02, 15:04:05"}}</div>
 			</div>
 		</div>
 		<div class="span6 idiom-right">
 			<div class="left">
-				<h4>Version {{.IdiomRight.Version}}</h4>
+				<h4 class="version-number">Version {{.IdiomRight.Version}}</h4>
+				<div class="version-date">{{.IdiomRight.VersionDate.Format "2006-01-02, 15:04:05"}}</div>
 			</div>
 		</div>
 	</div>
