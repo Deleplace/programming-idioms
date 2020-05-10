@@ -12,6 +12,9 @@ import "fmt"
 type PageMeta struct {
 	// PageTitle is the title of this page
 	PageTitle string
+	// CanonicalURL helps deduplicating pages for SEO.
+	// See https://support.google.com/webmasters/answer/139066
+	CanonicalURL string
 	// PageKeywords for meta tag "keyword"
 	PageKeywords string
 	// Toggles (global or custom) used to tune the output

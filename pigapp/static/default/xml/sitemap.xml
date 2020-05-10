@@ -6,15 +6,15 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <url>
-  <loc>https://www.programming-idioms.org/</loc>
+  <loc>https://programming-idioms.org/</loc>
 </url>
 <url>
-  <loc>https://www.programming-idioms.org/about</loc>
+  <loc>https://programming-idioms.org/about</loc>
 </url>
 <url>
-  <loc>https://www.programming-idioms.org/about#about-block-all-idioms</loc>
+  <loc>https://programming-idioms.org/about#about-block-all-idioms</loc>
 </url>
 <url>
-  <loc>https://www.programming-idioms.org/about#about-block-language-coverage</loc>
+  <loc>https://programming-idioms.org/about#about-block-language-coverage</loc>
 </url>
 </urlset>

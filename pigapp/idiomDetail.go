@@ -107,6 +107,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
+	var canonicalURL string
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
@@ -138,6 +139,10 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			http.Redirect(w, r, properURL, 302)
 			return nil
 		}
+		canonicalURL = host() + NiceImplRelativeURL(idiom, selectedImplID, selectedImplLang)
+	} else {
+		// Just the idiom, no specific impl
+		canonicalURL = host() + NiceIdiomRelativeURL(idiom)
 	}
 
 	includeNonFav := seeNonFavorite(r)
@@ -185,6 +190,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		PageMeta: PageMeta{
 			PageTitle:    pageTitle,
 			PageKeywords: idiom.ExtraKeywords,
+			CanonicalURL: canonicalURL,
 			Toggles:      myToggles,
 		},
 		UserProfile:      userProfile,
