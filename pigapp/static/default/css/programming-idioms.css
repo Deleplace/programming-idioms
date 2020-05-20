@@ -558,11 +558,11 @@ textarea.impl-code{
     cursor: pointer;
 }
 
-.btn.btn-edit{
-	margin-bottom: 4px;
-}
-
-.btn.show-impl-grid{
+.btn.btn-edit,
+.btn.btn-flag-impl,
+.btn.show-impl-grid,
+.btn.btn-delete {
+	width: 1.5em;
 	margin-bottom: 4px;
 }
 

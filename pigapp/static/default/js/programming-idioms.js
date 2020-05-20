@@ -65,7 +65,7 @@ $(function() {
 	$('pre').popover({
 		html : true
 	}).popover('show');
-	$('a').popover('show');
+	// $('a').popover('show');
 	$('input').popover({
 		trigger: 'manual'
 	}).popover('show');
@@ -641,6 +641,33 @@ $(function() {
 		        e.preventDefault();
 	    	}
 	    }
+	});
+
+	// Impl flag (to the admin)
+	$(".btn-flag-impl").click(function(e){
+		let btn = $(e.target).closest(".btn-flag-impl");
+		let rationale;
+		do {
+			rationale = window.prompt("I'd like to report this implementation because:");
+			if( rationale===null )
+				   return; // Clicked Cancel
+		} while(rationale === "");
+
+		let idiomId = btn.attr('data-idiom-id');
+		let implId = btn.attr('data-impl-id');
+		let idiomVersion = btn.attr('data-idiom-version');
+
+		$.post(
+			'/ajax-impl-flag/' + idiomId + '/' + implId,
+			{
+				"idiomVersion": idiomVersion,
+				"rationale": rationale
+			}
+		).done(function() {
+			alert( "Thanks :)" );
+		}).fail(function() {
+			alert( "Unfortunately we could not save this report :(" );
+		});
 	});
 
 	// Impl create, impl edit : show other implementations below,

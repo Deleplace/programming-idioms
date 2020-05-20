@@ -215,6 +215,7 @@
 				{{if or (and (not .Impl.Protected) (not .Idiom.Protected)) .UserProfile.IsAdmin}}
 					{{template "impl-edit-button" decorate .Impl .Idiom}}
 				{{end}}
+				{{template "impl-flag-button" decorate .Impl .Idiom}}
 				{{if .UserProfile.IsAdmin}}
 					{{template "impl-delete-button" decorate .Impl .Idiom}}
 				{{end}}
@@ -348,23 +349,27 @@
 {{end}}
 
 {{define "idiom-impl-grid-button"}}
-	<button type="button" class="btn show-impl-grid popover-on-hover" data-toggle="popover" data-content="View implementations in grid" data-placement="top"><i class="icon-th"></i></button>
+	<a class="btn show-impl-grid" title="View implementations in grid"><i class="icon-th"></i></button>
 {{end}}
 
 {{define "idiom-edit-button"}}
-	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info btn-edit" {{/* TODO title="Edit this idiom statement"*/}} ><i class="icon-edit"></i></a>
+	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info btn-edit" title="Edit this idiom statement" ><i class="icon-edit"></i></a>
 {{end}}
 
 {{define "idiom-delete-button"}}
-	<a href="#" data-url="{{hostPrefix}}/admin-idiom-delete?idiomId={{.Id}}" class="btn btn-danger ajax-generic-action reason-needed"><i class="icon-remove-sign"></i></a>
+	<a href="#" data-url="{{hostPrefix}}/admin-idiom-delete?idiomId={{.Id}}" class="btn btn-danger ajax-generic-action reason-needed btn-delete" title="Delete this idiom"><i class="icon-remove-sign"></i></a>
 {{end}}
 
 {{define "impl-edit-button"}}
-	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info btn-edit" {{/* TODO title="Edit this implementation"*/}} ><i class="icon-pencil"></i></a>
+	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info btn-edit" title="Edit this implementation" ><i class="icon-pencil"></i></a>
+{{end}}
+
+{{define "impl-flag-button"}}
+	<a class="btn btn-info btn-flag-impl" title="Flag this implementation" data-idiom-id="{{.Deco.Id}}" data-impl-id="{{.Data.Id}}" data-idiom-version="{{.Deco.Version}}"><i class="icon-flag"></i></a>
 {{end}}
 
 {{define "impl-delete-button"}}
-	<a href="#" data-url="{{hostPrefix}}/admin-impl-delete?idiomId={{.Deco.Id}}&implId={{.Data.Id}}" class="btn btn-danger ajax-generic-action reason-needed"><i class="icon-remove-sign"></i></a>
+	<a href="#" data-url="{{hostPrefix}}/admin-impl-delete?idiomId={{.Deco.Id}}&implId={{.Data.Id}}" class="btn btn-danger ajax-generic-action reason-needed btn-delete" title="Delete this implementation"><i class="icon-remove-sign"></i></a>
 {{end}}
 
 {{define "input-username"}}
