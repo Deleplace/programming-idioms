@@ -62,6 +62,7 @@
 								<textarea name="impl_imports" rows="2" 
 									class="input-xlarge imports"
 									placeholder="Import statements (optional)" 
+									spellcheck="false"
 									maxlength="500">{{.Impl.ImportsBlock}}</textarea>
 							</div>
 						</div>
@@ -74,6 +75,7 @@
 									(not in the code)' rows='4' maxlength='500'>{{.Impl.AuthorComment}}</textarea><div>To emphasize a name: <span>_x &rarr; <b><i>x</b></i></span></div>"
 									maxlength="500"
 									required="required"
+									spellcheck="false"
 									data-variables="{{.Idiom.VariablesComma}}">{{.Impl.CodeBlock}}</textarea>
 								<div class="warning-code-cromulence alert">
 								</div>
