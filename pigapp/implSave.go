@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
@@ -49,12 +50,13 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	docURL := r.FormValue("impl_doc_url")
 	editSummary := fmt.Sprintf("New %s implementation by user [%s]", PrintNiceLang(language), username)
 
-	imports = Truncate(imports, 200)
+	trim := strings.TrimSpace
+	imports = trim(Truncate(imports, 200))
 	code = TruncateBytes(NoCR(code), 500)
-	comment = TruncateBytes(comment, 500)
-	attributionURL = Truncate(attributionURL, 250)
-	demoURL = Truncate(demoURL, 250)
-	docURL = Truncate(docURL, 250)
+	comment = trim(TruncateBytes(comment, 500))
+	attributionURL = trim(Truncate(attributionURL, 250))
+	demoURL = trim(Truncate(demoURL, 250))
+	docURL = trim(Truncate(docURL, 250))
 
 	log.Infof(ctx, "[%s] is creating new %s impl for idiom %v", username, PrintNiceLang(language), idiomIDStr)
 
@@ -136,12 +138,13 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
 
-	imports = Truncate(imports, 200)
+	trim := strings.TrimSpace
+	imports = trim(Truncate(imports, 200))
 	code = TruncateBytes(NoCR(code), 500)
-	comment = TruncateBytes(comment, 500)
-	attributionURL = Truncate(attributionURL, 250)
-	demoURL = Truncate(demoURL, 250)
-	docURL = Truncate(docURL, 250)
+	comment = trim(TruncateBytes(comment, 500))
+	attributionURL = trim(Truncate(attributionURL, 250))
+	demoURL = trim(Truncate(demoURL, 250))
+	docURL = trim(Truncate(docURL, 250))
 
 	log.Infof(ctx, "[%s] is updating impl %s of idiom %s", username, existingImplIDStr, idiomIDStr)
 
