@@ -1186,9 +1186,8 @@ footer {
 footer > * {
     vertical-align: middle;
 }
-footer a {
-    color: white;
-}
+footer a,
+footer a:hover,
 footer a:visited {
     color: white;
 }
