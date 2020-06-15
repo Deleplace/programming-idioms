@@ -24,10 +24,6 @@ $(function() {
 	//
 	
 	$('button').button();
-	$(".sortable-y").sortable({
-		handle : ".handle",
-        // cursor: 'move'
-	});
 	$(".sortable-lang").sortable({
         // cursor: 'move',
         update: function( event, ui ) {

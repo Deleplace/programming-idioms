@@ -497,14 +497,6 @@ li > a.lang-tab {
 	display: none;
 }
 
-.sortable-y .handle:hover {
-    cursor: move;
-}
-
-.sortable-y .handle span:hover {
-    cursor: move;
-}
-
 /* Import statements (boring) are greyed out */
 .piimports pre{
 	color: #777;

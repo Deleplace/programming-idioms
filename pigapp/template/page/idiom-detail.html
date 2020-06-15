@@ -17,11 +17,11 @@
 			{{template "idiom-summary-large"  decorate .Idiom .UserProfile}}
 			{{$selectedImplId := .SelectedImplID}}
 			{{$selectedImplLang := .SelectedImplLang}}
-			<div class="sortable-y">
+			<div>
 				{{range .Idiom.Implementations}}
 				{{if or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages)}}
 					<div>
-						<div class="handle">
+						<div>
 						    <ul class="nav nav-tabs">
 	   							<li class="active">
 	   								<a href="#" class="lang-tab"><span class="label {{if idEqual .Id $selectedImplId}}badge-lang{{end}} {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
