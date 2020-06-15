@@ -118,8 +118,8 @@
 			<div class="span6 impl-right">
 				{{if $right.LanguageName}}
 				    <ul class="nav nav-tabs">
-							<li class="active">
-								<a href="/idiom/{{$.IdiomRight.Id}}/impl/{{$right.Id}}" class="lang-tab goto-impl"><span class="label badge-lang">{{$right.LanguageName | printNiceLang}}</span></a>
+						<li class="active">
+							<a href="{{niceImplURL $.IdiomRight.Idiom $right.Id $right.LanguageName}}" class="lang-tab goto-impl"><span class="label badge-lang">{{$right.LanguageName | printNiceLang}}</span></a>
 					    </li>
 					</ul>
 				{{end}}
