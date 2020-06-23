@@ -35,18 +35,6 @@ $(function() {
 			$('pre').popover("show"); // Fix (0,0) popovers of hidden tabs
 		}
 	});
-
-	function displayCodeCommentBubble() {
-		$("pre[data-toggle=popover]").each(function(){
-			// Newlines are allowed in Author Comments
-			var $this = $(this);
-			var content = $this.attr("data-content");
-			if(content)
-				//$this.attr("data-content", "<div class='code-bubble'>" + content.replace(/</g,"&lt;").replace(/\n/g,"<br/>") + "</div>");
-				$this.attr("data-content", "<div class='code-bubble'>" + content.replace(/\n/g,"<br/>") + "</div>");
-		});
-	}
-
 	
 	$('.togglabe').on('click',function() {
 		$(this).toggleClass("active");
@@ -61,6 +49,13 @@ $(function() {
 	$('pre').popover({
 		html : true
 	}).popover('show');
+	$(document).on("click", ".popover-content", function (){
+		var pre = $(this).closest(".picode").children("pre");
+		var bubble = $(this).closest(".popover");
+		bubble.hide( "slide", {direction: "left"}, 200, function(){
+			pre.popover("toggle");
+		});
+	});
 	// $('a').popover('show');
 	$('input').popover({
 		trigger: 'manual'
@@ -81,16 +76,7 @@ $(function() {
 		// Repaint some bubbles on window resize
 		$('pre').popover("show");
 	});
-	
-	// Popover: hide on click
-	$(document).on("click", ".code-bubble", function(){
-		var codeBubble = $(this);
-		var popoverContent = codeBubble.parent();
-		var popover = popoverContent.parent();
-		var pre = popover.prev();
-		pre.popover("hide");
-	});
-	
+		
 	$('.input-suggest-language').typeahead({
 		source : function(query, process){
 	        return $.get(
