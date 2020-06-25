@@ -50,11 +50,17 @@ $(function() {
 		html : true
 	}).popover('show');
 	$(document).on("click", ".popover-content", function (){
-		var pre = $(this).closest(".picode").children("pre");
-		var bubble = $(this).closest(".popover");
-		bubble.hide( "slide", {direction: "left"}, 200, function(){
-			pre.popover("toggle");
-		});
+		// Attached to <pre>: this is the detail view.
+		// We want to hide the bubble on bubble click.
+		let pre = $(this).closest(".picode").children("pre");
+		if(pre.length == 1) {
+			let bubble = $(this).closest(".popover");
+			bubble.hide( "slide", {direction: "left"}, 200, function(){
+				pre.popover("toggle");
+			});
+		}
+		// Attached to <textarea>: this is the edit view.
+		// We don't want to hide the bubble.
 	});
 	// $('a').popover('show');
 	$('input').popover({
