@@ -12,7 +12,7 @@ function renderHeader() {
     var hadd = function(code){
         h.insertAdjacentHTML('beforeend', code);
     }
-    hadd('<a href="/"><img src="/default_20200205_/img/wheel_48x48.png" width="48" height="48" class="header_picto" /></a>');
+    hadd('<a href="/"><img src="/default_20200205_/img/wheel.svg" width="48" height="48" class="header_picto" alt="Logo" /></a>');
     hadd('<h1><a href="/">Programming-Idioms</a></h1>');
     hadd('<a href="/random-idiom"><img src="/default_20200205_/img/die.svg" width="32" height="32" class="picto die" title="Go to a random idiom" /></a>');
     hadd('<form class="form-search" action="/search"> \

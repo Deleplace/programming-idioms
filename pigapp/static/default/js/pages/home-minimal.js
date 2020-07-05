@@ -22,7 +22,7 @@ function renderHeader() {
     var hadd = function(code){
         h.insertAdjacentHTML('beforeend', code);
     }
-    hadd('<a href="/"><img src="/default_20200205_/img/wheel_48x48.png" width="48" height="48" class="header_picto" /></a>');
+    hadd('<a href="/"><img src="/default_20200205_/img/wheel.svg" width="48" height="48" class="header_picto" alt="Logo" /></a>');
     hadd('<h1><a href="/">Programming-Idioms</a></h1>');
 
     let nick = getCookie("Nickname");
