@@ -88,8 +88,9 @@ func restoreIdiomVersion(w http.ResponseWriter, r *http.Request) error {
 	versionStr := r.FormValue("version")
 	version := String2Int(versionStr)
 	ctx := r.Context()
+	restoreUser := lookForNickname(r)
 
-	idiom, err := dao.historyRestore(ctx, idiomID, version)
+	idiom, err := dao.historyRestore(ctx, idiomID, version, restoreUser)
 	if err != nil {
 		return err
 	}

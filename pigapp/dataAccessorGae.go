@@ -9,6 +9,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"context"
+
 	"google.golang.org/appengine/blobstore"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/delay"
@@ -121,7 +122,7 @@ func (a *GaeDatastoreAccessor) revert(ctx context.Context, idiomID int, version 
 	return idiom, datastore.Delete(ctx, historyKeys[0])
 }
 
-func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, version int) (*Idiom, error) {
+func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, version int, restoreUser string) (*Idiom, error) {
 	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
 		Filter("Version =", version).
@@ -161,6 +162,7 @@ func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, 
 
 	historyIdiom.Version = currentVersion                                  // will be incremented
 	historyIdiom.EditSummary = fmt.Sprintf("Restored version %v", version) // TODO append reverter's reason here
+	historyIdiom.LastEditor = restoreUser
 	err = a.saveExistingIdiom(ctx, idiomKey, historyIdiom)
 	if err != nil {
 		return nil, err
