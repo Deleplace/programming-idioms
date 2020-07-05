@@ -103,7 +103,7 @@
 					<div class="span6">
 						<h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
 						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
-						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
+						{{template "idiom-picture" .ImageURL}}
 					</div>
 					<div class="span4">
 						<div class="language-list">
@@ -495,6 +495,23 @@
 		<iframe width="100%" height="800px" src="https://google.com/search?q={{.LanguageSingleSelector.Selected}}+{{.Idiom.Title}}"></iframe>
 		*/}}
 	</div>
+{{end}}
+
+{{define "idiom-picture"}}
+	{{if hasSuffix . ".webp"}}
+		{{$fallback := replace . ".webp" ".png" -1}}
+		<div class="idiom-picture">
+			<picture>
+				<source srcset="{{.}}" type="image/webp">
+				<source srcset="{{$fallback}}" type="image/png">
+				<img src="{{$fallback}}"  alt="Illustration" />
+			</picture>
+		</div>
+	{{else if .}}
+		<div class="idiom-picture">
+			<img src="{{.}}" alt="Illustration"/>
+		</div>
+	{{end}}
 {{end}}
 
 {{define ""}}
