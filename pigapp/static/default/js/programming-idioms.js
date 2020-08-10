@@ -957,4 +957,15 @@ $(function() {
 			}
 		});
 	});
+
+	// Restore a previous version of the Idiom
+	// (only the admin can do this)
+	$("form.idiom-restore-version > input.presubmit").on("click", function(e) {
+		var reason = window.prompt("Why?");
+		if( reason===null )
+	   		return; // Clicked Cancel
+		var form = $(this).closest("form");
+		form.find("input[name=why]").val(reason);
+		form.submit();
+	});
 });

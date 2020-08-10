@@ -122,7 +122,7 @@ func (a *GaeDatastoreAccessor) revert(ctx context.Context, idiomID int, version 
 	return idiom, datastore.Delete(ctx, historyKeys[0])
 }
 
-func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, version int, restoreUser string) (*Idiom, error) {
+func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, version int, restoreUser string, why string) (*Idiom, error) {
 	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
 		Filter("Version =", version).
@@ -160,8 +160,8 @@ func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, 
 	newVersion := idiom.Version + 1
 	log.Infof(ctx, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
 
-	historyIdiom.Version = currentVersion                                  // will be incremented
-	historyIdiom.EditSummary = fmt.Sprintf("Restored version %v", version) // TODO append reverter's reason here
+	historyIdiom.Version = currentVersion // will be incremented
+	historyIdiom.EditSummary = fmt.Sprintf("Restored version %d: %s", version, why)
 	historyIdiom.LastEditor = restoreUser
 	err = a.saveExistingIdiom(ctx, idiomKey, historyIdiom)
 	if err != nil {

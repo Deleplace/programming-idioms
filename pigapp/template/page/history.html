@@ -27,10 +27,11 @@
 					<td>{{shorten .EditSummary 120 | markup2CSS}}</td>
 					<td>{{shorten .IdiomOrImplLastEditor 40}}</td>
 					<td>{{if and ($.UserProfile.IsAdmin) (gt (len $.HistoryList) 1) (ne .Version $.Idiom.Version)}}
-							<form method="POST" action="/history-restore">
+							<form method="POST" action="/admin-history-restore" class="idiom-restore-version">
 								<input type="hidden" name="idiomId" value="{{$.Idiom.Id}}" />
 								<input type="hidden" name="version" value="{{.Version}}" />
-								<input type="submit" value="Restore v{{.Version}}" class="btn btn-danger ajax-generic-action" /> 
+								<input type="hidden" name="why" value="" />
+								<input type="button" value="Restore v{{.Version}}" class="btn btn-danger presubmit" /> 
 							</form>
 						{{end}}</td>
 				</tr>

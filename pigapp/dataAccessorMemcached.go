@@ -539,9 +539,9 @@ func (a *MemcacheDatastoreAccessor) revert(ctx context.Context, idiomID int, ver
 	return idiom, err
 }
 
-func (a *MemcacheDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, version int, restoreUser string) (*Idiom, error) {
+func (a *MemcacheDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, version int, restoreUser string, why string) (*Idiom, error) {
 
-	idiom, err := a.GaeDatastoreAccessor.historyRestore(ctx, idiomID, version, restoreUser)
+	idiom, err := a.GaeDatastoreAccessor.historyRestore(ctx, idiomID, version, restoreUser, why)
 
 	if err != nil {
 		// Uncaching is useful, even when the restore has failed

@@ -255,10 +255,11 @@
 				<a href="{{hostPrefix}}{{.NextChangePath}}">Next change ↷</a>
 			{{else}}
 				{{if .UserProfile.IsAdmin}}
-					<form method="POST" action="/history-restore">
+					<form method="POST" action="/admin-history-restore" class="idiom-restore-version">
 						<input type="hidden" name="idiomId" value="{{.IdiomLeft.Id}}" />
 						<input type="hidden" name="version" value="{{.IdiomLeft.Version}}" />
-						<input type="submit" value="Revert v{{.IdiomRight.Version}} and restore v{{.IdiomLeft.Version}}" class="btn btn-danger ajax-generic-action" /> 
+						<input type="hidden" name="why" value="" />
+						<input type="button" value="Revert v{{.IdiomRight.Version}} and restore v{{.IdiomLeft.Version}}" class="btn btn-danger presubmit" /> 
 					</form>
 				{{end}}
 			{{end}}
