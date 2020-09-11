@@ -526,7 +526,7 @@ textarea.impl-code{
 	font-family: monospace;
 }
 
-/* Code zone (in forms) (2016-10: admins only*/
+/* Code zone (in forms) (2016-10: admins only) */
 .impl-picture img{
   max-height: 500px;
 }
