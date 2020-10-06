@@ -976,6 +976,11 @@ footer a.visited {
 	cursor: pointer;
 }
 
+.version-diff h5 > a {
+	margin-left: 0.4em;
+	color: #355;
+}
+
 .diff-nav {
 	margin-top: 1.5rem;
 }

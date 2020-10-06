@@ -191,13 +191,13 @@
 				{{$c := diffClass $left.DocumentationURL $right.DocumentationURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.DocumentationURL}}
-						<h5>Doc URL</h5>
+						<h5>Doc URL <a href="{{$left.DocumentationURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
 						<div class="field-value">{{$left.DocumentationURL}}</div>
 					{{end}}
 				</div>
 				<div class="span6 impl-right {{$c}}">
 					{{if $right.DocumentationURL}}
-						<h5>Doc URL</h5>
+						<h5>Doc URL <a href="{{$right.DocumentationURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
 						<div class="field-value">{{$right.DocumentationURL}}</div>
 					{{end}}
 				</div>
@@ -210,13 +210,13 @@
 				{{$c := diffClass $left.OriginalAttributionURL $right.OriginalAttributionURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.OriginalAttributionURL}}
-						<h5>Origin</h5>
+						<h5>Origin <a href="{{$left.OriginalAttributionURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
 						<div class="field-value">{{$left.OriginalAttributionURL}}</div>
 					{{end}}
 				</div>
 				<div class="span6 impl-right {{$c}}">
 					{{if $right.OriginalAttributionURL}}
-						<h5>Origin</h5>
+						<h5>Origin <a href="{{$right.OriginalAttributionURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
 						<div class="field-value">{{$right.OriginalAttributionURL}}</div>
 					{{end}}
 				</div>
@@ -229,13 +229,13 @@
 				{{$c := diffClass $left.DemoURL $right.DemoURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.DemoURL}}
-						<h5>Demo URL</h5>
+						<h5>Demo URL <a href="{{$left.DemoURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
 						<div class="field-value">{{$left.DemoURL}}</div>
 					{{end}}
 				</div>
 				<div class="span6 impl-right {{$c}}">
 					{{if $right.DemoURL}}
-						<h5>Demo URL</h5>
+						<h5>Demo URL <a href="{{$right.DemoURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
 						<div class="field-value">{{$right.DemoURL}}</div>
 					{{end}}
 				</div>
