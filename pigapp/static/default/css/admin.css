@@ -1,0 +1,78 @@
+/* 
+ * Additional CSS for admin pages, that doesn't need to be loaded by regular pages. 
+ */
+
+ .list-flagged-contents table.flagged thead th {
+    padding-left: 1em;
+    text-align: left;
+ }
+
+ .list-flagged-contents table.flagged th.user-report {
+    font-weight: bold;
+    color: #622;
+}
+
+ .list-flagged-contents table.flagged tbody tr {
+    border-left: solid 1px #CCF;
+    border-right: solid 1px #CCF;
+ }
+
+ .list-flagged-contents table.flagged tbody tr.flag-context {
+    border-top: solid 1px #CCF;
+ }
+
+ .list-flagged-contents table.flagged tbody tr.flag-rant {
+    border-bottom: solid 1px #CCF;
+ }
+
+ .list-flagged-contents table.flagged td {
+     padding-left: 1em;
+ }
+
+ .list-flagged-contents table.flagged td.flag-date {
+    width: 9em;
+    color: #66F;
+}
+
+.list-flagged-contents table.flagged td.idiom-id {
+    text-align: right;
+    font-weight: bold;
+    color: #666;
+}
+
+.list-flagged-contents table.flagged td.idiom-title {
+    font-weight: bold;
+    color: #666;
+}
+
+ .list-flagged-contents table.flagged td.impl-id {
+    color: #555;
+}
+
+.list-flagged-contents table.flagged td.impl-lang {
+    padding-top: 0.5em;
+    vertical-align: top;
+    text-align: right;
+    font-weight: bold;
+    color: #447;
+}
+
+.list-flagged-contents table.flagged td.nickname {
+     color: #733;
+}
+
+.list-flagged-contents table.flagged td.impl-view-link {
+    text-align: right;
+}
+
+.list-flagged-contents table.flagged td.impl-edit-link {
+    padding-right: 0.5em;
+}
+
+.list-flagged-contents table.flagged td.rationale {
+    padding-top: 0.5em;
+    vertical-align: top;
+    font-weight: bold;
+    color: #622;
+    padding-right: 1em;
+}

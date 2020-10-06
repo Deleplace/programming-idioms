@@ -1,0 +1,73 @@
+{{define "page-admin-list-flagged"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>
+<div class="page-holder">
+	{{template "header-admin" .}}
+	<div class="page-content container-fluid list-flagged-contents">
+		<div class="row-fluid">
+			<a href="/admin">&lt; Admin</a>
+            <h1>Flagged contents</h1>
+            <table class="flagged">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="user-report">User report</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Flagged}}
+                        <tr class="flag-context">
+                            <td class="idiom-id">
+                                #{{.IdiomID}}
+                            </td>
+                            <td class="idiom-title">
+                                {{if .Idiom}}
+                                    {{.Idiom.Title}}
+                                {{end}}
+                            </td>
+                            <td class="flag-date">
+                                {{.Timestamp.Format "2006-01-02 15:04"}}
+                            </td>
+                            <td class="nickname">
+                                {{.UserNickname}}
+                            </td>
+                            <td class="impl-view-link">
+                                <a href="/idiom/{{.IdiomID}}/impl/{{.ImplID}}" target="_blank"><i class="icon-external-link"></i> Impl {{.ImplID}}</a>
+                            </td>
+                            <td class="impl-edit-link">
+                                <a href="/impl-edit/{{.IdiomID}}/{{.ImplID}}" target="_blank">Edit</a>
+                            </td>
+                            {{/*
+                                TODO button "Mark resolved"
+                            */}}
+                        </tr>
+                        <tr class="flag-rant">
+                            <td class="impl-lang">
+                                {{if .Impl}}
+                                    {{.Impl.LanguageName}}
+                                {{end}}
+                            </td>
+                            <td colspan="2">
+                                {{if .Impl}}
+                                    <pre>{{.Impl.CodeBlock}}</pre>
+                                {{end}}
+                            </td>
+                            <td colspan="3" class="rationale">
+                                ⚑ {{.Rationale}}
+                            </td>
+                        </tr>
+                    {{end}}
+                </tbody>
+            </table>
+		</div>
+	</div>
+{{template "include-js" .}}  
+</div>
+</body>
+{{template "close-html"}}
+{{end}}

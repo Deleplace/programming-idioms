@@ -100,6 +100,7 @@ func initRoutes() {
 			handle("/admin-data-export", adminExport)
 			handle("/admin-data-import", adminImport)
 			handle("/admin-resave-entities", adminResaveEntities)
+			handle("/admin-flagged", adminListFlaggedContent)
 			handleAjax("/admin-repair-history-versions", adminRepairHistoryVersions)
 			handleAjax("/admin-data-import-ajax", adminImportAjax)
 			handleAjax("/admin-reindex-ajax", adminReindexAjax)
