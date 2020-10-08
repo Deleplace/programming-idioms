@@ -50,8 +50,33 @@
 					   <div class="control-group">
 						   <label class="control-label" for="idiom_variables">Variables</label>
 						   <div class="controls">
-							   <input type="text" name="idiom_variables" 
+							   <input type="text" name="idiom_variables" class="input-xlarge" 
 							   	placeholder="Formal variables, comma-separated" value="{{.Idiom.VariablesComma}}" />
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <label class="control-label" for="related_url_1">Related URLs</label>
+						   <div class="controls">
+							   <input type="text" name="related_url_label_1" class="input-medium" placeholder="Label"
+									value="{{if ge (len .Idiom.RelatedURLLabels) 1}}{{index .Idiom.RelatedURLLabels 0}}{{end}}" />
+							   <input type="text" name="related_url_1" class="input-xlarge"  placeholder="URL..."
+							   		value="{{if ge (len .Idiom.RelatedURLs) 1}}{{index .Idiom.RelatedURLs 0}}{{end}}" />
+							</div>
+						</div>
+					   <div class="control-group">
+						   <div class="controls">
+								<input type="text" name="related_url_label_2" class="input-medium" placeholder="Label"
+								   	value="{{if ge (len .Idiom.RelatedURLLabels) 2}}{{index .Idiom.RelatedURLLabels 1}}{{end}}" />
+								<input type="text" name="related_url_2" class="input-xlarge"  placeholder="URL..."
+									value="{{if ge (len .Idiom.RelatedURLs) 2}}{{index .Idiom.RelatedURLs 1}}{{end}}" />
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <div class="controls">
+								<input type="text" name="related_url_label_3" class="input-medium" placeholder="Label"
+								   value="{{if ge (len .Idiom.RelatedURLLabels) 3}}{{index .Idiom.RelatedURLLabels 2}}{{end}}" />
+								<input type="text" name="related_url_3" class="input-xlarge"  placeholder="URL..."
+									value="{{if ge (len .Idiom.RelatedURLs) 3}}{{index .Idiom.RelatedURLs 2}}{{end}}" />
 						   </div>
 					   </div>
 					   {{end}}
@@ -82,7 +107,7 @@
 						<div class="control-group">
 							<label class="control-label" for="edit_summary">Edit summary</label>
 							<div class="controls">
-								<input type="text" name="edit_summary" class="input-xlarge" value="" required="required" 
+								<input type="text" name="edit_summary" class="input-xxlarge" value="" required="required" 
 								maxlength="120" placeholder="Why?" />
 							</div>
 						</div>

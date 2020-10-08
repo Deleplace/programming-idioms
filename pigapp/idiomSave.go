@@ -168,6 +168,29 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 		} else {
 			idiom.Variables = strings.Split(vars, ",")
 		}
+
+		newRelatedURLs := []string{
+			strings.TrimSpace(r.FormValue("related_url_1")),
+			strings.TrimSpace(r.FormValue("related_url_2")),
+			strings.TrimSpace(r.FormValue("related_url_3")),
+		}
+		newRelatedURLLabels := []string{
+			strings.TrimSpace(r.FormValue("related_url_label_1")),
+			strings.TrimSpace(r.FormValue("related_url_label_2")),
+			strings.TrimSpace(r.FormValue("related_url_label_3")),
+		}
+		idiom.RelatedURLs = nil
+		idiom.RelatedURLLabels = nil
+		for i := range newRelatedURLs {
+			url, label := newRelatedURLs[i], newRelatedURLLabels[i]
+			if url != "" {
+				idiom.RelatedURLs = append(idiom.RelatedURLs, url)
+				if label == "" {
+					label = "See also"
+				}
+				idiom.RelatedURLLabels = append(idiom.RelatedURLLabels, label)
+			}
+		}
 	}
 
 	if r.FormValue("idiom_version") != strconv.Itoa(idiom.Version) {

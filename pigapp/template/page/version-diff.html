@@ -76,7 +76,88 @@
 			</div>
 		</div>
 		{{end}}
-    </div>
+	</div>
+			
+	{{/* IDIOM EXPECTED FORMAL VARIABLES */}}
+	<div class="row-fluid">
+		{{$c := diffClass $left.VariablesComma $right.VariablesComma}}
+		<div class="span6 idiom-left">
+			{{if $left.VariablesComma}}
+				<div class="{{$c}}">
+					<h5>Variables</h5>
+					{{$left.VariablesComma}}
+				</div>
+			{{end}}
+		</div>
+		<div class="span6 idiom-right">
+			{{if $right.VariablesComma}}
+				<div class="{{$c}}">
+					<h5>Variables</h5>
+					{{$right.VariablesComma}}
+				</div>
+			{{end}}
+		</div>
+	</div>
+			
+	{{/* IDIOM RELATED URLS */}}
+	{{$c0a := diffClass (join $left.RelatedURLs ",") (join $right.RelatedURLs ",")}}
+	{{$c0b := diffClass (join $left.RelatedURLLabels ",") (join $right.RelatedURLLabels ",")}}
+	{{if or $c0a $c0b}}
+	<div class="row-fluid">
+		<div class="span6 idiom-left">
+			{{if ge (len $left.RelatedURLs) 1}}
+				<div class="{{$c0a}} {{$c0b}}">
+					<h5>Related URL 1</h5>
+					{{index $left.RelatedURLs 0}}
+				</div>
+			{{end}}
+		</div>
+		<div class="span6 idiom-right">
+			{{if ge (len $right.RelatedURLs) 1}}
+				<div class="{{$c0a}} {{$c0b}}">
+					<h5>Related URL 1</h5>
+					{{index $right.RelatedURLs 0}}
+				</div>
+			{{end}}
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6 idiom-left">
+			{{if ge (len $left.RelatedURLs) 2}}
+				<div class="{{$c0a}} {{$c0b}}">
+					<h5>Related URL 2</h5>
+					{{index $left.RelatedURLs 1}}
+				</div>
+			{{end}}
+		</div>
+		<div class="span6 idiom-right">
+			{{if ge (len $right.RelatedURLs) 2}}
+				<div class="{{$c0a}} {{$c0b}}">
+					<h5>Related URL 2</h5>
+					{{index $right.RelatedURLs 1}}
+				</div>
+			{{end}}
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6 idiom-left">
+			{{if ge (len $left.RelatedURLs) 3}}
+				<div class="{{$c0a}} {{$c0b}}">
+					<h5>Related URL 3</h5>
+					{{index $left.RelatedURLs 2}}
+				</div>
+			{{end}}
+		</div>
+		<div class="span6 idiom-right">
+			{{if ge (len $right.RelatedURLs) 3}}
+				<div class="{{$c0a}} {{$c0b}}">
+					<h5>Related URL 3</h5>
+					{{index $right.RelatedURLs 2}}
+				</div>
+			{{end}}
+		</div>
+	</div>
+	{{end}}
 			
 	{{/* IDIOM EXTRA KEYWORDS */}}
 	<div class="row-fluid">

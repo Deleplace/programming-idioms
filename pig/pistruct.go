@@ -102,6 +102,12 @@ type Idiom struct {
 	// Variables from the lead paragraph, that we'd like every
 	// impl snippet to contain
 	Variables []string
+
+	// RelatedURLs as extra pieces of documentation for the idiom statement.
+	RelatedURLs []string
+
+	// RelatedURLLabels are nice text for Related URLs hyperlinks.
+	RelatedURLLabels []string
 }
 
 // Impl is a specific implementation of one Idiom in one programming language.

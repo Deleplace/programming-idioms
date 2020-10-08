@@ -104,6 +104,17 @@
 						<h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
 						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
 						{{template "idiom-picture" .ImageURL}}
+						{{if .RelatedURLs}}
+							<ul class="idiom-related-urls">
+								{{$idiom := .}}
+								{{range $i, $url := .RelatedURLs}}
+									<li>
+										<i class="icon-external-link"></i>
+										<a href="{{$url}}" target="_blank" rel="nofollow" class="related-url-link">{{index $idiom.RelatedURLLabels $i}}</a>
+									</li>
+								{{end}}
+							</ul>
+						{{end}}
 					</div>
 					<div class="span4">
 						<div class="language-list">

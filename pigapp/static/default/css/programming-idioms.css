@@ -454,6 +454,14 @@ h3 a {
 .idiom-summary-large .idiom-picture img{
   max-height: 160px;
 }
+.idiom-summary-large ul.idiom-related-urls {
+	margin-top: 2em;
+	list-style-type: none;
+	margin-left: 0.4em;
+}
+.idiom-summary-large a.related-url-link {
+	margin-left: 0.2em;
+}
 .idiom-summary-large .language-list {
   float: left;
   padding-left: 10px;
@@ -903,6 +911,22 @@ footer a.visited {
 	background-color: #FC6;
 	padding-left: 3px;
 	padding-right: 3px;
+}
+
+.version-diff .idiom-left .created {
+	background-color: #DFD;
+}
+
+.version-diff .idiom-right .created {
+	background-color: #AFA;
+}
+
+.version-diff .idiom-left .deleted {
+	background-color: #FFD7D7;
+}
+
+.version-diff .idiom-right .deleted {
+	background-color: #FAA;
 }
 
 .version-diff .well {
