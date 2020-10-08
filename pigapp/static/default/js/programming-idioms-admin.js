@@ -163,4 +163,37 @@ $(function() {
 	        data: $("#message-for-user-form").serialize(),
 	    });
 	});
+
+	// Flagged Contents page
+
+	$('button.flag-mark-resolved').on("click", function(){
+		let btn = $(this);
+		let flagKey = btn.attr('flagkey');
+		if(!flagKey) {
+			console.error("no flagkey??");
+			return;
+		}
+	    $.ajax({
+	        url: '/admin-flag-resolve',
+	        type: 'POST',
+	        xhr: function() {
+	            var myXhr = $.ajaxSettings.xhr();
+	            return myXhr;
+	        },
+	        success: function(response){
+	        	// $.fn.pisuccess( "Flag content marked resolved." );
+				let tr1 = btn.closest("tr");
+				tr1.addClass("resolved");
+				let tr2 = tr1.next();
+				if(tr2) {
+					tr2.addClass("resolved");
+				}
+				btn.closest("td").text("✓");
+	        },
+	        error: function(xhr, status, e){
+	        	$.fn.pierror( "Flag resolve failed : " + xhr.responseText );
+	        },
+	        data: {flagkey: flagKey}
+	    });
+	});
 });

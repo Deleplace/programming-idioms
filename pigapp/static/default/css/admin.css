@@ -76,3 +76,13 @@
     color: #622;
     padding-right: 1em;
 }
+
+.list-flagged-contents table.flagged td.mark-resolved {
+    text-align: center;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.list-flagged-contents table.flagged tr.resolved {
+    background-color: #CCC;
+}

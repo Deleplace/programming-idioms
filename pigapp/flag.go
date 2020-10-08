@@ -32,6 +32,12 @@ type FlaggedContent struct {
 
 	// UserNickname is optional. Anonymous reports are fine.
 	UserNickname string
+
+	// Resolved by the admin.
+	Resolved bool
+
+	// ResolveDate is when the admin marked the flag as "Resolved".
+	ResolveDate time.Time
 }
 
 func ajaxImplFlag(w http.ResponseWriter, r *http.Request) error {
@@ -57,7 +63,7 @@ func ajaxImplFlag(w http.ResponseWriter, r *http.Request) error {
 	ikey := datastore.NewIncompleteKey(ctx, "FlaggedContent", nil)
 	key, err := datastore.Put(ctx, ikey, &flag)
 	if err != nil {
-		log.Errorf(ctx, "saving FlagContent: %v", err)
+		log.Errorf(ctx, "saving FlaggedContent: %v", err)
 		return PiError{"Could not save flagged content data", http.StatusInternalServerError}
 	}
 	log.Infof(ctx, "Saved content flag %s", key.Encode())
@@ -74,6 +80,7 @@ type AdminFlaggedFacade struct {
 // FlaggedContentFacade is the Facade for 1 line of the Flagged Contents table.
 type FlaggedContentFacade struct {
 	FlaggedContent
+	Key   *datastore.Key
 	Idiom *Idiom
 	Impl  *Impl
 }
@@ -84,7 +91,7 @@ func adminListFlaggedContent(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 
 	var reports []FlaggedContent
-	_, err := datastore.NewQuery("FlaggedContent").
+	keys, err := datastore.NewQuery("FlaggedContent").
 		Order("-Timestamp").
 		Limit(100).
 		GetAll(ctx, &reports)
@@ -93,9 +100,10 @@ func adminListFlaggedContent(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	var table []FlaggedContentFacade
-	for _, report := range reports {
+	for i, report := range reports {
 		line := FlaggedContentFacade{
 			FlaggedContent: report,
+			Key:            keys[i],
 		}
 
 		_, idiom, err := dao.getIdiom(ctx, report.IdiomID)
@@ -125,4 +133,36 @@ func adminListFlaggedContent(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	return templates.ExecuteTemplate(w, "page-admin-list-flagged", data)
+}
+
+func ajaxAdminFlagResolve(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != "POST" {
+		http.Error(w, "POST only", http.StatusBadRequest)
+	}
+	flagKeyStr := r.FormValue("flagkey")
+	flagKey, err := datastore.DecodeKey(flagKeyStr)
+	if err != nil {
+		return PiError{ErrorText: "Could not decode key " + flagKeyStr, Code: http.StatusBadRequest}
+	}
+
+	ctx := r.Context()
+	var flag FlaggedContent
+	err = datastore.Get(ctx, flagKey, &flag)
+	if err == datastore.ErrNoSuchEntity {
+		return PiError{ErrorText: "Flagged contents " + flagKeyStr + " no longer exists", Code: http.StatusNotFound}
+	}
+	if err != nil {
+		log.Errorf(ctx, "retrieving FlaggegContent: %v", err)
+		return PiError{ErrorText: "Could not retrieve Flagged Contents entry :(", Code: http.StatusInternalServerError}
+	}
+	flag.Resolved = true
+	flag.ResolveDate = time.Now()
+	_, err = datastore.Put(ctx, flagKey, &flag)
+	if err != nil {
+		log.Errorf(ctx, "saving FlaggedContent: %v", err)
+		return PiError{"Could not save flagged content data", http.StatusInternalServerError}
+	}
+	log.Infof(ctx, "Saved content flag %s", flagKey.Encode())
+
+	return nil
 }

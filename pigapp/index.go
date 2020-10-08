@@ -18,7 +18,7 @@ const ThemeVersion = "default"
 
 // ThemeDate is the prefix used for "revving" the static files and enable long-term HTTP cache.
 // It MUST end with underscore _ (see app.yaml)
-const ThemeDate = "20200810_"
+const ThemeDate = "20201008_"
 
 var r = mux.NewRouter()
 
@@ -110,6 +110,7 @@ func initRoutes() {
 			handleAjax("/admin-idiom-delete", idiomDelete)
 			handleAjax("/admin-impl-delete", implDelete)
 			handleAjax("/admin-send-message-for-user", sendMessageForUserAjax)
+			handleAjax("/admin-flag-resolve", ajaxAdminFlagResolve)
 		}
 		handleAjax("/api/idiom/{idiomId}", jsonIdiom)
 		handleAjax("/api/idioms/all", jsonAllIdioms)
@@ -156,6 +157,7 @@ var neededParameters = map[string][]string{
 	"/admin-idiom-delete":          {"idiomId"},
 	"/admin-impl-delete":           {"idiomId", "implId"},
 	"/admin-send-message-for-user": {"username", "message"},
+	"/admin-flag-resolve":          {"flagkey"},
 	"/api/idiom":                   {"idiomId"},
 }
 

@@ -17,11 +17,12 @@
                         <th class="user-report">User report</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {{range .Flagged}}
-                        <tr class="flag-context">
+                        <tr class="flag-context {{if .Resolved}}resolved{{end}}">
                             <td class="idiom-id">
                                 #{{.IdiomID}}
                             </td>
@@ -42,11 +43,13 @@
                             <td class="impl-edit-link">
                                 <a href="/impl-edit/{{.IdiomID}}/{{.ImplID}}" target="_blank">Edit</a>
                             </td>
-                            {{/*
-                                TODO button "Mark resolved"
-                            */}}
+                            <td class="mark-resolved">
+                                {{if not .Resolved}}
+                                    <button class="flag-mark-resolved" title="Mark resolved" flagkey="{{.Key.Encode}}">Resolve</button>
+                                {{end}}
+                            </td>
                         </tr>
-                        <tr class="flag-rant">
+                        <tr class="flag-rant {{if .Resolved}}resolved{{end}}">
                             <td class="impl-lang">
                                 {{if .Impl}}
                                     {{.Impl.LanguageName}}
@@ -57,7 +60,7 @@
                                     <pre>{{.Impl.CodeBlock}}</pre>
                                 {{end}}
                             </td>
-                            <td colspan="3" class="rationale">
+                            <td colspan="4" class="rationale">
                                 ⚑ {{.Rationale}}
                             </td>
                         </tr>
