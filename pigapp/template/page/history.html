@@ -1,4 +1,4 @@
-{{define "page-history"}}
+{{define "page-idiom-history"}}
 {{template "prologue"}}  
 {{template "head" .PageMeta}}  
 <body>  
@@ -34,6 +34,47 @@
 								<input type="button" value="Restore v{{.Version}}" class="btn btn-danger presubmit" /> 
 							</form>
 						{{end}}</td>
+				</tr>
+			{{end}}
+		</table>
+		</div>
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}
+</div>  
+</body>
+{{template "close-html"}}
+{{end}}
+
+{{define "page-impl-history"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>  
+<div class="page-holder">
+	{{template "header-small" .}}  
+	<div class="page-content container-fluid">
+
+		<h4>
+			History</a> of <a href="{{niceIdiomURL .Idiom}}">Idiom {{.Idiom.Id}}</a>
+		</h4>
+		{{template "idiom-summary-medium"  decorate .Idiom .UserProfile}}
+
+		<div>
+		<table class="idiom-history">
+			<tr><th></th><th>#</th><th>Edit date</th><th>Edit Summary</th><th>Author</th>
+			{{$implID := .ImplID }}
+			{{range $i, $h := .HistoryList}}
+				<tr>
+					<td>
+						{{if lt (plus $i 1) (len $.HistoryList)}}
+							{{$prev := (minus .Version 1)}}
+							<a href="/idiom/{{$.Idiom.Id}}/impl/{{$implID}}/diff/{{$prev}}/{{.Version}}" class="btn">👁 Δ</a>
+						{{end}}
+					</td>
+					<td>{{.Version}}</td>
+					<td>{{.VersionDate.Format "2006-01-02, 15:04"}}</td>
+					<td>{{shorten .EditSummary 120 | markup2CSS}}</td>
+					<td>{{shorten .IdiomOrImplLastEditor 40}}</td>
 				</tr>
 			{{end}}
 		</table>

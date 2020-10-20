@@ -229,6 +229,7 @@
 				{{template "impl-flag-button" decorate .Impl .Idiom}}
 				{{if .UserProfile.IsAdmin}}
 					{{template "impl-delete-button" decorate .Impl .Idiom}}
+					<a href="{{hostPrefix}}/history/{{.Idiom.Id}}/impl/{{.Impl.Id}}" class="" title="Implementation history">Impl history</a>
 				{{end}}
 			</div>
 		</div>
@@ -380,7 +381,7 @@
 {{end}}
 
 {{define "impl-delete-button"}}
-	<a href="#" data-url="{{hostPrefix}}/admin-impl-delete?idiomId={{.Deco.Id}}&implId={{.Data.Id}}" class="btn btn-danger ajax-generic-action reason-needed btn-delete" title="Delete this implementation"><i class="icon-remove-sign"></i></a>
+<a href="#" data-url="{{hostPrefix}}/admin-impl-delete?idiomId={{.Deco.Id}}&implId={{.Data.Id}}" class="btn btn-danger ajax-generic-action reason-needed btn-delete" title="Delete this implementation"><i class="icon-remove-sign"></i></a>
 {{end}}
 
 {{define "input-username"}}

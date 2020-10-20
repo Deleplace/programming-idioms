@@ -7,7 +7,11 @@
 	<div class="page-content container-fluid version-diff">
 		
 	<h4>
-		<a href="{{hostPrefix}}/history/{{.IdiomRight.Id}}">History</a> of <a href="{{niceIdiomURL .IdiomRight.AsIdiomPtr}}">Idiom {{.IdiomRight.Id}}</a> &gt; diff from v{{.IdiomLeft.Version}} to v{{.IdiomRight.Version}}
+		<a href="{{hostPrefix}}/history/{{.IdiomRight.Id}}">History</a> of <a href="{{niceIdiomURL .IdiomRight.AsIdiomPtr}}">Idiom {{.IdiomRight.Id}}</a>
+		&gt; diff from v{{.IdiomLeft.Version}} to v{{.IdiomRight.Version}}
+		{{if gt .ImplID 0}}
+			for implementation {{.ImplID}}
+		{{end}}
 	</h4>
 	<div class="row-fluid">
 		<div class="span3">
@@ -327,12 +331,12 @@
 
 	<div class="row-fluid diff-nav">
 		<div class="span6 previous">
-			{{if .PreviousChangePath}}
+			{{if and .PreviousChangePath (le .ImplID 0)}}
 				<a href="{{hostPrefix}}{{.PreviousChangePath}}">↶ Previous change</a>
 			{{end}}
 		</div>
 		<div class="span6 next">
-			{{if .NextChangePath}}
+			{{if and .NextChangePath (le .ImplID 0)}}
 				<a href="{{hostPrefix}}{{.NextChangePath}}">Next change ↷</a>
 			{{else}}
 				{{if .UserProfile.IsAdmin}}

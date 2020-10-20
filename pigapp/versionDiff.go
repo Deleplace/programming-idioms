@@ -20,6 +20,8 @@ type VersionDiffFacade struct {
 	CreationImplIDs                    map[int]bool
 	DeletionImplIDs                    map[int]bool
 	PreviousChangePath, NextChangePath string
+	// ImplID: if we're focused on one single impl of interest
+	ImplID int
 }
 
 func versionDiff(w http.ResponseWriter, r *http.Request) error {
@@ -40,6 +42,11 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 		return PiError{fmt.Sprintf("Won't compare v%v with itself", v1), http.StatusBadRequest}
 	}
 
+	// In case we're interested in a single impl
+	implIDStr := vars["implId"]
+	implID := String2Int(implIDStr)
+	singleImpl := (implID > 0)
+
 	var err error
 	var left *IdiomHistory
 	if v1 == 0 {
@@ -55,6 +62,28 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	_, right, err := dao.getIdiomHistory(ctx, idiomID, v2)
 	if err != nil {
 		return PiError{err.Error(), http.StatusNotFound}
+	}
+
+	if singleImpl {
+		// Remove all other impls
+
+		impls := left.Implementations
+		left.Implementations = nil
+		for _, impl := range impls {
+			if impl.Id == implID {
+				left.Implementations = append(left.Implementations, impl)
+				break
+			}
+		}
+
+		impls = right.Implementations
+		right.Implementations = nil
+		for _, impl := range impls {
+			if impl.Id == implID {
+				right.Implementations = append(right.Implementations, impl)
+				break
+			}
+		}
 	}
 
 	removeUntouchedImpl(left, right)
@@ -105,6 +134,7 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 		ImplRight:       implRight,
 		CreationImplIDs: creationImplIDs,
 		DeletionImplIDs: deletionImplIDs,
+		ImplID:          implID,
 	}
 	// Note: the Prev/Next links wouldn't work in a case where version numbers
 	// wouldn't be perfectly sequential.

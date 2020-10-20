@@ -74,7 +74,16 @@ func (a *GaeDatastoreAccessor) getIdiomHistory(ctx context.Context, idiomID int,
 func (a *GaeDatastoreAccessor) getIdiomHistoryList(ctx context.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error) {
 	q := datastore.NewQuery("IdiomHistory").
 		Project("Version", "VersionDate", "IdiomOrImplLastEditor", "EditSummary").
-		// Project("Version", "VersionDate", "LastEditor", "EditSummary").
+		Filter("Id =", idiomID).
+		Order("-Version")
+	historyList := make([]*IdiomHistory, 0)
+	keys, err := q.GetAll(ctx, &historyList)
+	return keys, historyList, err
+}
+
+// Not projected. Retrieves the whole idiom&impl contents for each version of this idiom.
+func (a *GaeDatastoreAccessor) getDenseHistoryList(ctx context.Context, idiomID int) ([]*datastore.Key, []*IdiomHistory, error) {
+	q := datastore.NewQuery("IdiomHistory").
 		Filter("Id =", idiomID).
 		Order("-Version")
 	historyList := make([]*IdiomHistory, 0)
