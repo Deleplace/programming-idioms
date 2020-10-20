@@ -80,9 +80,9 @@ type AdminFlaggedFacade struct {
 // FlaggedContentFacade is the Facade for 1 line of the Flagged Contents table.
 type FlaggedContentFacade struct {
 	FlaggedContent
-	Key   *datastore.Key
-	Idiom *Idiom
-	Impl  *Impl
+	Key          *datastore.Key
+	IdiomHistory *IdiomHistory
+	Impl         *Impl
 }
 
 func adminListFlaggedContent(w http.ResponseWriter, r *http.Request) error {
@@ -106,17 +106,17 @@ func adminListFlaggedContent(w http.ResponseWriter, r *http.Request) error {
 			Key:            keys[i],
 		}
 
-		_, idiom, err := dao.getIdiom(ctx, report.IdiomID)
+		_, idiomHistory, err := dao.getIdiomHistory(ctx, report.IdiomID, report.IdiomVersion)
 		if err == nil {
-			line.Idiom = idiom
-			_, impl, found := idiom.FindImplInIdiom(report.ImplID)
+			line.IdiomHistory = idiomHistory
+			_, impl, found := idiomHistory.FindImplInIdiom(report.ImplID)
 			if found {
 				line.Impl = impl
 			} else {
-				log.Errorf(ctx, "impl %d not found in idiom %d", report.ImplID, idiom.Id)
+				log.Errorf(ctx, "impl %d not found in idiom %d v%d", report.ImplID, idiomHistory.Id, idiomHistory.Version)
 			}
 		} else {
-			log.Errorf(ctx, "loading idiom for impl %d: %v", report.ImplID, err)
+			log.Errorf(ctx, "loading idiom %d history v%d for impl %d: %v", report.IdiomID, report.IdiomVersion, report.ImplID, err)
 		}
 
 		table = append(table, line)
