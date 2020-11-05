@@ -28,6 +28,10 @@ h1 > a {
     .hide-on-desktop, .show-on-tablets, .show-on-mobile { display: none; }
 }
 
+.item a {
+    text-decoration: none;
+}
+
 footer {    
     position: absolute;
     left: 0;
