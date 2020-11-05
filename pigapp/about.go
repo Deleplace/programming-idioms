@@ -8,6 +8,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"context"
+
 	"google.golang.org/appengine/log"
 )
 
@@ -67,8 +68,15 @@ func ajaxAboutContact(w http.ResponseWriter, r *http.Request) error {
 func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 
+	if cachedHTML := htmlCacheRead(ctx, "/about-block-all-idioms"); cachedHTML != nil {
+		// Using the whole HTML block from Memcache
+		log.Debugf(ctx, "%s from memcache!", "/about-block-all-idioms")
+		_, err := w.Write(cachedHTML)
+		return err
+	}
+
 	log.Debugf(ctx, "retrieveAllIdioms start...")
-	allIdioms, err := retrieveAllIdioms(r)
+	allIdioms, err := retrieveAllIdioms(r, false)
 	if err != nil {
 		return err
 	}
@@ -82,11 +90,19 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 		AllIdioms:   allIdioms,
 	}
 
+	var buffer bytes.Buffer
 	log.Debugf(ctx, "block-about-all-idioms templating start...")
-	if err := templates.ExecuteTemplate(w, "block-about-all-idioms", data); err != nil {
+	err = templates.ExecuteTemplate(&buffer, "block-about-all-idioms", data)
+	log.Debugf(ctx, "block-about-all-idioms templating end.")
+	if err != nil {
 		return PiError{err.Error(), http.StatusInternalServerError}
 	}
-	log.Debugf(ctx, "block-about-all-idioms templating end.")
+	_, err = w.Write(buffer.Bytes())
+	if err != nil {
+		return err
+	}
+	htmlCacheWrite(ctx, "/about-block-all-idioms", buffer.Bytes(), 12*time.Hour)
+
 	return nil
 }
 
@@ -157,7 +173,7 @@ func languageCoverage(ctx context.Context) (cover CoverageFacade, err error) {
 	langImplCount := map[string]int{}
 	langImplScore := map[string]int{}
 	log.Debugf(ctx, "Loading full idiom list...")
-	_, idioms, err := dao.getAllIdioms(ctx, 299, "-ImplCount") // TODO change 299 ?!
+	_, idioms, err := dao.getAllIdioms(ctx, 399, "-ImplCount") // TODO change 399 ?!
 	if err != nil {
 		return cover, err
 	}

@@ -20,6 +20,8 @@ func idiomDelete(w http.ResponseWriter, r *http.Request) error {
 
 	err := dao.deleteIdiom(ctx, idiomID, why)
 
+	htmlCacheEvict(ctx, "/about-block-all-idioms")
+
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		// fmt.Fprint(w, Response{"success": false, "message": err.Error()})

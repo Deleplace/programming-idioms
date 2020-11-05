@@ -15,7 +15,7 @@ type AllIdiomsFacade struct {
 
 func allIdioms(w http.ResponseWriter, r *http.Request) error {
 
-	idioms, err := retrieveAllIdioms(r)
+	idioms, err := retrieveAllIdioms(r, true)
 	if err != nil {
 		return PiError{err.Error(), http.StatusInternalServerError}
 	}
@@ -35,7 +35,7 @@ func allIdioms(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func retrieveAllIdioms(r *http.Request) ([]*Idiom, error) {
+func retrieveAllIdioms(r *http.Request, orderByFav bool) ([]*Idiom, error) {
 	ctx := r.Context()
 	// TODO sort by popularity desc
 	// TODO limit to 50, + button [See more...]  or pagination
@@ -45,10 +45,12 @@ func retrieveAllIdioms(r *http.Request) ([]*Idiom, error) {
 		return nil, err
 	}
 
-	favlangs := lookForFavoriteLanguages(r)
-	includeNonFav := seeNonFavorite(r)
-	for _, idiom := range idioms {
-		implFavoriteLanguagesFirstWithOrder(idiom, favlangs, "", includeNonFav)
+	if orderByFav {
+		favlangs := lookForFavoriteLanguages(r)
+		includeNonFav := seeNonFavorite(r)
+		for _, idiom := range idioms {
+			implFavoriteLanguagesFirstWithOrder(idiom, favlangs, "", includeNonFav)
+		}
 	}
 
 	return idioms, nil

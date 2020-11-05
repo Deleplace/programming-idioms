@@ -340,8 +340,9 @@ func (a *MemcacheDatastoreAccessor) getAllIdioms(ctx context.Context, limit int,
 			// Cached "All idioms" will have a 10mn lag after an idiom/impl creation.
 			//a.cachePair(ctx, cacheKey, keys, idioms, 10*time.Minute)
 			// For now, it might mange too often
-			err2 := a.cachePair(ctx, cacheKey, keys, idioms, 30*time.Second)
-			logIf(err2, log.Errorf, ctx, "caching all idioms")
+			//err2 := a.cachePair(ctx, cacheKey, keys, idioms, 30*time.Second)
+			//logIf(err2, log.Errorf, ctx, "caching all idioms")
+			// actually "all idioms" is now too large to fit in cache
 		}
 		return keys, idioms, err
 	}
