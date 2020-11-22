@@ -523,6 +523,22 @@ $(function() {
 	$('.show-impl-grid').on('click', function(){
 		showImplGrid();
 	});
+
+	$("a.copy-code-to-clipboard").click(function(){
+		var that = $(this);
+		var snippet = that.closest(".impl-external-links").parent().find(".picode > pre").text();
+		if(!snippet) {
+			alert("Sorry, failed to retrieve the snippet code :(");
+			return;
+		}
+		navigator.clipboard.writeText(snippet).then(function() {
+			console.log('Copying to clipboard was successful!');
+			that.html('<i class="icon-check" title="The snippet code has been copied to clipboard"></i>');
+		  }, function(err) {
+			alert('Async: Could not copy text: ' + err);
+		  });
+		return false;
+	});
 	
 	//
 	// Forms : idiom creation, impl creation
