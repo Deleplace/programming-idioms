@@ -526,7 +526,8 @@ $(function() {
 
 	$("a.copy-code-to-clipboard").click(function(){
 		var that = $(this);
-		var snippet = that.closest(".impl-external-links").parent().find(".picode > pre").text();
+		var picode = that.closest(".impl-external-links").parent().find(".picode");
+		var snippet = picode.find("pre").text();
 		if(!snippet) {
 			alert("Sorry, failed to retrieve the snippet code :(");
 			return;
@@ -534,6 +535,10 @@ $(function() {
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying to clipboard was successful!');
 			that.html('<i class="icon-check" title="The snippet code has been copied to clipboard"></i>');
+
+			$(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
+			picode.addClass("just-copied-to-clipboard");
+			that.addClass("just-copied-to-clipboard");
 		  }, function(err) {
 			alert('Async: Could not copy text: ' + err);
 		  });

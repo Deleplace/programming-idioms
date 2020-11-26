@@ -529,6 +529,18 @@ pre.prettyprint {
     font-weight: bold;
 }
 
+.picode.just-copied-to-clipboard pre {
+	/* The user has clicked the "Copy snippet to the clipboard" button. */
+	background-color: #DED;
+	border: 2px solid #7A7;
+}
+
+.impl-external-links a.just-copied-to-clipboard,
+.impl-external-links a:hover.just-copied-to-clipboard {
+	/* The user has clicked the "Copy snippet to the clipboard" button. */
+	color: #282;
+}
+
 /* Code zone (in forms) */
 textarea.impl-code{
 	font-family: monospace;
