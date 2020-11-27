@@ -75,7 +75,7 @@ func PrintNiceLang(lang string) string {
 	switch strings.TrimSpace(strings.ToLower(lang)) {
 	case "cpp":
 		return "C++"
-	case "csharp":
+	case "csharp", "cs":
 		return "C#"
 	default:
 		return lang
@@ -103,20 +103,20 @@ var langLowerCaseIndex = indexByLowerCase(AllLanguages())
 func NormLang(lang string) string {
 	lg := strings.TrimSpace(strings.ToLower(lang))
 	switch lg {
-	case "c++":
+	case "c++", "cc":
 		return "Cpp"
-	case "cc":
-		return "Cpp"
-	case "c#":
+	case "c#", "cs":
 		return "Csharp"
 	case "javascript":
 		return "JS"
 	case "golang":
 		return "Go"
-	case "py":
-		return "Python"
 	case "objective c":
 		return "Obj-C"
+	case "py":
+		return "Python"
+	case "rs":
+		return "Rust"
 	default:
 		return langLowerCaseIndex[lg]
 	}

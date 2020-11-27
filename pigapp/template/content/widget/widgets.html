@@ -230,6 +230,7 @@
 				{{template "impl-flag-button" decorate .Impl .Idiom}}
 				{{if .UserProfile.IsAdmin}}
 					{{template "impl-delete-button" decorate .Impl .Idiom}}
+					<br/>
 					<a href="{{hostPrefix}}/history/{{.Idiom.Id}}/impl/{{.Impl.Id}}" class="" title="Implementation history">Impl history</a>
 				{{end}}
 			</div>
