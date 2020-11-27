@@ -175,11 +175,13 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	log.Debugf(ctx, "Decorate with votes end.")
 
 	pageTitle := idiom.Title
+	extraKeywords := idiom.ExtraKeywords
 	if selectedImplLang != "" {
-		// SEO: specify the language in the HTML title, for search engine results
+		// SEO: specify the language in the HTML title, and in meta keywords, for search engine results
 		if niceLang := PrintNiceLang(selectedImplLang); niceLang != "" {
 			pageTitle += ", in " + niceLang
 		}
+		extraKeywords = strings.Join(LanguageExtraKeywords(selectedImplLang), " ") + " " + extraKeywords
 	}
 
 	myToggles := copyToggles(toggles)
@@ -189,7 +191,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	data := &IdiomDetailFacade{
 		PageMeta: PageMeta{
 			PageTitle:    pageTitle,
-			PageKeywords: idiom.ExtraKeywords,
+			PageKeywords: extraKeywords,
 			CanonicalURL: canonicalURL,
 			Toggles:      myToggles,
 		},

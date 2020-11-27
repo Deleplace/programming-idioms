@@ -192,3 +192,8 @@ var langsExtraKeywords = map[string][]string{
 	"Scala":   []string{"sc"},
 	"Scheme":  []string{"scs", "ss"},
 }
+
+func LanguageExtraKeywords(lg string) []string {
+	// Careful, no defensive copy here!
+	return langsExtraKeywords[lg]
+}
