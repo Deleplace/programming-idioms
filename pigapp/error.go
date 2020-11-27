@@ -80,6 +80,7 @@ func errorJSON(w http.ResponseWriter, r *http.Request, err error) {
 	log.Errorf(ctx, text)
 
 	w.WriteHeader(code)
+	w.Header().Set("Content-Type", "application/json") // can be redundant by that's okay
 	fmt.Fprint(w, Response{
 		"success": false,
 		"message": text,

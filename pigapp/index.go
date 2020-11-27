@@ -113,6 +113,7 @@ func initRoutes() {
 			handleAjax("/admin-impl-delete", implDelete)
 			handleAjax("/admin-send-message-for-user", sendMessageForUserAjax)
 			handleAjax("/admin-flag-resolve", ajaxAdminFlagResolve)
+			handleAjax("/admin-memcache-flush", ajaxAdminMemcacheFlush)
 		}
 		handleAjax("/api/idiom/{idiomId}", jsonIdiom)
 		handleAjax("/api/idioms/all", jsonAllIdioms)
@@ -268,6 +269,9 @@ func handleAjax(path string, h betterHandler) {
 				errorJSON(w, r, err)
 				return
 			}
+
+			// TODO: maybe we never want any other Content-Type so...?
+			// w.Header().Set("Content-Type", "application/json")
 			err := h(w, r)
 			if err != nil {
 				errorJSON(w, r, err)

@@ -196,4 +196,23 @@ $(function() {
 	        data: {flagkey: flagKey}
 	    });
 	});
+
+
+	$('#memcache-flush-form input.submit').on("click", function(){
+	    $.ajax({
+	        url: '/admin-memcache-flush',
+	        type: 'POST',
+	        xhr: function() {
+	            var myXhr = $.ajaxSettings.xhr();
+	            return myXhr;
+	        },
+	        success: function(response){
+				$.fn.pisuccess( response.message );
+	        },
+	        error: function(xhr, status, e){
+				$.fn.pierror( "Memcache flush failed : " + xhr.responseText);
+	        },
+	        cache: false
+	    });
+	});
 });

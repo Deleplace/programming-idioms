@@ -9,6 +9,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/memcache"
 	"google.golang.org/appengine/user"
 )
 
@@ -116,4 +117,17 @@ func sendMessageForUserAjax(w http.ResponseWriter, r *http.Request) error {
 
 	w.WriteHeader(http.StatusNoContent)
 	return nil
+}
+
+func ajaxAdminMemcacheFlush(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	err := memcache.Flush(ctx)
+	w.Header().Set("Content-Type", "application/json")
+	if err == nil {
+		fmt.Fprint(w, Response{
+			"success": true,
+			"message": "Memcache flushed :)",
+		})
+	}
+	return err
 }
