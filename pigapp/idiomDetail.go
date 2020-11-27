@@ -170,9 +170,11 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	log.Debugf(ctx, "Decorate with votes start...")
-	daoVotes.decorateIdiom(ctx, idiom, userProfile.Nickname)
-	log.Debugf(ctx, "Decorate with votes end.")
+	if toggles.Any("idiomVotingUp", "implVotingUp") {
+		log.Debugf(ctx, "Decorate with votes start...")
+		daoVotes.decorateIdiom(ctx, idiom, userProfile.Nickname)
+		log.Debugf(ctx, "Decorate with votes end.")
+	}
 
 	pageTitle := idiom.Title
 	extraKeywords := idiom.ExtraKeywords
