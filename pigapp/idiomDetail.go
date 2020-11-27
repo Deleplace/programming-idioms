@@ -178,10 +178,15 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	extraKeywords := idiom.ExtraKeywords
 	if selectedImplLang != "" {
 		// SEO: specify the language in the HTML title, and in meta keywords, for search engine results
+		langAliases := selectedImplLang
 		if niceLang := PrintNiceLang(selectedImplLang); niceLang != "" {
 			pageTitle += ", in " + niceLang
+			if selectedImplLang != niceLang {
+				langAliases = niceLang + " " + langAliases
+			}
 		}
-		extraKeywords = strings.Join(LanguageExtraKeywords(selectedImplLang), " ") + " " + extraKeywords
+		langAliases += " " + strings.Join(LanguageExtraKeywords(selectedImplLang), " ")
+		extraKeywords = langAliases + " " + extraKeywords
 	}
 
 	myToggles := copyToggles(toggles)
