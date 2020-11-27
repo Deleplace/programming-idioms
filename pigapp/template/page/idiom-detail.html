@@ -22,7 +22,7 @@
 				{{if or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages)}}
 					<div>
 						<div>
-						    <ul class="nav nav-tabs">
+						    <ul class="nav nav-tabs language-names">
 	   							<li class="active">
 	   								<a href="#" class="lang-tab"><span class="label {{if idEqual .Id $selectedImplId}}badge-lang{{end}} {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
 							    </li>
@@ -36,7 +36,7 @@
 				{{end}}
 			</div>
 			<div class="implementations-tabs">
-				<ul class="nav nav-tabs">
+				<ul class="nav nav-tabs language-names">
 					{{$tabclass := ""}}
 					{{range .Idiom.Implementations}}
 						{{if not (or (eq .LanguageName $selectedImplLang) (isInStringList .LanguageName $.UserProfile.FavoriteLanguages))}}

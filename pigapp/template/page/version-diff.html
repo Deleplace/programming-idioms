@@ -193,16 +193,16 @@
 		<div class="row-fluid lang">
 			<div class="span6 impl-left">
 				{{if $left.LanguageName}}
-				    <ul class="nav nav-tabs">
-							<li class="active">
-								<a href="#" class="lang-tab"><span class="label badge-lang">{{$left.LanguageName | printNiceLang}}</span></a>
+				    <ul class="nav nav-tabs language-names">
+						<li class="active">
+							<a href="#" class="lang-tab"><span class="label badge-lang">{{$left.LanguageName | printNiceLang}}</span></a>
 					    </li>
 					</ul>
 				{{end}}
 			</div>
 			<div class="span6 impl-right">
 				{{if $right.LanguageName}}
-				    <ul class="nav nav-tabs">
+				    <ul class="nav nav-tabs language-names">
 						<li class="active">
 							<a href="{{niceImplURL $.IdiomRight.Idiom $right.Id $right.LanguageName}}" class="lang-tab goto-impl"><span class="label badge-lang">{{$right.LanguageName | printNiceLang}}</span></a>
 					    </li>

@@ -496,6 +496,10 @@ h3 a {
 
 /* Tabbed implementations in Idiom Detail */
 
+ul.nav.nav-tabs.language-names {
+	margin-bottom: 8px;
+}
+
 li > a.lang-tab {
 	padding : 4px 6px 4px 6px;
 }

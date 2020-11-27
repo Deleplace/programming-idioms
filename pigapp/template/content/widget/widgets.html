@@ -244,7 +244,7 @@
 	<div class="row impl-preview">
 		<div class="span7">
 			<div class="handle">
-			    <ul class="nav nav-tabs">
+			    <ul class="nav nav-tabs language-names">
 					<li class="active">
 						<a href="#" class="lang-tab"><span class="label badge-lang"></span></a>
 				    </li>
@@ -488,7 +488,7 @@
 	</div>
 	{{range .Idiom.Implementations}}
 		<div class="span4 impl-cell">
-			<ul class="nav nav-tabs">
+			<ul class="nav nav-tabs language-names">
 				<li class="active">
 					<a href="#impl{{.Id}}" class="lang-tab"><span class="label {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
 				</li>
