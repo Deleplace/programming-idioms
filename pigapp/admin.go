@@ -129,5 +129,6 @@ func ajaxAdminMemcacheFlush(w http.ResponseWriter, r *http.Request) error {
 			"message": "Memcache flushed :)",
 		})
 	}
+	log.Infof(ctx, "Memcached flushed by admin")
 	return err
 }

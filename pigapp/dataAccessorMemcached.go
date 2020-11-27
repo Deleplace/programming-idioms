@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"compress/gzip"
 	"encoding/gob"
 	"fmt"
 	"time"
@@ -153,15 +154,15 @@ func (a *MemcacheDatastoreAccessor) readCache(ctx context.Context, cacheKey stri
 	if cacheItem, err = memcache.Get(ctx, cacheKey); err == memcache.ErrCacheMiss {
 		// Item not in the cache
 		return nil, nil
-	} else if err != nil {
-		return nil, err
-	} else {
-		buffer := bytes.NewBuffer(cacheItem.Value) // todo avoid bytes copy ??
-		dec := gob.NewDecoder(buffer)
-		var data interface{}
-		err = dec.Decode(&data)
-		return data, err
 	}
+	if err != nil {
+		return nil, err
+	}
+	buffer := bytes.NewBuffer(cacheItem.Value) // todo avoid bytes copy ??
+	dec := gob.NewDecoder(buffer)
+	var data interface{}
+	err = dec.Decode(&data)
+	return data, err
 }
 
 func init() {
@@ -290,7 +291,10 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(ctx context.Context, idiom *Idi
 		err2 := a.recacheIdiom(ctx, key, idiom, false)
 		logIf(err2, log.Errorf, ctx, "saving new idiom")
 	}
-	htmlCacheEvict(ctx, "about-block-language-coverage")
+	_ = memcache.DeleteMulti(ctx, []string{
+		"about-block-language-coverage",
+		"getAllIdioms(399,-ImplCount)",
+	})
 	return key, err
 }
 
@@ -307,7 +311,10 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(ctx context.Context, key *
 		err2 := a.recacheIdiom(ctx, key, idiom, false)
 		logIf(err2, log.Errorf, ctx, "saving existing idiom")
 	}
-	htmlCacheEvict(ctx, "about-block-language-coverage")
+	_ = memcache.DeleteMulti(ctx, []string{
+		"about-block-language-coverage",
+		"getAllIdioms(399,-ImplCount)",
+	})
 	return err
 }
 
@@ -327,9 +334,9 @@ func (a *MemcacheDatastoreAccessor) stealthIncrementImplRating(ctx context.Conte
 
 func (a *MemcacheDatastoreAccessor) getAllIdioms(ctx context.Context, limit int, order string) ([]*datastore.Key, []*Idiom, error) {
 	cacheKey := fmt.Sprintf("getAllIdioms(%v,%v)", limit, order)
-	data, cacheerr := a.readCache(ctx, cacheKey)
+	data, cacheerr := a.readZipCache(ctx, cacheKey)
 	if cacheerr != nil {
-		log.Errorf(ctx, cacheerr.Error())
+		log.Errorf(ctx, "Reading zip cache for %q: %v", cacheKey, cacheerr)
 		// Ouch. Well, skip the cache if it's broken
 		return a.GaeDatastoreAccessor.getAllIdioms(ctx, limit, order)
 	}
@@ -337,16 +344,12 @@ func (a *MemcacheDatastoreAccessor) getAllIdioms(ctx context.Context, limit int,
 		// Not in the cache. Then fetch the real datastore data. And cache it.
 		keys, idioms, err := a.GaeDatastoreAccessor.getAllIdioms(ctx, limit, order)
 		if err == nil {
-			// Cached "All idioms" will have a 10mn lag after an idiom/impl creation.
-			//a.cachePair(ctx, cacheKey, keys, idioms, 10*time.Minute)
-			// For now, it might mange too often
-			//err2 := a.cachePair(ctx, cacheKey, keys, idioms, 30*time.Second)
-			//logIf(err2, log.Errorf, ctx, "caching all idioms")
-			// actually "all idioms" is now too large to fit in cache
+			err2 := a.cacheZipPair(ctx, cacheKey, keys, idioms, 12*time.Hour)
+			logIf(err2, log.Errorf, ctx, "caching all idioms")
 		}
 		return keys, idioms, err
 	}
-	// Found in cache :)
+	log.Infof(ctx, "Found %q in cache :)", cacheKey)
 	pair := data.(*pair)
 	keys := pair.First.([]*datastore.Key)
 	idioms := pair.Second.([]*Idiom)
@@ -609,4 +612,83 @@ func (a *MemcacheDatastoreAccessor) dismissMessage(ctx context.Context, key *dat
 		err = nil
 	}
 	return msg, err
+}
+
+// When expected data may be >1MB, but compressible <1MB.
+func (a *MemcacheDatastoreAccessor) readZipCache(ctx context.Context, cacheKey string) (interface{}, error) {
+	var zipCacheItem *memcache.Item
+	var err error
+	if zipCacheItem, err = memcache.Get(ctx, cacheKey); err == memcache.ErrCacheMiss {
+		// Item not in the cache
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	zipdata := zipCacheItem.Value
+	zipbuffer := bytes.NewBuffer(zipdata)
+	zipreader, err := gzip.NewReader(zipbuffer)
+	if err != nil {
+		return nil, fmt.Errorf("Reading zip memcached entry %q: %v", cacheKey, err)
+	}
+
+	dec := gob.NewDecoder(zipreader)
+	var data interface{}
+	err = dec.Decode(&data)
+	return data, err
+}
+
+// When expected data may be >1MB, but compressible <1MB.
+func (a *MemcacheDatastoreAccessor) cacheZipValue(ctx context.Context, cacheKey string, data interface{}, expiration time.Duration) error {
+	var buffer bytes.Buffer
+	enc := gob.NewEncoder(&buffer)
+
+	err := enc.Encode(&data)
+	if err != nil {
+		log.Debugf(ctx, "Failed encoding for cache[%v] : %v", cacheKey, err)
+		return err
+	}
+
+	var zipbuffer bytes.Buffer
+	zipwriter := gzip.NewWriter(&zipbuffer)
+	_, err = zipwriter.Write(buffer.Bytes())
+	if err != nil {
+		return fmt.Errorf("Writing zip memcached entry %q: %v", cacheKey, err)
+	}
+	err = zipwriter.Close()
+	if err != nil {
+		return fmt.Errorf("Writing (Close) zip memcached entry %q: %v", cacheKey, err)
+	}
+	const KB = 1024
+	const MB = 1024 * KB
+	if zipbuffer.Len() > 1*MB {
+		return fmt.Errorf("Not caching %q: %dkB (gzipped) is too large", cacheKey, zipbuffer.Len()/KB)
+	}
+	log.Debugf(ctx, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), buffer.Len(), cacheKey)
+
+	cacheItem := &memcache.Item{
+		Key:        cacheKey,
+		Value:      zipbuffer.Bytes(),
+		Expiration: expiration,
+	}
+	// Set the item, unconditionally
+	err = memcache.Set(ctx, cacheItem)
+	if err != nil {
+		log.Debugf(ctx, "Failed setting cache[%v] : %v", cacheKey, err)
+	} else {
+		// log.Debugf(ctx, "Successfully set cache[%v]", cacheKey)
+	}
+	return err
+}
+
+// Just a shortcut for caching the pair
+func (a *MemcacheDatastoreAccessor) cacheZipPair(ctx context.Context, cacheKey string, first interface{}, second interface{}, expiration time.Duration) error {
+	pair := &pair{first, second}
+	return a.cacheZipValue(ctx, cacheKey, pair, expiration)
+}
+
+// A shortcut for caching the zipped (datastoreKey + value)
+func (a *MemcacheDatastoreAccessor) cacheZipKeyValue(ctx context.Context, cacheKey string, datastoreKey *datastore.Key, entity interface{}, expiration time.Duration) error {
+	kae := &KeyAndEntity{datastoreKey, entity}
+	return a.cacheZipValue(ctx, cacheKey, kae, expiration)
 }
