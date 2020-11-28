@@ -524,6 +524,27 @@ $(function() {
 		showImplGrid();
 	});
 
+	$(".copy-imports-to-clipboard a").click(function(){
+		var that = $(this);
+		var impl = that.closest(".implementation");
+		var piimports = impl.find(".piimports");
+		var snippet = piimports.find("pre").text();
+		if(!snippet) {
+			alert("Sorry, failed to retrieve the imports code :(");
+			return;
+		}
+		navigator.clipboard.writeText(snippet).then(function() {
+			console.log('Copying imports to clipboard was successful!');
+			that.html('<i class="icon-check" title="The imports code has been copied to clipboard"></i>');
+
+			$(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
+			piimports.addClass("just-copied-to-clipboard");
+		  }, function(err) {
+			alert('Async: Could not copy imports text: ' + err);
+		  });
+		return false;
+	});
+
 	$("a.copy-code-to-clipboard").click(function(){
 		var that = $(this);
 		var impl = that.closest(".implementation");

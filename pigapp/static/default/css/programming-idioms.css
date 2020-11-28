@@ -533,6 +533,35 @@ pre.prettyprint {
     font-weight: bold;
 }
 
+
+.implementation .copy-imports-to-clipboard {
+    margin-top: -24px;
+	margin-right: 7px;
+	visibility: hidden;
+}
+
+.implementation .copy-imports-to-clipboard a {
+	color: #888;
+	text-decoration: none;
+}
+
+.implementation .piimports:hover .copy-imports-to-clipboard {
+	visibility: visible;
+}
+
+.implementation .piimports.just-copied-to-clipboard pre {
+	/* The user has clicked the "Copy imports to the clipboard" button. */
+	background-color: #DED;
+	border: 2px solid #7A7;
+}
+
+.implementation .piimports.just-copied-to-clipboard a {
+	/* The user has clicked the "Copy imports to the clipboard" button. */
+	color: #282;
+	visibility: visible;
+}
+
+
 .nav > li > a.copy-code-to-clipboard {
 	margin-right: 6px;
 }
