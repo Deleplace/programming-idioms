@@ -526,7 +526,8 @@ $(function() {
 
 	$("a.copy-code-to-clipboard").click(function(){
 		var that = $(this);
-		var picode = that.closest(".impl-external-links").parent().find(".picode");
+		var impl = that.closest(".implementation");
+		var picode = impl.find(".picode");
 		var snippet = picode.find("pre").text();
 		if(!snippet) {
 			alert("Sorry, failed to retrieve the snippet code :(");
@@ -537,8 +538,7 @@ $(function() {
 			that.html('<i class="icon-check" title="The snippet code has been copied to clipboard"></i>');
 
 			$(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
-			picode.addClass("just-copied-to-clipboard");
-			that.addClass("just-copied-to-clipboard");
+			impl.addClass("just-copied-to-clipboard");
 		  }, function(err) {
 			alert('Async: Could not copy text: ' + err);
 		  });

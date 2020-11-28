@@ -533,16 +533,24 @@ pre.prettyprint {
     font-weight: bold;
 }
 
-.picode.just-copied-to-clipboard pre {
+.nav > li > a.copy-code-to-clipboard {
+	margin-right: 6px;
+}
+
+.implementation.just-copied-to-clipboard .picode pre {
 	/* The user has clicked the "Copy snippet to the clipboard" button. */
 	background-color: #DED;
 	border: 2px solid #7A7;
 }
 
-.impl-external-links a.just-copied-to-clipboard,
-.impl-external-links a:hover.just-copied-to-clipboard {
+.implementation.just-copied-to-clipboard .impl-external-links .nav-tabs>.active>a.copy-code-to-clipboard {
 	/* The user has clicked the "Copy snippet to the clipboard" button. */
+	margin-top: -2px;
 	color: #282;
+	background-color: #DED;
+	border: 2px solid #7A7;
+	border-top: 2px solid #DED;
+	outline:none !important;
 }
 
 /* Code zone (in forms) */
@@ -567,7 +575,6 @@ textarea.impl-code{
 .impl-external-links a{
 	margin-right: 8px;
 }
-
 
 .impl-external-links .nav-tabs > .active > a:hover{
     font-weight:bolder;

@@ -204,7 +204,7 @@
 
 {{define "impl-code-and-comments"}}
 	<div class="row-fluid">
-		<div class="{{if .Impl.AuthorComment}}span7{{else}}span10{{end}}">
+		<div class="{{if .Impl.AuthorComment}}span7{{else}}span10{{end}} implementation">
 			{{template "implementation-code" .Impl}}
 
 			<div class="impl-external-links tabbable tabs-below pull-right">
@@ -243,7 +243,7 @@
 
 {{define "impl-preview-skeleton"}}
 	<div class="row impl-preview">
-		<div class="span7">
+		<div class="span7 implementation">
 			<div class="handle">
 			    <ul class="nav nav-tabs language-names">
 					<li class="active">
@@ -277,7 +277,7 @@
 
 {{define "impl-code-ro"}}
 	<div class="row-fluid">
-		<div class="span7">
+		<div class="span7 implementation">
 			{{template "implementation-code" .Impl}}
 			<div class="impl-external-links tabbable tabs-below pull-right">
 				<ul class="nav nav-tabs">
