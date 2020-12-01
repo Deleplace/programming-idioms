@@ -23,10 +23,24 @@
 
 		<h3>Two languages</h3>
 		<p>See all implementations for 2 languages side-by-side, in a long printable list.</p>
-		<form class="two-languages-select navbar-form pull-left">
-			{{template "language-single-select-light" "lang1"}}
-			{{template "language-single-select-light" "lang2"}}
-			<input type="submit" value="OK" class="btn btn-primary" />
+		<form class="two-languages-select form-horizontal span4">
+			<div class="control-group" data-original-title="" title="">
+				<label class="control-label">Language 1</label>
+				<div class="controls" data-original-title="" title="">
+					{{template "language-single-select-light" "lang1"}}
+				</div>
+			</div>
+			<div class="control-group" data-original-title="" title="">
+				<label class="control-label">Language 2</label>
+				<div class="controls" data-original-title="" title="">
+					{{template "language-single-select-light" "lang2"}}
+				</div>
+			</div>
+			<div class="control-group" data-original-title="" title="">
+				<div class="controls" data-original-title="" title="">
+					<input type="submit" value="Compare" class="btn btn-primary" />
+				</div>
+			</div>
 		</form>
 	</div>
 {{end}}
