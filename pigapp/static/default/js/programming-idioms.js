@@ -480,7 +480,7 @@ $(function() {
 	// Idiom detail
 	//
 	
-	$('.selector-language').on('click', function(){
+	$(document).on('click', '.selector-language', function(){
 		var lg = $(this).closest("li").attr("data-language");
 		var nicelg = niceLang(lg);
 		$(this).closest(".language-single-select").find("input[type=text]").val(nicelg).change();
@@ -955,7 +955,21 @@ $(function() {
 		]);
 	});
 
+	//
+	// Cheatsheet language select screen
+	//
+	$(document).on('submit', 'form.two-languages-select', function(){
+		var lang1 = $(this).find("input[name=lang1]").val();
+		var lang2 = $(this).find("input[name=lang2]").val();
+		lang1=normLang(lang1);
+		lang2=normLang(lang2);
+		window.location.href = "/cheatsheet/" + lang1 + "/" + lang2;
+		return false;
+	});
 
+	//
+	// Cheatsheet (printable) page
+	//
 	$("button.page-print").click(function(){
 		window.print();
 	});

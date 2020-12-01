@@ -13,7 +13,7 @@ import (
 // single language.
 //
 
-// AllIdiomsFacade is the Facade for the Cheat Sheets.
+// CheatSheetFacade is the Facade for the Cheat Sheets.
 type CheatSheetFacade struct {
 	PageMeta        PageMeta
 	UserProfile     UserProfile

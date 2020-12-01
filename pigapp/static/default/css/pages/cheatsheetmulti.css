@@ -1,0 +1,28 @@
+.page-cheatsheet.multi .idiom-title-and-lead {
+    width: 20%;
+}
+
+.page-cheatsheet.multi .impl-code {
+    width: 40%;
+    padding-right: 0.6em;
+}
+
+.idiom-title-and-lead .alt-impl {
+    font-style: italic;
+    font-weight: bold;
+    color: #BBB;
+}
+
+button.close {
+    /* Buggy when more than 1 impl per language. Disabled, for now. */
+    display: none;
+}
+
+@media print {
+    .page-cheatsheet.multi .idiom-title-and-lead {
+        width: 20%;
+    }
+    .page-cheatsheet.multi .impl-code {
+        width: 40%;
+    }
+}

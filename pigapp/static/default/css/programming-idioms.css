@@ -889,6 +889,10 @@ footer a.visited {
 	padding-bottom: 6px;
 }
 
+.two-languages-select .language-single-select {
+	/* width: 6em; */
+}
+
 .list-external-sites li{
 	margin-bottom: 20px;
 }

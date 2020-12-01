@@ -1,0 +1,84 @@
+{{define "page-cheatsheet-multi"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body class="page-cheatsheet multi">  
+<div class="page-holder">
+	{{template "header-print" .}}  
+	<div class="page-content container-fluid">
+
+		<div class="filters form-inline">
+			<button class="page-print icon-print icon-3x"></button>
+
+			<label for="showIdiomId" class="checkbox" title="Show ID on the left">
+				<input type="checkbox" id="showIdiomId" checked="checked" /> Idiom ID
+			</label>
+
+			<label for="showImports" class="checkbox" title="Show imports statements in the code">
+				<input type="checkbox" id="showImports" /> Imports
+			</label>
+
+			<label for="showComments" class="checkbox" title="Show comments below the code">
+				<input type="checkbox" id="showComments" /> Comments
+			</label>
+
+			<input type="text" id="filter" class="input-small" placeholder="filter..." />
+		</div>
+
+		<div>
+			<table class="cheatsheet-lines">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        {{range .Langs}}
+                        <th>{{. | printNiceLang}}</th>
+                        {{end}}
+                    </tr>
+                </thead>
+				{{range $line := .Lines}}
+                    {{range $i, $_ := .Depth}}
+                    <tr class="cheatsheet-line">
+                        {{$dotted := "dotted"}}
+                        {{if ge $i 1}}
+                            {{$dotted = ""}}
+                        {{end}}
+						<th class="idiom-id {{$dotted}}">{{if eq $i 0}}{{$line.IdiomID}}{{end}}</th>
+						<td class="idiom-title-and-lead {{$dotted}}">
+                            {{if eq $i 0}}
+                                <div class="idiom-title">{{markup2CSS (atom2string $line.IdiomTitle)}}</div>
+                                <div>{{markup2CSS (atom2string $line.IdiomLeadParagraph)}}</div>
+                            {{else}}
+                                <div class="alt-impl">Alternative implementation...</div>
+                            {{end}}
+                        </td>
+                            {{range $line.ByLanguage}}
+                                <td class="impl-code {{$dotted}}">
+                                {{if lt $i (len .) }}
+                                    {{with index . $i}}
+                                            {{if .ImplImportsBlock}}
+                                            <div class="piimports" style="display: none;">
+                                                <pre>{{.ImplImportsBlock}}</pre>
+                                            </div>
+                                            {{end}}
+                                            <div class="picode">
+                                                <pre>{{.ImplCodeBlock}}</pre>
+                                            </div>
+                                            <div class="impl-comment" style="display: none;">
+                                                {{markup2CSS (atom2string .ImplCodeBlockComment)}}
+                                            </div>
+                                    {{end}}
+                                {{end}}
+                                </td>
+                            {{end}}
+                        {{end}}
+						<td><button type="button" class="close">&times;</button></div></td>
+                    </tr>
+                {{end}}
+			</table>
+		</div>
+	</div>
+{{template "include-js" .}}  
+</div>
+</body>
+{{template "close-html"}}
+{{end}}

@@ -2,22 +2,31 @@
 	<div class="pi-cheatsheets">
 		<h2>Cheatsheets</h2>
 
+		<h3>One language</h3>
 		<p>See all implementations for one language, in a long printable list.</p>
 
 		{{if .UserProfile.FavoriteLanguages}}
 		<ul class="inline">
-		{{range .UserProfile.FavoriteLanguages}}
-			<li><a href="/cheatsheet/{{.}}" class="btn btn-success"><b>{{. | printNiceLang}}</b> <i class="icon-list"></i></a></li>
-		{{end}}
+			{{range .UserProfile.FavoriteLanguages}}
+				<li><a href="/cheatsheet/{{.}}" class="btn btn-success"><b>{{. | printNiceLang}}</b> <i class="icon-list"></i></a></li>
+			{{end}}
 		</ul>
 		{{end}}
 
 		<ul class="inline">
-		{{range .Langs}}
-			{{if not (isInStringList . $.UserProfile.FavoriteLanguages)}}
-			<li><a href="/cheatsheet/{{.}}" class="btn btn-primary">{{. | printNiceLang}} <i class="icon-list"></i></a></li> 
+			{{range .Langs}}
+				{{if not (isInStringList . $.UserProfile.FavoriteLanguages)}}
+					<li><a href="/cheatsheet/{{.}}" class="btn btn-primary">{{. | printNiceLang}} <i class="icon-list"></i></a></li> 
+				{{end}}
 			{{end}}
-		{{end}}
 		</ul>
+
+		<h3>Two languages</h3>
+		<p>See all implementations for 2 languages side-by-side, in a long printable list.</p>
+		<form class="two-languages-select navbar-form pull-left">
+			{{template "language-single-select-light" "lang1"}}
+			{{template "language-single-select-light" "lang2"}}
+			<input type="submit" value="OK" class="btn btn-primary" />
+		</form>
 	</div>
 {{end}}

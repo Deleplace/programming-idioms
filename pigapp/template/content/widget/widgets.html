@@ -90,6 +90,23 @@
 	</div>
 {{end}}
 
+{{define "language-single-select-light"}}
+	<div class="input-append language-single-select"
+		data-toggle="popover" data-content="Type ahead, or select one">
+	  <input type="text" class="span4 typeahead language" autocomplete="off" name="{{.}}" data-provide="typeahead"  placeholder="Name..." />
+	  <div class="btn-group">
+	    <button class="btn dropdown-toggle" data-toggle="dropdown">
+	      <span class="caret"></span>
+	    </button>
+	    <ul class="dropdown-menu inline language-choices">
+		    {{range mainStreamLanguages}}
+		      <li data-language="{{.}}"><a href="#" class="btn selector-language">{{. | printNiceLang}}</a></li>
+			{{end}}
+	    </ul>
+	  </div>
+	</div>
+{{end}}
+
 {{define "language-input-suggest"}}
 	  <input type="text" class="input-suggest-language input-small" data-provide="typeahead" placeholder="Other..." />
 {{end}}

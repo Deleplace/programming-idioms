@@ -15,7 +15,8 @@ $(function() {
 		});
         $.get(url,function(data){
             $(".about-central-zone").fadeOut(10,function(){$(".about-central-zone").html(data);});
-            $(".about-central-zone").fadeIn(tempo);
+			$(".about-central-zone").fadeIn(tempo);
+			initLanguageTypeahead();
         });
 	}
 	
@@ -101,4 +102,27 @@ $(function() {
 		loadAboutCentral(ajaxUrl, 10);
 	}
 	
+	// This is REDUNDANT CODE copy-pasted from programming-idioms.js
+	// TODO Remove id possible
+	function initLanguageTypeahead() {
+		$('.language-single-select .typeahead').typeahead({
+			source : function(query, process){
+				return $.get(
+						'/typeahead-languages', 
+						{ userInput: query }, 
+						function (data) {
+							let processedData = {};
+							if(data && data.options)
+								processedData = process(data.options);
+							return processedData;
+						});
+			},    
+			matcher: function (item) {
+				// Override default behavior.
+				// Show all options returned by server.
+				// For example, do not remove "C#" when user has typed "csharp"
+				return true;
+			}
+		});
+	}
 });
