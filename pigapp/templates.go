@@ -47,6 +47,7 @@ func initTemplates() (*template.Template, error) {
 		"implementationsFor":    implementationsFor,
 		"shorten":               Shorten,
 		"atom2string":           atom2string,
+		"atom2int":              atom2int,
 		"trim":                  strings.TrimSpace,
 		"ifval":                 ifval,
 		"diffClass":             diffClass,

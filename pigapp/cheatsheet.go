@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
@@ -64,4 +65,11 @@ func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 // useful for calling markup2CSS on cheatSheetLineDoc fields
 func atom2string(atom gaesearch.Atom) string {
 	return string(atom)
+}
+
+// useful for calling markup2CSS on cheatSheetLineDoc fields
+func atom2int(atom gaesearch.Atom) int {
+	i, _ := strconv.Atoi(string(atom))
+	// In case of an invalid argument, the return value is 0
+	return i
 }

@@ -32,7 +32,11 @@
 					<tr class="cheatsheet-line">
 						<th class="idiom-id dotted">{{.IdiomID}}</th>
 						<td class="idiom-title-and-lead dotted">
-							<div class="idiom-title">{{markup2CSS (atom2string .IdiomTitle)}}</div>
+							<div class="idiom-title">
+								<a href="{{niceIdiomIDTitleURL (atom2int .IdiomID) (atom2string .IdiomTitle)}}">
+									{{markup2CSS (atom2string .IdiomTitle)}}
+								</a>
+							</div>
 							<div>{{markup2CSS (atom2string .IdiomLeadParagraph)}}</div>
 						</td>
 						<td class="impl-code dotted">
