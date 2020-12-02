@@ -536,7 +536,7 @@ $(function() {
 			alert("Sorry, failed to retrieve the imports code :(");
 			return;
 		}
-		using("copy-imports-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
+		using("impl/copy-imports-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying imports to clipboard was successful!');
 			that.html('<i class="icon-check" title="The imports code has been copied to clipboard"></i>');
@@ -558,7 +558,7 @@ $(function() {
 			alert("Sorry, failed to retrieve the snippet code :(");
 			return;
 		}
-		using("copy-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
+		using("impl/copy-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying to clipboard was successful!');
 			that.html('<i class="icon-check" title="The snippet code has been copied to clipboard"></i>');
@@ -569,6 +569,21 @@ $(function() {
 			alert('Async: Could not copy text: ' + err);
 		  });
 		return false;
+	});
+
+	$(".impl-external-links .demo a").on("click", function(event) {
+		var impl = $(this).closest(".implementation");
+		using("impl/demo/"+ impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
+	});
+
+	$(".impl-external-links .doc a").on("click", function(event) {
+		var impl = $(this).closest(".implementation");
+		using("impl/doc/"+ impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
+	});
+
+	$(".impl-external-links .origin a").on("click", function(event) {
+		var impl = $(this).closest(".implementation");
+		using("impl/origin/"+ impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 	});
 	
 	//
