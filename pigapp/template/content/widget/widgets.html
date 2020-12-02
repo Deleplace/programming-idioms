@@ -213,7 +213,7 @@
 
 {{define "impl-code-and-comments"}}
 	<div class="row-fluid">
-		<div class="{{if .Impl.AuthorComment}}span7{{else}}span10{{end}} implementation">
+		<div class="{{if .Impl.AuthorComment}}span7{{else}}span10{{end}} implementation" data-idiom-id="{{.Idiom.Id}}" data-impl-id="{{.Impl.Id}}" data-impl-lang="{{.Impl.LanguageName}}">
 			{{template "implementation-code" .Impl}}
 
 			<div class="impl-external-links tabbable tabs-below pull-right">

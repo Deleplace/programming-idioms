@@ -206,6 +206,7 @@ $(function() {
 
 	// New-school "Live" binding
 	$(document).on("click", ".remove-nickname", function(){
+		using("remove-nickname");
 		$.removeCookie("Nickname", { path: '/' });
 		$(".greetings").hide();
 	});
@@ -444,6 +445,7 @@ $(function() {
 		var lgDisplay = $(this).html();
 		var li = $('<li class="active" data-language="'+lg+'"><span class="badge badge-success">'+lgDisplay+' <a href="#" class="favorite-language-remove icon-remove"></a></span></li>');
 		li.hide().appendTo($(".favorite-languages")).show('normal');
+		using("fav-lang-bar-add/" + lg);
     	updateFavlangCookie();
 		$(this).hide('normal');
 
@@ -518,6 +520,7 @@ $(function() {
 
 	// Impl grid view (exposé-like) for current idiom.
 	function showImplGrid(){
+		using("grid");
 		$(".modal-impl-grid").modal();
 	}
 	$('.show-impl-grid').on('click', function(){
@@ -533,6 +536,7 @@ $(function() {
 			alert("Sorry, failed to retrieve the imports code :(");
 			return;
 		}
+		using("copy-imports-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying imports to clipboard was successful!');
 			that.html('<i class="icon-check" title="The imports code has been copied to clipboard"></i>');
@@ -554,6 +558,7 @@ $(function() {
 			alert("Sorry, failed to retrieve the snippet code :(");
 			return;
 		}
+		using("copy-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying to clipboard was successful!');
 			that.html('<i class="icon-check" title="The snippet code has been copied to clipboard"></i>');
@@ -1024,4 +1029,13 @@ $(function() {
 		form.find("input[name=why]").val(reason);
 		form.submit();
 	});
+
+	function using(what) {
+		fetch("/using/"+what, {
+			method: "POST",
+			body: JSON.stringify({
+				page: window.location.pathname+window.location.search
+			})
+		});
+	}
 });
