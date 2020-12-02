@@ -2,13 +2,13 @@
 	<div class="pi-cheatsheets">
 		<h2>Cheatsheets</h2>
 
-		<h3>One language</h3>
+		<h3>One language <i class="icon-list"></i></h3>
 		<p>See all implementations for one language, in a long printable list.</p>
 
 		{{if .UserProfile.FavoriteLanguages}}
 		<ul class="inline">
 			{{range .UserProfile.FavoriteLanguages}}
-				<li><a href="/cheatsheet/{{.}}" class="btn btn-success"><b>{{. | printNiceLang}}</b> <i class="icon-list"></i></a></li>
+				<li><a href="/cheatsheet/{{.}}" class="btn btn-success"><b>{{. | printNiceLang}}</b></i></a></li>
 			{{end}}
 		</ul>
 		{{end}}
@@ -16,12 +16,12 @@
 		<ul class="inline">
 			{{range .Langs}}
 				{{if not (isInStringList . $.UserProfile.FavoriteLanguages)}}
-					<li><a href="/cheatsheet/{{.}}" class="btn btn-primary">{{. | printNiceLang}} <i class="icon-list"></i></a></li> 
+					<li><a href="/cheatsheet/{{.}}" class="btn btn-primary">{{. | printNiceLang}}</i></a></li> 
 				{{end}}
 			{{end}}
 		</ul>
 
-		<h3>Two languages</h3>
+		<h3>Two languages <i class="icon-list"></i> <i class="icon-list"></i></h3>
 		<p>See all implementations for 2 languages side-by-side, in a long printable list.</p>
 		<form class="two-languages-select form-horizontal span4">
 			<div class="control-group" data-original-title="" title="">
