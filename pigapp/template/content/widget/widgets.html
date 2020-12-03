@@ -107,7 +107,7 @@
 	{{$favlangs := .Deco.FavoriteLanguages}}
 	{{$isAdmin := .Deco.IsAdmin}}
 	{{with .Data}}
-			<div class="well idiom-summary-large">
+			<div class="well idiom-summary-large" data-idiom-id="{{.Id}}">
 				<div class="row-fluid">
 					<div class="span6">
 						<h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>

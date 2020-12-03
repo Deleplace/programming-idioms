@@ -461,6 +461,7 @@ $(function() {
 		var lgDisplay = span.html();
 		var li = span.parent();
 		var lg = li.attr('data-language');
+		using("fav-lang-bar-remove/" + lg);
 		li.removeAttr('data-language');
 		li.slideUp(500, function(){ li.remove(); } );
 		updateFavlangCookie();
@@ -471,10 +472,13 @@ $(function() {
 
 	$('.btn-see-non-favorite').on('click', function(){
 		oldValue = $(this).hasClass('active');
-		if( oldValue )
+		if( oldValue ) {
 			$.cookie("see-non-favorite", "0", { expires : 100, path: '/' });
-		else
+			using("see-non-favorite/set/0");
+		} else {
 			$.cookie("see-non-favorite", "1", { expires : 100, path: '/' });
+			using("see-non-favorite/set/1");
+		}
 		location.reload();
 	});
 	
@@ -520,11 +524,12 @@ $(function() {
 
 	// Impl grid view (exposé-like) for current idiom.
 	function showImplGrid(){
-		using("grid");
+		var idiomID = $(this).closest(".idiom-summary-large").attr("data-idiom-id");
+		using("grid/" + idiomID);
 		$(".modal-impl-grid").modal();
-	}
+	};
 	$('.show-impl-grid').on('click', function(){
-		showImplGrid();
+		showImplGrid.call(this);
 	});
 
 	$(".copy-imports-to-clipboard a").click(function(){
