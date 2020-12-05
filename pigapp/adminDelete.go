@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/pig"
+	"google.golang.org/appengine/log"
 )
 
 func idiomDelete(w http.ResponseWriter, r *http.Request) error {
@@ -48,6 +49,12 @@ func implDelete(w http.ResponseWriter, r *http.Request) error {
 		why = fmt.Sprintf("Admin deletes impl %d: %s", implID, reason)
 	}
 	err := dao.deleteImpl(ctx, idiomID, implID, why)
+
+	err2 := unindexImpl(ctx, idiomID, implID)
+	if err2 != nil {
+		log.Errorf(ctx, "Unindexing impl %d from idiom %d: %v", implID, idiomID)
+		// But keep going
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {

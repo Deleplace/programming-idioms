@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 
@@ -201,10 +202,8 @@ func indexIdiomCheatsheets(ctx context.Context, idiom *Idiom) error {
 
 func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
 	log.Infof(ctx, "Unindexing everything (from the text search indexes)")
+	start := time.Now()
 
-	// Must remove 1 by 1 (Index has no batch methods)
-	// UPDATE: DeleteMulti now exists (since 2017-01)
-	// TODO: use DeleteMulti
 	for _, indexName := range []string{
 		"idioms",
 		"impls",
@@ -216,6 +215,7 @@ func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
 			return err
 		}
 		it := index.List(ctx, &gaesearch.ListOptions{IDsOnly: true})
+		docIDs := make([]string, 0, 100)
 		for {
 			docID, err := it.Next(nil)
 			if err == gaesearch.Done {
@@ -225,13 +225,23 @@ func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
 				log.Errorf(ctx, "Error getting next indexed object to unindex: %v", err)
 				return err
 			}
-			err = index.Delete(ctx, docID)
-			if err != nil {
-				return err
+			docIDs = append(docIDs, docID)
+			if len(docIDs) == 100 {
+				// It seems that we can't make a huge batch call, hard limit is ~200
+				err = index.DeleteMulti(ctx, docIDs)
+				if err != nil {
+					return err
+				}
+				docIDs = docIDs[:0]
 			}
+		}
+		err = index.DeleteMulti(ctx, docIDs)
+		if err != nil {
+			return err
 		}
 	}
 
+	log.Infof(ctx, "Unindexed everything in %v", time.Since(start))
 	return nil
 }
 
@@ -244,6 +254,29 @@ func (a *GaeDatastoreAccessor) unindex(ctx context.Context, idiomID int) error {
 		return err
 	}
 	return index.Delete(ctx, docID)
+}
+
+func unindexImpl(ctx context.Context, idiomID, implID int) error {
+	var err error
+	for _, indexName := range []string{
+		"impls",
+		"cheatsheets",
+	} {
+		index, err := gaesearch.Open(indexName)
+		if err != nil {
+			return err
+		}
+		docID := fmt.Sprintf("%d_%d", idiomID, implID)
+		err2 := index.Delete(ctx, docID)
+		if err2 != nil {
+			err = err2
+		}
+	}
+	return err
+
+	// Index "idioms":
+	// Reindexing of the Idiom itself from index "idioms", doc "id", is handled elsewhere,
+	// async via indexDelayer.
 }
 
 // retriever returns a list of Idiom Key strings
