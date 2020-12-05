@@ -14,9 +14,12 @@ $(function() {
 			}
 		});
         $.get(url,function(data){
-            $(".about-central-zone").fadeOut(10,function(){$(".about-central-zone").html(data);});
-			$(".about-central-zone").fadeIn(tempo);
-			initLanguageTypeahead();
+            $(".about-central-zone").fadeOut(10,function(){
+				$(".about-central-zone").html(data);
+				$(".about-central-zone").fadeIn(tempo, function(){
+					initLanguageTypeahead();
+				});
+			});
         });
 	}
 	
