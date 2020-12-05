@@ -418,8 +418,14 @@ $(function() {
 			return "Cpp";
 		case "c#":
 			return "Csharp";
+		case "cs":
+			return "Csharp";
 		case "golang":
 			return "go";
+		case "py":
+			return "Python";
+		case "rs":
+			return "Rust";
 		}
 		return lang;
 	}
@@ -1039,6 +1045,22 @@ $(function() {
 		});
 	});
 
+	function addFavlangsInCookie(langs) {
+		var langsConcat = $.cookie("my-languages") || "_";
+		var newLangsConcat = langsConcat;
+		for (var i = 0; i<langs.length; i++) {
+			var lang = langs[i];
+			lang = capitalizeFirstLetter(lang);
+			lang = normLang(lang);
+			if(!hasFavlangInCookie(lang)) {
+				newLangsConcat += lang + "_";
+			}
+		}
+		if(newLangsConcat != langsConcat){
+			$.cookie("my-languages", newLangsConcat,{ expires : 100, path: '/' });
+		}
+	}
+
 	// Restore a previous version of the Idiom
 	// (only the admin can do this)
 	$("form.idiom-restore-version > input.presubmit").on("click", function(e) {
@@ -1057,5 +1079,19 @@ $(function() {
 				page: window.location.pathname+window.location.search
 			})
 		});
+	}
+
+
+	function isCheatsheetPage() {
+		return /\/cheatsheet\//.test(window.location.pathname);
+	}
+
+	if( isCheatsheetPage() ) {
+		// #134 Auto add favorite languages
+		var path = window.location.pathname;
+		path = path.substring("/cheatsheet/".length);
+		let langs = path.split(/\//);
+		console.log("Adding favlangs", langs);
+		addFavlangsInCookie(langs);
 	}
 });
