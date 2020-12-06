@@ -7,7 +7,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"github.com/gorilla/mux"
-	gaesearch "google.golang.org/appengine/search"
 )
 
 // CheatSheetMultipleFacade is the Facade for the Cheat Sheets with multiple languages.
@@ -19,9 +18,9 @@ type CheatSheetMultipleFacade struct {
 }
 
 type cheatSheetLineMulti struct {
-	IdiomID            gaesearch.Atom // TODO string?
-	IdiomTitle         gaesearch.Atom // TODO string?
-	IdiomLeadParagraph gaesearch.Atom // TODO string?
+	IdiomID            int
+	IdiomTitle         string
+	IdiomLeadParagraph string
 
 	// Depth represents the max number of impl for one language in ByLanguage
 	Depth []struct{}
@@ -56,8 +55,8 @@ func cheatsheetDouble(w http.ResponseWriter, r *http.Request) error {
 	var lines []cheatSheetLineMulti
 
 	byIdiomID := map[int][]cheatSheetLineDocs{}
-	idiomTitles := map[int]gaesearch.Atom{}
-	idiomLeadParagraphs := map[int]gaesearch.Atom{}
+	idiomTitles := map[int]string{}
+	idiomLeadParagraphs := map[int]string{}
 	for langIndex, lang := range langs {
 		cheatsheetLines, err := dao.getCheatSheet(ctx, lang, limit)
 		if err != nil {
@@ -73,8 +72,8 @@ func cheatsheetDouble(w http.ResponseWriter, r *http.Request) error {
 			} else {
 				byIdiomID[idiomID] = make([]cheatSheetLineDocs, len(langs))
 				byIdiomID[idiomID][langIndex] = cheatSheetLineDocs{line}
-				idiomTitles[idiomID] = (line.IdiomTitle)
-				idiomLeadParagraphs[idiomID] = (line.IdiomLeadParagraph)
+				idiomTitles[idiomID] = string(line.IdiomTitle)
+				idiomLeadParagraphs[idiomID] = string(line.IdiomLeadParagraph)
 			}
 
 		}
@@ -86,7 +85,7 @@ func cheatsheetDouble(w http.ResponseWriter, r *http.Request) error {
 	sort.Ints(idiomIDs)
 	for _, idiomID := range idiomIDs {
 		line := cheatSheetLineMulti{
-			IdiomID:            gaesearch.Atom(strconv.Itoa(idiomID)),
+			IdiomID:            idiomID,
 			IdiomTitle:         idiomTitles[idiomID],
 			IdiomLeadParagraph: idiomLeadParagraphs[idiomID],
 			// Depth:              make([]struct{}, 2),

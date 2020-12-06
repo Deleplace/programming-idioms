@@ -54,11 +54,11 @@
 						<td class="idiom-title-and-lead {{$dotted}}">
                             {{if eq $i 0}}
                                 <div class="idiom-title">
-                                    <a href="{{niceIdiomIDTitleURL (atom2int $line.IdiomID) (atom2string $line.IdiomTitle)}}">
-                                        {{markup2CSS (atom2string $line.IdiomTitle)}}
+                                    <a href="{{niceIdiomIDTitleURL $line.IdiomID $line.IdiomTitle}}">
+                                        {{markup2CSS $line.IdiomTitle}}
                                     </a>
                                 </div>
-                                <div>{{markup2CSS (atom2string $line.IdiomLeadParagraph)}}</div>
+                                <div>{{markup2CSS $line.IdiomLeadParagraph}}</div>
                             {{else}}
                                 <div class="alt-impl">Alternative implementation...</div>
                             {{end}}
