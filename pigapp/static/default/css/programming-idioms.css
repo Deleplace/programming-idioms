@@ -1213,7 +1213,10 @@ footer a.visited {
 
   .page-cheatsheet .piimports pre {
     border-width: 1px !important;
-    border-radius: 0px;
+	border-radius: 4px !important;
+	border-bottom-left-radius: 0px !important;
+	border-bottom-right-radius: 0px !important;
+	color: #777 !important;
   }
 }
 
