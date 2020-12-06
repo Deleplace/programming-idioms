@@ -1049,14 +1049,35 @@ $(function() {
 		using("cheatsheet/options/filter/" + word); // spaces will appear as %20
 	});
 
+	$("input.restrict-having").change(function(){
+		applyCheatsheetFilters();
+		var lang = $(this).attr("data-lang");
+		if( $(this).val() )
+			using("cheatsheet/restrict/" + lang);
+		else
+			using("cheatsheet/unrestrict/" + lang);
+	});
+
 	function applyCheatsheetFilters() {
 		var word = $("#filter").val();
+		var restrictorLangs = new Set();
+		$("input.restrict-having").each(function(){
+			var lang = $(this).attr("data-lang")
+			if(!lang)
+				return;
+			var checked = $(this).is(':checked');
+			if(!checked)
+				return;
+			restrictorLangs.add(lang);
+		});
+
 		$("tr.cheatsheet-line").each(function(){
+			var line = $(this);
 			var show = true;
 		
 			// Full-text (raw, no tokenization)
 			if(word){
-				var lowerHtml = $(this).html().toLowerCase();
+				var lowerHtml = line.html().toLowerCase();
 				var lowerWord = word.toLowerCase();
 				if( lowerHtml.indexOf(lowerWord) === -1 ){
 					show = false;
@@ -1064,12 +1085,22 @@ $(function() {
 			}
 
 			// Restrict to existing impls
-			// TODO!
+			restrictorLangs.forEach(function(lang) {
+				var cell = line.find("td.lang-" + lang);
+				if(cell.length==0) {
+					console.log("Table cell for " + lang + " not found!");
+					return;
+				}
+				if(cell.text().trim() === "") {
+					// No impl in this language, let's hide the whole line
+					show = false;
+				}
+			});
 
 			if(show) {
-				$(this).show('normal');
+				line.show('normal');
 			} else {
-				$(this).hide('normal');
+				line.hide('normal');
 			}
 		});
 
@@ -1123,5 +1154,7 @@ $(function() {
 		let langs = path.split(/\//);
 		console.log("Adding favlangs", langs);
 		addFavlangsInCookie(langs);
+		// Filter out lines "assumed uninteresting"
+		applyCheatsheetFilters();
 	}
 });

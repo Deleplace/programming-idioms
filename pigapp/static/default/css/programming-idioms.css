@@ -250,6 +250,11 @@ h3 a {
 
 .header-print .navbar-inner {
 	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.header-print .navbar .nav {
+	margin-right: 0;
 }
 
 .header-print .nav>li {

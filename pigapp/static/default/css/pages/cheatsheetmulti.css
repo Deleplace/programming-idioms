@@ -13,6 +13,11 @@
     color: #BBB;
 }
 
+.page-print {
+    float: right;
+    margin-left: 2rem;
+}
+
 @media print {
     .page-cheatsheet.multi .idiom-title-and-lead {
         width: 20%;

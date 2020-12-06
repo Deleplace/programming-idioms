@@ -6,27 +6,36 @@
 	{{template "header-cheatsheet-print" .}}  
 	<div class="page-content container-fluid">
 
+        <button class="btn page-print icon-print icon-3x"></button>
+
 		<div class="filters form-inline">
-			<button class="page-print icon-print icon-3x"></button>
+            <div>
+                <label for="showIdiomId" class="checkbox" title="Show ID on the left">
+                    <input type="checkbox" id="showIdiomId" checked="checked" /> Idiom ID
+                </label>
 
-			<label for="showIdiomId" class="checkbox" title="Show ID on the left">
-				<input type="checkbox" id="showIdiomId" checked="checked" /> Idiom ID
-			</label>
+                <label for="showImports" class="checkbox" title="Show imports statements in the code">
+                    <input type="checkbox" id="showImports" /> Imports
+                </label>
 
-			<label for="showImports" class="checkbox" title="Show imports statements in the code">
-				<input type="checkbox" id="showImports" /> Imports
-			</label>
+                <label for="showComments" class="checkbox" title="Show comments below the code">
+                    <input type="checkbox" id="showComments" /> Comments
+                </label>
 
-			<label for="showComments" class="checkbox" title="Show comments below the code">
-				<input type="checkbox" id="showComments" /> Comments
-			</label>
-
-			<input type="text" id="filter" class="input-small" placeholder="filter..." />
+                <input type="text" id="filter" class="input-small" placeholder="filter..." />
+            </div>
+            <div>
+                {{range .Langs}}
+                    <label class="checkbox" title="Hide lines that don't have any {{.}} implementation">
+                        <input type="checkbox" class="restrict-having" data-lang="{{.}}" checked="checked" /> Only entries having {{.}}
+                    </label>
+                {{end}}
+            </div>
         </div>
         
 		<div class="guidance">
             <ul>
-                <li>The snippets are under the <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">CC-BY-SA</a> license.</li>
+                <li>The snippets are under the <a href="http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license" target="_blank">CC-BY-SA</a> license.</li>
                 <li>Consider printing in landscape mode</li>
                 <li>or not printing at all, and keeping a bookmark.</li>
             </ul>
@@ -43,6 +52,7 @@
                         {{end}}
                     </tr>
                 </thead>
+                {{$langs := .Langs}}
                 {{range $line := .Lines}}
                     <tr class="cheatsheet-line">
 						<th class="idiom-id dotted">
@@ -58,9 +68,9 @@
                                 {{markup2CSS $line.IdiomLeadParagraph}}
                             </div>
                         </td>
-                            {{range $line.ByLanguage}}
-                                <td class="impl-code dotted">
-                                    {{range $i, $doc := .}}
+                            {{range $j, $docs := $line.ByLanguage}}
+                                <td class="impl-code dotted lang-{{index $langs $j}}">
+                                    {{range $i, $doc := $docs}}
                                             {{if gt $i 0}}
                                                 <div class="alt-impl-breaker">Alternative implementation:</div>
                                             {{end}}
