@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"sort"
 	"strconv"
@@ -48,6 +49,14 @@ func cheatsheetDouble(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	langs := []string{vars["lang1"], vars["lang2"]}
 	ctx := r.Context()
+
+	for i := range langs {
+		lang := NormLang(langs[i])
+		if !StringSliceContains(AllLanguages(), lang) {
+			return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", langs[i], AllNiceLangs), http.StatusBadRequest}
+		}
+		langs[i] = lang
+	}
 
 	// Security belt. Might be changed if needed.
 	limit := 1000
