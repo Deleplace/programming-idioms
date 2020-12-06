@@ -64,7 +64,7 @@ func ajaxImplFlag(w http.ResponseWriter, r *http.Request) error {
 	key, err := datastore.Put(ctx, ikey, &flag)
 	if err != nil {
 		log.Errorf(ctx, "saving FlaggedContent: %v", err)
-		return PiError{"Could not save flagged content data", http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "Could not save flagged content data")
 	}
 	log.Infof(ctx, "Saved content flag %s", key.Encode())
 	return nil
@@ -142,25 +142,25 @@ func ajaxAdminFlagResolve(w http.ResponseWriter, r *http.Request) error {
 	flagKeyStr := r.FormValue("flagkey")
 	flagKey, err := datastore.DecodeKey(flagKeyStr)
 	if err != nil {
-		return PiError{ErrorText: "Could not decode key " + flagKeyStr, Code: http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Could not decode key %q", flagKeyStr)
 	}
 
 	ctx := r.Context()
 	var flag FlaggedContent
 	err = datastore.Get(ctx, flagKey, &flag)
 	if err == datastore.ErrNoSuchEntity {
-		return PiError{ErrorText: "Flagged contents " + flagKeyStr + " no longer exists", Code: http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Flagged contents %q no longer exists", flagKeyStr)
 	}
 	if err != nil {
 		log.Errorf(ctx, "retrieving FlaggegContent: %v", err)
-		return PiError{ErrorText: "Could not retrieve Flagged Contents entry :(", Code: http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "Could not retrieve Flagged Contents entry :(")
 	}
 	flag.Resolved = true
 	flag.ResolveDate = time.Now()
 	_, err = datastore.Put(ctx, flagKey, &flag)
 	if err != nil {
 		log.Errorf(ctx, "saving FlaggedContent: %v", err)
-		return PiError{"Could not save flagged content data", http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "Could not save flagged content data")
 	}
 	log.Infof(ctx, "Saved content flag %s", flagKey.Encode())
 

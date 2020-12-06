@@ -111,7 +111,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
 	idiomTitleInURL := vars["idiomTitle"]
@@ -227,7 +227,7 @@ func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]s
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
 	idiomTitleInURL := vars["idiomTitle"]

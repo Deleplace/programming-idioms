@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"sort"
 	"strconv"
@@ -53,7 +52,7 @@ func cheatsheetDouble(w http.ResponseWriter, r *http.Request) error {
 	for i := range langs {
 		lang := NormLang(langs[i])
 		if !StringSliceContains(AllLanguages(), lang) {
-			return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", langs[i], AllNiceLangs), http.StatusBadRequest}
+			return PiErrorf(http.StatusBadRequest, "Sorry, [%v] is currently not a supported language. Supported languages are %v.", langs[i], AllNiceLangs)
 		}
 		langs[i] = lang
 	}
@@ -69,7 +68,7 @@ func cheatsheetDouble(w http.ResponseWriter, r *http.Request) error {
 	for langIndex, lang := range langs {
 		cheatsheetLines, err := dao.getCheatSheet(ctx, lang, limit)
 		if err != nil {
-			return PiError{err.Error(), http.StatusInternalServerError}
+			return PiErrorf(http.StatusInternalServerError, "%v", err)
 		}
 		for _, line := range cheatsheetLines {
 			idiomID, err := strconv.Atoi(string(line.IdiomID))
@@ -123,7 +122,7 @@ func cheatsheetDouble(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if err := templates.ExecuteTemplate(w, "page-cheatsheet-multi", data); err != nil {
-		return PiError{err.Error(), http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
 	return nil
 }

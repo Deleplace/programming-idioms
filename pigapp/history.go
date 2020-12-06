@@ -31,7 +31,7 @@ func idiomHistory(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if len(list) == 0 {
-		return PiError{ErrorText: "No history entries found for idiom " + idiomIDStr, Code: 500}
+		return PiErrorf(http.StatusInternalServerError, "No history entries found for idiom %q", idiomIDStr)
 	}
 
 	revertedVersionStr := r.FormValue("reverted")
@@ -90,7 +90,7 @@ func implHistory(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	if len(list) == 0 {
-		return PiError{ErrorText: "No history entries found for idiom " + idiomIDStr, Code: 500}
+		return PiErrorf(http.StatusInternalServerError, "No history entries found for idiom %q", idiomIDStr)
 	}
 
 	revertedVersionStr := r.FormValue("reverted")

@@ -30,12 +30,12 @@ func implEdit(w http.ResponseWriter, r *http.Request) error {
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
 	_, impl, exists := idiom.FindImplInIdiom(implID)
 	if !exists {
-		return PiError{"Could not find implementation " + implIDStr + " in idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find implementation %q in idiom %q", implIDStr, idiomIDStr)
 	}
 	implCopy := *impl
 

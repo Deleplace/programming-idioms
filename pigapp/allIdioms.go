@@ -17,7 +17,7 @@ func allIdioms(w http.ResponseWriter, r *http.Request) error {
 
 	idioms, err := retrieveAllIdioms(r, true)
 	if err != nil {
-		return PiError{err.Error(), http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
 
 	data := AllIdiomsFacade{
@@ -30,7 +30,7 @@ func allIdioms(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if err := templates.ExecuteTemplate(w, "page-all-idioms", data); err != nil {
-		return PiError{err.Error(), http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
 	return nil
 }

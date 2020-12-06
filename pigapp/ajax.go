@@ -45,7 +45,7 @@ func ajaxIdiomVote(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 	} else {
-		return PiError{"Vote choice should be up or down", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Vote choice should be up or down")
 	}
 	ctx := r.Context()
 	idiomID := String2Int(idiomIDStr)
@@ -89,7 +89,7 @@ func ajaxImplVote(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 	} else {
-		return PiError{"Vote choice should be up or down", http.StatusInternalServerError}
+		return PiErrorf(http.StatusBadRequest, "Vote choice should be up or down")
 	}
 	ctx := r.Context()
 	implID := String2Int(implIDStr)

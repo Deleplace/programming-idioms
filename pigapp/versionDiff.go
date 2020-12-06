@@ -36,10 +36,10 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	v2Str := vars["v2"]
 	v2 := String2Int(v2Str)
 	if v2 < v1 {
-		return PiError{fmt.Sprintf("Won't compare v%v with older v%v", v1, v2), http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Won't compare v%v with older v%v", v1, v2)
 	}
 	if v2 == v1 {
-		return PiError{fmt.Sprintf("Won't compare v%v with itself", v1), http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Won't compare v%v with itself", v1)
 	}
 
 	// In case we're interested in a single impl
@@ -56,12 +56,12 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		_, left, err = dao.getIdiomHistory(ctx, idiomID, v1)
 		if err != nil {
-			return PiError{err.Error(), http.StatusNotFound}
+			return PiErrorf(http.StatusNotFound, "%v", err)
 		}
 	}
 	_, right, err := dao.getIdiomHistory(ctx, idiomID, v2)
 	if err != nil {
-		return PiError{err.Error(), http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "%v", err)
 	}
 
 	if singleImpl {

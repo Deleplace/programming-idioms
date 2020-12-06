@@ -19,6 +19,14 @@ func (p PiError) Error() string {
 	return p.ErrorText
 }
 
+// PiErrorf formats a PiError message.
+func PiErrorf(code int, format string, a ...interface{}) PiError {
+	return PiError{
+		ErrorText: fmt.Sprintf(format, a...),
+		Code:      code,
+	}
+}
+
 // ErrorFacade is the Facade for the Error page (BSOD).
 type ErrorFacade struct {
 	PageMeta    PageMeta

@@ -30,7 +30,7 @@ func implCreate(w http.ResponseWriter, r *http.Request) error {
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
 	// This alters the idiom content in the Facade only
@@ -86,7 +86,7 @@ func ajaxOtherImplementations(w http.ResponseWriter, r *http.Request) error {
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
 	myToggles := copyToggles(toggles)

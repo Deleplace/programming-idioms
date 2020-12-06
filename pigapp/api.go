@@ -45,7 +45,7 @@ func jsonIdiom(w http.ResponseWriter, r *http.Request) error {
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
 		// TODO distinguish "not found" from "server error"
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 	// TODO cache the JSON form
 	return printJSON(w, idiom, true)
@@ -58,7 +58,7 @@ func jsonAllIdioms(w http.ResponseWriter, r *http.Request) error {
 	_, idioms, err := dao.getAllIdioms(ctx, 0, "Id")
 	if err != nil {
 		log.Errorf(ctx, "%v", err)
-		return PiError{"Could not retrieve idioms.", http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "Could not retrieve idioms.")
 	}
 	// TODO cache the JSON form
 	return printJSON(w, idioms, true)

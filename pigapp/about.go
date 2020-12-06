@@ -48,7 +48,7 @@ func about(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if err := templates.ExecuteTemplate(w, "page-about", data); err != nil {
-		return PiError{err.Error(), http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
 	return nil
 }
@@ -95,7 +95,7 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 	err = templates.ExecuteTemplate(&buffer, "block-about-all-idioms", data)
 	log.Debugf(ctx, "block-about-all-idioms templating end.")
 	if err != nil {
-		return PiError{err.Error(), http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
 	_, err = w.Write(buffer.Bytes())
 	if err != nil {
@@ -122,7 +122,7 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 	coverage, err := languageCoverage(ctx)
 	if err != nil {
 		log.Errorf(ctx, "Error generating language coverage: %v", err)
-		return PiError{"Couldn't generate language coverage", 500}
+		return PiErrorf(http.StatusInternalServerError, "Couldn't generate language coverage")
 	}
 	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount, coverage.LangImplScore)
 

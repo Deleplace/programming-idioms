@@ -33,7 +33,7 @@ func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 	// This uses the Search API to retrieve just the data we need.
 	cheatsheetLines, err := dao.getCheatSheet(ctx, lang, limit)
 	if err != nil {
-		return PiError{err.Error(), http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
 
 	// Don't repeat idiom ID, title, lead on consecutive rows.
@@ -57,7 +57,7 @@ func cheatsheet(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if err := templates.ExecuteTemplate(w, "page-cheatsheet", data); err != nil {
-		return PiError{err.Error(), http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
 	return nil
 }

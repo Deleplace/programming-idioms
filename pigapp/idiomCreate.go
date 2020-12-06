@@ -30,7 +30,7 @@ func idiomCreate(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if err := templates.ExecuteTemplate(w, "page-idiom-create", data); err != nil {
-		return PiError{err.Error(), http.StatusInternalServerError}
+		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
 	return nil
 }

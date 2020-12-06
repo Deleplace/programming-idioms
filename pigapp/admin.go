@@ -83,20 +83,20 @@ func ajaxCreateRelation(w http.ResponseWriter, r *http.Request) error {
 
 	keyA, idiomA, err := dao.getIdiom(ctx, idiomAId)
 	if err != nil {
-		return PiError{err.Error(), http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "%v", err)
 	}
 
 	keyB, idiomB, err := dao.getIdiom(ctx, idiomBId)
 	if err != nil {
-		return PiError{err.Error(), http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "%v", err)
 	}
 
 	idiomA.AddRelation(idiomB)
 	if err := dao.saveExistingIdiom(ctx, keyA, idiomA); err != nil {
-		return PiError{err.Error(), http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "%v", err)
 	}
 	if err := dao.saveExistingIdiom(ctx, keyB, idiomB); err != nil {
-		return PiError{err.Error(), http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "%v", err)
 	}
 	w.WriteHeader(http.StatusNoContent)
 	return nil

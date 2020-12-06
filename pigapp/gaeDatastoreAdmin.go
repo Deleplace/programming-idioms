@@ -7,6 +7,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/pig"
 
 	"context"
+
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
@@ -23,7 +24,7 @@ func adminResaveEntities(w http.ResponseWriter, r *http.Request) error {
 	case "IdiomHistory":
 		err = resaveAllIdiomHistory(ctx)
 	default:
-		return PiError{ErrorText: "Wrong kind [" + r.FormValue("kind") + "]"}
+		return PiErrorf(http.StatusBadRequest, "Wrong kind [%s]", r.FormValue("kind"))
 	}
 
 	if err != nil {
@@ -76,7 +77,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 
 	idiomIDStr := r.FormValue("idiomId")
 	if idiomIDStr == "" {
-		return PiError{"Mandatory param: idiomId", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Mandatory param: idiomId")
 	}
 	idiomID := String2Int(idiomIDStr)
 
@@ -94,7 +95,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 	}
 	for i := range histories[1:] {
 		if histories[i].VersionDate.After(histories[i+1].VersionDate) {
-			return PiError{ErrorText: "History items not well sorted", Code: 500}
+			return PiErrorf(http.StatusInternalServerError, "History items not well sorted")
 		}
 	}
 

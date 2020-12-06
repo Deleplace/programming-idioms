@@ -61,7 +61,7 @@ func readUserProfile(r *http.Request) UserProfile {
 func mustUserProfile(r *http.Request, w http.ResponseWriter) (UserProfile, error) {
 	profile := readUserProfile(r)
 	if profile.Nickname == "" {
-		return profile, PiError{"You must already have a nickname.", http.StatusBadRequest}
+		return profile, PiErrorf(http.StatusBadRequest, "You must already have a nickname.")
 	}
 	return profile, nil
 }

@@ -209,8 +209,7 @@ func handle(path string, h betterHandler) {
 
 			defer func() {
 				if msg := recover(); msg != nil {
-					msgStr := fmt.Sprintf("%v", msg)
-					errorPage(w, r, PiError{msgStr, http.StatusInternalServerError})
+					errorPage(w, r, PiErrorf(http.StatusInternalServerError, "%v", msg))
 					return
 				}
 			}()
@@ -248,8 +247,7 @@ func handleAjax(path string, h betterHandler) {
 
 			defer func() {
 				if msg := recover(); msg != nil {
-					msgStr := fmt.Sprintf("%v", msg)
-					errorJSON(w, r, PiError{msgStr, http.StatusInternalServerError})
+					errorJSON(w, r, PiErrorf(http.StatusInternalServerError, "%v", msg))
 					return
 				}
 			}()
@@ -295,7 +293,7 @@ func parametersMissing(w http.ResponseWriter, r *http.Request, params ...string)
 		}
 	}
 	if len(missing) > 0 {
-		return PiError{fmt.Sprintf("Missing parameters : %s", missing), http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Missing parameters : %s", missing)
 	}
 	return nil
 }
@@ -310,7 +308,7 @@ func muxVarsMissing(w http.ResponseWriter, r *http.Request, params ...string) er
 		}
 	}
 	if len(missing) > 0 {
-		return PiError{fmt.Sprintf("Missing parameters : %s", missing), http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Missing parameters : %s", missing)
 	}
 	return nil
 }

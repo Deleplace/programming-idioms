@@ -21,7 +21,7 @@ func idiomSave(w http.ResponseWriter, r *http.Request) error {
 
 	if !toggles["anonymousWrite"] {
 		if username == "" {
-			return PiError{"Username is mandatory. No anonymous edit.", http.StatusBadRequest}
+			return PiErrorf(http.StatusBadRequest, "Username is mandatory. No anonymous edit.")
 		}
 	}
 
@@ -66,7 +66,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	log.Infof(ctx, "[%v] is creating new idiom [%v]", username, title)
 
 	if !StringSliceContains(AllLanguages(), language) {
-		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs), http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs)
 	}
 
 	// TODO put that in a transaction!
@@ -142,17 +142,17 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 
 	idiomID := String2Int(existingIDStr)
 	if idiomID == -1 {
-		return PiError{existingIDStr + " is not a valid idiom id.", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "%q is not a valid idiom id.", existingIDStr)
 	}
 
 	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + existingIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", existingIDStr)
 	}
 
 	isAdmin := IsAdmin(r)
 	if idiom.Protected && !isAdmin {
-		return PiError{"Can't edit protected idiom " + existingIDStr, http.StatusUnauthorized}
+		return PiErrorf(http.StatusUnauthorized, "Can't edit protected idiom %q", existingIDStr)
 	}
 	if isAdmin {
 		wasProtected := idiom.Protected
@@ -196,7 +196,7 @@ func existingIdiomSave(w http.ResponseWriter, r *http.Request, username string, 
 	}
 
 	if r.FormValue("idiom_version") != strconv.Itoa(idiom.Version) {
-		return PiError{fmt.Sprintf("Idiom has been concurrently modified (editing version %v, current version is %v)", r.FormValue("idiom_version"), idiom.Version), http.StatusConflict}
+		return PiErrorf(http.StatusConflict, "Idiom has been concurrently modified (editing version %v, current version is %v)", r.FormValue("idiom_version"), idiom.Version)
 	}
 
 	idiom.LastEditor = username

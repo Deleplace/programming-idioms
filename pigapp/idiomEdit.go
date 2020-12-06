@@ -25,7 +25,7 @@ func idiomEdit(w http.ResponseWriter, r *http.Request) error {
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Idiom " + idiomIDStr + " not found : " + err.Error(), http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Idiom %q not found : %v", idiomIDStr, err)
 	}
 
 	userProfile := readUserProfile(r)

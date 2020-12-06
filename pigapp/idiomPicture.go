@@ -33,12 +33,12 @@ func idiomAddPicture(w http.ResponseWriter, r *http.Request) error {
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
-		return PiError{idiomIDStr + " is not a valid idiom id.", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "%q is not a valid idiom id.", idiomIDStr)
 	}
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
 	myToggles := copyToggles(toggles)
@@ -69,12 +69,12 @@ func idiomSavePicture(w http.ResponseWriter, r *http.Request) error {
 
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
-		return PiError{idiomIDStr + " is not a valid idiom id.", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "%q is not a valid idiom id.", idiomIDStr)
 	}
 
 	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
 	idiom.ImageURL = pictureURL

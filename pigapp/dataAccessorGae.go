@@ -113,13 +113,13 @@ func (a *GaeDatastoreAccessor) revert(ctx context.Context, idiomID int, version 
 		return nil, err
 	}
 	if len(histories) == 0 {
-		return nil, PiError{ErrorText: fmt.Sprintf("No history found for idiom %v", idiomID), Code: 400}
+		return nil, PiErrorf(http.StatusBadRequest, "No history found for idiom %v", idiomID)
 	}
 	if len(histories) == 1 {
-		return nil, PiError{ErrorText: fmt.Sprintf("Can't revert the only version of idiom %v", idiomID), Code: 400}
+		return nil, PiErrorf(http.StatusBadRequest, "Can't revert the only version of idiom %v", idiomID)
 	}
 	if histories[0].Version != version {
-		return nil, PiError{ErrorText: fmt.Sprintf("Can't revert idiom %v: last version is not %v", idiomID, version), Code: 400}
+		return nil, PiErrorf(http.StatusBadRequest, "Can't revert idiom %v: last version is not %v", idiomID, version)
 	}
 	log.Infof(ctx, "Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
 	idiomKey := newIdiomKey(ctx, idiomID)
@@ -142,14 +142,14 @@ func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, 
 		return nil, err
 	}
 	if len(histories) == 0 {
-		return nil, PiError{ErrorText: fmt.Sprintf("No history found for idiom %v", idiomID), Code: 400}
+		return nil, PiErrorf(http.StatusBadRequest, "No history found for idiom %v", idiomID)
 	}
 	var errTooManyItems error
 	historyIdiom := &histories[0].Idiom
 	if len(histories) >= 2 {
 		// Workaround for unsolved bug when history versions are inconsistent
 		// Let's just restore the "most recent" candidate
-		errTooManyItems = PiError{ErrorText: fmt.Sprintf("Found many history items for idiom %v, version %v. Restoring most recent candidate.", idiomID, version), Code: 500}
+		errTooManyItems = PiErrorf(http.StatusInternalServerError, "Found many history items for idiom %v, version %v. Restoring most recent candidate.", idiomID, version)
 		for i := range histories {
 			candidate := &histories[i].Idiom
 			if candidate.VersionDate.After(historyIdiom.VersionDate) {
@@ -163,7 +163,7 @@ func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, 
 		return nil, err
 	}
 	if idiom.Version == version {
-		return nil, PiError{ErrorText: fmt.Sprintf("Won't restore idiom %v, version %v to itself.", idiomID, version), Code: 400}
+		return nil, PiErrorf(http.StatusBadRequest, "Won't restore idiom %v, version %v to itself.", idiomID, version)
 	}
 	currentVersion := idiom.Version
 	newVersion := idiom.Version + 1
@@ -569,11 +569,7 @@ func (a *GaeDatastoreAccessor) randomIdiomNotHaving(ctx context.Context, notHavi
 	count := len(keys3)
 
 	if count == 0 {
-		msg := fmt.Sprintf("%v contributors are so effective, that no unimplemented idiom could be found :|", notHavingLang)
-		return nil, nil, PiError{
-			ErrorText: msg,
-			Code:      500,
-		}
+		return nil, nil, PiErrorf(http.StatusInternalServerError, "%v contributors are so effective, that no unimplemented idiom could be found :|", notHavingLang)
 	}
 
 	k := rand.Intn(count)

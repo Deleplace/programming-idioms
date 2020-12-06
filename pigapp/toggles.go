@@ -151,7 +151,7 @@ func allToggleNames() []string {
 func togglesMissing(w http.ResponseWriter, r *http.Request, toggleNames ...string) error {
 	for _, name := range toggleNames {
 		if !toggles[name] {
-			return PiError{"Not available for now.", http.StatusForbidden}
+			return PiErrorf(http.StatusForbidden, "Not available for now.")
 		}
 	}
 	return nil

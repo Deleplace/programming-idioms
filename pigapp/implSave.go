@@ -20,7 +20,7 @@ func implSave(w http.ResponseWriter, r *http.Request) error {
 
 	if !toggles["anonymousWrite"] {
 		if username == "" {
-			return PiError{"Username is mandatory. No anonymous edit.", http.StatusBadRequest}
+			return PiErrorf(http.StatusBadRequest, "Username is mandatory. No anonymous edit.")
 		}
 	}
 
@@ -61,25 +61,25 @@ func newImplSave(w http.ResponseWriter, r *http.Request, username string, idiomI
 	log.Infof(ctx, "[%s] is creating new %s impl for idiom %v", username, PrintNiceLang(language), idiomIDStr)
 
 	if !StringSliceContains(AllLanguages(), language) {
-		return PiError{fmt.Sprintf("Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs), http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Sorry, [%v] is currently not a supported language. Supported languages are %v.", r.FormValue("impl_language"), AllNiceLangs)
 	}
 
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
-		return PiError{idiomIDStr + " is not a valid idiom id.", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "%q is not a valid idiom id.", idiomIDStr)
 	}
 
 	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
 	if err := validateURLFormatOrEmpty(attributionURL); err != nil {
-		return PiError{"Can't accept URL [" + attributionURL + "]", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Can't accept URL [%s]", attributionURL)
 	}
 
 	if err := validateURLFormatOrEmpty(demoURL); err != nil {
-		return PiError{"Can't accept URL [" + demoURL + "]", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Can't accept URL [%s]", demoURL)
 	}
 
 	implID, err := dao.nextImplID(ctx)
@@ -150,27 +150,27 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 
 	idiomID := String2Int(idiomIDStr)
 	if idiomID == -1 {
-		return PiError{idiomIDStr + " is not a valid idiom id.", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "%q is not a valid idiom id.", idiomIDStr)
 	}
 
 	key, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
-		return PiError{"Could not find implementation " + existingImplIDStr + " for idiom " + idiomIDStr, http.StatusNotFound}
+		return PiErrorf(http.StatusNotFound, "Could not find implementation %q for idiom %q", existingImplIDStr, idiomIDStr)
 	}
 
 	implID := String2Int(existingImplIDStr)
 	if implID == -1 {
-		return PiError{existingImplIDStr + " is not a valid implementation id.", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "%q is not a valid implementation id.", existingImplIDStr)
 	}
 
 	_, impl, _ := idiom.FindImplInIdiom(implID)
 
 	isAdmin := IsAdmin(r)
 	if idiom.Protected && !isAdmin {
-		return PiError{"Can't edit protected idiom " + idiomIDStr, http.StatusUnauthorized}
+		return PiErrorf(http.StatusUnauthorized, "Can't edit protected idiom %q", idiomIDStr)
 	}
 	if impl.Protected && !isAdmin {
-		return PiError{"Can't edit protected impl " + existingImplIDStr, http.StatusUnauthorized}
+		return PiErrorf(http.StatusUnauthorized, "Can't edit protected impl %q", existingImplIDStr)
 	}
 	if isAdmin {
 		wasProtected := impl.Protected
@@ -185,15 +185,15 @@ func existingImplSave(w http.ResponseWriter, r *http.Request, username string, i
 	}
 
 	if r.FormValue("impl_version") != strconv.Itoa(impl.Version) {
-		return PiError{fmt.Sprintf("Implementation has been concurrently modified (editing version %v, current version is %v)", r.FormValue("impl_version"), impl.Version), http.StatusConflict}
+		return PiErrorf(http.StatusConflict, "Implementation has been concurrently modified (editing version %v, current version is %v)", r.FormValue("impl_version"), impl.Version)
 	}
 
 	if err := validateURLFormatOrEmpty(attributionURL); err != nil {
-		return PiError{"Can't accept URL [" + attributionURL + "]", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Can't accept URL [%s]", attributionURL)
 	}
 
 	if err := validateURLFormatOrEmpty(demoURL); err != nil {
-		return PiError{"Can't accept URL [" + demoURL + "]", http.StatusBadRequest}
+		return PiErrorf(http.StatusBadRequest, "Can't accept URL [%s]", demoURL)
 	}
 
 	idiom.EditSummary = "[" + PrintNiceLang(impl.LanguageName) + "] " + r.FormValue("edit_summary")
