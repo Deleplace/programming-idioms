@@ -1002,34 +1002,44 @@ $(function() {
 	// Cheatsheet (printable) page
 	//
 	$("button.page-print").click(function(){
+		using("print");
 		window.print();
 	});
 
 	$(".cheatsheet-lines button.close").click(function(){
-		$(this).closest("tr").remove();
+		var line = $(this).closest("tr");
+		var idiomID = line.find("th.idiom-id").text();
+		line.remove();	
+		using("cheatsheet/remove-line/" + idiomID);
 	});
 
 	$(".page-cheatsheet #showIdiomId").change(function(){
 		if( $(this).is(':checked') ){
 			$("th.idiom-id").show();
+			using("cheatsheet/options/idiom-id/show");
 		}else{
 			$("th.idiom-id").hide();
+			using("cheatsheet/options/idiom-id/hide");
 		}
 	});
 
 	$(".page-cheatsheet #showImports").change(function(){
 		if( $(this).is(':checked') ){
 			$(".piimports").show();
+			using("cheatsheet/options/imports/show");
 		}else{
 			$(".piimports").hide();
+			using("cheatsheet/options/imports/hide");
 		}
 	});
 
 	$(".page-cheatsheet #showComments").change(function(){
 		if( $(this).is(':checked') ){
 			$(".impl-comment").show();
+			using("cheatsheet/options/comments/show");
 		}else{
 			$(".impl-comment").hide();
+			using("cheatsheet/options/comments/hide");
 		}
 	});
 
@@ -1043,6 +1053,7 @@ $(function() {
 				$(this).show('normal');
 			}
 		});
+		using("cheatsheet/options/filter/" + word); // spaces will appear as %20
 	});
 
 	function addFavlangsInCookie(langs) {
