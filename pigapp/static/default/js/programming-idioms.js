@@ -1044,17 +1044,36 @@ $(function() {
 	});
 
 	$(".page-cheatsheet #filter").change(function(){
-		var word = $(this).val();
-		$("tr.cheatsheet-line").hide();
-		$("tr.cheatsheet-line").each(function(){
-			var lowerHtml = $(this).html().toLowerCase();
-			var lowerWord = word.toLowerCase();
-			if( lowerHtml.indexOf(lowerWord) !== -1 ){
-				$(this).show('normal');
-			}
-		});
+		applyCheatsheetFilters();
+		var word = $("#filter").val();
 		using("cheatsheet/options/filter/" + word); // spaces will appear as %20
 	});
+
+	function applyCheatsheetFilters() {
+		var word = $("#filter").val();
+		$("tr.cheatsheet-line").each(function(){
+			var show = true;
+		
+			// Full-text (raw, no tokenization)
+			if(word){
+				var lowerHtml = $(this).html().toLowerCase();
+				var lowerWord = word.toLowerCase();
+				if( lowerHtml.indexOf(lowerWord) === -1 ){
+					show = false;
+				}
+			}
+
+			// Restrict to existing impls
+			// TODO!
+
+			if(show) {
+				$(this).show('normal');
+			} else {
+				$(this).hide('normal');
+			}
+		});
+
+	}
 
 	function addFavlangsInCookie(langs) {
 		var langsConcat = $.cookie("my-languages") || "_";
