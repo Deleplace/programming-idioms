@@ -13,11 +13,6 @@
     color: #BBB;
 }
 
-button.close {
-    /* Buggy when more than 1 impl per language. Disabled, for now. */
-    display: none;
-}
-
 @media print {
     .page-cheatsheet.multi .idiom-title-and-lead {
         width: 20%;
