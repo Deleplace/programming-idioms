@@ -43,49 +43,47 @@
                         {{end}}
                     </tr>
                 </thead>
-				{{range $line := .Lines}}
-                    {{range $i, $_ := .Depth}}
+                {{range $line := .Lines}}
                     <tr class="cheatsheet-line">
-                        {{$dotted := "dotted"}}
-                        {{if ge $i 1}}
-                            {{$dotted = ""}}
-                        {{end}}
-						<th class="idiom-id {{$dotted}}">{{if eq $i 0}}{{$line.IdiomID}}{{end}}</th>
-						<td class="idiom-title-and-lead {{$dotted}}">
-                            {{if eq $i 0}}
-                                <div class="idiom-title">
-                                    <a href="{{niceIdiomIDTitleURL $line.IdiomID $line.IdiomTitle}}">
-                                        {{markup2CSS $line.IdiomTitle}}
-                                    </a>
-                                </div>
-                                <div>{{markup2CSS $line.IdiomLeadParagraph}}</div>
-                            {{else}}
-                                <div class="alt-impl">Alternative implementation...</div>
-                            {{end}}
+						<th class="idiom-id dotted">
+                            {{$line.IdiomID}}
+                        </th>
+						<td class="idiom-title-and-lead dotted">
+                            <div class="idiom-title">
+                                <a href="{{niceIdiomIDTitleURL $line.IdiomID $line.IdiomTitle}}">
+                                    {{markup2CSS $line.IdiomTitle}}
+                                </a>
+                            </div>
+                            <div>
+                                {{markup2CSS $line.IdiomLeadParagraph}}
+                            </div>
                         </td>
                             {{range $line.ByLanguage}}
-                                <td class="impl-code {{$dotted}}">
-                                {{if lt $i (len .) }}
-                                    {{with index . $i}}
+                                <td class="impl-code dotted">
+                                    {{range $i, $doc := .}}
+                                            {{if gt $i 0}}
+                                                <div class="alt-impl-breaker">Alternative implementation:</div>
+                                            {{end}}
                                             {{if .ImplImportsBlock}}
-                                            <div class="piimports" style="display: none;">
-                                                <pre>{{.ImplImportsBlock}}</pre>
-                                            </div>
+                                                <div class="piimports" style="display: none;">
+                                                    <pre>{{$doc.ImplImportsBlock}}</pre>
+                                                </div>
                                             {{end}}
                                             <div class="picode">
-                                                <pre>{{.ImplCodeBlock}}</pre>
+                                                <pre>{{$doc.ImplCodeBlock}}</pre>
                                             </div>
                                             <div class="impl-comment" style="display: none;">
-                                                {{markup2CSS (atom2string .ImplCodeBlockComment)}}
+                                                {{markup2CSS (atom2string $doc.ImplCodeBlockComment)}}
                                             </div>
                                     {{end}}
-                                {{end}}
                                 </td>
                             {{end}}
-                        {{end}}
-						<td><button type="button" class="close">&times;</button></div></td>
+						<td>
+                            <button type="button" class="close">&times;</button>
+                        </td>
                     </tr>
                 {{end}}
+
 			</table>
 		</div>
 	</div>

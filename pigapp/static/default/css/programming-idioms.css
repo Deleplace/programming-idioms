@@ -1088,7 +1088,7 @@ footer a.visited {
 	padding-left: 12px;
 }
 
-/* Individual cheatsheet */
+/* Individual cheatsheet (and base for multi) */
 
 .page-cheatsheet h2 {
 	margin-top: 5px;
@@ -1168,6 +1168,15 @@ footer a.visited {
   font-size: 35px;
 }
 
+/* Multiple cheatsheet */
+
+.page-cheatsheet .alt-impl-breaker {
+	margin-top: 1em;
+	font-style: italic;
+	font-weight: bold;
+	color: #888;
+}
+
 /* 
  * CSS for printing
  */
@@ -1217,6 +1226,10 @@ footer a.visited {
 	border-bottom-left-radius: 0px !important;
 	border-bottom-right-radius: 0px !important;
 	color: #777 !important;
+  }
+
+  .page-cheatsheet .alt-impl-breaker {
+	color: #888 !important;
   }
 }
 
