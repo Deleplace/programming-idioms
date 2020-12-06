@@ -1105,6 +1105,16 @@ footer a.visited {
 .page-cheatsheet .form-search {
 	display:none;
 }
+.page-cheatsheet .guidance {
+	float: right;
+	margin-right: 4em;
+	color: #777;
+	font-weight: bold;
+}
+
+.page-cheatsheet .guidance li {
+	list-style: none;
+}
 
 .page-cheatsheet .filters {
 	float: right;
@@ -1176,6 +1186,14 @@ footer a.visited {
   .new-impl-invitation,
   .about-link {
     display:none !important;
+  }
+
+  .page-cheatsheet .alt-impl {
+    color: #777 !important;
+  }
+
+  .page-cheatsheet .guidance{
+    display: none !important;
   }
 
   .page-cheatsheet .filters{
