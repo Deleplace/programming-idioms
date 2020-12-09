@@ -18,7 +18,7 @@ const ThemeVersion = "default"
 
 // ThemeDate is the prefix used for "revving" the static files and enable long-term HTTP cache.
 // It MUST end with underscore _ (see app.yaml)
-const ThemeDate = "20201207_"
+const ThemeDate = "20201209_"
 
 var r = mux.NewRouter()
 
@@ -67,8 +67,8 @@ func initRoutes() {
 		handle("/rss-recent-changes", rssRecentChanges)
 		handle("/my/{nickname}/{langs}", bookmarkableUserURL)
 		handle("/my/{langs}", bookmarkableUserURL)
-		handle("/cheatsheet/{lang}", cheatsheet)
-		handle("/cheatsheet/{lang1}/{lang2}", cheatsheetDouble)
+		// handle("/cheatsheet/{lang}", cheatsheet)
+		handle("/cheatsheet/{langs:.+}", cheatsheetMulti)
 		handleAjax("/typeahead-languages", typeaheadLanguages)
 		handleAjax("/supported-languages", supportedLanguages)
 		handleAjax("/ajax-other-implementations", ajaxOtherImplementations)

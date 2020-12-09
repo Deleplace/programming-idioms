@@ -1,11 +1,17 @@
-.page-cheatsheet.multi .idiom-title-and-lead {
+table.cheatsheet-lines th.idiom-title-and-lead{
     width: 20%;
 }
 
+table.cheatsheet-lines.with-1-langs th.idiom-title-and-lead {
+    /* For a single language, we allow more space for the title. */
+    width: 35%;
+}
+
 .page-cheatsheet.multi .impl-code {
-    width: 40%;
+    width: auto;
     padding-right: 0.6em;
 }
+
 
 .idiom-title-and-lead .alt-impl {
     font-style: italic;
@@ -16,13 +22,29 @@
 .page-print {
     float: right;
     margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+.languages-overflow {
+    text-align:center;
+    margin-left:20%;
+    margin-right:30%;
+    transform: rotate(-1.5deg);
+    font-size: 1.4rem;
+    background-color: #FEE;
+    color: #500;
+    font-weight: bold;
+}
+
+.languages-overflow .shout {
+    font-size: larger;
 }
 
 @media print {
     .page-cheatsheet.multi .idiom-title-and-lead {
         width: 20%;
     }
-    .page-cheatsheet.multi .impl-code {
-        width: 40%;
+    .languages-overflow {
+        display: none;
     }
 }

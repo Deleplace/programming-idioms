@@ -9,6 +9,9 @@ import (
 	gaesearch "google.golang.org/appengine/search"
 )
 
+// LEGACY
+// This code is currently not used. See cheatsheetmulti.go, even for 1 single language.
+
 //
 // A Cheat Sheet is a single page containing the implementations of all idioms, for a
 // single language.

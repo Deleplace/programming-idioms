@@ -6,6 +6,12 @@
 	{{template "header-cheatsheet-print" .}}  
 	<div class="page-content container-fluid">
 
+        {{if ge (len .Langs) 3}}
+            <div class="languages-overflow">
+                {{len .Langs}} languages side-by-side <span class="shout">are you out of your mind</span> that will never fit on a page
+            </div>
+        {{end}}
+
         <button class="btn page-print icon-print icon-3x"></button>
 
 		<div class="filters form-inline">
@@ -24,13 +30,15 @@
 
                 <input type="text" id="filter" class="input-small" placeholder="filter..." />
             </div>
-            <div>
-                {{range .Langs}}
-                    <label class="checkbox" title="Hide lines that don't have any {{.}} implementation">
-                        <input type="checkbox" class="restrict-having" data-lang="{{.}}" checked="checked" /> Only entries having {{.}}
-                    </label>
-                {{end}}
-            </div>
+            {{if ge (len .Langs) 2}}
+                <div>
+                    {{range .Langs}}
+                        <label class="checkbox" title="Hide lines that don't have any {{.}} implementation">
+                            <input type="checkbox" class="restrict-having" data-lang="{{.}}" checked="checked" /> Only entries having {{.}}
+                        </label>
+                    {{end}}
+                </div>
+            {{end}}
         </div>
         
 		<div class="guidance">
@@ -42,13 +50,14 @@
         </div>
 
 		<div>
-			<table class="cheatsheet-lines">
+            {{$nbLangs := len .Langs}}
+			<table class="cheatsheet-lines with-{{$nbLangs}}-langs">
                 <thead>
                     <tr>
                         <th class="idiom-id"></th>
-                        <th></th>
+                        <th class="idiom-title-and-lead"></th>
                         {{range .Langs}}
-                        <th>{{. | printNiceLang}}</th>
+                            <th class="one-lang-column out-of-{{$nbLangs}}">{{. | printNiceLang}}</th>
                         {{end}}
                     </tr>
                 </thead>

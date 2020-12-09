@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
+	"strings"
 
 	. "github.com/Deleplace/programming-idioms/pig"
-	"github.com/gorilla/mux"
 )
 
 // CheatSheetMultipleFacade is the Facade for the Cheat Sheets with multiple languages.
@@ -44,9 +44,14 @@ func (chsh *cheatSheetLineMulti) computeDepth() {
 	chsh.Depth = make([]struct{}, n)
 }
 
-func cheatsheetDouble(w http.ResponseWriter, r *http.Request) error {
-	vars := mux.Vars(r)
-	langs := []string{vars["lang1"], vars["lang2"]}
+func cheatsheetMulti(w http.ResponseWriter, r *http.Request) error {
+	subpath := strings.TrimPrefix(r.URL.Path, "/cheatsheet/")
+	subpath = strings.TrimSuffix(subpath, "/")
+	langs := strings.Split(subpath, "/")
+	return cheatsheetMultiLangs(w, r, langs)
+}
+
+func cheatsheetMultiLangs(w http.ResponseWriter, r *http.Request, langs []string) error {
 	ctx := r.Context()
 
 	for i := range langs {
