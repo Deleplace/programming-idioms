@@ -221,21 +221,21 @@ h3 a {
 .header-print {
 	margin: 0px 0px 10px 0px;
 	padding: 0px;
+	padding-bottom: 4px;
+	min-height: 2rem;
 }
 
-.header-print img {
-	margin: 0px 0px 5px 0px;
+header.header-print h1 {
+	line-height: 25px;
+	font-size: 20px;
+	margin-left: 0.2rem;
 }
 
-.header-print h1 {
+header.header-print h1 > a {
 	font-size: 20px;
 	overflow-x : hidden;
 	margin: 0px;
 	line-height: normal;
-}
-
-.header-print h1 a {
-	color: #005;
 }
 
 .header-print .slogan {
