@@ -1,0 +1,53 @@
+{{define "sitelinks-searchbox"}}
+    <!-- Activate Google Sitelinks Searchbox  -->
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://programming-idioms.org/",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://programming-idioms.org/search/{search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
+{{end}}
+
+{{define "structured-data-QA"}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "QAPage",
+            "mainEntity": {
+                "@type": "Question",
+                "name": "{{.Question}}",
+                "text": "{{.Text}}",
+                "answerCount": {{len .Answers}},
+                "dateCreated": "{{.DateCreated}}",
+                "author": {
+                    "@type": "Person",
+                    "name": "{{.Author}}"
+                },
+                {{if .ImageURL}}
+                    "image": "{{.ImageURL}}",
+                {{end}}
+                "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License",
+                "suggestedAnswer": [
+                    {{range $i, $a := .Answers}}
+                        {{if ge $i 1}},{{end}}{
+                            "@type": "Answer",
+                            "text": "{{.Text}}",
+                            "dateCreated": "{{.DateCreated}}",
+                            "url": "{{.URL}}",
+                            "author": {
+                                "@type": "Person",
+                                "name": "{{.Author}}"
+                            }
+                        }
+                    {{end}}
+                ]
+            }
+        }
+    </script>
+{{end}}
