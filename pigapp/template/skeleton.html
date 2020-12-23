@@ -83,28 +83,28 @@
 						"@type": "QAPage",
 						"mainEntity": {
 							"@type": "Question",
-							"name": {{.Question}},
-							"text": {{.Text}},
+							"name": "{{.Question}}",
+							"text": "{{.Text}}",
 							"answerCount": {{len .Answers}},
-							"dateCreated": {{.DateCreated}},
+							"dateCreated": "{{.DateCreated}}",
 							"author": {
 								"@type": "Person",
-								"name": {{.Author}}
+								"name": "{{.Author}}"
 							},
 							{{if .ImageURL}}
-								"image": {{.ImageURL}},
+								"image": "{{.ImageURL}}",
 							{{end}}
 							"license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License",
 							"suggestedAnswer": [
 								{{range $i, $a := .Answers}}
 									{{if ge $i 1}},{{end}}{
 										"@type": "Answer",
-										"text": {{.Text}},
-										"dateCreated": {{.DateCreated}},
-										"url": {{.URL}},
+										"text": "{{.Text}}",
+										"dateCreated": "{{.DateCreated}}",
+										"url": "{{.URL}}",
 										"author": {
 											"@type": "Person",
-											"name": {{.Author}}
+											"name": "{{.Author}}"
 										}
 									}
 								{{end}}
