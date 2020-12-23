@@ -27,6 +27,8 @@ type PageMeta struct {
 	ExtraJs []string
 	// PreventIndexingRobots for edit pages, etc.
 	PreventIndexingRobots bool
+	// SEO structured data
+	QA QAStructuredData
 }
 
 // UserProfile is a soft (non-secure) user profile
@@ -70,4 +72,42 @@ type LanguageSingleSelector struct {
 	FieldName string
 	// Value of the widget: standardized name of a programming language
 	Selected string
+}
+
+// QAStructuredData is SEO structured data to display Rich results in
+// search engines. It maps to a schema.org Q&A page.
+// See https://developers.google.com/search/docs/data-types/qapage
+type QAStructuredData struct {
+	// Question is a language-specific specialization of the Idiom title,
+	// e.g. "Depth-first traversing of a binary tree, in Python".
+	// It may have the same value as the HTML page title.
+	// When Question is empty, it is safe to assume the QAStructuredData is
+	// empty/invalid and should not be written to the HTML page.
+	Question string
+
+	// Text is the long form of the question. It maps to the Idiom's lead paragraph.
+	Text string
+
+	Author string
+
+	DateCreated string
+
+	ImageURL string
+
+	Answers []QAStructuredDataAnswer
+}
+
+// QAStructuredDataAnswer is structured data for a single Answer, i.e. a
+// single Implementation.
+// See https://developers.google.com/search/docs/data-types/qapage
+type QAStructuredDataAnswer struct {
+	// Text is mapped to the Implementation's CodeBlock (snippet).
+	Text string
+
+	Author string
+
+	DateCreated string
+
+	// URL is the absolute nice URL to this specific implementation.
+	URL string
 }

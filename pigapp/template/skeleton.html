@@ -74,7 +74,46 @@
 		{{end}}
 		<link rel="search" type="application/opensearchdescription+xml" title="Programming Idioms" href="{{hostPrefix}}{{themeDir}}/xml/search-idioms.xml">
         <link rel="alternate" type="application/rss+xml" title="New idioms" href="/rss-recently-created"/>
-        <link rel="alternate" type="application/rss+xml" title="Recent updates" href="/rss-recently-updated"/>
+		<link rel="alternate" type="application/rss+xml" title="Recent updates" href="/rss-recently-updated"/>
+		{{with .QA}}
+			{{if .Question}}
+				<script type="application/ld+json">
+					{
+						"@context": "https://schema.org",
+						"@type": "QAPage",
+						"mainEntity": {
+							"@type": "Question",
+							"name": {{.Question}},
+							"text": {{.Text}},
+							"answerCount": {{len .Answers}},
+							"dateCreated": {{.DateCreated}},
+							"author": {
+								"@type": "Person",
+								"name": {{.Author}}
+							},
+							{{if .ImageURL}}
+								"image": {{.ImageURL}},
+							{{end}}
+							"license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License",
+							"suggestedAnswer": [
+								{{range $i, $a := .Answers}}
+									{{if ge $i 1}},{{end}}{
+										"@type": "Answer",
+										"text": {{.Text}},
+										"dateCreated": {{.DateCreated}},
+										"url": {{.URL}},
+										"author": {
+											"@type": "Person",
+											"name": {{.Author}}
+										}
+									}
+								{{end}}
+							]
+						}
+					}
+				</script>
+			{{end}}
+		{{end}}
 	</head>
 {{end}}
 

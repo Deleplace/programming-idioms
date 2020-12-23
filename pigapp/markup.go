@@ -53,3 +53,14 @@ func linebreak(sentence string) string {
 	sentence = strings.Replace(sentence, "\n", "<br/>", -1)
 	return sentence
 }
+
+// remove the leading underscore
+//
+// _x -> x
+func deemphasize(sentence string) string {
+	// After a word break,
+	// an underscore char,
+	// and then a group of valid identifier chars.
+	re := regexp.MustCompile("\\b_([\\w$]+)")
+	return re.ReplaceAllString(sentence, "${1}")
+}
