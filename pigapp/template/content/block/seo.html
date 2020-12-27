@@ -1,0 +1,15 @@
+{{define "sitelinks-searchbox"}}
+    <!-- Activate Google Sitelinks Searchbox  -->
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://programming-idioms.org/",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://programming-idioms.org/search/{search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
+{{end}}
