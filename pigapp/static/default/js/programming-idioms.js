@@ -504,6 +504,13 @@ $(function() {
 		return /\/idiom\/[0-9]+\/[^/]+\/[0-9]+\/[^/]+/.test(window.location.pathname);
 	}
 
+	function extractLangFromURL() {
+		let parts = window.location.pathname.split(/\//);
+		let lang = parts[parts.length-1];
+		lang = capitalizeFirstLetter(lang);
+		return lang;
+	}
+
 	function capitalizeFirstLetter(string) {
 		// https://stackoverflow.com/a/1026087
 		return string.charAt(0).toUpperCase() + string.slice(1);
@@ -511,9 +518,7 @@ $(function() {
 
 	if( isIdiomDetailWithLang() ) {
 		// #112 Auto add favorite languages
-		let parts = window.location.pathname.split(/\//);
-		let lang = parts[parts.length-1];
-		lang = capitalizeFirstLetter(lang);
+		let lang = extractLangFromURL();
 		if(!hasFavlangInCookie(lang)) {
 			addFavlang(lang);
 		}
@@ -1156,5 +1161,66 @@ $(function() {
 		addFavlangsInCookie(langs);
 		// Filter out lines "assumed uninteresting"
 		applyCheatsheetFilters();
+	}
+
+	function generateQAStructuredData(idiom) {
+		let lang = extractLangFromURL();
+		let questionName = document.title;
+		let questionText = $(".idiom-lead-paragraph").text();
+		let questionCreation = idiom.CreationDate.substring(0,10);
+		let questionAuthor = idiom.Author;
+		// let questionText = idiom.LeadParagraph;
+		let answers = [];
+		idiom.Implementations.forEach(function(impl){
+			if(impl.LanguageName.toLowerCase() != lang.toLowerCase())
+				return;
+			let parts = window.location.href.split(/\//);
+			let n = parts.length;
+			parts[n-2] = impl.Id;
+			let implAbsoluteURL = parts.join("/");
+			let answer = {
+				"@type": "Answer",
+				"text": impl.CodeBlock,
+				"dateCreated": impl.CreationDate.substring(0,10),
+				"url": implAbsoluteURL,
+				"author": {
+					"@type": "Person",
+					"name": impl.Author
+				}
+			};
+			 answers.push(answer);
+		});
+
+		const script = document.createElement('script');
+		script.setAttribute('type', 'application/ld+json');
+		let sd = {
+			"mainEntity": {
+				"@context": "https://schema.org",
+				"@type": "QAPage",
+				"name": questionName,
+				"text": questionText,
+				"answerCount": answers.length,
+				"dateCreated": questionCreation,
+				"author": {
+                    "@type": "Person",
+                    "name": questionAuthor
+                },
+				"license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License",
+				"suggestedAnswer": answers
+			}
+		};
+		script.textContent = JSON.stringify(sd, null, "  ");
+		document.head.appendChild(script);
+		// console.debug("Just injected", script.textContent);
+		console.debug("Generated Q&A structured data");
+	}
+	
+	if( isIdiomDetailWithLang() ) {
+		let idiomID = $(".idiom-summary-large").attr("data-idiom-id"); // Or extract from the URL?
+		fetch('/api/idiom/' + idiomID)
+		.then(function(response){ return response.json()})
+		.then(function(idiom) {
+			generateQAStructuredData(idiom);
+		});
 	}
 });
