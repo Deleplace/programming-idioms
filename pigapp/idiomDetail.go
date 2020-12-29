@@ -224,6 +224,7 @@ func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]s
 
 	idiomIDStr := vars["idiomId"]
 	idiomID := String2Int(idiomIDStr)
+	var canonicalURL string
 
 	_, idiom, err := dao.getIdiom(ctx, idiomID)
 	if err != nil {
@@ -253,6 +254,10 @@ func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]s
 			properURL := NiceIdiomURL(idiom)
 			return needRedirectError(properURL)
 		}
+		canonicalURL = host() + NiceImplRelativeURL(idiom, selectedImplID, selectedImplLang)
+	} else {
+		// Just the idiom, no specific impl
+		canonicalURL = host() + NiceIdiomRelativeURL(idiom)
 	}
 
 	implFavoriteLanguagesFirstWithOrder(idiom, nil, selectedImplLang, true)
@@ -292,6 +297,7 @@ func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]s
 		PageMeta: PageMeta{
 			PageTitle:    pageTitle,
 			PageKeywords: idiom.ExtraKeywords,
+			CanonicalURL: canonicalURL,
 			Toggles:      myToggles,
 		},
 		UserProfile:      EmptyUserProfile(),
