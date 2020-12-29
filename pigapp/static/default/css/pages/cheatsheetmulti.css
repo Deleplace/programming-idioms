@@ -40,6 +40,28 @@ table.cheatsheet-lines.with-1-langs th.idiom-title-and-lead {
     font-size: larger;
 }
 
+.implementation .move-up {
+    margin-top: -24px;
+    margin-right: 7px;
+}
+
+.implementation .copy-code-to-clipboard {
+	visibility: hidden;
+}
+
+.implementation a.copy-code-to-clipboard {
+	color: #888;
+	text-decoration: none;
+}
+
+.implementation a.copy-code-to-clipboard:hover {
+	text-decoration: none;
+}
+
+.implementation .picode:hover .copy-code-to-clipboard {
+	visibility: visible;
+}
+
 @media print {
     .page-cheatsheet.multi .idiom-title-and-lead {
         width: 20%;

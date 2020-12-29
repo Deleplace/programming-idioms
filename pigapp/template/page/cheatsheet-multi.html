@@ -80,20 +80,28 @@
                             {{range $j, $docs := $line.ByLanguage}}
                                 <td class="impl-code dotted lang-{{index $langs $j}}">
                                     {{range $i, $doc := $docs}}
+                                        <div class="implementation">
                                             {{if gt $i 0}}
                                                 <div class="alt-impl-breaker">Alternative implementation:</div>
                                             {{end}}
                                             {{if .ImplImportsBlock}}
                                                 <div class="piimports" style="display: none;">
                                                     <pre>{{$doc.ImplImportsBlock}}</pre>
+                                                    <div class="right copy-imports-to-clipboard">
+                                                        <a href="#"><i class="icon-copy" title="Copy imports to the clipboard"></i></a>
+                                                    </div>
                                                 </div>
                                             {{end}}
                                             <div class="picode">
                                                 <pre>{{$doc.ImplCodeBlock}}</pre>
+                                                <div class="right move-up">
+                                                    <a href="#" class="copy-code-to-clipboard"><i class="icon-copy" title="Copy code to the clipboard"></i></a>
+                                                </div>
                                             </div>
                                             <div class="impl-comment" style="display: none;">
                                                 {{markup2CSS (atom2string $doc.ImplCodeBlockComment)}}
                                             </div>
+                                        </div>
                                     {{end}}
                                 </td>
                             {{end}}
