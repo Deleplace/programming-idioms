@@ -354,6 +354,15 @@ header.header-print h1 > a {
 	margin-bottom: 1em;
 }
 
+ul.related-idioms {
+	margin-left: 0.6em;
+	list-style-type: none;
+}
+
+.related-idioms li {
+	margin-bottom: 0.4em;
+}
+
 /* Idiom navigation lists */
 
 .idioms_nav_list h2,.idioms_nav_list h3 {

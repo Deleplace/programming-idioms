@@ -12,7 +12,7 @@
 	
 	{{if .RelatedIdiomIds}}
 		<h4>Related idioms</h4>
-		<ul>
+		<ul class="related-idioms">
 			{{range $i,$rid := .RelatedIdiomIds}}
 				{{$title := index $.RelatedIdiomTitles $i}}
 				<li><a href="{{niceIdiomIDTitleURL $rid $title}}">{{$title}}</a></li>
