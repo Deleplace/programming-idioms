@@ -1,5 +1,5 @@
 /*
- * Admin only. Do not include in front pages.
+ * Admin only. Do not include pages when the user is not admin.
  */
 
 $(function() {

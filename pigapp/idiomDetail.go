@@ -191,6 +191,11 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		extraKeywords = langAliases + " " + extraKeywords
 	}
 
+	extraJS := []string{}
+	if IsAdmin(r) {
+		extraJS = append(extraJS, hostPrefix()+themeDirectory()+"/js/programming-idioms-admin.js")
+	}
+
 	myToggles := copyToggles(toggles)
 	myToggles["actionEditIdiom"] = !idiom.Protected || IsAdmin(r)
 	myToggles["actionIdiomHistory"] = true
@@ -201,6 +206,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			PageKeywords: extraKeywords,
 			CanonicalURL: canonicalURL,
 			Toggles:      myToggles,
+			ExtraJs:      extraJS,
 		},
 		UserProfile:      userProfile,
 		Idiom:            idiom,

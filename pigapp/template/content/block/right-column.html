@@ -1,24 +1,39 @@
 {{define "right-column"}}
 <div class="right_column">
-	<div class="created_by">
-		<h4>Idiom created by</h4>
-		{{.Author}}
-	</div>
+	{{$isAdmin := .Deco.IsAdmin}}
+	{{with .Data}}
+		{{$idiom := .}}
+		<div class="created_by">
+			<h4>Idiom created by</h4>
+			{{.Author}}
+		</div>
 
-	<div>
-		{{/* TODO should check .PageMeta.Toggles.actionIdiomHistory */}}
-		<a href="{{hostPrefix}}/history/{{.Id}}">View history</a>
-	</div>
-	
-	{{if .RelatedIdiomIds}}
-		<h4>Related idioms</h4>
-		<ul class="related-idioms">
-			{{range $i,$rid := .RelatedIdiomIds}}
-				{{$title := index $.RelatedIdiomTitles $i}}
-				<li><a href="{{niceIdiomIDTitleURL $rid $title}}">{{$title}}</a></li>
-			{{end}} 
-		</ul>
-	{{end}} 
+		<div>
+			{{/* TODO should check .PageMeta.Toggles.actionIdiomHistory */}}
+			<a href="{{hostPrefix}}/history/{{.Id}}">View history</a>
+		</div>
+		
+		{{if .RelatedIdiomIds}}
+			<h4>Related idioms</h4>
+			<ul class="related-idioms">
+				{{range $i,$rid := .RelatedIdiomIds}}
+					{{$title := index $idiom.RelatedIdiomTitles $i}}
+					<li><a href="{{niceIdiomIDTitleURL $rid $title}}">{{$title}}</a></li>
+				{{end}} 
+			</ul>
+		{{end}} 
 
+		{{if $isAdmin}}
+			<form id="relation-form" enctype="multipart/form-data">
+				<h4>Add relation</h4>
+				<fieldset>
+				  <input type="hidden" name="idiomAId" value="{{.Id}}" class="idiomA" />
+				  <label for="idiomBId">Other idiom ID</label>
+				  <input type="text" name="idiomBId" class="idiomB input-small" required="required" value="" /> <br/>
+				  <input type="button" class="btn create-relation" value="Associate" />
+				</fieldset>
+			  </form>
+		{{end}}
+	{{end}}
 </div>
 {{end}}

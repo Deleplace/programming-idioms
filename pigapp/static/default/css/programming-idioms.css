@@ -277,6 +277,7 @@ header.header-print h1 > a {
 }
 
 .message-zone .pimessage {
+	margin-top: 0.6em;
 	padding-left: 20px;
 	border-radius: 4px;
 }
@@ -361,6 +362,10 @@ ul.related-idioms {
 
 .related-idioms li {
 	margin-bottom: 0.4em;
+}
+
+.right_column #relation-form h4 {
+	margin-top: 3em;
 }
 
 /* Idiom navigation lists */
