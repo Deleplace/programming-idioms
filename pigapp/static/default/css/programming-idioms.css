@@ -66,6 +66,11 @@ legend {
 	background-color: #0044cc;
 }
 
+li[aria-selected=false] .badge-lang {
+	/* Non-active tabs shall be shown different: dim. */
+	background-color: #275ecc;
+}
+
 .badge-fav-lang {
 	background-color: #468847;
 }
