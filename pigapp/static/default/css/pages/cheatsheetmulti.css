@@ -1,3 +1,9 @@
+table.cheatsheet-lines th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
 table.cheatsheet-lines th.idiom-title-and-lead{
     width: 20%;
 }
