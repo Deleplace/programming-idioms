@@ -125,6 +125,7 @@ func versionDiff(w http.ResponseWriter, r *http.Request) error {
 			PageTitle:             right.Title,
 			Toggles:               myToggles,
 			PreventIndexingRobots: true,
+			ExtraJs:               []string{hostPrefix() + themeDirectory() + "/js/pages/idiom-history.js"},
 		},
 		UserProfile:     userProfile,
 		IdiomLeft:       left,

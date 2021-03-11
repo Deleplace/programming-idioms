@@ -1093,6 +1093,12 @@ footer a.visited {
 	text-align: right;
 }
 
+a.history-copy-imports-to-clipboard,
+a.history-copy-code-to-clipboard,
+a.history-copy-comments-to-clipboard {
+	text-decoration: none;
+}
+
 /* Missing fields list */
 
 .idioms-missing-fields td.mark {

@@ -215,15 +215,15 @@
 		{{if or $left.ImportsBlock $right.ImportsBlock }}
 			<div class="row-fluid">
 				{{$c := diffClass $left.ImportsBlock $right.ImportsBlock}}
-				<div class="span6 impl-left {{$c}}">
+				<div class="span6 impl-left imports {{$c}}">
 					{{if $left.CodeBlock}}
-						<h5>Imports</h5>
+						<h5>Imports <a href="#" class="history-copy-imports-to-clipboard"><i class="icon-copy" title="Copy imports to the clipboard"></i></a></h5>
 						<pre>{{$left.ImportsBlock}}</pre>
 					{{end}}
 				</div>
-				<div class="span6 impl-right {{$c}}">
+				<div class="span6 impl-right imports {{$c}}">
 					{{if $right.CodeBlock}}
-						<h5>Imports</h5>
+						<h5>Imports <a href="#" class="history-copy-imports-to-clipboard"><i class="icon-copy" title="Copy imports to the clipboard"></i></a></h5>
 						<pre>{{$right.ImportsBlock}}</pre>
 					{{end}}
 				</div>
@@ -233,15 +233,15 @@
 		{{/* CODE BLOCK */}}
 		<div class="row-fluid">
 			{{$c := diffClass $left.CodeBlock $right.CodeBlock}}
-			<div class="span6 impl-left {{$c}}">
+			<div class="span6 impl-left impl-code {{$c}}">
 				{{if $left.CodeBlock}}
-					<h5>Code</h5>
+					<h5>Code <a href="#" class="history-copy-code-to-clipboard"><i class="icon-copy" title="Copy this snippet to the clipboard"></i></a></h5>
 					<pre>{{$left.CodeBlock}}</pre>
 				{{end}}
 			</div>
-			<div class="span6 impl-right {{$c}}">
+			<div class="span6 impl-right impl-code {{$c}}">
 				{{if $right.CodeBlock}}
-					<h5>Code</h5>
+					<h5>Code <a href="#" class="history-copy-code-to-clipboard"><i class="icon-copy" title="Copy this snippet to the clipboard"></i></a></h5>
 					<pre>{{$right.CodeBlock}}</pre>
 				{{end}}
 			</div>
@@ -251,17 +251,17 @@
 		{{if or $left.AuthorComment $right.AuthorComment }}
 		<div class="row-fluid">
 			{{$c := diffClass $left.AuthorComment $right.AuthorComment}}
-			<div class="span6 impl-left {{$c}}">
+			<div class="span6 impl-left comments {{$c}}">
 				{{if $left.AuthorComment}}
-					<h5>Comments bubble</h5>
+					<h5>Comments bubble <a href="#" class="history-copy-comments-to-clipboard"><i class="icon-copy" title="Copy this comment to the clipboard"></i></a></h5>
 					<div class="diff-code-comments">
 						{{markup2CSS $left.AuthorComment}}
 					</div>
 				{{end}}
 			</div>
-			<div class="span6 impl-right {{$c}}">
+			<div class="span6 impl-right comments {{$c}}">
 				{{if $right.AuthorComment}}
-					<h5>Comments bubble</h5>
+					<h5>Comments bubble <a href="#" class="history-copy-comments-to-clipboard"><i class="icon-copy" title="Copy this comment to the clipboard"></i></a></h5>
 					<div class="diff-code-comments">
 						{{markup2CSS $right.AuthorComment}}
 					</div>
