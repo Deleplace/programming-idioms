@@ -500,6 +500,10 @@ $(function() {
 	});
 
 	function isIdiomDetailWithLang() {
+		// Diff pages are not concerned
+		if ( /\/diff\//.test(window.location.pathname) )
+			return false;
+
 		// E.g. "/idiom/52/check-if-map-contains-value/2870/csharp"
 		return /\/idiom\/[0-9]+\/[^/]+\/[0-9]+\/[^/]+/.test(window.location.pathname);
 	}
