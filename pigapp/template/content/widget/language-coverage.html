@@ -17,7 +17,7 @@
 							<span>{{printNiceLang $lang}}</span>
 						</th>
 					{{end}}
-					<th class="fold-unfold"><i class="icon-double-angle-right icon-large"></i></th>
+					<th class="fold-unfold"><i class="fas fa-angle-double-right icon-large"></i></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -31,13 +31,13 @@
 						<td class="{{$class}}">
 							{{$implId := index $cover.Checked $idiomId $lang}}
 							{{if $implId}}
-								<a href="{{hostPrefix}}/idiom/{{$idiomId}}/impl/{{$implId}}"><span class="icon-stack {{langCoverageClass $lang $favlangs}}"><i class="icon-check-sign icon-stack-base"></i></span></a>
+								<a href="{{hostPrefix}}/idiom/{{$idiomId}}/impl/{{$implId}}"><span class="{{langCoverageClass $lang $favlangs}}"><i class="fas fa-check-square fa-2x"></i></span></a>
 							{{else}}
-								<a href="{{hostPrefix}}/impl-create/{{$idiomId}}/{{$lang}}"><span class="icon-stack"><i class="icon-circle-blank {{langCoverageClass $lang $favlangs}} icon-stack-base"></i></span></a>
+								<a href="{{hostPrefix}}/impl-create/{{$idiomId}}/{{$lang}}"><i class="fas fa-circle-notch fa-2x {{langCoverageClass $lang $favlangs}}"></i></a>
 							{{end}}
 						</td>
 					{{end}}
-					<td class="fold-unfold"><i class="icon-double-angle-right"></i></td>
+					<td class="fold-unfold"><i class="fas fa-angle-double-right"></i></td>
 				</tr>
 			{{end}}
 			</tbody>

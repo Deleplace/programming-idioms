@@ -4,7 +4,7 @@
 			<form class="form-search" action="{{hostPrefix}}/search">
 				<div class="input-append">
 					<input type="search" class="search-query input-medium" placeholder="Keywords..." name="q" value="{{.PageMeta.SearchQuery}}" required="required">
-					<button type="submit" class="btn"><i class="icon-search"></i></button>
+					<button type="submit" class="btn"><i class="fas fa-search"></i></button>
 				</div>
 			</form>
 		{{end}}
@@ -17,30 +17,30 @@
 			<div class="actions-dropdown">
 				<div class="btn-group">
 					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-						<i class="icon-fixed-width icon-bolt"></i> Actions <span class="caret"></span>
+						<i class="fas fa-fixed-width icon-bolt"></i> Actions <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu pull-right">
 						{{if .PageMeta.Toggles.idiomCreation}}
-							<li><a href="{{hostPrefix}}/idiom-create"><i class="icon-fixed-width icon-plus"></i> New idiom</a></li>
+							<li><a href="{{hostPrefix}}/idiom-create"><i class="fas fa-fixed-width icon-plus"></i> New idiom</a></li>
 						{{end}}
 						{{if and .PageMeta.Toggles.idiomEditing .PageMeta.Toggles.actionEditIdiom}}
 							<li class="divider"></li>
-							<li><a href="{{hostPrefix}}/idiom-edit/{{.Idiom.Id}}"><i class="icon-fixed-width icon-edit"></i> Edit idiom statement</a></li>
+							<li><a href="{{hostPrefix}}/idiom-edit/{{.Idiom.Id}}"><i class="fas fa-fixed-width icon-edit"></i> Edit idiom statement</a></li>
 							{{if or .PageMeta.Toggles.pictureEditing .UserProfile.IsAdmin}}
-								<li><a href="{{hostPrefix}}/idiom-add-picture/{{.Idiom.Id}}"><i class="icon-fixed-width icon-camera"></i> Add picture</a></li>
+								<li><a href="{{hostPrefix}}/idiom-add-picture/{{.Idiom.Id}}"><i class="fas fa-fixed-width icon-camera"></i> Add picture</a></li>
 							{{end}}
 						{{end}}
 						{{if .PageMeta.Toggles.actionIdiomHistory}}
-							<li><a href="{{hostPrefix}}/history/{{.Idiom.Id}}"><i class="icon-fixed-width icon-sort-by-attributes-alt"></i> Idiom history</a></li>
+							<li><a href="{{hostPrefix}}/history/{{.Idiom.Id}}"><i class="fas fa-fixed-width icon-sort-by-attributes-alt"></i> Idiom history</a></li>
 						{{end}}
 						{{if and .PageMeta.Toggles.implEditing .PageMeta.Toggles.actionEditIdiom}}
 							{{range .Idiom.Implementations}}
-								<li><a href="{{hostPrefix}}/impl-edit/{{$.Idiom.Id}}/{{.Id}}"><i class="icon-fixed-width icon-pencil"></i> Edit {{.LanguageName | printNiceLang}} implementation</a></li>
+								<li><a href="{{hostPrefix}}/impl-edit/{{$.Idiom.Id}}/{{.Id}}"><i class="fas fa-fixed-width icon-pencil"></i> Edit {{.LanguageName | printNiceLang}} implementation</a></li>
 							{{end}}
 						{{end}}
 						{{if and .PageMeta.Toggles.implAddition .PageMeta.Toggles.actionAddImpl}} 
 							<li class="divider"></li>
-							<li><a href="{{hostPrefix}}/impl-create/{{.Idiom.Id}}"><i class="icon-fixed-width icon-plus-sign"></i> Add an implementation to this idiom</a></li>
+							<li><a href="{{hostPrefix}}/impl-create/{{.Idiom.Id}}"><i class="fas fa-fixed-width icon-plus-sign"></i> Add an implementation to this idiom</a></li>
 						{{end}}
 					</ul>
 				</div>
@@ -53,7 +53,7 @@
 	<p class="greetings">
 	{{if .PageMeta.Toggles.greetings}}
 		{{if .UserProfile.Nickname}}
-			<i class="icon-user user-info-link"> <a href="#">{{.UserProfile.Nickname}}</a></i> <a href="#" class="remove-nickname"><i class="icon-remove"></i></a>
+			<i class="fas fa-user user-info-link"> <a href="#">{{.UserProfile.Nickname}}</a></i> <a href="#" class="remove-nickname"><i class="fas fa-times"></i></a>
 		{{end}}
 	{{end}}
 	</p>
@@ -118,7 +118,7 @@
 								{{$idiom := .}}
 								{{range $i, $url := .RelatedURLs}}
 									<li>
-										<i class="icon-external-link"></i>
+										<i class="fas fa-external-link-alt"></i>
 										<a href="{{$url}}" target="_blank" rel="nofollow" class="related-url-link">{{index $idiom.RelatedURLLabels $i}}</a>
 									</li>
 								{{end}}
@@ -218,10 +218,10 @@
 
 			<div class="impl-external-links tabbable tabs-below pull-right">
 				<ul class="nav nav-tabs">
-					{{if .Impl.DemoURL}}<li class="active demo"><a href="{{.Impl.DemoURL}}" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a></li>{{end}}
-					{{if .Impl.DocumentationURL}}<li class="active doc"><a href="{{.Impl.DocumentationURL}}" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a></li>{{end}}
-					{{if .Impl.OriginalAttributionURL}}<li class="active origin"><a href="{{.Impl.OriginalAttributionURL}}" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a></li>{{end}}
-					<li class="active"><a href="#" class="copy-code-to-clipboard"><i class="icon-copy" title="Copy snippet to the clipboard"></i></a></li>
+					{{if .Impl.DemoURL}}<li class="active demo"><a href="{{.Impl.DemoURL}}" target="_blank" rel="nofollow">Demo <i class="fas fa-external-link-alt"></i></a></li>{{end}}
+					{{if .Impl.DocumentationURL}}<li class="active doc"><a href="{{.Impl.DocumentationURL}}" target="_blank" rel="nofollow">Doc <i class="fas fa-external-link-alt"></i></a></li>{{end}}
+					{{if .Impl.OriginalAttributionURL}}<li class="active origin"><a href="{{.Impl.OriginalAttributionURL}}" target="_blank" rel="nofollow">Origin <i class="fas fa-external-link-alt"></i></a></li>{{end}}
+					<li class="active"><a href="#" class="copy-code-to-clipboard"><i class="fas fa-copy" title="Copy snippet to the clipboard"></i></a></li>
 				</ul>
 			</div>
 
@@ -270,9 +270,9 @@
 
 			<div class="impl-external-links tabbable tabs-below pull-right">
 				<ul class="nav nav-tabs">
-					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-demo">Demo <i class="icon-external-link"></i></a></li>
-					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-doc">Doc <i class="icon-external-link"></i></a></li>
-					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-attribution">Origin <i class="icon-external-link"></i></a></li>
+					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-demo">Demo <i class="fas fa-external-link-alt"></i></a></li>
+					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-doc">Doc <i class="fas fa-external-link-alt"></i></a></li>
+					<li class="active"><a href="#" target="_blank" rel="nofollow" class="impl-attribution">Origin <i class="fas fa-external-link-alt"></i></a></li>
 				</ul>
 			</div>
 
@@ -290,9 +290,9 @@
 			{{template "implementation-code" .Impl}}
 			<div class="impl-external-links tabbable tabs-below pull-right">
 				<ul class="nav nav-tabs">
-					{{if .Impl.DemoURL}}<li class="active"><a href="{{.Impl.DemoURL}}" class="ext-demo" target="_blank" rel="nofollow">Demo <i class="icon-external-link"></i></a></li>{{end}}
-					{{if .Impl.DocumentationURL}}<li class="active"><a href="{{.Impl.DocumentationURL}}" class="ext-doc" target="_blank" rel="nofollow">Doc <i class="icon-external-link"></i></a></li>{{end}}
-					{{if .Impl.OriginalAttributionURL}}<li class="active"><a href="{{.Impl.OriginalAttributionURL}}" class="ext-origin" target="_blank" rel="nofollow">Origin <i class="icon-external-link"></i></a></li>{{end}}
+					{{if .Impl.DemoURL}}<li class="active"><a href="{{.Impl.DemoURL}}" class="ext-demo" target="_blank" rel="nofollow">Demo <i class="fas fa-external-link-alt"></i></a></li>{{end}}
+					{{if .Impl.DocumentationURL}}<li class="active"><a href="{{.Impl.DocumentationURL}}" class="ext-doc" target="_blank" rel="nofollow">Doc <i class="fas fa-external-link-alt"></i></a></li>{{end}}
+					{{if .Impl.OriginalAttributionURL}}<li class="active"><a href="{{.Impl.OriginalAttributionURL}}" class="ext-origin" target="_blank" rel="nofollow">Origin <i class="fas fa-external-link-alt"></i></a></li>{{end}}
 				</ul>
 			</div>
 		</div>
@@ -302,14 +302,14 @@
 {{define "voting-idiom"}}
 	<div class="btn-group btn-group-vertical voting">
 	  {{if toggled "idiomVotingUp"}}
-	  <button data-idiom-id="{{.Id}}" data-vote-choice="up" class="btn popover-on-hover voting-idiom {{if .Deco.UpVoted}}active{{end}}" data-toggle="popover" data-content="This idiom statement is promising" data-placement="top" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-plus"></i></button>
+	  <button data-idiom-id="{{.Id}}" data-vote-choice="up" class="btn popover-on-hover voting-idiom {{if .Deco.UpVoted}}active{{end}}" data-toggle="popover" data-content="This idiom statement is promising" data-placement="top" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="fas fa-plus"></i></button>
 	  {{end}}
 	  {{if toggled "idiomVotingDown"}}
-	  <button data-idiom-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-idiom {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This idiom has problems"  data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-minus"></i></button>
+	  <button data-idiom-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-idiom {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This idiom has problems"  data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="fas fa-minus"></i></button>
 	  {{end}}
 	</div>
 	{{if toggled "showIdiomRating"}}		
-		<span class="voting_score {{if not .Rating}}hidden{{end}}"><i class="icon-star icon-small"> {{.Rating}}</i></span>
+		<span class="voting_score {{if not .Rating}}hidden{{end}}"><i class="fas fa-star icon-small"> {{.Rating}}</i></span>
 	{{end}}
 {{end}}
 
@@ -317,14 +317,14 @@
 {{define "voting-implementation"}}
 	<div class="btn-group btn-group-vertical voting">
 	  {{if toggled "implVotingUp"}}
-	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="up"  class="btn popover-on-hover voting-impl {{if .Deco.UpVoted}}active{{end}}" data-toggle="popover" data-content="This implementation is useful" data-placement="top" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-plus"></i></button>
+	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="up"  class="btn popover-on-hover voting-impl {{if .Deco.UpVoted}}active{{end}}" data-toggle="popover" data-content="This implementation is useful" data-placement="top" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="fas fa-plus"></i></button>
 	  {{end}}
 	  {{if toggled "implVotingDown"}}
-	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-impl {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This implementation has problems" data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="icon-minus"></i></button>
+	  <button type="button" data-impl-id="{{.Id}}" data-vote-choice="down" class="btn popover-on-hover voting-impl {{if .Deco.DownVoted}}active{{end}}" data-toggle="popover" data-content="This implementation has problems" data-placement="bottom" data-loading-text="<i class='icon-spinner icon-spin'></i>"><i class="fas fa-minus"></i></button>
 	  {{end}}
 	</div>
 	{{if toggled "showImplRating"}}
-		<span class="voting_score {{if not .Rating}}hidden{{end}}"><i class="icon-star icon-small"> {{.Rating}}</i></span>
+		<span class="voting_score {{if not .Rating}}hidden{{end}}"><i class="fas fa-star icon-small"> {{.Rating}}</i></span>
 	{{end}}
 {{end}}
 
@@ -333,7 +333,7 @@
 		<div class="piimports">
 			<pre>{{.}}</pre>
 			<div class="right copy-imports-to-clipboard">
-				<a href="#"><i class="icon-copy" title="Copy imports to the clipboard"></i></a>
+				<a href="#"><i class="fas fa-copy" title="Copy imports to the clipboard"></i></a>
 			</div>
 		</div>
 	{{end}}
@@ -348,11 +348,11 @@
 {{end}}
 
 {{define "small-rating"}}
-	<span class="small-rating"><i class="icon-star icon-small"></i> {{.}}</span>
+	<span class="small-rating"><i class="fas fa-star icon-small"></i> {{.}}</span>
 {{end}}
 
 {{define "extra-small-rating"}}
-	<span class="small-rating" title="{{.}} votes"><i class="icon-star icon-small"></i></span>
+	<span class="small-rating" title="{{.}} votes"><i class="fas fa-star icon-small"></i></span>
 {{end}}
 
 {{define "small-id-and-rating"}}
@@ -375,27 +375,27 @@
 {{end}}
 
 {{define "idiom-impl-grid-button"}}
-	<a class="btn show-impl-grid" title="View implementations in grid"><i class="icon-th"></i></a>
+	<a class="btn show-impl-grid" title="View implementations in grid"><i class="fas fa-th"></i></a>
 {{end}}
 
 {{define "idiom-edit-button"}}
-	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info btn-edit" title="Edit this idiom statement" ><i class="icon-edit"></i></a>
+	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info btn-edit" title="Edit this idiom statement" ><i class="fas fa-edit"></i></a>
 {{end}}
 
 {{define "idiom-delete-button"}}
-	<a href="#" data-url="{{hostPrefix}}/admin-idiom-delete?idiomId={{.Id}}" class="btn btn-danger ajax-generic-action reason-needed btn-delete" title="Delete this idiom"><i class="icon-remove-sign"></i></a>
+	<a href="#" data-url="{{hostPrefix}}/admin-idiom-delete?idiomId={{.Id}}" class="btn btn-danger ajax-generic-action reason-needed btn-delete" title="Delete this idiom"><i class="fas fa-times-circle"></i></a>
 {{end}}
 
 {{define "impl-edit-button"}}
-	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info btn-edit" title="Edit this implementation" ><i class="icon-pencil"></i></a>
+	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info btn-edit" title="Edit this implementation" ><i class="fas fa-edit"></i></a>
 {{end}}
 
 {{define "impl-flag-button"}}
-	<a class="btn btn-info btn-flag-impl" title="Flag this implementation" data-idiom-id="{{.Deco.Id}}" data-impl-id="{{.Data.Id}}" data-idiom-version="{{.Deco.Version}}"><i class="icon-flag"></i></a>
+	<a class="btn btn-info btn-flag-impl" title="Flag this implementation" data-idiom-id="{{.Deco.Id}}" data-impl-id="{{.Data.Id}}" data-idiom-version="{{.Deco.Version}}"><i class="fas fa-flag"></i></a>
 {{end}}
 
 {{define "impl-delete-button"}}
-<a href="#" data-url="{{hostPrefix}}/admin-impl-delete?idiomId={{.Deco.Id}}&implId={{.Data.Id}}" class="btn btn-danger ajax-generic-action reason-needed btn-delete" title="Delete this implementation"><i class="icon-remove-sign"></i></a>
+<a href="#" data-url="{{hostPrefix}}/admin-impl-delete?idiomId={{.Deco.Id}}&implId={{.Data.Id}}" class="btn btn-danger ajax-generic-action reason-needed btn-delete" title="Delete this implementation"><i class="fas fa-times-circle"></i></a>
 {{end}}
 
 {{define "input-username"}}

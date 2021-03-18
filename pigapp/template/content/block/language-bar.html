@@ -4,8 +4,8 @@
 	<div class="row-fluid">
 		<div class="span3">
 			<div class="btn-group actions">
-              <button class="btn btn-inverse btn-see-non-favorite {{if .UserProfile.SeeNonFavorite}}active{{else}}{{end}} {{if not .UserProfile.FavoriteLanguages}}disabled{{end}}" title="See implementations in other languages as well (recommended)"><i class="icon-asterisk"></i></button>
-              <button class="btn btn-inverse show-languages-pool" title="Add your favorite language"><i class="icon-plus"></i></button>
+              <button class="btn btn-inverse btn-see-non-favorite {{if .UserProfile.SeeNonFavorite}}active{{else}}{{end}} {{if not .UserProfile.FavoriteLanguages}}disabled{{end}}" title="See implementations in other languages as well (recommended)"><i class="fas fa-asterisk"></i></button>
+              <button class="btn btn-inverse show-languages-pool" title="Add your favorite language"><i class="fas fa-plus"></i></button>
             </div>
         </div>
 		<div class="span9">
@@ -16,7 +16,7 @@
 			{{end}}
 			<ul class="favorite-languages sortable-lang">
 				{{range .UserProfile.FavoriteLanguages}}
-					<li class="active" data-language="{{.}}"><span class="badge badge-fav-lang">{{. | printNiceLang}} <a href="#" class="favorite-language-remove icon-remove"></a></span></li>
+					<li class="active" data-language="{{.}}"><span class="badge badge-fav-lang">{{. | printNiceLang}} <a href="#" class="favorite-language-remove"><i class="fas fa-times"></i></a></span></li>
 				{{end}}
 			</ul>
 		</div>

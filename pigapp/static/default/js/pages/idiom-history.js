@@ -11,7 +11,7 @@ $(function() {
         //using("TODO");
         navigator.clipboard.writeText(snippet).then(function() {
             console.log('Copying imports to clipboard was successful!');
-            that.html('<i class="icon-check" title="The imports code has been copied to clipboard"></i>');
+            that.html('<i class="fas fa-clipboard-check" title="The imports code has been copied to clipboard"></i>');
 
             $(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
                 importsGroup.addClass("just-copied-to-clipboard");
@@ -32,7 +32,7 @@ $(function() {
         //using("TODO");
         navigator.clipboard.writeText(snippet).then(function() {
             console.log('Copying code snippet to clipboard was successful!');
-            that.html('<i class="icon-check" title="The imports code has been copied to clipboard"></i>');
+            that.html('<i class="fas fa-clipboard-check" title="The imports code has been copied to clipboard"></i>');
 
             $(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
                 codeGroup.addClass("just-copied-to-clipboard");
@@ -55,7 +55,7 @@ $(function() {
         //using("TODO");
         navigator.clipboard.writeText(comment).then(function() {
             console.log('Copying comments to clipboard was successful!');
-            that.html('<i class="icon-check" title="The imports code has been copied to clipboard"></i>');
+            that.html('<i class="fas fa-clipboard-check" title="The imports code has been copied to clipboard"></i>');
 
             $(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
                 commentsGroup.addClass("just-copied-to-clipboard");

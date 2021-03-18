@@ -41,8 +41,11 @@ func about(w http.ResponseWriter, r *http.Request) error {
 		PageMeta: PageMeta{
 			PageTitle: "About Programming-Idioms",
 			Toggles:   toggles,
-			ExtraCss:  []string{hostPrefix() + themeDirectory() + "/css/docs.css"},
-			ExtraJs:   []string{hostPrefix() + themeDirectory() + "/js/pages/about.js"},
+			ExtraCss: []string{
+				hostPrefix() + themeDirectory() + "/css/docs.css",
+				hostPrefix() + themeDirectory() + "/css/pages/about.css",
+			},
+			ExtraJs: []string{hostPrefix() + themeDirectory() + "/js/pages/about.js"},
 		},
 		UserProfile: readUserProfile(r),
 	}

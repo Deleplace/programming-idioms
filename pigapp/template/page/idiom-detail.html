@@ -11,7 +11,7 @@
 			{{template "language-bar" .}}
 		</div>
     </div>
-			
+
 	<div class="row-fluid">
 		<div class="span10">
 			{{template "idiom-summary-large"  decorate .Idiom .UserProfile}}
@@ -61,7 +61,7 @@
 					<div class="new-impl-invitation hide-on-mobile">
 						<hr/>
 						<h5>Do you know the best way to do this in your language ?</h5>
-						<a href="{{hostPrefix}}/impl-create/{{.Idiom.Id}}" class="btn btn-primary"><i class="icon-plus-sign"></i> New implementation...</a>
+						<a href="{{hostPrefix}}/impl-create/{{.Idiom.Id}}" class="btn btn-primary"><i class="fas fa-plus-circle"></i> New implementation...</a>
 					</div>
 				{{end}}
 			{{end}}

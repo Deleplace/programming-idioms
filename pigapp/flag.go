@@ -137,7 +137,7 @@ func adminListFlaggedContent(w http.ResponseWriter, r *http.Request) error {
 
 func ajaxAdminFlagResolve(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != "POST" {
-		http.Error(w, "POST only", http.StatusBadRequest)
+		return PiErrorf(http.StatusBadRequest, "POST only")
 	}
 	flagKeyStr := r.FormValue("flagkey")
 	flagKey, err := datastore.DecodeKey(flagKeyStr)

@@ -200,7 +200,7 @@ $(function() {
 		if( nick.length>30 )
 			nick = nick.substring(0,30);
 		$.cookie("Nickname", nick, { expires : 100, path: '/' });
-		$(".greetings").html('<i class="icon-user"> '+ nick +'</i> <a href="#" class="remove-nickname"><i class="icon-remove"></i></a>').show();
+		$(".greetings").html('<i class="fas fa-user"> '+ nick +'</i> <a href="#" class="remove-nickname"><i class="fas fa-times"></i></a>').show();
 		$("#modal-nickname").modal("hide");
 	});
 
@@ -559,7 +559,7 @@ $(function() {
 		using("impl/copy-imports-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying imports to clipboard was successful!');
-			that.html('<i class="icon-check" title="The imports code has been copied to clipboard"></i>');
+			that.html('<i class="fas fa-clipboard-check" title="The imports code has been copied to clipboard"></i>');
 
 			$(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
 			piimports.addClass("just-copied-to-clipboard");
@@ -581,7 +581,7 @@ $(function() {
 		using("impl/copy-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying to clipboard was successful!');
-			that.html('<i class="icon-check" title="The snippet code has been copied to clipboard"></i>');
+			that.html('<i class="fas fa-clipboard-check" title="The snippet code has been copied to clipboard"></i>');
 
 			$(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
 			impl.addClass("just-copied-to-clipboard");

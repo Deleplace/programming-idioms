@@ -217,13 +217,13 @@
 				{{$c := diffClass $left.ImportsBlock $right.ImportsBlock}}
 				<div class="span6 impl-left imports {{$c}}">
 					{{if $left.CodeBlock}}
-						<h5>Imports <a href="#" class="history-copy-imports-to-clipboard"><i class="icon-copy" title="Copy imports to the clipboard"></i></a></h5>
+						<h5>Imports <a href="#" class="history-copy-imports-to-clipboard"><i class="far fa-copy" title="Copy imports to the clipboard"></i></a></h5>
 						<pre>{{$left.ImportsBlock}}</pre>
 					{{end}}
 				</div>
 				<div class="span6 impl-right imports {{$c}}">
 					{{if $right.CodeBlock}}
-						<h5>Imports <a href="#" class="history-copy-imports-to-clipboard"><i class="icon-copy" title="Copy imports to the clipboard"></i></a></h5>
+						<h5>Imports <a href="#" class="history-copy-imports-to-clipboard"><i class="fas fa-copy" title="Copy imports to the clipboard"></i></a></h5>
 						<pre>{{$right.ImportsBlock}}</pre>
 					{{end}}
 				</div>
@@ -235,13 +235,13 @@
 			{{$c := diffClass $left.CodeBlock $right.CodeBlock}}
 			<div class="span6 impl-left impl-code {{$c}}">
 				{{if $left.CodeBlock}}
-					<h5>Code <a href="#" class="history-copy-code-to-clipboard"><i class="icon-copy" title="Copy this snippet to the clipboard"></i></a></h5>
+					<h5>Code <a href="#" class="history-copy-code-to-clipboard"><i class="fas fa-copy" title="Copy this snippet to the clipboard"></i></a></h5>
 					<pre>{{$left.CodeBlock}}</pre>
 				{{end}}
 			</div>
 			<div class="span6 impl-right impl-code {{$c}}">
 				{{if $right.CodeBlock}}
-					<h5>Code <a href="#" class="history-copy-code-to-clipboard"><i class="icon-copy" title="Copy this snippet to the clipboard"></i></a></h5>
+					<h5>Code <a href="#" class="history-copy-code-to-clipboard"><i class="fas fa-copy" title="Copy this snippet to the clipboard"></i></a></h5>
 					<pre>{{$right.CodeBlock}}</pre>
 				{{end}}
 			</div>
@@ -253,7 +253,7 @@
 			{{$c := diffClass $left.AuthorComment $right.AuthorComment}}
 			<div class="span6 impl-left comments {{$c}}">
 				{{if $left.AuthorComment}}
-					<h5>Comments bubble <a href="#" class="history-copy-comments-to-clipboard"><i class="icon-copy" title="Copy this comment to the clipboard"></i></a></h5>
+					<h5>Comments bubble <a href="#" class="history-copy-comments-to-clipboard"><i class="fas fa-copy" title="Copy this comment to the clipboard"></i></a></h5>
 					<div class="diff-code-comments">
 						{{markup2CSS $left.AuthorComment}}
 					</div>
@@ -261,7 +261,7 @@
 			</div>
 			<div class="span6 impl-right comments {{$c}}">
 				{{if $right.AuthorComment}}
-					<h5>Comments bubble <a href="#" class="history-copy-comments-to-clipboard"><i class="icon-copy" title="Copy this comment to the clipboard"></i></a></h5>
+					<h5>Comments bubble <a href="#" class="history-copy-comments-to-clipboard"><i class="fas fa-copy" title="Copy this comment to the clipboard"></i></a></h5>
 					<div class="diff-code-comments">
 						{{markup2CSS $right.AuthorComment}}
 					</div>
@@ -276,13 +276,13 @@
 				{{$c := diffClass $left.DocumentationURL $right.DocumentationURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.DocumentationURL}}
-						<h5>Doc URL <a href="{{$left.DocumentationURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
+						<h5>Doc URL <a href="{{$left.DocumentationURL}}" target="_blank" rel="nofollow"><i class="fas fa-external-link-alt"></i></a></h5>
 						<div class="field-value">{{$left.DocumentationURL}}</div>
 					{{end}}
 				</div>
 				<div class="span6 impl-right {{$c}}">
 					{{if $right.DocumentationURL}}
-						<h5>Doc URL <a href="{{$right.DocumentationURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
+						<h5>Doc URL <a href="{{$right.DocumentationURL}}" target="_blank" rel="nofollow"><i class="fas fa-external-link-alt"></i></a></h5>
 						<div class="field-value">{{$right.DocumentationURL}}</div>
 					{{end}}
 				</div>
@@ -295,13 +295,13 @@
 				{{$c := diffClass $left.OriginalAttributionURL $right.OriginalAttributionURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.OriginalAttributionURL}}
-						<h5>Origin <a href="{{$left.OriginalAttributionURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
+						<h5>Origin <a href="{{$left.OriginalAttributionURL}}" target="_blank" rel="nofollow"><i class="fas fa-external-link-alt"></i></a></h5>
 						<div class="field-value">{{$left.OriginalAttributionURL}}</div>
 					{{end}}
 				</div>
 				<div class="span6 impl-right {{$c}}">
 					{{if $right.OriginalAttributionURL}}
-						<h5>Origin <a href="{{$right.OriginalAttributionURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
+						<h5>Origin <a href="{{$right.OriginalAttributionURL}}" target="_blank" rel="nofollow"><i class="fas fa-external-link-alt"></i></a></h5>
 						<div class="field-value">{{$right.OriginalAttributionURL}}</div>
 					{{end}}
 				</div>
@@ -314,13 +314,13 @@
 				{{$c := diffClass $left.DemoURL $right.DemoURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.DemoURL}}
-						<h5>Demo URL <a href="{{$left.DemoURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
+						<h5>Demo URL <a href="{{$left.DemoURL}}" target="_blank" rel="nofollow"><i class="fas fa-external-link-alt"></i></a></h5>
 						<div class="field-value">{{$left.DemoURL}}</div>
 					{{end}}
 				</div>
 				<div class="span6 impl-right {{$c}}">
 					{{if $right.DemoURL}}
-						<h5>Demo URL <a href="{{$right.DemoURL}}" target="_blank" rel="nofollow"><i class="icon-external-link"></i></a></h5>
+						<h5>Demo URL <a href="{{$right.DemoURL}}" target="_blank" rel="nofollow"><i class="fas fa-external-link-alt"></i></a></h5>
 						<div class="field-value">{{$right.DemoURL}}</div>
 					{{end}}
 				</div>
