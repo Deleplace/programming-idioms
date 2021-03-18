@@ -379,7 +379,7 @@ $(function() {
 			<li class="active" data-language="' + lg + '"> \
 				<span class="badge badge-success"> \
 					' + lgDisplay + '\
-					<a href="#" class="favorite-language-remove icon-remove"></a> \
+					<a href="#" class="favorite-language-remove fas fa-times"></a> \
 				</span> \
 			</li>');
 		li.appendTo($(".favorite-languages"));
@@ -449,7 +449,7 @@ $(function() {
 		var li = $(this).parent();
 		var lg = li.attr('data-language');
 		var lgDisplay = $(this).html();
-		var li = $('<li class="active" data-language="'+lg+'"><span class="badge badge-success">'+lgDisplay+' <a href="#" class="favorite-language-remove icon-remove"></a></span></li>');
+		var li = $('<li class="active" data-language="'+lg+'"><span class="badge badge-success">'+lgDisplay+' <a href="#" class="favorite-language-remove fas fa-times"></a></span></li>');
 		li.hide().appendTo($(".favorite-languages")).show('normal');
 		using("fav-lang-bar-add/" + lg);
     	updateFavlangCookie();
