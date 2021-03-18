@@ -36,7 +36,7 @@ function renderFooter() {
     var footer = footerz[0];
     footer.insertAdjacentHTML('beforeend', `
     <div>
-		All content <a href="https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">CC-BY-SA</a>
+		All content <a href="https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license noopener">CC-BY-SA</a>
     </div>
     <div>
 		<a href="/about#about-block-language-coverage" title="Coverage grid"><img src="/default_20200205_/img/coverage_icon_indexed.png" class="coverage square-loading" alt="Coverage grid" /></a>

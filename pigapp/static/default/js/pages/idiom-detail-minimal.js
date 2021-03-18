@@ -57,7 +57,7 @@ function renderImpl(impl) {
         var a = elem("a", "", "Demo 🗗");
         a.href = impl.DemoURL;
         a.target="_blank";
-        a.rel="nofollow";
+        a.rel="nofollow noopener";
         li.appendChild(a);
         ul.appendChild(li);
     }
@@ -66,7 +66,7 @@ function renderImpl(impl) {
         var a = elem("a", "", "Doc 🗗");
         a.href = impl.DocumentationURL;
         a.target="_blank";
-        a.rel="nofollow";
+        a.rel="nofollow noopener";
         li.appendChild(a);
         ul.appendChild(li);
     }
@@ -75,7 +75,7 @@ function renderImpl(impl) {
         var a = elem("a", "", "Origin 🗗");
         a.href = impl.OriginalAttributionURL;
         a.target="_blank";
-        a.rel="nofollow";
+        a.rel="nofollow noopener";
         li.appendChild(a);
         ul.appendChild(li);
     }
@@ -115,7 +115,7 @@ function renderFooter() {
     var footerz = document.getElementsByTagName("footer");
     var footer = footerz[0];
     footer.insertAdjacentHTML('beforeend', '<div> \
-		All content <a href="https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license">CC-BY-SA</a> \
+		All content <a href="https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License" rel="license noopener">CC-BY-SA</a> \
     </div>');
     footer.insertAdjacentHTML('beforeend', '<div> \
 		<a href="/about" class="about-link">?</a> \
