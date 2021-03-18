@@ -25,11 +25,13 @@
 
 		{{if $isAdmin}}
 			<form id="relation-form" enctype="multipart/form-data">
-				<h4>Add relation</h4>
+				<label>Add relation</label>
 				<fieldset>
 				  <input type="hidden" name="idiomAId" value="{{.Id}}" class="idiomA" />
-				  <label for="idiomBId">Other idiom ID</label>
-				  <input type="text" name="idiomBId" class="idiomB input-small" required="required" value="" /> <br/>
+				  <label>
+					  Other idiom ID
+					  <input type="text" name="idiomBId" class="idiomB input-small" required="required" value="" />
+				  </label> <br/>
 				  <input type="button" class="btn create-relation" value="Associate" />
 				</fieldset>
 			  </form>
