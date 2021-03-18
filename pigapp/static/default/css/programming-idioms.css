@@ -34,6 +34,10 @@ html, body{
 	float: right;
 }
 
+a {
+    color: #006699;
+}
+
 @media (max-width: 479px) {
     .show-on-desktop, .show-on-tablets, .hide-on-mobile { display: none; }
 }
