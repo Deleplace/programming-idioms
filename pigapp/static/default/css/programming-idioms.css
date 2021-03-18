@@ -346,7 +346,7 @@ header.header-print h1 > a {
 
 /* Right column */
 .right_column, .right_column a:link, .right_column a:visited {
-	color: #888;
+	color: #666;
 }
 .right_column h3{
 	margin-bottom: 0px;
