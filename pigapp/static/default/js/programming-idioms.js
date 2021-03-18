@@ -200,7 +200,7 @@ $(function() {
 		if( nick.length>30 )
 			nick = nick.substring(0,30);
 		$.cookie("Nickname", nick, { expires : 100, path: '/' });
-		$(".greetings").html('<i class="fas fa-user"> '+ nick +'</i> <a href="#" class="remove-nickname"><i class="fas fa-times"></i></a>').show();
+		$(".greetings").html('<i class="fas fa-user"> '+ nick +'</i> <a href="#" class="remove-nickname fas fa-times" alt="Clear username"></a>').show();
 		$("#modal-nickname").modal("hide");
 	});
 
