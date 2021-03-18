@@ -1,6 +1,6 @@
 $(function() {
 
-    $("a.history-copy-imports-to-clipboard").click(function(){
+    $("a.history-copy-imports-to-clipboard").on("click", function(){
         var that = $(this);
         var importsGroup = that.closest(".imports");
         var snippet = importsGroup.find("pre").text();
@@ -21,7 +21,7 @@ $(function() {
         return false;
     });
 
-    $("a.history-copy-code-to-clipboard").click(function(){
+    $("a.history-copy-code-to-clipboard").on("click", function(){
         var that = $(this);
         var codeGroup = that.closest(".impl-code");
         var snippet = codeGroup.find("pre").text();
@@ -43,7 +43,7 @@ $(function() {
     });
 
 
-    $("a.history-copy-comments-to-clipboard").click(function(){
+    $("a.history-copy-comments-to-clipboard").on("click", function(){
         var that = $(this);
         var commentsGroup = that.closest(".comments");
         var comment = commentsGroup.find(".diff-code-comments").text();

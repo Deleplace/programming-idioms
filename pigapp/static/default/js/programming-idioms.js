@@ -73,12 +73,12 @@ $(function() {
 
 
 	
-	$(".idiom-picture img").load(function() {
+	$(".idiom-picture img").on("load", function() {
 		// Repaint some bubbles when idiom picture has finished disploying
 		$('pre').popover("show");
 	});
 	
-	$(window).resize(function () {
+	$(window).on("resize", function () {
 		// Repaint some bubbles on window resize
 		$('pre').popover("show");
 	});
@@ -211,7 +211,7 @@ $(function() {
 		$(".greetings").hide();
 	});
 
-	$(".user-info-link a").click(function() {
+	$(".user-info-link a").on("click", function() {
 		var headerCode =  '<div class="modal-header">'
 						+ '	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
 						+ '	<h3>Cookie contents</h3>'
@@ -224,7 +224,7 @@ $(function() {
 			var removeBtn = $("<button>").text("Delete this cookie");
 			dt1.append(removeBtn);
 			var dd1 = $("<dd>").text(username());
-			removeBtn.click(function(){
+			removeBtn.on("click", function(){
 				$.removeCookie("Nickname", { path: '/' });
 				dlNickname.hide("slow", function(){ dlNickname.remove(); });
 				takeaway.hide("slow", function(){ takeaway.remove(); });
@@ -240,7 +240,7 @@ $(function() {
 		if( langsConcat ){
 			var dt = $("<dt><tt>my-languages</tt></dt>");
 			var removeBtn = $("<button>").text("Delete this cookie");
-			removeBtn.click(function(){ 
+			removeBtn.on("click", function(){ 
 				$.removeCookie("my-languages", { path: '/' });
 				dlLangs.hide("slow", function(){ dlLangs.remove(); });
 				updateProfileUrl();
@@ -286,7 +286,7 @@ $(function() {
 	// Widgets click events
 	//
 	
-	$('.idiom_cover .count').click(
+	$('.idiom_cover .count').on("click",
 			function() {
 				$(this).children('i').toggleClass(
 						'icon-chevron-right icon-chevron-down');
@@ -547,7 +547,7 @@ $(function() {
 		showImplGrid.call(this);
 	});
 
-	$(".copy-imports-to-clipboard a").click(function(){
+	$(".copy-imports-to-clipboard a").on("click", function(){
 		var that = $(this);
 		var impl = that.closest(".implementation");
 		var piimports = impl.find(".piimports");
@@ -569,7 +569,7 @@ $(function() {
 		return false;
 	});
 
-	$("a.copy-code-to-clipboard").click(function(){
+	$("a.copy-code-to-clipboard").on("click", function(){
 		var that = $(this);
 		var impl = that.closest(".implementation");
 		var picode = impl.find(".picode");
@@ -624,7 +624,7 @@ $(function() {
 		alert("autocompletechange");
 	 });
 
-	$("input[name=impl_language]").change(function() {
+	$("input[name=impl_language]").on("change", function() {
 		let inputField = $(this);
 		let userinput = inputField.val();
 		let userinputlower = userinput.toLowerCase();
@@ -656,7 +656,7 @@ $(function() {
 				});
 	});
 
-	$("textarea[name=impl_code").change(function() {
+	$("textarea[name=impl_code").on("change", function() {
 		let warnZone = $(".warning-code-cromulence");
 		warnZone.hide().empty();
 		function warn(line) {
@@ -689,7 +689,7 @@ $(function() {
 	
 	// Being able to insert <tab> characters in code
 	// See https://stackoverflow.com/questions/6140632/how-to-handle-tab-in-textarea#answer-6140696
-	$("textarea").keydown(function(e) {
+	$("textarea").on("keydown", function(e) {
 	    if(e.keyCode === 9) { // tab was pressed
 	    	if(! e.ctrlKey){ // but not Ctrl+tab (do not prevent the default browser shortcut)
 		        // get caret position/selection
@@ -714,7 +714,7 @@ $(function() {
 	});
 
 	// Impl flag (to the admin)
-	$(".btn-flag-impl").click(function(e){
+	$(".btn-flag-impl").on("click", function(e){
 		let btn = $(e.target).closest(".btn-flag-impl");
 		let rationale;
 		do {
@@ -1010,19 +1010,19 @@ $(function() {
 	//
 	// Cheatsheet (printable) page
 	//
-	$("button.page-print").click(function(){
+	$("button.page-print").on("click", function(){
 		using("print");
 		window.print();
 	});
 
-	$(".cheatsheet-lines button.close").click(function(){
+	$(".cheatsheet-lines button.close").on("click", function(){
 		var line = $(this).closest("tr");
 		var idiomID = line.find("th.idiom-id").text();
 		line.remove();	
 		using("cheatsheet/remove-line/" + idiomID);
 	});
 
-	$(".page-cheatsheet #showIdiomId").change(function(){
+	$(".page-cheatsheet #showIdiomId").on("change", function(){
 		if( $(this).is(':checked') ){
 			$("th.idiom-id").show();
 			using("cheatsheet/options/idiom-id/show");
@@ -1032,7 +1032,7 @@ $(function() {
 		}
 	});
 
-	$(".page-cheatsheet #showImports").change(function(){
+	$(".page-cheatsheet #showImports").on("change", function(){
 		if( $(this).is(':checked') ){
 			$(".piimports").show();
 			using("cheatsheet/options/imports/show");
@@ -1042,7 +1042,7 @@ $(function() {
 		}
 	});
 
-	$(".page-cheatsheet #showComments").change(function(){
+	$(".page-cheatsheet #showComments").on("change", function(){
 		if( $(this).is(':checked') ){
 			$(".impl-comment").show();
 			using("cheatsheet/options/comments/show");
@@ -1052,13 +1052,13 @@ $(function() {
 		}
 	});
 
-	$(".page-cheatsheet #filter").change(function(){
+	$(".page-cheatsheet #filter").on("change", function(){
 		applyCheatsheetFilters();
 		var word = $("#filter").val();
 		using("cheatsheet/options/filter/" + word); // spaces will appear as %20
 	});
 
-	$("input.restrict-having").change(function(){
+	$("input.restrict-having").on("change", function(){
 		applyCheatsheetFilters();
 		var lang = $(this).attr("data-lang");
 		if( $(this).val() )
