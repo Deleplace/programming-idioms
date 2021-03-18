@@ -75,7 +75,7 @@ li[aria-selected=false] .badge-lang {
 	background-color: #468847;
 }
 
-.badge-nonfav-lang {
+.badge-non-fav-lang {
 	background-color: #666666;
 }
 
@@ -535,7 +535,7 @@ li > a.lang-tab {
 
 /* Import statements (boring) are greyed out */
 .piimports pre{
-	color: #777;
+	color: #444;
 	border-bottom: 0px;
     border-color: #D7D7D7;
 	margin-bottom: 0px;
