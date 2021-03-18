@@ -60,7 +60,7 @@
 				{{if or (not .Idiom.Protected) .UserProfile.IsAdmin}}
 					<div class="new-impl-invitation hide-on-mobile">
 						<hr/>
-						<h5>Do you know the best way to do this in your language ?</h5>
+						<label>Do you know the best way to do this in your language ?</label>
 						<a href="{{hostPrefix}}/impl-create/{{.Idiom.Id}}" class="btn btn-primary"><i class="fas fa-plus-circle"></i> New implementation...</a>
 					</div>
 				{{end}}

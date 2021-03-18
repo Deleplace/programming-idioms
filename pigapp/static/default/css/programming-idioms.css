@@ -352,8 +352,10 @@ header.header-print h1 > a {
 	margin-bottom: 0px;
 }
 
-.right_column .created_by h4 {
+.right_column label {
 	margin-bottom: 0;
+	font-weight: bold;
+	font-size: 16px;
 }
 
 .right_column > div {
@@ -493,6 +495,10 @@ ul.related-idioms {
 .variable {
 	font-weight: bold;
 	font-style: italic;
+}
+
+.new-impl-invitation label {
+	font-weight: bold;
 }
 
 /* Modal nickname popin */

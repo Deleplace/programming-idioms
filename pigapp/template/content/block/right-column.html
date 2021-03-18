@@ -4,7 +4,7 @@
 	{{with .Data}}
 		{{$idiom := .}}
 		<div class="created_by">
-			<h4>Idiom created by</h4>
+			<label>Idiom created by</label>
 			{{.Author}}
 		</div>
 
@@ -14,7 +14,7 @@
 		</div>
 		
 		{{if .RelatedIdiomIds}}
-			<h4>Related idioms</h4>
+			<label>Related idioms</label>
 			<ul class="related-idioms">
 				{{range $i,$rid := .RelatedIdiomIds}}
 					{{$title := index $idiom.RelatedIdiomTitles $i}}
