@@ -112,7 +112,7 @@
 					<div class="span6">
 						<h1>Idiom #{{.Id}} <a href="{{niceIdiomURL .}}">{{.Title}}</a></h1>
 						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
-						{{template "idiom-picture" .ImageURL}}
+						{{template "idiom-picture" .}}
 						{{if .RelatedURLs}}
 							<ul class="idiom-related-urls">
 								{{$idiom := .}}
@@ -524,18 +524,21 @@
 {{end}}
 
 {{define "idiom-picture"}}
-	{{if hasSuffix . ".webp"}}
-		{{$fallback := replace . ".webp" ".png" -1}}
+	{{if hasSuffix .ImageURL ".webp"}}
+		{{$fallback := replace .ImageURL ".webp" ".png" -1}}
 		<div class="idiom-picture">
 			<picture>
-				<source srcset="{{.}}" type="image/webp">
+				<source srcset="{{.ImageURL}}" type="image/webp">
 				<source srcset="{{$fallback}}" type="image/png">
-				<img src="{{$fallback}}"  alt="Illustration" />
+				<img src="{{$fallback}}"  alt="Illustration" 
+					{{if .ImageWidth}}width="{{.ImageWidth}}"{{end}}
+					{{if .ImageHeight}}height="{{.ImageHeight}}"{{end}}
+				/>
 			</picture>
 		</div>
 	{{else if .}}
 		<div class="idiom-picture">
-			<img src="{{.}}" alt="Illustration"/>
+			<img src="{{.ImageURL}}" alt="Illustration"/>
 		</div>
 	{{end}}
 {{end}}

@@ -60,6 +60,9 @@ type Idiom struct {
 	// ImageURL to illustrate this idiom.
 	ImageURL string
 
+	// ImageWidth, ImageHeight hints for web rendering: avoids FOUC
+	ImageWidth, ImageHeight int
+
 	// Autoincremented at each update 1, 2, 3...
 	Version int
 
