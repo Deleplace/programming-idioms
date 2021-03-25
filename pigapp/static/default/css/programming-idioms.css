@@ -194,6 +194,14 @@ h3 a {
 	background-image: linear-gradient(to bottom, #3333dd, #ffffff);
 }
 
+button.remove-nickname {
+	background: none;
+	border: none;
+	padding-top: 0.2em;
+	padding-left: 0;
+	color: #bbbbbb;
+}
+
 /* Header small */
 .header-small {
 	margin: 0px 0px 12px 0px;
@@ -322,10 +330,12 @@ header.header-print h1 > a {
 }
 
 
-.favorite-language-remove {
-	/* Remove icon hidden by default ?
-	display: none;
-	*/
+button.favorite-language-remove {
+	background: none;
+	border: none;
+	padding: 0;
+	color: #ffffff;
+	font-size: inherit;
 }
 
 .medium .badge {
