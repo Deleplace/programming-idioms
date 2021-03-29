@@ -28,6 +28,10 @@
                     <input type="checkbox" id="showComments" /> Comments
                 </label>
 
+                <label for="showExternalLinks" class="checkbox" title="Show external links to docs and demos">
+                    <input type="checkbox" id="showExternalLinks" /> Links
+                </label>
+
                 <input type="text" id="filter" class="input-small" placeholder="filter..." />
             </div>
             {{if ge (len .Langs) 2}}
@@ -101,6 +105,14 @@
                                             <div class="impl-comment" style="display: none;">
                                                 {{markup2CSS (atom2string $doc.ImplCodeBlockComment)}}
                                             </div>
+
+                                            <div class="impl-external-links pull-right">
+                                                <ul>
+                                                    {{if $doc.ImplDemoURL}}<li class="active demo"><a href="{{$doc.ImplDemoURL}}" target="_blank" rel="nofollow noopener">Demo</a></li>{{end}}
+                                                    {{if $doc.ImplDocURL}}<li class="active doc"><a href="{{$doc.ImplDocURL}}" target="_blank" rel="nofollow noopener">Doc</a></li>{{end}}
+                                                </ul>
+                                            </div>
+
                                         </div>
                                     {{end}}
                                 </td>

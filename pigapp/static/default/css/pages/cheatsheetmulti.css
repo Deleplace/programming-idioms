@@ -68,11 +68,33 @@ table.cheatsheet-lines.with-1-langs th.idiom-title-and-lead {
 	visibility: visible;
 }
 
+.implementation .impl-external-links {
+    display: none;
+    margin-bottom: 0;
+}
+
+.implementation .impl-external-links ul {
+    margin: 0;
+    list-style: none;
+}
+
+.implementation .impl-external-links li {
+    float: left;
+    margin-left: 1em;
+}
+
+.implementation .impl-external-links li a {
+    color: #777777;
+}
+
 @media print {
     .page-cheatsheet.multi .idiom-title-and-lead {
         width: 20%;
     }
     .languages-overflow {
         display: none;
+    }
+    .page-cheatsheet .implementation .impl-external-links {
+        display: none !important;
     }
 }

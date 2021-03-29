@@ -1053,6 +1053,16 @@ $(function() {
 		}
 	});
 
+	$(".page-cheatsheet #showExternalLinks").on("change", function(){
+		if( $(this).is(':checked') ){
+			$(".impl-external-links").show();
+			using("cheatsheet/options/impl-external-links/show");
+		}else{
+			$(".impl-external-links").hide();
+			using("cheatsheet/options/impl-external-links/hide");
+		}
+	});
+
 	$(".page-cheatsheet #filter").on("change", function(){
 		applyCheatsheetFilters();
 		var word = $("#filter").val();

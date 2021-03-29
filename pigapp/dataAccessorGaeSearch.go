@@ -82,6 +82,10 @@ type cheatSheetLineDoc struct {
 	ImplCodeBlock gaesearch.Atom
 	// ImplCodeBlock is the comment of this impl.
 	ImplCodeBlockComment gaesearch.Atom
+	// ImplDemoURL is the demo URL of this impl.
+	ImplDemoURL gaesearch.Atom
+	// ImplDocURL is the documentation URL of this impl.
+	ImplDocURL gaesearch.Atom
 }
 
 type cheatSheetLineDocs []cheatSheetLineDoc
@@ -182,6 +186,8 @@ func indexIdiomCheatsheets(ctx context.Context, idiom *Idiom) error {
 			ImplImportsBlock:     gaesearch.Atom(impl.ImportsBlock),
 			ImplCodeBlock:        gaesearch.Atom(impl.CodeBlock),
 			ImplCodeBlockComment: gaesearch.Atom(impl.AuthorComment),
+			ImplDocURL:           gaesearch.Atom(impl.DocumentationURL),
+			ImplDemoURL:          gaesearch.Atom(impl.DemoURL),
 		}
 	}
 	_, err = index.PutMulti(ctx, docIDs, docs)
