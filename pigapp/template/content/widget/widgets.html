@@ -538,7 +538,10 @@
 		</div>
 	{{else if .ImageURL}}
 		<div class="idiom-picture">
-			<img src="{{.ImageURL}}" alt="Illustration"/>
+			<img src="{{.ImageURL}}" alt="Illustration"
+				{{if .ImageWidth}}width="{{.ImageWidth}}"{{end}}
+				{{if .ImageHeight}}height="{{.ImageHeight}}"{{end}}
+			/>
 		</div>
 	{{end}}
 {{end}}
