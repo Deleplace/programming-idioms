@@ -353,9 +353,20 @@ button.favorite-language-remove {
 
 }
 
+.span12.addible-languages-pool {
+	display: none;
+}
 
-.addible-languages-pool {
-	display: none; /* <- Doesn't work? */
+.addible-languages-pool {
+	margin-top: 0.5em;
+}
+
+.addible-languages-pool li {
+	margin-top: 0.5em;
+}
+
+.addible-languages-pool li:last-child {
+	margin-left: 0.5em;
 }
 
 /* Right column */
