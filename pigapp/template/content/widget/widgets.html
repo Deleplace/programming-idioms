@@ -53,7 +53,7 @@
 	<p class="greetings">
 	{{if .PageMeta.Toggles.greetings}}
 		{{if .UserProfile.Nickname}}
-			<i class="fas fa-user user-info-link"> <a href="#">{{.UserProfile.Nickname}}</a></i> <button class="remove-nickname fas fa-times" aria-label="Clear username"></button>
+			<i class="fas fa-user user-info-link"> <a href="#">{{.UserProfile.Nickname}}</a></i> <button class="remove-nickname fas fa-times" aria-label="Clear username" title="Clear username"></button>
 		{{end}}
 	{{end}}
 	</p>

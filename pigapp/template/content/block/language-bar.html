@@ -16,7 +16,7 @@
 			{{end}}
 			<ul class="favorite-languages sortable-lang">
 				{{range .UserProfile.FavoriteLanguages}}
-					<li class="active" data-language="{{.}}"><span class="badge badge-fav-lang">{{. | printNiceLang}} <button class="favorite-language-remove fas fa-times" aria-label="Remove fav"></button></span></li>
+					<li class="active" data-language="{{.}}"><span class="badge badge-fav-lang">{{. | printNiceLang}} <button class="favorite-language-remove fas fa-times" aria-label="Remove fav" title="Remove fav"></button></span></li>
 				{{end}}
 			</ul>
 		</div>

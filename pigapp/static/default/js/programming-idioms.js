@@ -200,7 +200,7 @@ $(function() {
 		if( nick.length>30 )
 			nick = nick.substring(0,30);
 		$.cookie("Nickname", nick, { expires : 100, path: '/' });
-		$(".greetings").html('<i class="fas fa-user"> '+ nick +'</i> <a href="#" class="remove-nickname fas fa-times" alt="Clear username"></a>').show();
+		$(".greetings").html('<i class="fas fa-user"> '+ nick +'</i> <a href="#" class="remove-nickname fas fa-times" alt="Clear username" title="Clear username"></a>').show();
 		$("#modal-nickname").modal("hide");
 	});
 
@@ -449,7 +449,7 @@ $(function() {
 		var li = $(this).parent();
 		var lg = li.attr('data-language');
 		var lgDisplay = $(this).html();
-		var li = $('<li class="active" data-language="'+lg+'"><span class="badge badge-success">'+lgDisplay+' <a href="#" class="favorite-language-remove fas fa-times"></a></span></li>');
+		var li = $('<li class="active" data-language="'+lg+'"><span class="badge badge-success">'+lgDisplay+' <a href="#" class="favorite-language-remove fas fa-times" title="Remove fav"></a></span></li>');
 		li.hide().appendTo($(".favorite-languages")).show('normal');
 		using("fav-lang-bar-add/" + lg);
     	updateFavlangCookie();
