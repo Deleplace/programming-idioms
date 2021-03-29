@@ -10,6 +10,7 @@ header > * {
 }
 header > h1 {
     margin: 0.2rem 0.5rem 0.2rem 0.5rem;
+	max-width: 75vw;
 }
 h1 > a {
     text-decoration: none;

@@ -1303,6 +1303,7 @@ header > * {
 }
 header > h1 {
     margin: 0.2rem 0.5rem 0.2rem 0.5rem;
+	max-width: 75vw;
 }
 header > h1 > a {
 	color: white;
@@ -1320,9 +1321,14 @@ header .random {
 }
 header .form-search {
     float: none;
+	max-width: 75vw;
 	margin-top: 0.5rem;
 	margin-left: 1rem;
 	margin-bottom: 0.5rem;
+}
+
+header .form-search input[name=q] {
+	max-width: 40vw;
 }
 
 header .greetings {
