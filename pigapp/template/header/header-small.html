@@ -12,6 +12,9 @@
 		<button type="submit">🔍 Search</button>
 	</form>
 	{{template "greetings" .}}
+	{{if .UserProfile.IsAdmin}}
+		<a class="btn go-to-admin" href="/admin" target="/blank">ADMIN</a>
+	{{end}}
 </header>
 {{template "message-zone"}}
 {{end}}
