@@ -493,6 +493,7 @@ ul.related-idioms {
 }
 .idiom-summary-large .idiom-picture img{
   max-height: 160px;
+  object-fit: scale-down;
 }
 .idiom-summary-large ul.idiom-related-urls {
 	margin-top: 2em;
