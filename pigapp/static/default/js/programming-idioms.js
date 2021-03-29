@@ -89,6 +89,7 @@ $(function() {
 	        		'/typeahead-languages', 
 	        		{ userInput: query }, 
 	        		function (data) {
+						data.options = data.options || [];
 	        			return process(data.options);
 	        		});
 		},

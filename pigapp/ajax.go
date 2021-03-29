@@ -141,6 +141,7 @@ func typeaheadLanguages(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "application/json")
 	// TODO browser cache 2d
 	// TODO server cache 2d
+	// FIXME this prints {"options":null} for an empty result list, which is not the most frontend-friendly.
 	fmt.Fprint(w, Response{"options": suggestions})
 	return nil
 }
