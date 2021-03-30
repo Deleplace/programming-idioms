@@ -25,6 +25,7 @@
 		{{if .Toggles.useCDN}} 
 			<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 			<!-- Warning: the full fa-solid-900 font in CDN (80kB) is much heavier than the custom lightweight self-hosted one -->
+			<!-- Warning: the full all.min.css CDN (59kB, 13kB gzipped) is heavier than the custom lightweight self-hosted one -->
 			<link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet">
 			{{if .Toggles.useMinifiedCss}} 
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.min.css" />
@@ -35,10 +36,10 @@
 		{{else}}
 			{{if .Toggles.useMinifiedCss}} 
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.nocdn.min.css" />
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/fontawesome-free-5.15.2-web/css/all.min.css" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/fontawesome-free-5.15.2-web/css/all.programming-idioms.css" />
 			{{else}}
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/bootstrap-combined.no-icons.min.css" />
-				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/fontawesome-free-5.15.2-web/css/all.css" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/fontawesome-free-5.15.2-web/css/all.programming-idioms.css" />
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/prettify.css" />
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.css" />
 			{{end}}
