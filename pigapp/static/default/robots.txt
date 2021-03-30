@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /history/
+Disallow: /my/
+Disallow: /idiom-edit/
+Disallow: /impl-edit/
+Disallow: /api/

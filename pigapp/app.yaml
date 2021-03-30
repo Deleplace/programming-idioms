@@ -12,6 +12,10 @@ handlers:
   static_files: static/default/.well-known/security.txt
   upload: static/default/\.well-known/security\.txt
   expiration: "1d"
+- url: /robots\.txt
+  static_files: static/default/robots.txt
+  upload: static/default/robots\.txt
+  expiration: "300s"
 - url: /default/img
   static_dir: static/default/img
   expiration: "15d"
