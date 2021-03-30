@@ -69,6 +69,7 @@ func initRoutes() {
 		handle("/my/{langs}", bookmarkableUserURL)
 		// handle("/cheatsheet/{lang}", cheatsheet)
 		handle("/cheatsheet/{langs:.+}", cheatsheetMulti)
+		r.PathPrefix("/cheatsheet").HandlerFunc(cheatsheetPageRedirect)
 		handleAjax("/typeahead-languages", typeaheadLanguages)
 		handleAjax("/supported-languages", supportedLanguages)
 		handleAjax("/ajax-other-implementations", ajaxOtherImplementations)
