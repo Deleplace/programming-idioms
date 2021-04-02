@@ -333,6 +333,7 @@ header.header-print h1 > a {
 button.favorite-language-remove {
 	background: none;
 	border: none;
+	margin-left: 0.5em;
 	padding: 0;
 	color: #ffffff;
 	font-size: inherit;
