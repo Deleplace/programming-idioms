@@ -1209,9 +1209,10 @@ $(function() {
 		const script = document.createElement('script');
 		script.setAttribute('type', 'application/ld+json');
 		let sd = {
+			"@context": "https://schema.org",
+			"@type": "QAPage",
 			"mainEntity": {
-				"@context": "https://schema.org",
-				"@type": "QAPage",
+				"@type": "Question",
 				"name": questionName,
 				"text": questionText,
 				"answerCount": answers.length,
