@@ -63,6 +63,9 @@ type Idiom struct {
 	// ImageWidth, ImageHeight hints for web rendering: avoids FOUC
 	ImageWidth, ImageHeight int
 
+	// ImageAlt is a description of a picture for accessibility purpose
+	ImageAlt string
+
 	// Autoincremented at each update 1, 2, 3...
 	Version int
 

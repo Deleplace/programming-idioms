@@ -530,9 +530,10 @@
 			<picture>
 				<source srcset="{{.ImageURL}}" type="image/webp">
 				<source srcset="{{$fallback}}" type="image/png">
-				<img src="{{$fallback}}"  alt="Illustration" 
+				<img src="{{$fallback}}"
 					{{if .ImageWidth}}width="{{.ImageWidth}}"{{end}}
 					{{if .ImageHeight}}height="{{.ImageHeight}}"{{end}}
+					{{if .ImageAlt}}alt="{{.ImageAlt}}"{{end}}
 				/>
 			</picture>
 		</div>
