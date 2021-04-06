@@ -79,7 +79,7 @@ func (a *MemcacheDatastoreAccessor) cacheValues(ctx context.Context, cacheKeys [
 	// Set the items, unconditionally, in 1 batch call
 	err := memcache.SetMulti(ctx, items)
 	if err != nil {
-		log.Debugf(ctx, "Failed setting cache items: %v", cacheKeys, err)
+		log.Debugf(ctx, "Failed setting cache items for keys %v: %v", cacheKeys, err)
 	}
 	return err
 }
@@ -109,7 +109,7 @@ func (a *MemcacheDatastoreAccessor) cacheSameValues(ctx context.Context, cacheKe
 	// Set the items, unconditionally, in 1 batch call
 	err = memcache.SetMulti(ctx, items)
 	if err != nil {
-		log.Debugf(ctx, "Failed setting cache items: %v", cacheKeys, err)
+		log.Debugf(ctx, "Failed setting cache items for keys %v: %v", cacheKeys, err)
 	}
 	return err
 }

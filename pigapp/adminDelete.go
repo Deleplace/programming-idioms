@@ -52,7 +52,7 @@ func implDelete(w http.ResponseWriter, r *http.Request) error {
 
 	err2 := unindexImpl(ctx, idiomID, implID)
 	if err2 != nil {
-		log.Errorf(ctx, "Unindexing impl %d from idiom %d: %v", implID, idiomID)
+		log.Errorf(ctx, "Unindexing impl %d from idiom %d: %v", implID, idiomID, err2)
 		// But keep going
 	}
 
