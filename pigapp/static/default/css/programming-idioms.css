@@ -202,6 +202,11 @@ button.remove-nickname {
 	color: #bbbbbb;
 }
 
+a.go-to-admin {
+	border: 2px solid white;
+	margin: 0.5em;
+}
+
 /* Header small */
 .header-small {
 	margin: 0px 0px 12px 0px;
