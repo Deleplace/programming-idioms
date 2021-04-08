@@ -1395,3 +1395,22 @@ footer a.about-link {
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
+
+
+@keyframes spin-jolty {
+    0% {
+        transform:rotate(0deg);
+    }
+    50% {
+        transform:rotate(360deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}
+
+.spinning-jolty {
+	animation-duration: 0.7s;
+	animation-name: spin-jolty;
+	animation-iteration-count: infinite;
+}
