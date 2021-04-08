@@ -1395,3 +1395,33 @@ footer a.about-link {
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
+
+
+@keyframes spin-jolty {
+    0% {
+        transform:rotate(0deg);
+    }
+    50% {
+        transform:rotate(360deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}
+
+.spinning-jolty {
+	animation-duration: 0.7s; /* Fast */
+	animation-name: spin-jolty;
+	animation-iteration-count: infinite;
+}
+
+.spinning-jolty2 {
+	animation-duration: 2.0s; /* Slow */
+	animation-name: spin-jolty;
+	animation-iteration-count: infinite;
+}
+
+.about-central-zone img.throbber {
+	width: 3em;
+	height: 3em;
+}

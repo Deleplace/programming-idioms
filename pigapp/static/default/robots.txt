@@ -3,4 +3,4 @@ Disallow: /history/
 Disallow: /my/
 Disallow: /idiom-edit/
 Disallow: /impl-edit/
-Disallow: /api/
+Disallow: /api/idioms/all

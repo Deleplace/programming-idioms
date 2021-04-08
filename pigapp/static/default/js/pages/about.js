@@ -4,7 +4,14 @@ $(function() {
 	// Left menu
 	//
 	var loadAboutCentral = function(url, tempo){
-		$(".about-central-zone").fadeOut(tempo);
+		let fetched = false;
+		let centralZone = $(".about-central-zone");
+		centralZone.fadeOut(tempo,function(){
+			if(fetched)
+				return;
+			centralZone.html(`<img src="/default/img/wheel.svg" class="throbber spinning-jolty2" />`);
+			centralZone.show();
+		});
 		$(".about-left-menu li").removeClass("active");
 		$(".about-left-menu a").each( function(){
 			var dbu = $(this).attr("data-block-url");
@@ -14,9 +21,10 @@ $(function() {
 			}
 		});
         $.get(url,function(data){
-            $(".about-central-zone").fadeOut(10,function(){
-				$(".about-central-zone").html(data);
-				$(".about-central-zone").fadeIn(tempo, function(){
+			fetched = true;
+            centralZone.fadeOut(10,function(){
+				centralZone.html(data);
+				centralZone.fadeIn(tempo, function(){
 					initLanguageTypeahead();
 				});
 			});

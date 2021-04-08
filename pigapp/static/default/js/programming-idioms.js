@@ -1239,4 +1239,8 @@ $(function() {
 			generateQAStructuredData(idiom);
 		});
 	}
+
+	$(".dice").on("click", function() {
+		$(this).addClass("spinning-jolty");
+	});
 });
