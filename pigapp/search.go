@@ -166,6 +166,11 @@ func searchRedirect(w http.ResponseWriter, r *http.Request) error {
 		http.Redirect(w, r, "/", 301)
 		return nil
 	}
+
+	// #102 Slash in query breaks the search URL.
+	// Mitigation: remove them.
+	q = strings.Replace(q, "/", " ", -1)
+
 	safeQ := url.QueryEscape(q)
 
 	http.Redirect(w, r, hostPrefix()+"/search/"+safeQ, http.StatusMovedPermanently)
