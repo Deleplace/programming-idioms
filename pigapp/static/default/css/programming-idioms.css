@@ -1410,7 +1410,18 @@ footer a.about-link {
 }
 
 .spinning-jolty {
-	animation-duration: 0.7s;
+	animation-duration: 0.7s; /* Fast */
 	animation-name: spin-jolty;
 	animation-iteration-count: infinite;
+}
+
+.spinning-jolty2 {
+	animation-duration: 2.0s; /* Slow */
+	animation-name: spin-jolty;
+	animation-iteration-count: infinite;
+}
+
+.about-central-zone img.throbber {
+	width: 3em;
+	height: 3em;
 }
