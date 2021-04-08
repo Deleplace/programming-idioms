@@ -18,7 +18,7 @@
                 <meta name="keywords" content="{{.PageKeywords}}">
             {{end}}
             <link rel="canonical" href="{{host}}/" />
-            <style type="text/css">
+            <style>
                 body { background-color: #EEF; margin: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
                 header { min-height: 3.8rem; background-color: #448; color: white; }
                 header a { color: white; }
@@ -81,9 +81,9 @@
         {{template "traffic-analyze"}}
         {{template "sitelinks-searchbox"}}
     </body>
+    <script src="{{hostPrefix}}{{themeDir}}/js/pages/home-minimal.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/home-minimal.css" />
+    <link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/wheel.svg" as="image" />
+    <link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/die_highlight.svg" as="image" />
 </html>
-<script src="{{hostPrefix}}{{themeDir}}/js/pages/home-minimal.js"></script>
-<link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/home-minimal.css" />
-<link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/wheel.svg" as="image" />
-<link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/die_highlight.svg" as="image" />
 {{end}}
