@@ -32,21 +32,21 @@ $(function() {
 	});
 	$(".implementations-tabs").tabs({
 		activate: function( event, ui ) {
-			$('pre').popover("show"); // Fix (0,0) popovers of hidden tabs
+			$('pre[data-content]').popover("show"); // Fix (0,0) popovers of hidden tabs
 		}
 	});
 	
 	$('.togglabe').on('click',function() {
 		$(this).toggleClass("active");
 	});
-	$('div').popover({
+	$('div[data-content]').popover({
 		html : true
 	}).popover('show');
-	$('textarea').popover({
+	$('textarea[data-content]').popover({
 		html : true,
 		trigger: 'manual'
 	}).popover('show');
-	$('pre').popover({
+	$('pre[data-content]').popover({
 		html : true
 	}).popover('show');
 	$(document).on("click", ".popover-content", function (){
@@ -63,7 +63,7 @@ $(function() {
 		// We don't want to hide the bubble.
 	});
 	// $('a').popover('show');
-	$('input').popover({
+	$('input[data-content]').popover({
 		trigger: 'manual'
 	}).popover('show');
 	$('button.show-popover').popover('show');
@@ -75,12 +75,12 @@ $(function() {
 	
 	$(".idiom-picture img").on("load", function() {
 		// Repaint some bubbles when idiom picture has finished disploying
-		$('pre').popover("show");
+		$('pre[data-content]').popover("show");
 	});
 	
 	$(window).on("resize", function () {
 		// Repaint some bubbles on window resize
-		$('pre').popover("show");
+		$('pre[data-content]').popover("show");
 	});
 		
 	$('.input-suggest-language').typeahead({
@@ -761,7 +761,7 @@ $(function() {
 					otherImplDiv.html(data);
 					otherImplDiv.tabs({
 						activate: function( event, ui ) {
-							$('pre').popover("show"); // Fix (0,0) popovers of hidden tabs
+							$('pre[data-content]').popover("show"); // Fix (0,0) popovers of hidden tabs
 						}
 					});
 					otherImplDiv.find("li:first-child").addClass("active");
@@ -770,7 +770,7 @@ $(function() {
 						$(this).addClass("active"); 
 					});
 					//displayCodeCommentBubble();
-					$('pre').popover("show");
+					$('pre[data-content]').popover("show");
 	        	});
 		// }, 3000 );
 	});
@@ -793,7 +793,7 @@ $(function() {
 	}
 
 	function showImplCreatePreview(){
-			$('pre').popover("hide"); // Hide (0,0) popovers of hidden tabs
+			$('pre[data-content]').popover("hide"); // Hide (0,0) popovers of hidden tabs
 			var m = $('.modal-impl-preview');
 			var lang = $(".form-impl-creation input[name=impl_language]").val();
 			m.find(".lang-tab span.label").html(lang);
@@ -824,7 +824,7 @@ $(function() {
 				m.find("a.impl-attribution").attr("href", "#").hide();
 			m.modal();
 			window.setTimeout(function(){
-				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
+				$('pre[data-content]').popover("show"); // Fix and show (0,0) popovers of hidden tabs
 			}, 800);
 	}
 
@@ -834,7 +834,7 @@ $(function() {
 	})
 
 	function showImplEditPreview(){
-			$('pre').popover("hide"); // Hide (0,0) popovers of hidden tabs
+			$('pre[data-content]').popover("hide"); // Hide (0,0) popovers of hidden tabs
 			var m = $('.modal-impl-preview');
 			var lang = $(".form-impl .badge").html();
 			m.find(".lang-tab span.label").html(lang);
@@ -865,7 +865,7 @@ $(function() {
 				m.find("a.impl-attribution").attr("href", "#").hide();
 			m.modal();
 			window.setTimeout(function(){
-				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
+				$('pre[data-content]').popover("show"); // Fix and show (0,0) popovers of hidden tabs
 			}, 800);
 	}
 
@@ -880,7 +880,7 @@ $(function() {
 	//
 
 	function showIdiomCreatePreview(){
-			$('pre').popover("hide"); // Hide (0,0) popovers of hidden tabs
+			$('pre[data-content]').popover("hide"); // Hide (0,0) popovers of hidden tabs
 			var m = $('.modal-idiom-preview');
 
 			var title = $(".form-idiom-creation input[name=idiom_title]").val();
@@ -919,7 +919,7 @@ $(function() {
 				m.find("a.impl-attribution").attr("href", "#").hide();
 			m.modal();
 			window.setTimeout(function(){
-				$('pre').popover("show"); // Fix and show (0,0) popovers of hidden tabs
+				$('pre[data-content]').popover("show"); // Fix and show (0,0) popovers of hidden tabs
 			}, 800);
 	}
 
