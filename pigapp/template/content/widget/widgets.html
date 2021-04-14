@@ -126,7 +126,7 @@
 						{{end}}
 					</div>
 					<div class="span4">
-						<div class="language-list">
+						<div class="language-list data-nosnippet">
 							<ul class="inline">
 								{{range .Implementations}}
 									<li class="active"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
@@ -166,7 +166,7 @@
 						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
 					</div>
 					<div class="span4">
-						<div class="language-list">
+						<div class="language-list data-nosnippet">
 							<ul class="inline">
 								{{range .Implementations}}
 									<li class="active{{if .Deco.Matching}} matching{{end}}{{if .Deco.SearchedLang}} searched-lang{{end}}"><span class="badge {{langBadgeClass .LanguageName $favlangs}}"><a href="{{niceImplURL $.Data .Id .LanguageName}}">{{.LanguageName | printNiceLang}}</a></span></li>
