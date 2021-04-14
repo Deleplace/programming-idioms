@@ -35,7 +35,7 @@
 				{{end}}
 				{{end}}
 			</div>
-			<div class="implementations-tabs data-nosnippet">
+			<div class="implementations-tabs {{if $selectedImplLang}}data-nosnippet{{end}}">
 				<ul class="nav nav-tabs language-names">
 					{{$tabclass := ""}}
 					{{range .Idiom.Implementations}}
