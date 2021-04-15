@@ -1182,6 +1182,11 @@ $(function() {
 		let lang = extractLangFromURL();
 		let questionName = document.title;
 		let questionText = $(".idiom-lead-paragraph").text();
+		if(!questionText) {
+			// In the rare case where the description (lead paragraph) is empty,
+			// let's stuff "text" with the question title, because "text" is mandatory.
+			questionText = questionName;
+		}
 		let questionCreation = idiom.CreationDate.substring(0,10);
 		let questionAuthor = idiom.Author;
 		// let questionText = idiom.LeadParagraph;
