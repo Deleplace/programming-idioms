@@ -1330,6 +1330,10 @@ header > h1 > a:visited {
     text-decoration: none;
 	color: white;
 }
+header > h1 > a:hover {
+    text-decoration: none;
+	color: white;
+}
 h1 > a {
     text-decoration: none;
 }
