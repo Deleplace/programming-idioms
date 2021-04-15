@@ -177,19 +177,12 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	pageTitle := idiom.Title
-	extraKeywords := idiom.ExtraKeywords
 	if selectedImplLang != "" {
-		// SEO: specify the language in the HTML title, and in meta keywords, for search engine results
-		langAliases := selectedImplLang
-		if niceLang := PrintNiceLang(selectedImplLang); niceLang != "" {
-			pageTitle += ", in " + niceLang
-			if selectedImplLang != niceLang {
-				langAliases = niceLang + " " + langAliases
-			}
-		}
-		langAliases += " " + strings.Join(LanguageExtraKeywords(selectedImplLang), " ")
-		extraKeywords = langAliases + " " + extraKeywords
+		// SEO: specify the language in the HTML title
+		pageTitle += ", in " + PrintNiceLang(selectedImplLang)
 	}
+
+	pageKeywords := preparePageKeywords(idiom, selectedImplLang)
 
 	extraJS := []string{}
 	if IsAdmin(r) {
@@ -203,7 +196,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	data := &IdiomDetailFacade{
 		PageMeta: PageMeta{
 			PageTitle:    pageTitle,
-			PageKeywords: extraKeywords,
+			PageKeywords: pageKeywords,
 			CanonicalURL: canonicalURL,
 			Toggles:      myToggles,
 			ExtraJs:      extraJS,
@@ -289,11 +282,11 @@ func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]s
 
 	pageTitle := idiom.Title
 	if selectedImplLang != "" {
-		// SEO: specify the language in the HTML title, for search engine results
-		if niceLang := PrintNiceLang(selectedImplLang); niceLang != "" {
-			pageTitle += ", in " + niceLang
-		}
+		// SEO: specify the language in the HTML title
+		pageTitle += ", in " + PrintNiceLang(selectedImplLang)
 	}
+
+	pageKeywords := preparePageKeywords(idiom, selectedImplLang)
 
 	myToggles := copyToggles(toggles)
 	myToggles["actionEditIdiom"] = !idiom.Protected
@@ -302,7 +295,7 @@ func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]s
 	data := &IdiomDetailFacade{
 		PageMeta: PageMeta{
 			PageTitle:    pageTitle,
-			PageKeywords: idiom.ExtraKeywords,
+			PageKeywords: pageKeywords,
 			CanonicalURL: canonicalURL,
 			Toggles:      myToggles,
 		},
@@ -323,4 +316,27 @@ type needRedirectError string
 
 func (err needRedirectError) Error() string {
 	return string(err)
+}
+
+// SEO meta keywords
+func preparePageKeywords(idiom *Idiom, selectedImplLang string) string {
+	// Keywords from the Idiom itself
+	keywords := idiom.ExtraKeywords
+	// #144 most idiom.ExtraKeywords have space separators, but wee need commas.
+	// Let's replace with commas. Drawback: a multiple word keyword don't survive.
+	keywords = strings.Replace(keywords, " ", ", ", -1)
+	keywords = strings.Replace(keywords, ",,", ",", -1)
+
+	// Extra keywords for the languqge name of the selected impl
+	if selectedImplLang != "" {
+		langAliases := selectedImplLang
+		niceLang := PrintNiceLang(selectedImplLang)
+		if selectedImplLang != niceLang {
+			langAliases = niceLang + ", " + langAliases
+		}
+		langAliases += ", " + strings.Join(LanguageExtraKeywords(selectedImplLang), ", ")
+		keywords = langAliases + ", " + keywords
+	}
+
+	return keywords
 }
