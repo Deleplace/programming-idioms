@@ -1184,6 +1184,15 @@ a.history-copy-comments-to-clipboard {
 	list-style: none;
 }
 
+.page-cheatsheet .license-on-print{
+    display: none;
+	float: right;
+	color: #666;
+}
+.page-cheatsheet .license-on-print p {
+	margin: 0;
+}
+
 .page-cheatsheet .filters {
 	float: right;
 	margin-bottom: 15px;
@@ -1271,6 +1280,10 @@ a.history-copy-comments-to-clipboard {
 
   .page-cheatsheet .guidance{
     display: none !important;
+  }
+
+  .page-cheatsheet .license-on-print{
+    display: block !important;
   }
 
   .page-cheatsheet .filters{
