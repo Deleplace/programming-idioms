@@ -20,7 +20,7 @@ func MainStreamLanguages() []string {
 	return mainStreamLangs[:]
 }
 
-var moreLangs = [...]string{"Ada", "Caml", "Clojure", "Cobol", "D", "Dart", "Elixir", "Erlang", "Fortran", "Groovy", "Haskell", "Kotlin", "Lua", "Lisp", "Pascal", "Perl", "Prolog", "Rust", "Scala", "Scheme", "VB"}
+var moreLangs = [...]string{"Ada", "Caml", "Clojure", "Cobol", "D", "Dart", "Elixir", "Erlang", "Fortran", "Groovy", "Haskell", "Kotlin", "Lua", "Lisp", "Pascal", "Perl", "Prolog", "Rust", "Scala", "Scheme", "VB", "Racket"}
 
 func MoreLanguages() []string {
 	// These do *not* include the MainStreamLanguages()
@@ -186,6 +186,7 @@ var langsExtraKeywords = map[string][]string{
 	"Pascal":  []string{"pp", "pas", "inc"},
 	"Perl":    []string{"pl"},
 	"Python":  []string{"py"},
+        "Racket":  []string{"rkt", "scrbl"},
 	"Ruby":    []string{"rb"},
 	"Rust":    []string{"rs"},
 	"Scala":   []string{"sc"},
