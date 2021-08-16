@@ -76,14 +76,16 @@
             </div>
 
         </div>
+
         <footer>
         </footer>
+
+        <script src="{{hostPrefix}}{{themeDir}}/js/pages/home-minimal.js"></script>
+        <link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/home-minimal.css" />
+        <link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/wheel.svg" as="image" />
+        <link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/die_highlight.svg" as="image" />
         {{template "traffic-analyze"}}
         {{template "sitelinks-searchbox"}}
     </body>
-    <script src="{{hostPrefix}}{{themeDir}}/js/pages/home-minimal.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{hostPrefix}}{{themeDir}}/css/pages/home-minimal.css" />
-    <link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/wheel.svg" as="image" />
-    <link rel="preload" href="{{hostPrefix}}{{themeDir}}/img/die_highlight.svg" as="image" />
 </html>
 {{end}}

@@ -1391,6 +1391,7 @@ footer div {
 footer img.coverage {
     width: 2rem;
     height: 2rem;
+    max-width: none;
 }
 footer .about-link {
     font-weight: bold;
