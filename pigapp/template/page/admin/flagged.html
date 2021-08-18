@@ -52,7 +52,7 @@
                         <tr class="flag-rant {{if .Resolved}}resolved{{end}}">
                             <td class="impl-lang">
                                 {{if .Impl}}
-                                    {{.Impl.LanguageName}}
+                                    {{.Impl.LanguageName | printNiceLang}}
                                 {{end}}
                             </td>
                             <td colspan="2">
