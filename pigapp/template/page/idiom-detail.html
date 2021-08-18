@@ -24,7 +24,7 @@
 						<div>
 						    <ul class="nav nav-tabs language-names">
 	   							<li class="active">
-	   								<a href="#" class="lang-tab"><span class="label {{if idEqual .Id $selectedImplId}}badge-lang{{end}} {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
+	   								<a href="#" class="lang-tab"><span class="label {{if idEqual .Id $selectedImplId}}selected-impl badge-lang{{end}} {{langBadgeClass .LanguageName $.UserProfile.FavoriteLanguages}}">{{.LanguageName | printNiceLang}}</span></a>
 							    </li>
 	    					</ul>
 						</div>

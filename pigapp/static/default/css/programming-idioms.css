@@ -83,6 +83,11 @@ li[aria-selected=false] .badge-lang {
 	background-color: #666666;
 }
 
+.selected-impl.badge-lang.badge-non-fav-lang {
+	/* Resolve conflict against badge-non-fav-lang */
+	background-color: #0044cc;
+}
+
 .favorite-language {
 	background-color: #008d02;  /* Something brighter than badge-success */
 }
@@ -1340,6 +1345,10 @@ header > h1 > a {
 	font-size: 2rem;
 }
 header > h1 > a:visited {
+    text-decoration: none;
+	color: white;
+}
+header > h1 > a:hover {
     text-decoration: none;
 	color: white;
 }
