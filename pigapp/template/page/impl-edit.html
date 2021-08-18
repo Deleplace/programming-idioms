@@ -67,6 +67,18 @@
 							</div>
 						</div>
 						<div class="control-group">
+							<label class="control-label"></label>
+							<div class="controls">
+								<div class="alert impl-edit-rules">
+									<p>
+										Implementation edit is for fixing errors and enhancing with metadata. Please do not replace
+										the code below with a different implementation.
+									</p>
+									<p>
+										Instead of changing the code of the snippet, consider <a href="/impl-create/{{.Idiom.Id}}/{{.Impl.LanguageName}}">creating another {{printNiceLang .Impl.LanguageName}} implementation</a>.
+									</p>
+								</div>
+							</div>
 							<label class="control-label" for="impl_code">Code</label>
 							<div class="controls">
 								<textarea name="impl_code" rows="8" class="impl-code input-xxlarge"
@@ -142,15 +154,6 @@
 			</div>		
 			<div class="span3">
 				{{template "contribution-rules-small-info"}}
-
-				<div class="alert impl-edit-rules">
-					<p>
-						Implementation edit is for fixing errors and enhancing with metadata.
-					</p>
-					<p>
-						Instead of changing the code of the snippet, consider <a href="/impl-create/{{.Idiom.Id}}/{{.Impl.LanguageName}}">creating another {{printNiceLang .Impl.LanguageName}} implementation</a>.
-					</p>
-				</div>
 			</div>
 		</div>
 
