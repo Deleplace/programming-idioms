@@ -150,6 +150,17 @@ func precomputeAutocompletions() map[string][]string {
 		}
 	}
 
+	for lg, words := range langsExtraKeywords {
+		for _, word := range words {
+			fragments := substrings(word)
+			for _, frag := range fragments {
+				if !StringSliceContains(m[frag], lg) {
+					m[frag] = append(m[frag], lg)
+				}
+			}
+		}
+	}
+
 	fmt.Fprintf(os.Stderr, "---\n")
 	return m
 }
@@ -183,7 +194,7 @@ var langsExtraKeywords = map[string][]string{
 	"Haskell": []string{"hs", "lhs"},
 	"JS":      []string{"javascript"},
 	"Obj-C":   []string{"Objective", "Objective-C", "mm"},
-	"Pascal":  []string{"pp", "pas", "inc"},
+	"Pascal":  []string{"pp", "pas", "inc", "turbopascal"},
 	"Perl":    []string{"pl"},
 	"Python":  []string{"py"},
 	"Ruby":    []string{"rb"},
