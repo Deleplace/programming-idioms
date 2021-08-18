@@ -630,7 +630,7 @@ $(function() {
 		let userinput = inputField.val();
 		let userinputlower = userinput.toLowerCase();
 		let group = inputField.closest(".control-group");
-		if(group.size() == 0)
+		if(group.length == 0)
 			return;
 		let message = group.find(".help-inline");
 		if(userinput === "") {
@@ -643,17 +643,22 @@ $(function() {
 		$.get('/supported-languages', 
 				{}, 
 				function(response) {
-					if( response.languages ) {
-						if( response.languages.find( function(lang) { return lang.toLowerCase() === userinputlower; }) ){
-							group.removeClass("error");
-							message.text("");
-						}else{
-							console.warn( userinput + " is currently not a supported language");
-							group.addClass("error");
-							message.text(userinput + " is currently not a supported language. Supported languages are " + response.languages.join(", "));
-							group.find(".language-single-select").popover("hide");
+					window.setTimeout( () => {
+						userinput = inputField.val(); // in some cases, this value has changed here
+						userinputlower = userinput.toLowerCase();
+						if( response.languages ) {
+							if( response.languages.find( function(lang) { return lang.toLowerCase() === userinputlower; }) ){
+								console.debug(`${userinput} is a legit lang, clearing any error`);
+								group.removeClass("error");
+								message.text("");
+							}else{
+								console.warn( userinput + " is currently not a supported language");
+								group.addClass("error");
+								message.text(userinput + " is currently not a supported language. Supported languages are " + response.languages.join(", "));
+								group.find(".language-single-select").popover("hide");
+							}
 						}
-					}
+					}, 200); // The change event is fired twice with possibly a different input, unfortunately. A small delay helps.
 				});
 	});
 
