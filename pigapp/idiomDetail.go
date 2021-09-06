@@ -76,7 +76,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		err := generateIdiomDetailPage(ctx, &buffer, vars)
 		if err != nil {
 			if properURL, ok := err.(needRedirectError); ok {
-				http.Redirect(w, r, string(properURL), 302)
+				http.Redirect(w, r, string(properURL), http.StatusFound) // 302
 				return nil
 			}
 			return err
@@ -114,15 +114,6 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		return PiErrorf(http.StatusNotFound, "Could not find idiom %q", idiomIDStr)
 	}
 
-	idiomTitleInURL := vars["idiomTitle"]
-	if idiomTitleInURL != "" && uriNormalize(idiom.Title) != idiomTitleInURL {
-		// Maybe the title has changed recently,
-		// or someone is attempting a practical joke forging a funny URL ?
-		properURL := NiceIdiomURL(idiom)
-		http.Redirect(w, r, properURL, 301)
-		return nil
-	}
-
 	var selectedImplID int
 	var selectedImplLang string
 	if selectedImplIDStr := vars["implId"]; selectedImplIDStr != "" {
@@ -143,6 +134,15 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		// Just the idiom, no specific impl
 		canonicalURL = host() + NiceIdiomRelativeURL(idiom)
+	}
+
+	idiomTitleInURL := vars["idiomTitle"]
+	if idiomTitleInURL != "" && uriNormalize(idiom.Title) != idiomTitleInURL {
+		// Maybe the title has changed recently,
+		// or someone is attempting a practical joke forging a funny URL ?
+		properURL := canonicalURL
+		http.Redirect(w, r, properURL, http.StatusMovedPermanently) // 301
+		return nil
 	}
 
 	includeNonFav := seeNonFavorite(r)
@@ -166,7 +166,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		// Maybe an accident,
 		// or someone is attempting a practical joke forging a funny URL ?
 		properURL := NiceImplURL(idiom, selectedImplID, selectedImplLang)
-		http.Redirect(w, r, properURL, 301)
+		http.Redirect(w, r, properURL, http.StatusMovedPermanently) // 301
 		return nil
 	}
 
