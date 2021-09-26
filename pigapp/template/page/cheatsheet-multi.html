@@ -9,6 +9,11 @@
     </div>
 	{{template "header-cheatsheet-print" .}}  
 	<div class="page-content container-fluid">
+        <div class="back-to-cheatsheets">
+            <a href="/cheatsheet">
+                &lt; Cheatsheets
+            </a>
+        </div>
 
         {{if ge (len .Langs) 3}}
             <div class="languages-overflow">
