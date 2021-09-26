@@ -1,6 +1,7 @@
 {{define "right-column"}}
 <div class="right_column data-nosnippet">
 	{{$isAdmin := .Deco.IsAdmin}}
+	{{$favLangs := .Deco.FavoriteLanguages}}
 	{{with .Data}}
 		{{$idiom := .}}
 		<div class="created_by">
@@ -35,6 +36,15 @@
 				  <input type="button" class="btn create-relation" value="Associate" />
 				</fieldset>
 			  </form>
+		{{end}}
+		
+		{{if $favLangs}} 
+			<label>Cheatsheets</label>
+			<ul class="related-idioms">
+				{{range $lg := $favLangs}}
+					<li><i class="fas fa-list"></i> <a href="/cheatsheet/{{$lg}}">{{printNiceLang $lg}}</a></li>
+				{{end}} 
+			</ul>
 		{{end}}
 	{{end}}
 </div>
