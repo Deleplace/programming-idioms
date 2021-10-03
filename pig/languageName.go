@@ -38,6 +38,7 @@ var AllNiceLangs []string
 
 func AllLanguages() []string {
 	if AllLangs == nil {
+		// Warning: this lazy init is a data race. Consider sync.Once instead.
 		mainstream := MainStreamLanguages()
 		more := MoreLanguages()
 		AllLangs = make([]string, len(mainstream)+len(more))
@@ -49,7 +50,8 @@ func AllLanguages() []string {
 			AllNiceLangs[i] = PrintNiceLang(lg)
 		}
 	}
-	return AllLangs
+	// Defensive copy (see issue #164)
+	return CloneStringSlice(AllLangs)
 }
 
 // autocompletions is a map[string][]string

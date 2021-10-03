@@ -259,3 +259,10 @@ func ConcurrentWithAnyError(funcs ...func() error) error {
 	}
 	return nil
 }
+
+// CloneStringSlice makes a defensive copy of
+func CloneStringSlice(a []string) []string {
+	b := make([]string, len(a))
+	copy(b, a)
+	return b
+}

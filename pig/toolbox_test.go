@@ -240,3 +240,50 @@ func TestTruncateBytes(t *testing.T) {
 		}
 	}
 }
+
+func TestCloneStringSlice(t *testing.T) {
+	{
+		a := []string{}
+		b := CloneStringSlice(a)
+		if want, got := 0, len(b); want != got {
+			t.Errorf("expected %d, got %d", want, got)
+		}
+	}
+	{
+		var a []string
+		b := CloneStringSlice(a)
+		if want, got := 0, len(b); want != got {
+			t.Errorf("expected %d, got %d", want, got)
+		}
+	}
+	{
+		a := make([]string, 0)
+		b := CloneStringSlice(a)
+		if want, got := 0, len(b); want != got {
+			t.Errorf("expected %d, got %d", want, got)
+		}
+	}
+	{
+		a := []string{"a"}
+		b := CloneStringSlice(a)
+		if want, got := 1, len(b); want != got {
+			t.Errorf("expected %d, got %d", want, got)
+		}
+		if want, got := "a", b[0]; want != got {
+			t.Errorf("expected %v, got %v", want, got)
+		}
+	}
+	{
+		a := []string{"a", "b"}
+		b := CloneStringSlice(a)
+		if want, got := 2, len(b); want != got {
+			t.Errorf("expected %d, got %d", want, got)
+		}
+		if want, got := "a", b[0]; want != got {
+			t.Errorf("expected %v, got %v", want, got)
+		}
+		if want, got := "b", b[1]; want != got {
+			t.Errorf("expected %v, got %v", want, got)
+		}
+	}
+}
