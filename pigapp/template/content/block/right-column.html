@@ -9,10 +9,11 @@
 			{{.Author}}
 		</div>
 
-		<div>
-			{{/* TODO should check .PageMeta.Toggles.actionIdiomHistory */}}
-			<a href="{{hostPrefix}}/history/{{.Id}}">View history</a>
-		</div>
+		{{/* TODO should check .PageMeta.Toggles.actionIdiomHistory */}}
+		<label>History</label>
+		<ul class="related-idioms">
+			<li><a href="{{hostPrefix}}/history/{{.Id}}">View revisions</a></li>
+		</ul>
 		
 		{{if .RelatedIdiomIds}}
 			<label>Related idioms</label>
@@ -23,20 +24,6 @@
 				{{end}} 
 			</ul>
 		{{end}} 
-
-		{{if $isAdmin}}
-			<form id="relation-form" enctype="multipart/form-data">
-				<label>Add relation</label>
-				<fieldset>
-				  <input type="hidden" name="idiomAId" value="{{.Id}}" class="idiomA" />
-				  <label>
-					  Other idiom ID
-					  <input type="text" name="idiomBId" class="idiomB input-small" required="required" value="" />
-				  </label> <br/>
-				  <input type="button" class="btn create-relation" value="Associate" />
-				</fieldset>
-			  </form>
-		{{end}}
 		
 		{{if $favLangs}} 
 			<label>Cheatsheets</label>
@@ -45,6 +32,29 @@
 					<li><i class="fas fa-list"></i> <a href="/cheatsheet/{{$lg}}">{{printNiceLang $lg}}</a></li>
 				{{end}} 
 			</ul>
+		{{end}}
+
+		<label>Issues</label>
+		<ul class="related-idioms">
+			<li><a href="https://github.com/Deleplace/programming-idioms/issues/new?assignees=Deleplace&labels=&template=bug_report.md&title=%5BBUG%5D+" target="_blank">Report a bug</a></li>
+		</ul>
+
+		{{if $isAdmin}}
+			<label>Add relation</label>
+			<form id="relation-form" enctype="multipart/form-data">
+				<fieldset>
+				  <input type="hidden" name="idiomAId" value="{{.Id}}" class="idiomA" />
+					<div class="control-group">
+					<label>
+						Other idiom ID
+					</label>
+				  <input type="text" name="idiomBId" class="idiomB input-small" required="required" value="" />
+				</div>
+				<div class="control-group">
+				  <input type="button" class="btn create-relation" value="Associate" />
+				</div>
+				</fieldset>
+			  </form>
 		{{end}}
 	{{end}}
 </div>

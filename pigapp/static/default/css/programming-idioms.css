@@ -411,6 +411,14 @@ ul.related-idioms {
 	margin-top: 3em;
 }
 
+.right_column #relation-form label {
+	font-weight: normal;
+}
+
+.right_column #relation-form .control-group {
+	margin-bottom: 0;
+}
+
 /* Idiom navigation lists */
 
 .idioms_nav_list h2,.idioms_nav_list h3 {
