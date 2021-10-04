@@ -193,7 +193,32 @@ var historyDelayer = delay.Func("save-history-item", func(ctx context.Context, i
 	if err != nil {
 		return err
 	}
-	log.Infof(ctx, "Saving history for idiom %d %q", historyItem.Idiom.Id, historyItem.Idiom.Title)
+	log.Infof(ctx, "Saving history v%d for idiom %d %q", historyItem.Version, historyItem.Idiom.Id, historyItem.Idiom.Title)
+
+	if historyItem.Version <= 1 {
+		// This is supposed to be the very first version for this idiom ID.
+		// Unless there is some clutter left from a previously delete idiom?
+		obsoleteVersionKeys, obsoleteVersions, err := dao.getIdiomHistoryList(ctx, historyItem.Idiom.Id)
+		if err != nil {
+			log.Errorf(ctx, "checking for obsolete history versions of idiom %d: %v", historyItem.Idiom.Id, err)
+		}
+		if len(obsoleteVersionKeys) > 0 {
+			log.Errorf(ctx, "Found %d obsolete history versions for idiom %d. Will delete them now.", len(obsoleteVersions), historyItem.Idiom.Id)
+			if nk, nv := len(obsoleteVersionKeys), len(obsoleteVersions); nk != nv {
+				log.Errorf(ctx, "Expected same numbers of Keys and Versions, got %d and %d", nk, nv)
+			}
+			for i, k := range obsoleteVersionKeys {
+				v := obsoleteVersions[i]
+				log.Infof(ctx, "Deleting obsolete history version %d (%v) for idiom %d", v.Version, v.VersionDate, historyItem.Idiom.Id)
+				err := datastore.Delete(ctx, k)
+				if err != nil {
+					log.Errorf(ctx, "deleting obsolete history version %d (%v) for idiom %d: %v", v.Version, v.VersionDate, historyItem.Idiom.Id, err)
+					// Keep going though
+				}
+			}
+		}
+	}
+
 	historyItem.ComputeIdiomOrImplLastEditor()
 	// Saves a new IdiomHistory entity. This causes no contention on the original Idiom entity.
 	_, err = datastore.Put(ctx, newHistoryKey(ctx), &historyItem)
