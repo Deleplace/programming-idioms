@@ -329,12 +329,12 @@ func (a *GaeDatastoreAccessor) deleteAllIdioms(ctx context.Context) error {
 }
 
 func (a *GaeDatastoreAccessor) deleteIdiom(ctx context.Context, idiomID int, why string) error {
-	key, _, err := a.getIdiom(ctx, idiomID)
+	key, idiom, err := a.getIdiom(ctx, idiomID)
 	if err != nil {
 		return err
 	}
-	// Remove from text search index
-	err = a.unindex(ctx, idiomID)
+	// Remove from text search indexes
+	err = a.unindex(ctx, idiom)
 	if err != nil {
 		log.Errorf(ctx, "Failed to unindex idiom %d: %v", idiomID, err)
 	}

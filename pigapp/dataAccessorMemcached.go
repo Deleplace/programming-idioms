@@ -369,8 +369,8 @@ func (a *MemcacheDatastoreAccessor) unindexAll(ctx context.Context) error {
 	return a.GaeDatastoreAccessor.unindexAll(ctx)
 }
 
-func (a *MemcacheDatastoreAccessor) unindex(ctx context.Context, idiomID int) error {
-	return a.GaeDatastoreAccessor.unindex(ctx, idiomID)
+func (a *MemcacheDatastoreAccessor) unindex(ctx context.Context, idiom *Idiom) error {
+	return a.GaeDatastoreAccessor.unindex(ctx, idiom)
 }
 
 func (a *MemcacheDatastoreAccessor) deleteIdiom(ctx context.Context, idiomID int, why string) error {

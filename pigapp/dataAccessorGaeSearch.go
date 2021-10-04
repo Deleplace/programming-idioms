@@ -251,15 +251,29 @@ func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
 	return nil
 }
 
-func (a *GaeDatastoreAccessor) unindex(ctx context.Context, idiomID int) error {
-	log.Infof(ctx, "Unindexing idiom %d", idiomID)
+func (a *GaeDatastoreAccessor) unindex(ctx context.Context, idiom *Idiom) error {
+	log.Infof(ctx, "Unindexing idiom %d", idiom.Id)
 
-	docID := strconv.Itoa(idiomID)
+	docID := strconv.Itoa(idiom.Id)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return err
 	}
-	return index.Delete(ctx, docID)
+	err = index.Delete(ctx, docID)
+	if err != nil {
+		return err
+	}
+
+	log.Infof(ctx, "Unindexing %d implementations from idiom %d", len(idiom.Implementations), idiom.Id)
+	for _, impl := range idiom.Implementations {
+		log.Infof(ctx, "Unindexing idiom %d impl %d", idiom.Id, impl.Id)
+		err := unindexImpl(ctx, idiom.Id, impl.Id)
+		if err != nil {
+			log.Errorf(ctx, "Unindexing idiom %d impl %d: %v", idiom.Id, impl.Id, err)
+			// Keep going though
+		}
+	}
+	return nil
 }
 
 func unindexImpl(ctx context.Context, idiomID, implID int) error {
@@ -581,7 +595,7 @@ func (a *GaeDatastoreAccessor) getCheatSheet(ctx context.Context, lang string, l
 		// Limit is not optional. 0 means zero result.
 		return nil, nil
 	}
-	cheatLines := make([]cheatSheetLineDoc, 0, 200)
+	cheatLines := make([]cheatSheetLineDoc, 0, 500)
 	query := "Lang:" + lang
 	it := index.Search(ctx, query, &gaesearch.SearchOptions{
 		Limit: limit,
