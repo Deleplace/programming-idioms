@@ -727,18 +727,23 @@ func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (missi
 }
 
 func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*IdiomStub, error) {
+	// Indirect way of finding out idioms where lang is missing:
+	// 1) Get the set of all idiomIDs having at least 1 impl in lang.
+	// 2) Iterate through all idiomIDs, keep only those not in the set.
+	// 3) Shuffle.
+	// 4) Keep n first idioms.
+
+	// 1)
+	haveLang := map[string]bool{}
 	index, err := gaesearch.Open("cheatsheets")
 	if err != nil {
 		return nil, err
 	}
-	query := "NOT Lang:" + lang
+	query := "Lang:" + lang
 	limit := 1000
-	// This is an *IDsOnly* search, where docID == idiomID_implID
 	it := index.Search(ctx, query, &gaesearch.SearchOptions{
 		Limit: limit,
-		//IDsOnly: true,
 	})
-	var results []*IdiomSingleton
 	for {
 		var doc cheatSheetLineDoc
 		_, err := it.Next(&doc)
@@ -748,30 +753,75 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*Idiom
 		if err != nil {
 			return nil, err
 		}
-		singleton := &IdiomSingleton{
+		haveLang[string(doc.IdiomID)] = true
+	}
+	//log.Infof(ctx, "Found idioms having %s: %v", lang, haveLang)
+
+	// 2)
+	idiomIDsWithoutLang := make([]string, 0, 300)
+	seen := map[string]bool{}
+	index, err = gaesearch.Open("idioms")
+	if err != nil {
+		return nil, err
+	}
+	// This is an *IDsOnly* search, where docID == Idiom.Id
+	it = index.List(ctx, &gaesearch.ListOptions{
+		Limit:   2000, // somewhat arbitrary? To protect the server.
+		IDsOnly: true,
+	})
+	for {
+		docID, err := it.Next(nil)
+		if err == gaesearch.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		idiomID := docID
+		if haveLang[idiomID] || seen[idiomID] {
+			continue
+		}
+		idiomIDsWithoutLang = append(idiomIDsWithoutLang, idiomID)
+		seen[idiomID] = true
+	}
+	//log.Infof(ctx, "Found idioms without %s: %v", lang, idiomIDsWithoutLang)
+
+	// 3)
+	rand.Shuffle(len(idiomIDsWithoutLang), func(i, j int) {
+		idiomIDsWithoutLang[i], idiomIDsWithoutLang[j] = idiomIDsWithoutLang[j], idiomIDsWithoutLang[i]
+	})
+
+	// 4)
+	if len(idiomIDsWithoutLang) > n {
+		idiomIDsWithoutLang = idiomIDsWithoutLang[:n]
+	}
+
+	// 5) Collect idiom stub data to be displayed
+	idiomStubs := make([]*IdiomStub, len(idiomIDsWithoutLang))
+	index, err = gaesearch.Open("cheatsheets")
+	if err != nil {
+		return nil, err
+	}
+	for i, idiomID := range idiomIDsWithoutLang {
+		query := "IdiomID:" + idiomID
+		it := index.Search(ctx, query, &gaesearch.SearchOptions{
+			Limit: 1,
+		})
+		var doc cheatSheetLineDoc
+		_, err := it.Next(&doc)
+		if err == gaesearch.Done {
+			log.Errorf(ctx, "couldn't find any cheatsheet data for idiom %s ??", idiomID)
+			continue
+		}
+		if err != nil {
+			return nil, err
+		}
+		idiomStubs[i] = &IdiomStub{
 			Id:            String2Int(string(doc.IdiomID)),
 			Title:         string(doc.IdiomTitle),
 			LeadParagraph: string(doc.IdiomLeadParagraph),
-			Implementations: []Impl{
-				{
-					Id:               String2Int(string(doc.ImplID)),
-					CodeBlock:        string(doc.ImplCodeBlock),
-					DemoURL:          string(doc.ImplDemoURL),
-					DocumentationURL: string(doc.ImplDocURL),
-					AuthorComment:    string(doc.ImplCodeBlockComment),
-				},
-			},
-			// All other fields left blank for Backlog display
-			// All other impls ignored for Backlog display of 1 impl
 		}
-		results = append(results, singleton)
 	}
-	log.Debugf(ctx, "searchMissingImplForLang handling %d %s impls", len(results), lang)
-	rand.Shuffle(len(results), func(i, j int) {
-		results[i], results[j] = results[j], results[i]
-	})
-	if len(results) < n {
-		return results, nil
-	}
-	return results[:n], nil
+	log.Infof(ctx, "Found idioms without %s: %v", lang, idiomIDsWithoutLang)
+	return idiomStubs, nil
 }

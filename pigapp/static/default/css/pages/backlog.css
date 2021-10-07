@@ -2,11 +2,27 @@
     width:100%;
 }
 
-table.singletons h3 {
+.backlog table.singletons h3,
+.backlog table.stubs h3 {
     font-size: 1rem;
     margin-top: 0.5rem;
     margin-bottom: 0;
     padding-top: 0;
     padding-bottom: 0;
     line-height: 1.4rem;
+}
+
+.backlog td.idiom-header {
+    /* column-span: all; */
+}
+
+.backlog td.impl-actions {
+    width: 12rem;
+    vertical-align: top;
+    text-align: right;
+}
+
+.backlog td.impl-actions button,
+.backlog td.idiom-actions button {
+    margin: 0.2rem;
 }

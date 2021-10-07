@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strings"
+	"time"
 
 	. "github.com/Deleplace/programming-idioms/pig"
 	"google.golang.org/appengine/log"
@@ -23,7 +24,6 @@ func backlogForLanguage(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	rawLang := vars["lang"]
 	lang := NormLang(rawLang)
-	langs := []string{lang}
 	log.Infof(ctx, "Computing backlog for %s", lang)
 
 	data := &BacklogLanguageFacade{
@@ -31,6 +31,7 @@ func backlogForLanguage(w http.ResponseWriter, r *http.Request) error {
 			PageTitle: "Idioms missing data for the " + lang + " implementation",
 			Toggles:   toggles,
 			ExtraCss:  []string{hostPrefix() + themeDirectory() + "/css/pages/backlog.css"},
+			ExtraJs:   []string{hostPrefix() + themeDirectory() + "/js/pages/backlog.js"},
 		},
 		UserProfile:         readUserProfile(r),
 		Lang:                lang,
@@ -38,9 +39,10 @@ func backlogForLanguage(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	log.Infof(ctx, "searchRandomImplsForLang(%q)...", rawLang)
+	tip := time.Now()
 	var err error
 	data.CurationSuggestions, err = searchRandomImplsForLang(ctx, rawLang, sampleSize)
-	log.Infof(ctx, "got %d results", len(data.CurationSuggestions))
+	log.Infof(ctx, "got %d curation suggestions for %s in %dms", len(data.CurationSuggestions), rawLang, time.Since(tip)/time.Millisecond)
 	if err != nil {
 		log.Errorf(ctx, "%v", err)
 	}
@@ -74,51 +76,25 @@ func backlogForLanguage(w http.ResponseWriter, r *http.Request) error {
 			}
 		}
 	*/
+	tip = time.Now()
 	data.MissingDoc, data.MissingDemo, err = searchMissingDocDemoForLang(ctx, rawLang, sampleSize)
-	log.Infof(ctx, "got %d missingDoc and %d missingDemo for %s", len(data.MissingDoc), len(data.MissingDemo), rawLang)
+	log.Infof(ctx, "got %d missingDoc and %d missingDemo for %s in %dms", len(data.MissingDoc), len(data.MissingDemo), rawLang, time.Since(tip)/time.Millisecond)
 	if err != nil {
 		log.Errorf(ctx, "%v", err)
 	}
 
-	/*
-		log.Infof(ctx, "Obsolete computations...")
-		// Warning: manipulating a lot of idioms in memory can get expensive.
-		// TODO: get IDs only, then substract IDs of those having DemoURL + DocumentationURL,
-		// then get the idioms by IDs.
-		maxFetch := 200
-		hits, err := dao.searchIdiomsByLangs(ctx, langs, maxFetch)
-		if err != nil {
-			return err
-		}
-
-		// Better if the portion shown varies
-		shuffleIdioms(hits)
-
-		maxShow := 25
-		results := make([]*IdiomSingleton, 0, maxShow)
-		for _, idiom := range hits {
-			keep := false
-			for _, impl := range implementationsFor(idiom, lang) {
-				if isBlank(impl.DemoURL) || isBlank(impl.DocumentationURL) {
-					keep = true
-					break
-				}
-			}
-			if keep {
-				results = append(results, (*IdiomSingleton)(idiom))
-				if len(results) >= maxShow {
-					break
-				}
-			}
-		}
-		//data.CurationSuggestions = results
-	*/
-	_ = langs
+	tip = time.Now()
+	data.MissingImpl, err = searchMissingImplForLang(ctx, lang, sampleSize)
+	log.Infof(ctx, "got %d missingImpl idioms %s in %dms", len(data.MissingImpl), rawLang, time.Since(tip)/time.Millisecond)
+	if err != nil {
+		log.Errorf(ctx, "%v", err)
+	}
 
 	log.Infof(ctx, "Done computing backlog for %s", lang)
 	log.Infof(ctx, "Executing backlog template for %s", lang)
+	tip = time.Now()
 	err = templates.ExecuteTemplate(w, "page-backlog-language", data)
-	log.Infof(ctx, "Done executing backlog template for %s", lang)
+	log.Infof(ctx, "Done executing backlog template for %s in %dms", lang, time.Since(tip)/time.Millisecond)
 	return err
 }
 
