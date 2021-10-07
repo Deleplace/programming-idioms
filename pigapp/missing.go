@@ -11,6 +11,9 @@ import (
 
 // This screen shows, for a given language, which implementations
 // don't have a DemoURL and/or a DocumentationURL.
+//
+// This is the ancestor of backlog.go
+// Backlogs aim at being more engaging and community-friendly.
 
 func missingList(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()

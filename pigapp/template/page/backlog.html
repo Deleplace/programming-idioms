@@ -1,0 +1,147 @@
+{{define "page-backlog-language"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body class="backlog">
+<div class="page-holder">
+	{{template "header-small" .}}  
+	<div class="page-content container-fluid">
+
+        <h2>Community backlog for {{.Lang | printNiceLang}}</h2>
+
+
+        {{if .CurationSuggestions}}
+            <div>
+                <h3>Expert validation</h3>
+                It is extremely valuable to curate the {{.Lang | printNiceLang}} contents. 
+                Would you like to review these implementations?
+                If they can be improved, please help yourself. 
+                If you know a better way, please create a distinct entry. 
+                If they're broken, please flag them.
+                
+                <div class="curation">
+                    <table class="singletons">
+                        {{range .CurationSuggestions}}
+                            {{$impl := index .Implementations 0}}                         
+                            <tr>
+                                <td class="curation-idiom-singleton">
+                                    <div class="span7">
+                                        <h3>Idiom #{{.Id}} {{.Title}}</h3>
+                                        <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
+                                </td>
+                                <td>
+                                    <button>Edit implementation</button> <br/>
+                                    <button>View full idiom</button> <br/>
+                                    <button>Flag</button> <br/>
+                                    <button>Mark as good</button>
+                                </td>
+                            </tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>
+        {{end}}
+        
+        <h3>Docs & demos</h3>
+        <div>
+            X% of the {{.Lang | printNiceLang}} don't have an external link to a documentation page yet.
+
+            {{if .MissingDoc}}
+                For example, these implementations would need a doc URL:
+
+                <div class="missing-doc">
+                    <table class="singletons">
+                        {{range .MissingDoc}}
+                            {{$impl := index .Implementations 0}}
+                            <tr>
+                                <td class="missing-doc-idiom-singleton">
+                                    <div class="span7">
+                                        <h3>Idiom #{{.Id}} {{.Title}}</h3>
+                                        <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
+                                </td>
+                                <td>
+                                    <button>Add a doc link</button> <br/>
+                                    <button>View full idiom</button> <br/>
+                                </td>
+                            </tr>
+                        {{end}}
+                    </table>
+                </div>
+            {{end}}
+        </div>
+        
+        <div>
+            X% of the {{.Lang | printNiceLang}} don't have a runnable demo yet.
+
+            {{if .MissingDemo}}
+                {{if .RecommendedDemoSite.Name}}
+                We recommend creating demos in <a href="{{.RecommendedDemoSite.URL}}" target="_blank">{{.RecommendedDemoSite.Name}}</a>
+                {{end}}
+
+                For example, these implementations would need a demo URL:
+
+                <div class="missing-demo">
+                    <table class="singletons">
+                        {{range .MissingDemo}}
+                            {{$impl := index .Implementations 0}}
+                            <tr>
+                                <td class="missing-demo-idiom-singleton">
+                                    <div class="span7">
+                                        <h3>Idiom #{{.Id}} {{.Title}}</h3>
+                                        <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
+                                </td>
+                                <td>
+                                    <button>Add a demo link</button> <br/>
+                                    <button>View full idiom</button> <br/>
+                                </td>
+                            </tr>
+                        {{end}}
+                    </table>
+                </div>
+            {{end}}
+        </div>
+
+        <div>
+            <h3>Missing implementations</h3>
+            {{.Lang | printNiceLang}} implementations are already provided for X idioms out of Y idioms
+
+			{{if .MissingImpl}}
+                You may help by writing a {{.Lang | printNiceLang}} snippet for these idioms:
+                <table>
+                    {{range .MissingImpl}}
+                            <tr>
+                                <th><span class="idiom_id label"># {{.Id}}</span></th>
+                                <td>
+                                    <a href="{{niceIdiomURL .}}" target="_blank">{{shorten .Title 35}}</a>
+                                </td>
+                            </tr>
+                    {{end}}
+                </table>
+            {{else}}
+                <i class="fas fa-meh"> No incomplete idioms found :)</i>
+            {{end}}
+        </div>
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}
+</div>  
+</body>
+{{template "close-html"}}
+{{end}}

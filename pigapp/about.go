@@ -171,12 +171,20 @@ func ajaxAboutCheatsheets(w http.ResponseWriter, r *http.Request) error {
 	return templates.ExecuteTemplate(w, "block-about-cheatsheets", data)
 }
 
+func ajaxAboutBacklogs(w http.ResponseWriter, r *http.Request) error {
+	data := AboutCheatsheetsFacade{
+		UserProfile: readUserProfile(r),
+		Langs:       AllLanguages(),
+	}
+	return templates.ExecuteTemplate(w, "block-about-backlogs", data)
+}
+
 func languageCoverage(ctx context.Context) (cover CoverageFacade, err error) {
 	checked := map[int]map[string]int{}
 	langImplCount := map[string]int{}
 	langImplScore := map[string]int{}
 	log.Debugf(ctx, "Loading full idiom list...")
-	_, idioms, err := dao.getAllIdioms(ctx, 399, "-ImplCount") // TODO change 399 ?!
+	_, idioms, err := dao.getAllIdioms(ctx, 799, "-ImplCount") // TODO change 799 ?!
 	if err != nil {
 		return cover, err
 	}

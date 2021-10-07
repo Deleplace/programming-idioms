@@ -544,6 +544,7 @@ func (a *GaeDatastoreAccessor) randomIdiomHaving(ctx context.Context, havingLang
 	if err != nil {
 		return nil, nil, err
 	}
+	log.Debugf(ctx, "Found %d idioms having %s", count, havingLang)
 	if count == 0 {
 		return nil, nil, fmt.Errorf("No implementations found in language [%s]", havingLang)
 	}
@@ -557,6 +558,7 @@ func (a *GaeDatastoreAccessor) randomIdiomHaving(ctx context.Context, havingLang
 	if len(keys) == 0 {
 		return nil, nil, fmt.Errorf("No idiom found for lang %s :|", havingLang)
 	}
+	log.Debugf(ctx, "Fetched 1 idiom having %s", havingLang)
 	return keys[0], idioms[0], err
 }
 

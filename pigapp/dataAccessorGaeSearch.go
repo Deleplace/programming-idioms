@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"sort"
 	"strconv"
 	"strings"
@@ -614,4 +615,163 @@ func (a *GaeDatastoreAccessor) getCheatSheet(ctx context.Context, lang string, l
 	// Sort by IdiomID asc, ImplID asc
 	sort.Sort(cheatSheetLineDocs(cheatLines))
 	return cheatLines, err
+}
+
+func searchRandomImplsForLang(ctx context.Context, lang string, n int) ([]*IdiomSingleton, error) {
+	index, err := gaesearch.Open("cheatsheets")
+	if err != nil {
+		return nil, err
+	}
+	query := "Lang:" + lang
+	limit := 1000
+	// This is an *IDsOnly* search, where docID == idiomID_implID
+	it := index.Search(ctx, query, &gaesearch.SearchOptions{
+		Limit: limit,
+		//IDsOnly: true,
+	})
+	var results []*IdiomSingleton
+	for {
+		var doc cheatSheetLineDoc
+		_, err := it.Next(&doc)
+		if err == gaesearch.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		singleton := &IdiomSingleton{
+			Id:            String2Int(string(doc.IdiomID)),
+			Title:         string(doc.IdiomTitle),
+			LeadParagraph: string(doc.IdiomLeadParagraph),
+			Implementations: []Impl{
+				{
+					Id:               String2Int(string(doc.ImplID)),
+					CodeBlock:        string(doc.ImplCodeBlock),
+					DemoURL:          string(doc.ImplDemoURL),
+					DocumentationURL: string(doc.ImplDocURL),
+					AuthorComment:    string(doc.ImplCodeBlockComment),
+				},
+			},
+			// All other fields left blank for Backlog display
+			// All other impls ignored for Backlog display of 1 impl
+		}
+		results = append(results, singleton)
+	}
+	log.Debugf(ctx, "searchRandomImplsForLang handling %d %s impls", len(results), lang)
+	rand.Shuffle(len(results), func(i, j int) {
+		results[i], results[j] = results[j], results[i]
+	})
+	if len(results) < n {
+		return results, nil
+	}
+	return results[:n], nil
+}
+
+func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (missingDoc, missingDemo []*IdiomSingleton, err error) {
+	index, err := gaesearch.Open("cheatsheets")
+	if err != nil {
+		return nil, nil, err
+	}
+	query := "Lang:" + lang
+	limit := 1000
+	// This is an *IDsOnly* search, where docID == idiomID_implID
+	it := index.Search(ctx, query, &gaesearch.SearchOptions{
+		Limit: limit,
+		//IDsOnly: true,
+	})
+	for {
+		var doc cheatSheetLineDoc
+		_, err := it.Next(&doc)
+		if err == gaesearch.Done {
+			break
+		}
+		if err != nil {
+			return nil, nil, err
+		}
+		singleton := &IdiomSingleton{
+			Id:            String2Int(string(doc.IdiomID)),
+			Title:         string(doc.IdiomTitle),
+			LeadParagraph: string(doc.IdiomLeadParagraph),
+			Implementations: []Impl{
+				{
+					Id:               String2Int(string(doc.ImplID)),
+					CodeBlock:        string(doc.ImplCodeBlock),
+					DemoURL:          string(doc.ImplDemoURL),
+					DocumentationURL: string(doc.ImplDocURL),
+					AuthorComment:    string(doc.ImplCodeBlockComment),
+				},
+			},
+			// All other fields left blank for Backlog display
+			// All other impls ignored for Backlog display of 1 impl
+		}
+		if strings.TrimSpace(singleton.Implementations[0].DocumentationURL) == "" {
+			missingDoc = append(missingDoc, singleton)
+		}
+		if strings.TrimSpace(singleton.Implementations[0].DemoURL) == "" {
+			missingDemo = append(missingDemo, singleton)
+		}
+	}
+	rand.Shuffle(len(missingDoc), func(i, j int) {
+		missingDoc[i], missingDoc[j] = missingDoc[j], missingDoc[i]
+	})
+	if len(missingDoc) > n {
+		missingDoc = missingDoc[:n]
+	}
+	rand.Shuffle(len(missingDemo), func(i, j int) {
+		missingDemo[i], missingDemo[j] = missingDemo[j], missingDemo[i]
+	})
+	if len(missingDemo) > n {
+		missingDemo = missingDemo[:n]
+	}
+	return missingDoc, missingDemo, nil
+}
+
+func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*IdiomStub, error) {
+	index, err := gaesearch.Open("cheatsheets")
+	if err != nil {
+		return nil, err
+	}
+	query := "NOT Lang:" + lang
+	limit := 1000
+	// This is an *IDsOnly* search, where docID == idiomID_implID
+	it := index.Search(ctx, query, &gaesearch.SearchOptions{
+		Limit: limit,
+		//IDsOnly: true,
+	})
+	var results []*IdiomSingleton
+	for {
+		var doc cheatSheetLineDoc
+		_, err := it.Next(&doc)
+		if err == gaesearch.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		singleton := &IdiomSingleton{
+			Id:            String2Int(string(doc.IdiomID)),
+			Title:         string(doc.IdiomTitle),
+			LeadParagraph: string(doc.IdiomLeadParagraph),
+			Implementations: []Impl{
+				{
+					Id:               String2Int(string(doc.ImplID)),
+					CodeBlock:        string(doc.ImplCodeBlock),
+					DemoURL:          string(doc.ImplDemoURL),
+					DocumentationURL: string(doc.ImplDocURL),
+					AuthorComment:    string(doc.ImplCodeBlockComment),
+				},
+			},
+			// All other fields left blank for Backlog display
+			// All other impls ignored for Backlog display of 1 impl
+		}
+		results = append(results, singleton)
+	}
+	log.Debugf(ctx, "searchMissingImplForLang handling %d %s impls", len(results), lang)
+	rand.Shuffle(len(results), func(i, j int) {
+		results[i], results[j] = results[j], results[i]
+	})
+	if len(results) < n {
+		return results, nil
+	}
+	return results[:n], nil
 }

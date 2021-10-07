@@ -1,0 +1,20 @@
+{{define "block-about-backlogs"}}
+	<div class="pi-backlogs">
+		<h2>Backlogs</h2>
+
+        Backlogs are pages where language communities can explore actionable contribution 
+        opportunities: curation, external links, new implementations.
+
+		{{if .UserProfile.FavoriteLanguages}}
+		<ul class="inline">
+			{{range .UserProfile.FavoriteLanguages}}
+				<li><a href="/backlog/{{.}}" class="btn btn-success"><b>{{. | printNiceLang}}</b></i></a></li>
+			{{end}}
+		</ul>
+        {{else}}
+            Please add some favorite languages to view their backlog
+            {{/* TODO find a way to refresh immediately if the user does add a favlang */}}
+		{{end}}
+
+	</div>
+{{end}}

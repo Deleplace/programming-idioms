@@ -61,6 +61,7 @@ func initRoutes() {
 		handle("/search/{q}", search)
 		handle("/list-by-language/{langs}", listByLanguage)
 		handle("/missing-fields/{lang}", missingList)
+		handle("/backlog/{lang}", backlogForLanguage)
 		handle("/idiom-picture", idiomPicture)
 		handle("/rss-recently-created", rssRecentlyCreated)
 		handle("/rss-recently-updated", rssRecentlyUpdated)
@@ -97,6 +98,7 @@ func initRoutes() {
 			handle("/about-block-language-coverage", ajaxAboutLanguageCoverage)
 			handle("/about-block-rss", ajaxAboutRss)
 			handle("/about-block-cheatsheets", ajaxAboutCheatsheets)
+			handle("/about-block-backlogs", ajaxAboutBacklogs)
 			handle("/about-block-see-also", ajaxAboutSeeAlso)
 			handle("/about-block-contact", ajaxAboutContact)
 			// Admin
