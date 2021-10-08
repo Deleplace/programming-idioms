@@ -1,3 +1,7 @@
+body.backlog {
+    background-color: #EEEEFF;
+}
+
 .backlog table {
     width:100%;
 }
@@ -12,6 +16,27 @@
     line-height: 1.4rem;
 }
 
+
+.backlog table td.idiom-header {
+    background-color: white;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+}
+
+.backlog table td.impl-singleton {
+    background-color: white;
+    border-bottom: 1rem;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 128px 48px;
+    padding-left: 0.5rem;
+}
+.backlog table tr.spacer td {
+    height: 0.5rem;
+}
+.backlog table.stubs td.idiom-header {
+    border-radius: 12px;
+}
+
 .backlog td.idiom-header {
     /* column-span: all; */
 }
@@ -22,7 +47,23 @@
     text-align: right;
 }
 
+.backlog td.idiom-actions {
+    /* width: 12rem; */
+    vertical-align: top;
+    text-align: right;
+}
+
 .backlog td.impl-actions button,
 .backlog td.idiom-actions button {
     margin: 0.2rem;
+}
+
+.backlog .pie {
+    float: left;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    box-shadow: 4px 4px 2px rgba(0,0,0,0.5);
+    margin: 1rem;
+    margin-top: -0.5rem;
 }

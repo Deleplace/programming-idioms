@@ -10,7 +10,7 @@
 
 
         {{if .CurationSuggestions}}
-            <div>
+            <div id="curation">
                 <h3>Expert validation</h3>
                 It is extremely valuable to curate the {{.Lang | printNiceLang}} contents. 
                 Would you like to review these implementations?
@@ -39,18 +39,21 @@
                                     <button class="btn-warning flag">Flag</button> <br/>
                                     <button class="btn-warning mark-good">Mark as good</button>
                                 </td>
-                                <td>
+                                <td class="impl-singleton">
                                     {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
                                 </td>
-                            </tr>
+                            </tr>                      
+                            <tr class="spacer"><td></td><td></td></tr>
                         {{end}}
                     </table>
                 </div>
             </div>
         {{end}}
         
-        <h3>Docs & demos</h3>
-        <div>
+        <div id="docs-demos">
+            <h3>Docs & demos</h3>
+
+            <div class="pie" style="background-image: conic-gradient(red {{.MissingDocDemo.MissingDocPercent}}, green {{.MissingDocDemo.MissingDocPercent}} {{.MissingDocDemo.HavingDocPercent}});"></div>
             {{.MissingDocDemo.MissingDocPercent}}  of the {{.Lang | printNiceLang}} snippets don't have an external link to a documentation page yet.
 
             {{if .MissingDocDemo.MissingDoc}}
@@ -75,17 +78,19 @@
                                     <button class="btn-warning edit">Add a doc link</button> <br/>
                                     <button class="btn-warning view">View full idiom</button> <br/>
                                 </td>
-                                <td>
+                                <td class="impl-singleton">
                                     {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
                                 </td>
                             </tr>
+                            <tr class="spacer"><td></td><td></td></tr>
                         {{end}}
                     </table>
                 </div>
             {{end}}
         </div>
         
-        <div>
+        <div id="missing-impl">
+            <div class="pie" style="background-image: conic-gradient(red {{.MissingDocDemo.MissingDemoPercent}}, green {{.MissingDocDemo.MissingDemoPercent}} {{.MissingDocDemo.HavingDemoPercent}});"></div>
             {{.MissingDocDemo.MissingDemoPercent}} of the {{.Lang | printNiceLang}} don't have a runnable demo yet.
 
             {{if .MissingDocDemo.MissingDemo}}
@@ -114,10 +119,12 @@
                                     <button class="btn-warning edit">Add a demo link</button> <br/>
                                     <button class="btn-warning view">View full idiom</button> <br/>
                                 </td>
-                                <td>
+                                <td class="impl-singleton">
                                     {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
                                 </td>
+                                <tr class="spacer"><td></td><td></td></tr>
                             </tr>
+                            <tr class="spacer"><td></td><td></td></tr>
                         {{end}}
                     </table>
                 </div>
@@ -149,6 +156,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="spacer"><td></td><td></td></tr>
                     {{end}}
                 </table>
             {{else}}

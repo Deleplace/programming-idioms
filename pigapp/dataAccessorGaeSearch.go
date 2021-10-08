@@ -713,6 +713,16 @@ func (bmdd backlogMissingDocDemo) MissingDemoPercent() string {
 	return fmt.Sprintf("%.0f%%", 100*ratio)
 }
 
+func (bmdd backlogMissingDocDemo) HavingDocPercent() string {
+	ratio := 1 - bmdd.MissingDocRatio()
+	return fmt.Sprintf("%.0f%%", 100*ratio)
+}
+
+func (bmdd backlogMissingDocDemo) HavingDemoPercent() string {
+	ratio := 1 - bmdd.MissingDemoRatio()
+	return fmt.Sprintf("%.0f%%", 100*ratio)
+}
+
 func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (bmdd backlogMissingDocDemo, err error) {
 	bmdd.Lang = lang
 	index, err := gaesearch.Open("cheatsheets")
