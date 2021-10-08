@@ -51,14 +51,14 @@
         
         <h3>Docs & demos</h3>
         <div>
-            X% of the {{.Lang | printNiceLang}} don't have an external link to a documentation page yet.
+            {{.MissingDocDemo.MissingDocPercent}}  of the {{.Lang | printNiceLang}} snippets don't have an external link to a documentation page yet.
 
-            {{if .MissingDoc}}
+            {{if .MissingDocDemo.MissingDoc}}
                 For example, these implementations would need a doc URL:
 
                 <div class="missing-doc">
                     <table class="singletons">
-                        {{range .MissingDoc}}
+                        {{range .MissingDocDemo.MissingDoc}}
                             {{$impl := index .Implementations 0}}
                             <tr>
                                 <td>
@@ -86,9 +86,9 @@
         </div>
         
         <div>
-            X% of the {{.Lang | printNiceLang}} don't have a runnable demo yet.
+            {{.MissingDocDemo.MissingDemoPercent}} of the {{.Lang | printNiceLang}} don't have a runnable demo yet.
 
-            {{if .MissingDemo}}
+            {{if .MissingDocDemo.MissingDemo}}
                 {{if .RecommendedDemoSite.Name}}
                 We recommend creating demos in <a href="{{.RecommendedDemoSite.URL}}" target="_blank">{{.RecommendedDemoSite.Name}}</a>
                 {{end}}
@@ -97,7 +97,7 @@
 
                 <div class="missing-demo">
                     <table class="singletons">
-                        {{range .MissingDemo}}
+                        {{range .MissingDocDemo.MissingDemo}}
                             {{$impl := index .Implementations 0}}
                             <tr>
                                 <td>
@@ -127,16 +127,16 @@
         <div>
             <h3>Missing implementations</h3>
             <p>
-                {{.Lang | printNiceLang}} implementations are already provided for X idioms out of Y idioms
+                {{.Lang | printNiceLang}} implementations are already provided for {{.MissingImpl.Stats.CountIdiomsMissingImpl}} idioms out of {{.MissingImpl.Stats.CountIdiomsTotal}} idioms
             </p>
 
-			{{if .MissingImpl}}
+			{{if .MissingImpl.Stubs}}
                 <p>
                     You may help by writing a {{.Lang | printNiceLang}} snippet for these idioms:
                 </p>
                 <table class="stubs">
                     {{$lang := .Lang}}   
-                    {{range .MissingImpl}}
+                    {{range .MissingImpl.Stubs}}
                             <tr>
                                 <td class="idiom-actions" data-idiom-id="{{.Id}}" data-missing-lang="{{$lang}}">
                                     <button class="btn-warning create-impl">Create a {{$lang | printNiceLang}} implementation</button> <br/>

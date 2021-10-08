@@ -77,15 +77,15 @@ func backlogForLanguage(w http.ResponseWriter, r *http.Request) error {
 		}
 	*/
 	tip = time.Now()
-	data.MissingDoc, data.MissingDemo, err = searchMissingDocDemoForLang(ctx, rawLang, sampleSize)
-	log.Infof(ctx, "got %d missingDoc and %d missingDemo for %s in %dms", len(data.MissingDoc), len(data.MissingDemo), rawLang, time.Since(tip)/time.Millisecond)
+	data.MissingDocDemo, err = searchMissingDocDemoForLang(ctx, rawLang, sampleSize)
+	log.Infof(ctx, "got %d missingDoc and %d missingDemo for %s in %dms", len(data.MissingDocDemo.MissingDoc), len(data.MissingDocDemo.MissingDemo), rawLang, time.Since(tip)/time.Millisecond)
 	if err != nil {
 		log.Errorf(ctx, "%v", err)
 	}
 
 	tip = time.Now()
 	data.MissingImpl, err = searchMissingImplForLang(ctx, lang, sampleSize)
-	log.Infof(ctx, "got %d missingImpl idioms %s in %dms", len(data.MissingImpl), rawLang, time.Since(tip)/time.Millisecond)
+	log.Infof(ctx, "got %d missingImpl idioms %s in %dms", len(data.MissingImpl.Stubs), rawLang, time.Since(tip)/time.Millisecond)
 	if err != nil {
 		log.Errorf(ctx, "%v", err)
 	}
@@ -104,10 +104,9 @@ type BacklogLanguageFacade struct {
 	UserProfile         UserProfile
 	Lang                string
 	RecommendedDemoSite DemoSite
-	MissingImpl         []*IdiomStub
 	CurationSuggestions []*IdiomSingleton
-	MissingDoc          []*IdiomSingleton
-	MissingDemo         []*IdiomSingleton
+	MissingDocDemo      backlogMissingDocDemo
+	MissingImpl         backlogMissingImpl
 }
 
 // IdiomSingleton is an idiom that contains a single Implementation.

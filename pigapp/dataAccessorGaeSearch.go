@@ -667,17 +667,62 @@ func searchRandomImplsForLang(ctx context.Context, lang string, n int) ([]*Idiom
 	return results[:n], nil
 }
 
-func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (missingDoc, missingDemo []*IdiomSingleton, err error) {
+type backlogMissingDocDemo struct {
+	// Lang is the language these impls.
+	Lang string
+
+	// MissingDoc holds a small subset of the Implementations in Lang that don't have a
+	// DocumentationURL.
+	// They are idiom singletons: only Id, Title, LeadParagraph, and one single implementation.
+	MissingDoc []*IdiomSingleton
+
+	// MissingDemo holds a small subset of the Implementations in Lang that don't have a
+	// DemoURL.
+	// They are idiom singletons: only Id, Title, LeadParagraph, and one single implementation.
+	MissingDemo []*IdiomSingleton
+
+	Stats struct {
+		// CountImplsMissingDoc is the total database number of Implementations in Lang that
+		// don't have a DocumentationURL.
+		CountImplsMissingDoc int
+
+		// CountImplsMissingDemo is the total database number of Implementations in Lang that
+		// don't have a DemoURL.
+		CountImplsMissingDemo int
+
+		// CountImplsLangTotal is the total number of Impls for this Lang, in the database.
+		CountImplsLangTotal int
+	}
+}
+
+func (bmdd backlogMissingDocDemo) MissingDocRatio() float64 {
+	return float64(bmdd.Stats.CountImplsMissingDoc) / float64(bmdd.Stats.CountImplsLangTotal)
+}
+
+func (bmdd backlogMissingDocDemo) MissingDemoRatio() float64 {
+	return float64(bmdd.Stats.CountImplsMissingDemo) / float64(bmdd.Stats.CountImplsLangTotal)
+}
+
+func (bmdd backlogMissingDocDemo) MissingDocPercent() string {
+	ratio := bmdd.MissingDocRatio()
+	return fmt.Sprintf("%.0f%%", 100*ratio)
+}
+
+func (bmdd backlogMissingDocDemo) MissingDemoPercent() string {
+	ratio := bmdd.MissingDemoRatio()
+	return fmt.Sprintf("%.0f%%", 100*ratio)
+}
+
+func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (bmdd backlogMissingDocDemo, err error) {
+	bmdd.Lang = lang
 	index, err := gaesearch.Open("cheatsheets")
 	if err != nil {
-		return nil, nil, err
+		return bmdd, err
 	}
 	query := "Lang:" + lang
-	limit := 1000
-	// This is an *IDsOnly* search, where docID == idiomID_implID
+	limit := 1000 // TODO 1000 here is... somewhat arbitrary
 	it := index.Search(ctx, query, &gaesearch.SearchOptions{
 		Limit: limit,
-		//IDsOnly: true,
 	})
 	for {
 		var doc cheatSheetLineDoc
@@ -686,8 +731,9 @@ func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (missi
 			break
 		}
 		if err != nil {
-			return nil, nil, err
+			return bmdd, err
 		}
+		bmdd.Stats.CountImplsLangTotal++
 		singleton := &IdiomSingleton{
 			Id:            String2Int(string(doc.IdiomID)),
 			Title:         string(doc.IdiomTitle),
@@ -705,28 +751,52 @@ func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (missi
 			// All other impls ignored for Backlog display of 1 impl
 		}
 		if strings.TrimSpace(singleton.Implementations[0].DocumentationURL) == "" {
-			missingDoc = append(missingDoc, singleton)
+			bmdd.MissingDoc = append(bmdd.MissingDoc, singleton)
 		}
 		if strings.TrimSpace(singleton.Implementations[0].DemoURL) == "" {
-			missingDemo = append(missingDemo, singleton)
+			bmdd.MissingDemo = append(bmdd.MissingDemo, singleton)
 		}
 	}
-	rand.Shuffle(len(missingDoc), func(i, j int) {
-		missingDoc[i], missingDoc[j] = missingDoc[j], missingDoc[i]
+	rand.Shuffle(len(bmdd.MissingDoc), func(i, j int) {
+		bmdd.MissingDoc[i], bmdd.MissingDoc[j] = bmdd.MissingDoc[j], bmdd.MissingDoc[i]
 	})
-	if len(missingDoc) > n {
-		missingDoc = missingDoc[:n]
+	bmdd.Stats.CountImplsMissingDoc = len(bmdd.MissingDoc)
+	if len(bmdd.MissingDoc) > n {
+		bmdd.MissingDoc = bmdd.MissingDoc[:n]
 	}
-	rand.Shuffle(len(missingDemo), func(i, j int) {
-		missingDemo[i], missingDemo[j] = missingDemo[j], missingDemo[i]
+	rand.Shuffle(len(bmdd.MissingDemo), func(i, j int) {
+		bmdd.MissingDemo[i], bmdd.MissingDemo[j] = bmdd.MissingDemo[j], bmdd.MissingDemo[i]
 	})
-	if len(missingDemo) > n {
-		missingDemo = missingDemo[:n]
+	bmdd.Stats.CountImplsMissingDemo = len(bmdd.MissingDemo)
+	if len(bmdd.MissingDemo) > n {
+		bmdd.MissingDemo = bmdd.MissingDemo[:n]
 	}
-	return missingDoc, missingDemo, nil
+	// Note we resliced to a subset of n, but we're not releasing the extra memory at all.
+	// TODO copy in new small slices, let the GC reclaim the rest.
+	return bmdd, nil
 }
 
-func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*IdiomStub, error) {
+type backlogMissingImpl struct {
+	// Lang is the language for which the current struct shows missing impls.
+	Lang string
+
+	// Stubs holds a small subset of the Idioms that have zero impls in Lang.
+	// They are stubs: only Id, Title, LeadParagraph. Does not implementations.
+	Stubs []*IdiomStub
+
+	Stats struct {
+		// CountIdiomsMissingImpl is the total database number of Idioms having zero.
+		// impls in Lang
+		CountIdiomsMissingImpl int
+
+		// CountIdiomsTotal is the total number of Idioms in the database.
+		CountIdiomsTotal int
+	}
+}
+
+func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi backlogMissingImpl, err error) {
+	bmi.Lang = lang
+
 	// Indirect way of finding out idioms where lang is missing:
 	// 1) Get the set of all idiomIDs having at least 1 impl in lang.
 	// 2) Iterate through all idiomIDs, keep only those not in the set.
@@ -737,7 +807,7 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*Idiom
 	haveLang := map[string]bool{}
 	index, err := gaesearch.Open("cheatsheets")
 	if err != nil {
-		return nil, err
+		return bmi, err
 	}
 	query := "Lang:" + lang
 	limit := 1000
@@ -751,7 +821,7 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*Idiom
 			break
 		}
 		if err != nil {
-			return nil, err
+			return bmi, err
 		}
 		haveLang[string(doc.IdiomID)] = true
 	}
@@ -762,7 +832,7 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*Idiom
 	seen := map[string]bool{}
 	index, err = gaesearch.Open("idioms")
 	if err != nil {
-		return nil, err
+		return bmi, err
 	}
 	// This is an *IDsOnly* search, where docID == Idiom.Id
 	it = index.List(ctx, &gaesearch.ListOptions{
@@ -775,16 +845,21 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*Idiom
 			break
 		}
 		if err != nil {
-			return nil, err
+			return bmi, err
 		}
 		idiomID := docID
-		if haveLang[idiomID] || seen[idiomID] {
+		if seen[idiomID] {
+			continue
+		}
+		seen[idiomID] = true
+		if haveLang[idiomID] {
 			continue
 		}
 		idiomIDsWithoutLang = append(idiomIDsWithoutLang, idiomID)
-		seen[idiomID] = true
 	}
 	//log.Infof(ctx, "Found idioms without %s: %v", lang, idiomIDsWithoutLang)
+	bmi.Stats.CountIdiomsMissingImpl = len(idiomIDsWithoutLang)
+	bmi.Stats.CountIdiomsTotal = len(seen)
 
 	// 3)
 	rand.Shuffle(len(idiomIDsWithoutLang), func(i, j int) {
@@ -797,10 +872,10 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*Idiom
 	}
 
 	// 5) Collect idiom stub data to be displayed
-	idiomStubs := make([]*IdiomStub, len(idiomIDsWithoutLang))
+	bmi.Stubs = make([]*IdiomStub, len(idiomIDsWithoutLang))
 	index, err = gaesearch.Open("cheatsheets")
 	if err != nil {
-		return nil, err
+		return bmi, err
 	}
 	for i, idiomID := range idiomIDsWithoutLang {
 		query := "IdiomID:" + idiomID
@@ -814,14 +889,14 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) ([]*Idiom
 			continue
 		}
 		if err != nil {
-			return nil, err
+			return bmi, err
 		}
-		idiomStubs[i] = &IdiomStub{
+		bmi.Stubs[i] = &IdiomStub{
 			Id:            String2Int(string(doc.IdiomID)),
 			Title:         string(doc.IdiomTitle),
 			LeadParagraph: string(doc.IdiomLeadParagraph),
 		}
 	}
 	log.Infof(ctx, "Found idioms without %s: %v", lang, idiomIDsWithoutLang)
-	return idiomStubs, nil
+	return bmi, nil
 }
