@@ -17,7 +17,7 @@ import (
 // and links to idioms/impls to be improved.
 
 // 4 sections will show sampleSize lines each: Missing impl, Missing doc, Missing demo, Curation.
-const sampleSize = 2
+const sampleSize = 3
 
 func backlogForLanguage(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()

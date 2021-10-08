@@ -744,6 +744,11 @@ func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (bmdd 
 			return bmdd, err
 		}
 		bmdd.Stats.CountImplsLangTotal++
+		if doc.IdiomID == "149" {
+			// "Rescue the princess" is not open to contributions.
+			// Idiom 149 is Protected, but the Protected status in not the search index "idioms".
+			continue
+		}
 		singleton := &IdiomSingleton{
 			Id:            String2Int(string(doc.IdiomID)),
 			Title:         string(doc.IdiomTitle),
@@ -877,6 +882,11 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi back
 		}
 		seen[idiomID] = true
 		if haveLang[idiomID] {
+			continue
+		}
+		if idiomID == "149" {
+			// "Rescue the princess" is not open to contributions.
+			// Idiom 149 is Protected, but the Protected status in not the search index "idioms".
 			continue
 		}
 		idiomIDsWithoutLang = append(idiomIDsWithoutLang, idiomID)

@@ -12,11 +12,15 @@
         {{if .CurationSuggestions}}
             <div id="curation">
                 <h3>Expert validation</h3>
-                It is extremely valuable to curate the {{.Lang | printNiceLang}} contents. 
-                Would you like to review these implementations?
-                If they can be improved, please help yourself. 
-                If you know a better way, please create a distinct entry. 
-                If they're broken, please flag them.
+                <p>
+                    It is extremely valuable to curate the {{.Lang | printNiceLang}} contents. 
+                    Would you like to review these implementations?
+                </p>
+                <p>
+                    If they can be improved, please help yourself. 
+                    If you know a better way, please create a distinct entry. 
+                    If they're broken, please flag them.
+                </p>
                 
                 <div class="curation">
                     <table class="singletons">
@@ -36,7 +40,7 @@
                             <tr>
                                 <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
                                     <button class="btn-primary edit">Edit implementation</button> <br/>
-                                    <button class="btn-primary flag">Flag</button> <br/>
+                                    <button class="btn-primary flag" title="Report a problem with this implementation">Flag</button> <br/>
                                     <button class="btn-primary mark-good">Mark as good</button>
                                 </td>
                                 <td class="impl-singleton">
