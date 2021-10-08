@@ -21,7 +21,7 @@ html, body{
 }
 
 .page-content{
-    padding-bottom: 140px;    /* approx height of footer */
+    padding-bottom: 100px;    /* should cover the height of the footer */
 }
 
 .clr {

@@ -23,7 +23,8 @@
                         {{range .CurationSuggestions}}
                             {{$impl := index .Implementations 0}}                         
                             <tr>
-                                <td>
+                                <td class="idiom-actions" data-idiom-id="{{.Id}}">
+                                    <button class="btn-primary view">View full idiom</button>
                                 </td>
                                 <td class="idiom-header" colspan="2" >
                                     <div class="span7">
@@ -34,10 +35,9 @@
                             </tr>
                             <tr>
                                 <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
-                                    <button class="btn-warning edit">Edit implementation</button> <br/>
-                                    <button class="btn-warning view">View full idiom</button> <br/>
-                                    <button class="btn-warning flag">Flag</button> <br/>
-                                    <button class="btn-warning mark-good">Mark as good</button>
+                                    <button class="btn-primary edit">Edit implementation</button> <br/>
+                                    <button class="btn-primary flag">Flag</button> <br/>
+                                    <button class="btn-primary mark-good">Mark as good</button>
                                 </td>
                                 <td class="impl-singleton">
                                     {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
@@ -64,7 +64,8 @@
                         {{range .MissingDocDemo.MissingDoc}}
                             {{$impl := index .Implementations 0}}
                             <tr>
-                                <td>
+                                <td class="idiom-actions" data-idiom-id="{{.Id}}">
+                                    <button class="btn-primary view">View full idiom</button>
                                 </td>
                                 <td class="missing-doc-idiom-singleton idiom-header" colspan="2" >
                                     <div class="span7">
@@ -75,8 +76,7 @@
                             </tr>
                             <tr>
                                 <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
-                                    <button class="btn-warning edit">Add a doc link</button> <br/>
-                                    <button class="btn-warning view">View full idiom</button> <br/>
+                                    <button class="btn-primary edit">Add a doc link</button> <br/>
                                 </td>
                                 <td class="impl-singleton">
                                     {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
@@ -89,7 +89,7 @@
             {{end}}
         </div>
         
-        <div id="missing-impl">
+        <div>
             <div class="pie" style="background-image: conic-gradient(red {{.MissingDocDemo.MissingDemoPercent}}, green {{.MissingDocDemo.MissingDemoPercent}} {{.MissingDocDemo.HavingDemoPercent}});"></div>
             {{.MissingDocDemo.MissingDemoPercent}} of the {{.Lang | printNiceLang}} don't have a runnable demo yet.
 
@@ -105,7 +105,8 @@
                         {{range .MissingDocDemo.MissingDemo}}
                             {{$impl := index .Implementations 0}}
                             <tr>
-                                <td>
+                                <td class="idiom-actions" data-idiom-id="{{.Id}}">
+                                    <button class="btn-primary view">View full idiom</button>
                                 </td>
                                 <td class="missing-demo-idiom-singleton idiom-header" colspan="2" >
                                     <div class="span7">
@@ -116,8 +117,7 @@
                             </tr>
                             <tr>
                                 <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
-                                    <button class="btn-warning edit">Add a demo link</button> <br/>
-                                    <button class="btn-warning view">View full idiom</button> <br/>
+                                    <button class="btn-primary edit">Add a demo link</button> <br/>
                                 </td>
                                 <td class="impl-singleton">
                                     {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
@@ -131,10 +131,11 @@
             {{end}}
         </div>
 
-        <div>
+        <div id="missing-impl">
             <h3>Missing implementations</h3>
+            <div class="pie" style="background-image: conic-gradient(red {{.MissingImpl.MissingImplPercent}}, green {{.MissingImpl.MissingImplPercent}} {{.MissingImpl.HavingImplPercent}});"></div>
             <p>
-                {{.Lang | printNiceLang}} implementations are already provided for {{.MissingImpl.Stats.CountIdiomsMissingImpl}} idioms out of {{.MissingImpl.Stats.CountIdiomsTotal}} idioms
+                A {{.Lang | printNiceLang}} implementation is missing for {{.MissingImpl.Stats.CountIdiomsMissingImpl}} idioms out of {{.MissingImpl.Stats.CountIdiomsTotal}} idioms
             </p>
 
 			{{if .MissingImpl.Stubs}}
@@ -146,8 +147,8 @@
                     {{range .MissingImpl.Stubs}}
                             <tr>
                                 <td class="idiom-actions" data-idiom-id="{{.Id}}" data-missing-lang="{{$lang}}">
-                                    <button class="btn-warning create-impl">Create a {{$lang | printNiceLang}} implementation</button> <br/>
-                                    <button class="btn-warning view">View full idiom</button> <br/>
+                                    <button class="btn-primary view">View full idiom</button> <br/>
+                                    <button class="btn-primary create-impl">Create a {{$lang | printNiceLang}} implementation</button>
                                 </td>
                                 <td class="idiom-header" >
                                     <div class="span7">

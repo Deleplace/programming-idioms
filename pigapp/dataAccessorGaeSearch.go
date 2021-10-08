@@ -804,6 +804,20 @@ type backlogMissingImpl struct {
 	}
 }
 
+func (bmi backlogMissingImpl) MissingImplRatio() float64 {
+	return float64(bmi.Stats.CountIdiomsMissingImpl) / float64(bmi.Stats.CountIdiomsTotal)
+}
+
+func (bmi backlogMissingImpl) MissingImplPercent() string {
+	ratio := bmi.MissingImplRatio()
+	return fmt.Sprintf("%.0f%%", 100*ratio)
+}
+
+func (bmi backlogMissingImpl) HavingImplPercent() string {
+	ratio := 1 - bmi.MissingImplRatio()
+	return fmt.Sprintf("%.0f%%", 100*ratio)
+}
+
 func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi backlogMissingImpl, err error) {
 	bmi.Lang = lang
 

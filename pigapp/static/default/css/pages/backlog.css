@@ -45,17 +45,22 @@ body.backlog {
     width: 12rem;
     vertical-align: top;
     text-align: right;
+    padding-right: 0.5rem;
 }
 
 .backlog td.idiom-actions {
     /* width: 12rem; */
     vertical-align: top;
     text-align: right;
+    padding-right: 0.5rem;
 }
 
 .backlog td.impl-actions button,
 .backlog td.idiom-actions button {
     margin: 0.2rem;
+    background-color: #2707cc;
+    background-image: linear-gradient(to bottom, #6633cc, #2200cc);
+    border-radius: 0.2rem;
 }
 
 .backlog .pie {
