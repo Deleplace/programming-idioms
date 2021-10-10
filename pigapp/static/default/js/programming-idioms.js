@@ -1158,16 +1158,6 @@ $(function() {
 		form.submit();
 	});
 
-	function using(what) {
-		fetch("/using/"+what, {
-			method: "POST",
-			body: JSON.stringify({
-				page: window.location.pathname+window.location.search
-			})
-		});
-	}
-
-
 	function isCheatsheetPage() {
 		return /\/cheatsheet\//.test(window.location.pathname);
 	}
@@ -1254,3 +1244,12 @@ $(function() {
 		$(this).addClass("spinning-jolty");
 	});
 });
+
+function using(what) {
+	fetch("/using/"+what, {
+		method: "POST",
+		body: JSON.stringify({
+			page: window.location.pathname+window.location.search
+		})
+	});
+}
