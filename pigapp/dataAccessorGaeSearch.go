@@ -865,7 +865,6 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi back
 	}
 	// This is an *IDsOnly* search, where docID == Idiom.Id
 	it = index.List(ctx, &gaesearch.ListOptions{
-		Limit:   2000, // somewhat arbitrary? To protect the server.
 		IDsOnly: true,
 	})
 	for {
