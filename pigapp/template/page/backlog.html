@@ -27,7 +27,7 @@
                         {{range .CurationSuggestions}}
                             {{$impl := index .Implementations 0}}                         
                             <tr>
-                                <td class="idiom-actions" data-idiom-id="{{.Id}}">
+                                <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
                                     <button class="btn-primary view">View full idiom</button>
                                 </td>
                                 <td class="idiom-header" colspan="2" >
@@ -40,7 +40,7 @@
                             <tr>
                                 <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
                                     <button class="btn-primary edit">Edit implementation</button> <br/>
-                                    <button class="btn-primary flag" title="Report a problem with this implementation">Flag</button> <br/>
+                                    <button class="btn-primary flag btn-flag-impl" title="Report a problem with this implementation" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">Flag</button> <br/>
                                     <button class="btn-primary mark-good">Mark as good</button>
                                 </td>
                                 <td class="impl-singleton">
@@ -68,7 +68,7 @@
                         {{range .MissingDocDemo.MissingDoc}}
                             {{$impl := index .Implementations 0}}
                             <tr>
-                                <td class="idiom-actions" data-idiom-id="{{.Id}}">
+                                <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
                                     <button class="btn-primary view">View full idiom</button>
                                 </td>
                                 <td class="missing-doc-idiom-singleton idiom-header" colspan="2" >
@@ -114,7 +114,7 @@
                         {{range .MissingDocDemo.MissingDemo}}
                             {{$impl := index .Implementations 0}}
                             <tr>
-                                <td class="idiom-actions" data-idiom-id="{{.Id}}">
+                                <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
                                     <button class="btn-primary view">View full idiom</button>
                                 </td>
                                 <td class="missing-demo-idiom-singleton idiom-header" colspan="2" >

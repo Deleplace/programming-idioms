@@ -14,10 +14,6 @@ $(".backlog .impl-actions button.edit").click(function(){
     window.open(pageURL);
 }); 
 
-$(".backlog .impl-actions button.flag").click( () => {
-    console.log("TODO");
-}); 
-
 $(".backlog .impl-actions button.mark-good").click( () => {
     console.log("TODO");
 }); 
@@ -34,5 +30,11 @@ $(".backlog .idiom-actions button.view").click(function(){
     let actions = $(this).closest(".idiom-actions");
     let idiomID = actions.attr("data-idiom-id");
     let pageURL = `/idiom/${idiomID}`;
+
+    // "View full idiom" may be better if it shows this impl at the top
+    let implID = actions.attr("data-impl-id");
+    if(implID) {
+        pageURL += `/impl/${implID}`;
+    }
     window.open(pageURL);
 }); 
