@@ -57,7 +57,7 @@
         <div id="docs-demos">
             <h3>Docs & demos</h3>
 
-            <div class="pie" style="background-image: conic-gradient(red {{.MissingDocDemo.MissingDocPercent}}, green {{.MissingDocDemo.MissingDocPercent}} {{.MissingDocDemo.HavingDocPercent}});"></div>
+            <div class="pie" style="background-image: conic-gradient(#770000, #DD0000  {{.MissingDocDemo.MissingDocPercent}}, #00DD00 {{.MissingDocDemo.MissingDocPercent}}, #00AA00);"></div>
             {{.MissingDocDemo.MissingDocPercent}}  of the {{.Lang | printNiceLang}} snippets don't have an external link to a documentation page yet.
 
             {{if .MissingDocDemo.MissingDoc}}
@@ -94,15 +94,20 @@
         </div>
         
         <div>
-            <div class="pie" style="background-image: conic-gradient(red {{.MissingDocDemo.MissingDemoPercent}}, green {{.MissingDocDemo.MissingDemoPercent}} {{.MissingDocDemo.HavingDemoPercent}});"></div>
-            {{.MissingDocDemo.MissingDemoPercent}} of the {{.Lang | printNiceLang}} don't have a runnable demo yet.
+            <div class="pie" style="background-image: conic-gradient(#DD3311, #CC5500 {{.MissingDocDemo.MissingDemoPercent}}, #00DD00 {{.MissingDocDemo.MissingDemoPercent}}, #00AA00);"></div>
+            <p>
+                {{.MissingDocDemo.MissingDemoPercent}} of the {{.Lang | printNiceLang}} don't have a runnable demo yet.
+            </p>
 
             {{if .MissingDocDemo.MissingDemo}}
                 {{if .RecommendedDemoSite.Name}}
-                We recommend creating demos in <a href="{{.RecommendedDemoSite.URL}}" target="_blank">{{.RecommendedDemoSite.Name}}</a>
+                    <p>
+                        We recommend creating demos in <a href="{{.RecommendedDemoSite.URL}}" target="_blank">{{.RecommendedDemoSite.Name}}</a>
+                    </p>
                 {{end}}
-
-                For example, these implementations would need a demo URL:
+                <p>
+                    For example, these implementations would need a demo URL:
+                </p>
 
                 <div class="missing-demo">
                     <table class="singletons">
@@ -137,7 +142,7 @@
 
         <div id="missing-impl">
             <h3>Missing implementations</h3>
-            <div class="pie" style="background-image: conic-gradient(red {{.MissingImpl.MissingImplPercent}}, green {{.MissingImpl.MissingImplPercent}} {{.MissingImpl.HavingImplPercent}});"></div>
+            <div class="pie" style="background-image: conic-gradient(#CC7700, #EECC22 {{.MissingImpl.MissingImplPercent}}, #00DD00 {{.MissingImpl.MissingImplPercent}}, #00AA00);"></div>
             <p>
                 A {{.Lang | printNiceLang}} implementation is missing for {{.MissingImpl.Stats.CountIdiomsMissingImpl}} idioms out of {{.MissingImpl.Stats.CountIdiomsTotal}} idioms
             </p>
