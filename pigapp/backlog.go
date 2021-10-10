@@ -1,7 +1,6 @@
 package main
 
 import (
-	"math/rand"
 	"net/http"
 	"strings"
 	"time"
@@ -46,36 +45,6 @@ func backlogForLanguage(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		log.Errorf(ctx, "%v", err)
 	}
-	/*
-		log.Infof(ctx, "Having/NotHaving sampling...")
-		for i := 0; i < sampleSize; i++ {
-			// TODO make a single Datastore call for 3 Missing impls
-			// TODO make a single Datastore call for 3 Curation suggestions
-			// TODO also, why are they so damn slow?
-			// TODO last resort, consider fetching those concurrently
-			// TODO retrieve the Having data from full text indexes instead?
-			log.Infof(ctx, "1 NotHaving...")
-			{
-				_, idiom, err := dao.randomIdiomNotHaving(ctx, rawLang)
-				if err == nil {
-					idiom.Implementations = nil
-					data.MissingImpl = append(data.MissingImpl, idiom)
-				} else {
-					log.Errorf(ctx, "getting random idiom not having %s: %v", rawLang, err)
-				}
-			}
-			log.Infof(ctx, "1 Having...")
-			{
-				_, idiom, err := dao.randomIdiomHaving(ctx, rawLang)
-				if err == nil {
-					idiom.Implementations = keepSingleImplForLanguage(idiom.Implementations, rawLang)
-					data.CurationSuggestions = append(data.CurationSuggestions, idiom)
-				} else {
-					log.Errorf(ctx, "getting random idiom not having %s: %v", rawLang, err)
-				}
-			}
-		}
-	*/
 	tip = time.Now()
 	data.MissingDocDemo, err = searchMissingDocDemoForLang(ctx, rawLang, sampleSize)
 	log.Infof(ctx, "got %d missingDoc and %d missingDemo for %s in %dms", len(data.MissingDocDemo.MissingDoc), len(data.MissingDocDemo.MissingDemo), rawLang, time.Since(tip)/time.Millisecond)
@@ -127,36 +96,20 @@ type DemoSite struct {
 func recommendedDemoSite(lang string) DemoSite {
 	var ds DemoSite
 	switch strings.TrimSpace(strings.ToLower(lang)) {
-	case "go":
-		ds.Name = "the Go Playground"
-		ds.URL = "https://play.golang.org/"
 	case "csharp", "cs", "fsharp", "fs":
 		ds.Name = "SharpLab"
 		ds.URL = "https://sharplab.io/"
+	case "dart":
+		ds.Name = "DartPad"
+		ds.URL = "https://dartpad.dev/"
+	case "go":
+		ds.Name = "the Go Playground"
+		ds.URL = "https://play.golang.org/"
+	case "rust":
+		ds.Name = "the Rust Playground"
+		ds.URL = "https://play.rust-lang.org/"
 	default:
 		// No recommended demo site for this lang
 	}
 	return ds
-}
-
-func keepForLanguage(impls []Impl, lang string) []Impl {
-	var keep []Impl
-	for _, impl := range impls {
-		// TODO normalize lowercase, etc?
-		if impl.LanguageName == lang {
-			keep = append(keep, impl)
-		}
-	}
-	return keep
-}
-
-func keepSingleImplForLanguage(impls []Impl, lang string) []Impl {
-	impls = keepForLanguage(impls, lang)
-	if len(impls) == 0 {
-		return impls
-	}
-	impl := impls[rand.Intn(len(impls))]
-	return []Impl{
-		impl,
-	}
 }
