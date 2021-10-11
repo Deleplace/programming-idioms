@@ -4,6 +4,7 @@ body.backlog {
 
 .backlog table {
     width:100%;
+    border-collapse: separate;
 }
 
 .backlog table.singletons h3,
@@ -19,13 +20,16 @@ body.backlog {
 
 .backlog table td.idiom-header {
     background-color: white;
+    border: solid 3px #CCE;
     border-top-right-radius: 12px;
     border-top-left-radius: 12px;
+    border-bottom: none;
 }
 
 .backlog table td.impl-singleton {
     background-color: white;
-    border-bottom: 1rem;
+    border: solid 3px #CCE;
+    border-top: none;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 128px 48px;
 }
@@ -34,6 +38,7 @@ body.backlog {
 }
 .backlog table.stubs td.idiom-header {
     border-radius: 12px;
+    border-bottom: solid 3px #CCE;
 }
 
 .backlog table td.impl-singleton,
