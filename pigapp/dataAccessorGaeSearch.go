@@ -189,6 +189,7 @@ func indexIdiomCheatsheets(ctx context.Context, idiom *Idiom) error {
 			ImplCodeBlockComment: gaesearch.Atom(impl.AuthorComment),
 			ImplDocURL:           gaesearch.Atom(impl.DocumentationURL),
 			ImplDemoURL:          gaesearch.Atom(impl.DemoURL),
+			// TODO IdiomVersion  (for proper flagging in Community Backlog page)
 		}
 	}
 	_, err = index.PutMulti(ctx, docIDs, docs)
