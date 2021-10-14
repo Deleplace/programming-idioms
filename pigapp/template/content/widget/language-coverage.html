@@ -12,12 +12,10 @@
 					<th></th>
 					<th></th>
 					{{range $j, $lang := .Languages}}
-						{{$class := hiddenizeExtraColumns $j "" "hidden"}}
-						<th data-lang="{{$lang}}" class="{{$class}} {{langCoverageClass $lang $favlangs}}" title="{{printNiceLang $lang}}">
+						<th data-lang="{{$lang}}" class="{{langCoverageClass $lang $favlangs}}" title="{{printNiceLang $lang}}">
 							<span>{{printNiceLang $lang}}</span>
 						</th>
 					{{end}}
-					<th class="fold-unfold"><i class="fas fa-angle-double-right icon-large"></i></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -27,8 +25,7 @@
 					<th data-idiom-id="{{$idiomId}}"><span class="idiom_id label"># {{$idiomId}}</span></th>
 					<th class="idiom-title"><a href="idiom/{{$idiomId}}">{{index $cover.IdiomTitles $i}}</a></th>
 					{{range $j, $lang := $cover.Languages}}
-						{{$class := hiddenizeExtraColumns $j "" "hidden"}}
-						<td class="{{$class}}">
+						<td>
 							{{$implId := index $cover.Checked $idiomId $lang}}
 							{{if $implId}}
 								<a href="{{hostPrefix}}/idiom/{{$idiomId}}/impl/{{$implId}}"><span class="{{langCoverageClass $lang $favlangs}}"><i class="fas fa-check-square fa-2x"></i></span></a>
@@ -37,7 +34,6 @@
 							{{end}}
 						</td>
 					{{end}}
-					<td class="fold-unfold"><i class="fas fa-angle-double-right"></i></td>
 				</tr>
 			{{end}}
 			</tbody>
