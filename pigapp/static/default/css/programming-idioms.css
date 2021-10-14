@@ -881,15 +881,20 @@ footer a.visited {
 }
 
 .language-coverage th[data-lang] span {
-	writing-mode: vertical-rl;
-	text-orientation: upright;
-	letter-spacing: -0.23em;
-	font-size: 24px;
+	font-size: 20px;
 	color: white;
 	padding: 0.1em;
 	border-radius: 6px;
 	background-color: #0088cc;
 	padding-bottom: 0.3em;
+	padding-top: 0.3em;
+
+	/* From https://stackoverflow.com/questions/15806925/how-to-rotate-text-left-90-degree-and-cell-size-is-adjusted-according-to-text-in */
+	-ms-writing-mode: tb-rl;
+	-webkit-writing-mode: vertical-rl;
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	white-space: nowrap;
 }
 
 .language-coverage th[data-lang].coverage-fav-lang span {
