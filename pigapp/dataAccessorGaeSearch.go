@@ -87,6 +87,10 @@ type cheatSheetLineDoc struct {
 	ImplDemoURL gaesearch.Atom
 	// ImplDocURL is the documentation URL of this impl.
 	ImplDocURL gaesearch.Atom
+	// Protected when "only admin can edit"
+	Protected gaesearch.Atom
+	// IdiomVersion is the number of this idiom revision
+	IdiomVersion gaesearch.Atom
 }
 
 type cheatSheetLineDocs []cheatSheetLineDoc
@@ -189,7 +193,8 @@ func indexIdiomCheatsheets(ctx context.Context, idiom *Idiom) error {
 			ImplCodeBlockComment: gaesearch.Atom(impl.AuthorComment),
 			ImplDocURL:           gaesearch.Atom(impl.DocumentationURL),
 			ImplDemoURL:          gaesearch.Atom(impl.DemoURL),
-			// TODO IdiomVersion  (for proper flagging in Community Backlog page)
+			IdiomVersion:         gaesearch.Atom(strconv.Itoa(idiom.Version)),
+			Protected:            gaesearch.Atom(strconv.FormatBool(idiom.Protected || impl.Protected)),
 		}
 	}
 	_, err = index.PutMulti(ctx, docIDs, docs)
@@ -653,6 +658,7 @@ func searchRandomImplsForLang(ctx context.Context, lang string, n int) ([]*Idiom
 					AuthorComment:    string(doc.ImplCodeBlockComment),
 				},
 			},
+			Version: String2Int(string(doc.IdiomVersion)),
 			// All other fields left blank for Backlog display
 			// All other impls ignored for Backlog display of 1 impl
 		}
@@ -747,7 +753,12 @@ func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (bmdd 
 		bmdd.Stats.CountImplsLangTotal++
 		if doc.IdiomID == "149" {
 			// "Rescue the princess" is not open to contributions.
-			// Idiom 149 is Protected, but the Protected status in not the search index "idioms".
+			continue
+			// Should also be caught by the Protected test below
+		}
+		if doc.Protected == "true" {
+			// Some idioms e.g. #149 "Rescue the princess" are not open to contributions.
+			log.Infof(ctx, "Skipping protected idiom %s impl %s", doc.IdiomID, doc.ImplID)
 			continue
 		}
 		singleton := &IdiomSingleton{
@@ -886,8 +897,8 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi back
 		}
 		if idiomID == "149" {
 			// "Rescue the princess" is not open to contributions.
-			// Idiom 149 is Protected, but the Protected status in not the search index "idioms".
 			continue
+			// TODO find a way to skip Protected idioms, in general.
 		}
 		idiomIDsWithoutLang = append(idiomIDsWithoutLang, idiomID)
 	}
