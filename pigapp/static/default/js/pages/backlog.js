@@ -61,7 +61,6 @@ $(function() {
         target.addClass("refreshing");
         btn.addClass("refreshing");
 
-
 		$.get(endpoint, 
             {}, 
             function(response) {
@@ -72,6 +71,11 @@ $(function() {
                     html : true
                 }).popover('show');
             });
+
+        let parts = endpoint.split("/");
+        let lang = parts[2];
+        let blockName = parts[4];
+        using(`backlog/refresh/${blockName}/${lang}`);
     }); 
     
 
