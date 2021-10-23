@@ -22,161 +22,177 @@
                     If they're broken, please flag them.
                 </p>
                 
-                <div class="curation">
-                    <table class="singletons">
-                        {{range .CurationSuggestions}}
-                            {{$impl := index .Implementations 0}}                         
-                            <tr>
-                                <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
-                                    <button class="btn-primary view">View full idiom</button>
-                                </td>
-                                <td class="idiom-header" colspan="2" >
-                                    <div class="span7">
-                                        <h3>Idiom #{{.Id}} {{.Title}}</h3>
-                                        <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}" data-idiom-version="{{.Version}}">
-                                    <button class="btn-primary edit">Edit implementation</button> <br/>
-                                    <button class="btn-primary flag btn-flag-impl" title="Report a problem with this implementation" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}" data-idiom-version="{{.Version}}">Flag</button> <br/>
-                                    <button class="btn-primary mark-good">Mark as good</button>
-                                </td>
-                                <td class="impl-singleton">
-                                    {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
-                                </td>
-                            </tr>                      
-                            <tr class="spacer"><td></td><td></td></tr>
-                        {{end}}
-                    </table>
-                </div>
+                {{template "backlog-block-curation" .}}
             </div>
         {{end}}
         
         <div id="docs-demos">
             <h3>Docs & demos</h3>
 
-            <div class="pie" style="background-image: conic-gradient(#770000, #DD0000  {{.MissingDocDemo.MissingDocPercent}}, #00DD00 calc({{.MissingDocDemo.MissingDocPercent}} + 1%), #00AA00);"></div>
-            {{.MissingDocDemo.MissingDocPercent}}  of the {{.Lang | printNiceLang}} snippets don't have an external link to a documentation page yet.
-
-            {{if .MissingDocDemo.MissingDoc}}
-                For example, these implementations would need a doc URL:
-
-                <div class="missing-doc">
-                    <table class="singletons">
-                        {{range .MissingDocDemo.MissingDoc}}
-                            {{$impl := index .Implementations 0}}
-                            <tr>
-                                <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
-                                    <button class="btn-primary view">View full idiom</button>
-                                </td>
-                                <td class="missing-doc-idiom-singleton idiom-header" colspan="2" >
-                                    <div class="span7">
-                                        <h3>Idiom #{{.Id}} {{.Title}}</h3>
-                                        <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
-                                    <button class="btn-primary edit">Add a doc link</button> <br/>
-                                </td>
-                                <td class="impl-singleton">
-                                    {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
-                                </td>
-                            </tr>
-                            <tr class="spacer"><td></td><td></td></tr>
-                        {{end}}
-                    </table>
-                </div>
-            {{end}}
+            {{template "backlog-block-missing-doc" .}}
         
-            <div class="pie" style="background-image: conic-gradient(#DD3311, #CC5500 {{.MissingDocDemo.MissingDemoPercent}}, #00DD00 calc({{.MissingDocDemo.MissingDemoPercent}} + 1%), #00AA00);"></div>
-            <p>
-                {{.MissingDocDemo.MissingDemoPercent}} of the {{.Lang | printNiceLang}} snippets don't have a runnable demo yet.
-            </p>
-
-            {{if .MissingDocDemo.MissingDemo}}
-                {{if .RecommendedDemoSite.Name}}
-                    <p>
-                        We recommend creating demos in <a href="{{.RecommendedDemoSite.URL}}" target="_blank">{{.RecommendedDemoSite.Name}}</a>
-                    </p>
-                {{end}}
-                <p>
-                    For example, these implementations would need a demo URL:
-                </p>
-
-                <div class="missing-demo">
-                    <table class="singletons">
-                        {{range .MissingDocDemo.MissingDemo}}
-                            {{$impl := index .Implementations 0}}
-                            <tr>
-                                <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
-                                    <button class="btn-primary view">View full idiom</button>
-                                </td>
-                                <td class="missing-demo-idiom-singleton idiom-header" colspan="2" >
-                                    <div class="span7">
-                                        <h3>Idiom #{{.Id}} {{.Title}}</h3>
-                                        <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
-                                    <button class="btn-primary edit">Add a demo link</button> <br/>
-                                </td>
-                                <td class="impl-singleton">
-                                    {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
-                                </td>
-                                <tr class="spacer"><td></td><td></td></tr>
-                            </tr>
-                            <tr class="spacer"><td></td><td></td></tr>
-                        {{end}}
-                    </table>
-                </div>
-            {{end}}
+            {{template "backlog-block-missing-demo" .}}
         </div>
 
         <div id="missing-impl">
             <h3>Missing implementations</h3>
-            <div class="pie" style="background-image: conic-gradient(#CC7700, #EECC22 {{.MissingImpl.MissingImplPercent}}, #00DD00 calc({{.MissingImpl.MissingImplPercent}} + 1%), #00AA00);"></div>
-            <p>
-                A {{.Lang | printNiceLang}} implementation is missing for {{.MissingImpl.Stats.CountIdiomsMissingImpl}} idioms out of {{.MissingImpl.Stats.CountIdiomsTotal}} idioms
-            </p>
-
-			{{if .MissingImpl.Stubs}}
-                <p>
-                    You may help by writing a {{.Lang | printNiceLang}} snippet for these idioms:
-                </p>
-                <table class="stubs">
-                    {{$lang := .Lang}}   
-                    {{range .MissingImpl.Stubs}}
-                            <tr>
-                                <td class="idiom-actions" data-idiom-id="{{.Id}}" data-missing-lang="{{$lang}}">
-                                    <button class="btn-primary view">View full idiom</button> <br/>
-                                    <button class="btn-primary create-impl">Create a {{$lang | printNiceLang}} implementation</button>
-                                </td>
-                                <td class="idiom-header" >
-                                    <div class="span7">
-                                        <h3>Idiom #{{.Id}} {{.Title}}</h3>
-                                        <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="spacer"><td></td><td></td></tr>
-                    {{end}}
-                </table>
-            {{else}}
-                <p>
-                    No idioms found without a {{.Lang | printNiceLang}} implementation :)
-                </p>
-            {{end}}
-        </div>
+            {{template "backlog-block-missing-impl" .}}
 	</div>
 {{template "footer" .}}
 {{template "include-js" .}}
 </div>  
 </body>
 {{template "close-html"}}
+{{end}}
+
+{{define "backlog-block-curation"}}
+    <div class="curation">
+        <table class="singletons">
+            {{range .CurationSuggestions}}
+                {{$impl := index .Implementations 0}}                         
+                <tr>
+                    <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
+                        <button class="btn-primary view">View full idiom</button>
+                    </td>
+                    <td class="idiom-header" colspan="2" >
+                        <div class="span7">
+                            <h3>Idiom #{{.Id}} {{.Title}}</h3>
+                            <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}" data-idiom-version="{{.Version}}">
+                        <button class="btn-primary edit">Edit implementation</button> <br/>
+                        <button class="btn-primary flag btn-flag-impl" title="Report a problem with this implementation" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}" data-idiom-version="{{.Version}}">Flag</button> <br/>
+                        <button class="btn-primary mark-good">Mark as good</button>
+                    </td>
+                    <td class="impl-singleton">
+                        {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
+                    </td>
+                </tr>                      
+                <tr class="spacer"><td></td><td></td></tr>
+            {{end}}
+        </table>
+    </div>
+{{end}}
+
+{{define "backlog-block-missing-doc"}}
+    <div class="pie" style="background-image: conic-gradient(#770000, #DD0000  {{.MissingDocDemo.MissingDocPercent}}, #00DD00 calc({{.MissingDocDemo.MissingDocPercent}} + 1%), #00AA00);"></div>
+    {{.MissingDocDemo.MissingDocPercent}}  of the {{.Lang | printNiceLang}} snippets don't have an external link to a <strong>documentation page</strong> yet.
+
+    {{if .MissingDocDemo.MissingDoc}}
+        For example, these implementations would need a doc URL:
+
+        <div class="missing-doc">
+            <table class="singletons">
+                {{range .MissingDocDemo.MissingDoc}}
+                    {{$impl := index .Implementations 0}}
+                    <tr>
+                        <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
+                            <button class="btn-primary view">View full idiom</button>
+                        </td>
+                        <td class="missing-doc-idiom-singleton idiom-header" colspan="2" >
+                            <div class="span7">
+                                <h3>Idiom #{{.Id}} {{.Title}}</h3>
+                                <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
+                            <button class="btn-primary edit">Add a doc link</button> <br/>
+                        </td>
+                        <td class="impl-singleton">
+                            {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
+                        </td>
+                    </tr>
+                    <tr class="spacer"><td></td><td></td></tr>
+                {{end}}
+            </table>
+        </div>
+    {{end}}
+{{end}}
+
+{{define "backlog-block-missing-demo"}}
+    <div class="pie" style="background-image: conic-gradient(#DD3311, #CC5500 {{.MissingDocDemo.MissingDemoPercent}}, #00DD00 calc({{.MissingDocDemo.MissingDemoPercent}} + 1%), #00AA00);"></div>
+    <p>
+        {{.MissingDocDemo.MissingDemoPercent}} of the {{.Lang | printNiceLang}} snippets don't have a <strong>runnable demo</strong> yet.
+    </p>
+
+    {{if .MissingDocDemo.MissingDemo}}
+        {{if .RecommendedDemoSite.Name}}
+            <p>
+                We recommend creating demos in <a href="{{.RecommendedDemoSite.URL}}" target="_blank">{{.RecommendedDemoSite.Name}}</a>
+            </p>
+        {{end}}
+        <p>
+            For example, these implementations would need a demo URL:
+        </p>
+
+        <div class="missing-demo">
+            <table class="singletons">
+                {{range .MissingDocDemo.MissingDemo}}
+                    {{$impl := index .Implementations 0}}
+                    <tr>
+                        <td class="idiom-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
+                            <button class="btn-primary view">View full idiom</button>
+                        </td>
+                        <td class="missing-demo-idiom-singleton idiom-header" colspan="2" >
+                            <div class="span7">
+                                <h3>Idiom #{{.Id}} {{.Title}}</h3>
+                                <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="impl-actions" data-idiom-id="{{.Id}}" data-impl-id="{{$impl.Id}}">
+                            <button class="btn-primary edit">Add a demo link</button> <br/>
+                        </td>
+                        <td class="impl-singleton">
+                            {{template "impl-code-ro" dict "Idiom" . "Impl" $impl "UserProfile" nil}}
+                        </td>
+                        <tr class="spacer"><td></td><td></td></tr>
+                    </tr>
+                    <tr class="spacer"><td></td><td></td></tr>
+                {{end}}
+            </table>
+        </div>
+    {{end}}
+{{end}}
+
+{{define "backlog-block-missing-impl"}}
+    <div class="pie" style="background-image: conic-gradient(#CC7700, #EECC22 {{.MissingImpl.MissingImplPercent}}, #00DD00 calc({{.MissingImpl.MissingImplPercent}} + 1%), #00AA00);"></div>
+    <p>
+        A {{.Lang | printNiceLang}} implementation is missing for {{.MissingImpl.Stats.CountIdiomsMissingImpl}} idioms out of {{.MissingImpl.Stats.CountIdiomsTotal}} idioms
+    </p>
+
+    {{if .MissingImpl.Stubs}}
+        <p>
+            You may help by writing a {{.Lang | printNiceLang}} snippet for these idioms:
+        </p>
+        <table class="stubs">
+            {{$lang := .Lang}}   
+            {{range .MissingImpl.Stubs}}
+                    <tr>
+                        <td class="idiom-actions" data-idiom-id="{{.Id}}" data-missing-lang="{{$lang}}">
+                            <button class="btn-primary view">View full idiom</button> <br/>
+                            <button class="btn-primary create-impl">Create a {{$lang | printNiceLang}} implementation</button>
+                        </td>
+                        <td class="idiom-header" >
+                            <div class="span7">
+                                <h3>Idiom #{{.Id}} {{.Title}}</h3>
+                                <p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="spacer"><td></td><td></td></tr>
+            {{end}}
+        </table>
+    {{else}}
+        <p>
+            No idioms found without a {{.Lang | printNiceLang}} implementation :)
+        </p>
+    {{end}}
+    </div>
 {{end}}
