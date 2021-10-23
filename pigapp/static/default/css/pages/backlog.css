@@ -82,3 +82,47 @@ body.backlog {
     margin: 1rem;
     margin-top: -0.5rem;
 }
+
+/* 
+ * Refreshing == fade out 
+ */
+.refreshing td.impl-actions button,
+.refreshing td.idiom-actions button {
+    background-color: #aa9ee9;
+    background-image: linear-gradient(to bottom, #b8a1e6, #9b8de0);
+}
+.backlog .refreshing table td.idiom-header,
+.backlog .refreshing table td.impl-singleton,
+.backlog .refreshing pre.prettyprint,
+.backlog .refreshing ul.nav.nav-tabs > li > a,
+.backlog .refreshing .popover {
+    background-color: #EEEEFF;
+}
+.backlog .refreshing .popover.right .arrow::after {
+    border-right-color: #EEEEFF;
+}
+
+.btn.block-data-refresh {
+    float: right;
+    margin-top: 0rem;
+    width: 2rem;
+    max-width: 2rem;
+    height: 2rem;
+    max-height: 2rem;
+    padding: 0.15rem;
+    /*
+    padding-top: 10px;
+    padding-bottom: 10px;
+    */
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: normal;
+    color: #444;
+}
+#curation .btn.block-data-refresh {
+    margin-top: -2.8rem;
+}
+.btn.block-data-refresh.refreshing {
+    transform: rotate(90deg);
+    color: #999;
+}

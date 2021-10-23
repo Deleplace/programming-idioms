@@ -8,7 +8,6 @@
 
         <h2>Community backlog for {{.Lang | printNiceLang}}</h2>
 
-
         {{if .CurationSuggestions}}
             <div id="curation">
                 <h3>Expert validation</h3>
@@ -22,21 +21,30 @@
                     If they're broken, please flag them.
                 </p>
                 
-                {{template "backlog-block-curation" .}}
+                <a class="btn block-data-refresh" data-block-endpoint="/backlog/{{.Lang}}/block/curation">🗘</a>
+                <div class="block-data-contents">
+                    {{template "backlog-block-curation" .}}
+                </div>
             </div>
         {{end}}
         
         <div id="docs-demos">
             <h3>Docs & demos</h3>
 
-            {{template "backlog-block-missing-doc" .}}
-        
-            {{template "backlog-block-missing-demo" .}}
+            <a class="btn block-data-refresh" data-block-endpoint="/backlog/{{.Lang}}/block/docs-demos">🗘</a>
+            <div class="block-data-contents">
+                {{template "backlog-block-missing-doc" .}}
+            
+                {{template "backlog-block-missing-demo" .}}
+            </div>
         </div>
 
         <div id="missing-impl">
             <h3>Missing implementations</h3>
-            {{template "backlog-block-missing-impl" .}}
+            <a class="btn block-data-refresh" data-block-endpoint="/backlog/{{.Lang}}/block/missing-impl">🗘</a>
+            <div class="block-data-contents">
+                {{template "backlog-block-missing-impl" .}}
+            </div>
 	</div>
 {{template "footer" .}}
 {{template "include-js" .}}

@@ -720,7 +720,7 @@ $(function() {
 	});
 
 	// Impl flag (to the admin)
-	$(".btn-flag-impl").on("click", function(e){
+	$(document).on("click", ".btn-flag-impl", function(e){
 		let btn = $(e.target).closest(".btn-flag-impl");
 		let rationale;
 		do {

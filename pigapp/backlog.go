@@ -113,3 +113,101 @@ func recommendedDemoSite(lang string) DemoSite {
 	}
 	return ds
 }
+
+// Block "Curation"
+func backlogBlockCuration(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	vars := mux.Vars(r)
+	rawLang := vars["lang"]
+	lang := NormLang(rawLang)
+	log.Infof(ctx, "Computing backlog for %s", lang)
+
+	data := &BacklogLanguageFacade{
+		Lang: lang,
+		// Mostly empty because we don't care about the full page metadata
+	}
+
+	log.Infof(ctx, "searchRandomImplsForLang(%q)...", rawLang)
+	tip := time.Now()
+	var err error
+	data.CurationSuggestions, err = searchRandomImplsForLang(ctx, rawLang, sampleSize)
+	log.Infof(ctx, "got %d curation suggestions for %s in %dms", len(data.CurationSuggestions), rawLang, time.Since(tip)/time.Millisecond)
+	if err != nil {
+		log.Errorf(ctx, "%v", err)
+	}
+
+	log.Infof(ctx, "Done computing backlog block Curation for %s", lang)
+	log.Infof(ctx, "Executing backlog block Curation template for %s", lang)
+	tip = time.Now()
+	err = templates.ExecuteTemplate(w, "backlog-block-curation", data)
+	log.Infof(ctx, "Done executing backlog block Curation template for %s in %dms", lang, time.Since(tip)/time.Millisecond)
+	return err
+}
+
+//
+// The Block handlers below are intended to allow refreshing only a portion of the Backlog page.
+//
+
+// Block "Docs & Demos"
+func backlogBlockDocsDemos(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	vars := mux.Vars(r)
+	rawLang := vars["lang"]
+	lang := NormLang(rawLang)
+	log.Infof(ctx, "Computing backlog for %s", lang)
+
+	data := &BacklogLanguageFacade{
+		Lang:                lang,
+		RecommendedDemoSite: recommendedDemoSite(rawLang),
+		// Mostly empty because we don't care about the full page metadata
+	}
+
+	tip := time.Now()
+	var err error
+	data.MissingDocDemo, err = searchMissingDocDemoForLang(ctx, rawLang, sampleSize)
+	log.Infof(ctx, "got %d missingDoc and %d missingDemo for %s in %dms", len(data.MissingDocDemo.MissingDoc), len(data.MissingDocDemo.MissingDemo), rawLang, time.Since(tip)/time.Millisecond)
+	if err != nil {
+		log.Errorf(ctx, "%v", err)
+	}
+
+	log.Infof(ctx, "Done computing backlog block Docs-Demos for %s", lang)
+	log.Infof(ctx, "Executing backlog block Docs-Demos templates for %s", lang)
+	tip = time.Now()
+	err = templates.ExecuteTemplate(w, "backlog-block-missing-doc", data)
+	if err != nil {
+		return err
+	}
+	err = templates.ExecuteTemplate(w, "backlog-block-missing-demo", data)
+	log.Infof(ctx, "Done executing backlog block Docs-Demos templates for %s in %dms", lang, time.Since(tip)/time.Millisecond)
+	return err
+}
+
+// Block "Missing implementations"
+func backlogBlockMissingImpl(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	vars := mux.Vars(r)
+	rawLang := vars["lang"]
+	lang := NormLang(rawLang)
+	log.Infof(ctx, "Computing backlog for %s", lang)
+
+	data := &BacklogLanguageFacade{
+		Lang: lang,
+		// Mostly empty because we don't care about the full page metadata
+	}
+
+	log.Infof(ctx, "searchRandomImplsForLang(%q)...", rawLang)
+	tip := time.Now()
+	var err error
+	data.MissingImpl, err = searchMissingImplForLang(ctx, lang, sampleSize)
+	log.Infof(ctx, "got %d missingImpl idioms %s in %dms", len(data.MissingImpl.Stubs), rawLang, time.Since(tip)/time.Millisecond)
+	if err != nil {
+		log.Errorf(ctx, "%v", err)
+	}
+
+	log.Infof(ctx, "Done computing backlog block Missing-Impl for %s", lang)
+	log.Infof(ctx, "Executing backlog block Missing-Impl template for %s", lang)
+	tip = time.Now()
+	err = templates.ExecuteTemplate(w, "backlog-block-missing-impl", data)
+	log.Infof(ctx, "Done executing backlog block Missing-Impl template for %s in %dms", lang, time.Since(tip)/time.Millisecond)
+	return err
+}
