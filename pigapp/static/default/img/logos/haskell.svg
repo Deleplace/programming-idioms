@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="359px"
+   height="256px"
+   viewBox="0 0 359 256"
+   version="1.1"
+   id="svg845"
+   sodipodi:docname="haskell.svg"
+   inkscape:version="1.1.1 (eb90963e84, 2021-10-02)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs849" />
+  <sodipodi:namedview
+     id="namedview847"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="3.296875"
+     inkscape:cx="112.98578"
+     inkscape:cy="128.15166"
+     inkscape:window-width="1865"
+     inkscape:window-height="1016"
+     inkscape:window-x="55"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="haskell" />
+  <!-- Generator: Sketch 52 (66869) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title832">haskell</title>
+  <desc
+     id="desc834">Created with Sketch.</desc>
+  <g
+     id="Page-1"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd">
+    <g
+       id="haskell">
+      <polygon
+         id="Path"
+         fill="#000"
+         points="0 255.825643 84.3434556 127.914546 0 0 63.2575917 0 147.601047 127.914546 63.2575917 255.825643"
+         fill-opacity="0.4" />
+      <polygon
+         id="polygon837"
+         fill="#000"
+         points="85.2160682 255.825643 169.559524 127.914546 85.2160682 0 148.47366 0 317.153754 255.825643 253.902979 255.825643 201.191728 175.882931 148.470251 255.825643"
+         fill-opacity="0.25" />
+      <polygon
+         id="polygon839"
+         fill="#000"
+         points="288.439348 179.010705 260.324862 136.370224 358.725561 136.370224 358.725561 179.014153 288.439348 179.014153"
+         fill-opacity="0.3" />
+      <polygon
+         id="polygon841"
+         fill="#000"
+         points="246.26762 115.058604 218.153135 72.4181236 358.725561 72.4181236 358.725561 115.058604"
+         fill-opacity="0.3" />
+    </g>
+  </g>
+</svg>

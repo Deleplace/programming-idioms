@@ -6,6 +6,9 @@
 	{{template "header-small" .}}  
 	<div class="page-content container-fluid">
 
+        {{if .LanguageLogo}}
+            <img src="{{hostPrefix}}{{themeDir}}/img/logos/{{.LanguageLogo}}" class="logo" />
+        {{end}}
         <h2>Community backlog for {{.Lang | printNiceLang}}</h2>
 
         {{if .CurationSuggestions}}

@@ -34,6 +34,7 @@ func backlogForLanguage(w http.ResponseWriter, r *http.Request) error {
 		},
 		UserProfile:         readUserProfile(r),
 		Lang:                lang,
+		LanguageLogo:        languageLogo(lang),
 		RecommendedDemoSite: recommendedDemoSite(rawLang),
 	}
 
@@ -72,6 +73,7 @@ type BacklogLanguageFacade struct {
 	PageMeta            PageMeta
 	UserProfile         UserProfile
 	Lang                string
+	LanguageLogo        string
 	RecommendedDemoSite DemoSite
 	CurationSuggestions []*IdiomSingleton
 	MissingDocDemo      backlogMissingDocDemo
@@ -112,6 +114,39 @@ func recommendedDemoSite(lang string) DemoSite {
 		// No recommended demo site for this lang
 	}
 	return ds
+}
+
+// E.g. "python.svg"  for the file at static/default/img/logos/python.svg
+func languageLogo(lang string) string {
+	switch strings.TrimSpace(strings.ToLower(lang)) {
+	case "csharp", "cs":
+		return "csharp.svg"
+	case "c":
+		return "c.svg"
+	case "cpp", "c++":
+		return "cpp.svg"
+	case "go":
+		return "go.svg"
+	case "haskell":
+		return "haskell.svg"
+	case "java":
+		return "java.svg"
+	case "js", "javascript":
+		return "javascript.svg"
+	case "kotlin":
+		return "kotlin.svg"
+	case "lua":
+		return "lua.svg"
+	case "php":
+		return "php.svg"
+	case "python", "py":
+		return "python.svg"
+	case "ruby", "rb":
+		return "ruby.svg"
+	default:
+		// No logo for this language
+		return ""
+	}
 }
 
 // Block "Curation"

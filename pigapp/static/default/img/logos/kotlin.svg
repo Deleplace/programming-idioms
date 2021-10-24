@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="256px"
+   height="256px"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg1105"
+   sodipodi:docname="kotlin.svg"
+   inkscape:version="1.1.1 (eb90963e84, 2021-10-02)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1107"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="3.296875"
+     inkscape:cx="61.421801"
+     inkscape:cy="79.620853"
+     inkscape:window-width="1865"
+     inkscape:window-height="1016"
+     inkscape:window-x="55"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="kotlin" />
+  <!-- Generator: Sketch 52 (66869) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title1059">kotlin</title>
+  <desc
+     id="desc1061">Created with Sketch.</desc>
+  <defs
+     id="defs1096">
+    <linearGradient
+       x1="48.229519"
+       y1="445.85818"
+       x2="133.89573"
+       y2="275.09435"
+       id="linearGradient-1"
+       gradientTransform="scale(1.4118624,0.70828431)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         stop-color="#393939"
+         offset="9.677%"
+         id="stop1063" />
+      <stop
+         stop-color="#888"
+         offset="30.07%"
+         id="stop1065" />
+      <stop
+         stop-color="#888"
+         offset="62.11%"
+         id="stop1067" />
+      <stop
+         stop-color="#999"
+         offset="86.43%"
+         id="stop1069" />
+      <stop
+         stop-color="#999"
+         offset="100%"
+         id="stop1071" />
+    </linearGradient>
+    <linearGradient
+       x1="13.9840532%"
+       y1="37.1049231%"
+       x2="68.682392%"
+       y2="-13.5538462%"
+       id="linearGradient-2">
+      <stop
+         stop-color="#0095D5"
+         offset="11.83%"
+         id="stop1074" />
+      <stop
+         stop-color="#3C83DC"
+         offset="41.78%"
+         id="stop1076" />
+      <stop
+         stop-color="#6D74E1"
+         offset="69.62%"
+         id="stop1078" />
+      <stop
+         stop-color="#806EE3"
+         offset="83.33%"
+         id="stop1080" />
+    </linearGradient>
+    <linearGradient
+       x1="-16.8361667%"
+       y1="91.9396667%"
+       x2="76.2191667%"
+       y2="-1.11566667%"
+       id="linearGradient-3">
+      <stop
+         stop-color="#C757BC"
+         offset="10.75%"
+         id="stop1083" />
+      <stop
+         stop-color="#D0609A"
+         offset="21.38%"
+         id="stop1085" />
+      <stop
+         stop-color="#E1725C"
+         offset="42.54%"
+         id="stop1087" />
+      <stop
+         stop-color="#EE7E2F"
+         offset="60.48%"
+         id="stop1089" />
+      <stop
+         stop-color="#F58613"
+         offset="74.3%"
+         id="stop1091" />
+      <stop
+         stop-color="#F88909"
+         offset="82.32%"
+         id="stop1093" />
+    </linearGradient>
+  </defs>
+  <g
+     id="Page-1"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd">
+    <g
+       id="kotlin">
+      <path
+         id="Path"
+         d="M 0 0 L 0 135.25391 L 0 138.66602 L 0 256 L 256 256 L 128.42578 127.57422 L 256 0 L 128.42578 0 L 0 0 z "
+         fill="#000"
+         fill-opacity="0.4" />
+    </g>
+  </g>
+</svg>

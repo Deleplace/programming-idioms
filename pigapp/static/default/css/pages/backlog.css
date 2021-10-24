@@ -83,6 +83,12 @@ body.backlog {
     margin-top: -0.5rem;
 }
 
+.backlog img.logo {
+    position: absolute;
+    right: 5rem;
+    height: 8rem;
+}
+
 /* 
  * Refreshing == fade out 
  */
