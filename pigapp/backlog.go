@@ -118,31 +118,26 @@ func recommendedDemoSite(lang string) DemoSite {
 
 // E.g. "python.svg"  for the file at static/default/img/logos/python.svg
 func languageLogo(lang string) string {
-	switch strings.TrimSpace(strings.ToLower(lang)) {
+	lg := strings.TrimSpace(strings.ToLower(lang))
+	switch lg {
 	case "csharp", "cs":
 		return "csharp.svg"
-	case "c":
-		return "c.svg"
+	case "c", "clojure", "haskell", "java", "kotlin", "lua", "php":
+		return lg + ".svg"
 	case "cpp", "c++":
 		return "cpp.svg"
-	case "go":
+	case "d", "dlang":
+		return "d.svg"
+	case "go", "golang":
 		return "go.svg"
-	case "haskell":
-		return "haskell.svg"
-	case "java":
-		return "java.svg"
 	case "js", "javascript":
-		return "javascript.svg"
-	case "kotlin":
-		return "kotlin.svg"
-	case "lua":
-		return "lua.svg"
-	case "php":
-		return "php.svg"
+		return "js.svg"
 	case "python", "py":
 		return "python.svg"
 	case "ruby", "rb":
 		return "ruby.svg"
+	case "rust", "rs":
+		return "rust.svg"
 	default:
 		// No logo for this language
 		return ""

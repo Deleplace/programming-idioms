@@ -89,6 +89,10 @@ body.backlog {
     height: 8rem;
 }
 
+.backlog p {
+    padding-right: 4em;
+}
+
 /* 
  * Refreshing == fade out 
  */
