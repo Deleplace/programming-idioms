@@ -121,7 +121,7 @@ func languageLogo(lang string) string {
 	switch lg := strings.TrimSpace(strings.ToLower(lang)); lg {
 	case "csharp", "cs":
 		return "csharp.svg"
-	case "c", "clojure", "haskell", "java", "kotlin", "lua", "php":
+	case "c", "clojure", "dart", "elixir", "groovy", "haskell", "java", "kotlin", "lua", "php":
 		return lg + ".svg"
 	case "cpp", "c++":
 		return "cpp.svg"
