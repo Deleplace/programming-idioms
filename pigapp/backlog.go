@@ -118,8 +118,7 @@ func recommendedDemoSite(lang string) DemoSite {
 
 // E.g. "python.svg"  for the file at static/default/img/logos/python.svg
 func languageLogo(lang string) string {
-	lg := strings.TrimSpace(strings.ToLower(lang))
-	switch lg {
+	switch lg := strings.TrimSpace(strings.ToLower(lang)); lg {
 	case "csharp", "cs":
 		return "csharp.svg"
 	case "c", "clojure", "haskell", "java", "kotlin", "lua", "php":
