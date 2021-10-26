@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 146 221"
+   version="1.1"
+   sodipodi:docname="scala.svg"
+   width="146"
+   height="221"
+   opacity="0.45"
+   inkscape:version="1.1.1 (eb90963e84, 2021-10-02)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs926" />
+  <sodipodi:namedview
+     id="namedview924"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     width="300px"
+     inkscape:zoom="2.1813559"
+     inkscape:cx="107.96037"
+     inkscape:cy="135.00777"
+     inkscape:window-width="1865"
+     inkscape:window-height="1016"
+     inkscape:window-x="55"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <title
+     id="title899">scala-full-color</title>
+  <path
+     d="m 4.9142408,82.277892 c 1.85,2.55 17.4500002,7.36 40.7200002,12.37 23.27,4.46 47.47,22.069998 66.289999,16.639998 12.73,-3.68 26.54,-36.469998 26.54,-41.339998 v -0.5 c 0,-3.4 -2.55,-6.13 -6.88,-8.4 -17.75,-9.07 -21.11,-12.41 -27.69,-10.6 -34.159999,9.43 -94.4699992,4.61 -98.9799992,31.83 z"
+     style="fill:#111;fill-rule:evenodd"
+     id="path911" />
+  <path
+     d="m 4.9142408,148.85789 c 1.85,2.59 17.4500002,7.36 40.7200002,12.38 26,4.74 48.61,20.19 67.439999,14.75 12.73,-3.68 25.39,-34.58 25.39,-39.46 v -0.48 c 0,-3.39 -2.55,-6.13 -6.88,-8.39 -13.54,-7.2 -31.43,-15.13 -37.999999,-13.32 -34.22,9.41 -79.96,11.48 -88.6700002,34.52 z"
+     style="fill:#111;fill-rule:evenodd"
+     id="path913" />
+  <path
+     d="m 113.02424,16.227892 c -31.459999,9.09 -81.369999,14.22 -108.2599992,14.22 v 0 51.35 a 0.8,0.8 0 0 0 0.19,0.48 c 18.3500002,0 75.0000002,-6 109.1799992,-15.4 a 129,129 0 0 0 17.49,-5.81 c 4.18,-1.88 6.88,-3.86 6.88,-5.92 v -51.79 c -0.04,4.88 -12.75,9.2 -25.48,12.87 z"
+     style="fill:#444;fill-rule:evenodd"
+     id="path917" />
+  <path
+     d="m 113.02424,82.817892 c -18.829999,5.43 -44.239999,9.47 -67.389999,11.83 -15.54,1.59 -30.06,2.42 -40.8700002,2.42 v 0 51.309998 a 0.8,0.8 0 0 0 0.19,0.48 c 18.3500002,0 75.0000002,-6 109.1799992,-15.39 a 130.38,130.38 0 0 0 17.49,-5.81 c 4.18,-1.89 6.88,-3.86 6.88,-5.92 V 69.947892 c -0.04,4.87 -12.75,9.19 -25.48,12.87 z"
+     style="fill:#444;fill-rule:evenodd"
+     id="path919" />
+  <path
+     d="m 113.02424,149.44789 c -18.829999,5.43 -44.239999,9.46 -67.389999,11.83 -15.56,1.59 -30.1,2.42 -40.9100002,2.42 v 51.75 c 18.1600002,0 75.1000002,-5.95 109.3699992,-15.39 12.63,-3.48 24.37,-7.44 24.37,-11.74 v -51.79 c 0,4.92 -12.71,9.2 -25.44,12.92 z"
+     style="fill:#444;fill-rule:evenodd"
+     id="path921" />
+  <metadata
+     id="metadata1065">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>scala-full-color</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
