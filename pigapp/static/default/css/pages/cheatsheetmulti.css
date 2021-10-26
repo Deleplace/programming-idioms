@@ -4,6 +4,13 @@ table.cheatsheet-lines th {
     background-color: white;
 }
 
+table.cheatsheet-lines th img.logo {
+    margin-top: -0.5rem;
+    height: 2rem;
+    max-height: 2rem;
+    max-width: 3rem;
+}
+
 table.cheatsheet-lines th.idiom-title-and-lead{
     width: 20%;
 }

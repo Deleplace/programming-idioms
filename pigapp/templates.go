@@ -55,6 +55,7 @@ func initTemplates() (*template.Template, error) {
 		"minus":                 minus,
 		"hasSuffix":             strings.HasSuffix,
 		"replace":               strings.Replace,
+		"logo":                  languageLogo,
 	}
 	t = t.Funcs(funcMap)
 	folders := []string{

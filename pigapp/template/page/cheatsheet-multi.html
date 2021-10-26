@@ -70,7 +70,12 @@
                         <th class="idiom-id"></th>
                         <th class="idiom-title-and-lead"></th>
                         {{range .Langs}}
-                            <th class="one-lang-column out-of-{{$nbLangs}}">{{. | printNiceLang}}</th>
+                            <th class="one-lang-column out-of-{{$nbLangs}}">
+                                {{if . | logo}}
+                                    <img src="{{hostPrefix}}{{themeDir}}/img/logos/{{. | logo}}" class="logo" />
+                                {{end}}
+                                {{. | printNiceLang}}
+                            </th>
                         {{end}}
                     </tr>
                 </thead>
