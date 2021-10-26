@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Layer_1"
+   viewBox="0 0 64 64"
+   version="1.1"
+   sodipodi:docname="vb.svg"
+   opacity="0.6"
+   inkscape:version="1.1.1 (eb90963e84, 2021-10-02)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview17"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="9.3249707"
+     inkscape:cx="32.010825"
+     inkscape:cy="32.010825"
+     inkscape:window-width="1865"
+     inkscape:window-height="1016"
+     inkscape:window-x="55"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs4">
+    <style
+       type="text/css"
+       id="style2">.cls-1{fill:#333;}.cls-2,.cls-3{fill:#fff;}.cls-2{opacity:0.2;}</style>
+  </defs>
+  <title
+     id="title6">logo_vb</title>
+  <circle
+     class="cls-1"
+     cx="32"
+     cy="32"
+     r="32"
+     id="circle8"
+     opacity="0.8" />
+  <path
+     class="cls-2"
+     d="M9.82,9A32,32,0,1,0,55,54.18Z"
+     id="path10"
+     opacity="0.4" />
+  <path
+     class="cls-3"
+     d="M33.29,19.4,24,44.6H20.71L11.57,19.4h3.29l7,20a11.87,11.87,0,0,1,.51,2.23h.07A11,11,0,0,1,23,39.35l7.12-20Z"
+     id="path12" />
+  <path
+     class="cls-3"
+     d="M36.92,44.6V19.4h7.17A7.84,7.84,0,0,1,49.27,21a5.17,5.17,0,0,1,1.92,4.17A6.13,6.13,0,0,1,50,28.89a6.26,6.26,0,0,1-3.2,2.25v.07a6.41,6.41,0,0,1,4.08,1.92,5.92,5.92,0,0,1,1.53,4.23,6.59,6.59,0,0,1-2.32,5.24,8.64,8.64,0,0,1-5.85,2Zm3-22.54v8.14h3A5.74,5.74,0,0,0,46.71,29a4.07,4.07,0,0,0,1.39-3.3q0-3.67-4.83-3.67Zm0,10.79v9.07h4a6,6,0,0,0,4-1.23,4.21,4.21,0,0,0,1.43-3.37q0-4.46-6.08-4.46Z"
+     id="path14" />
+  <metadata
+     id="metadata834">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>logo_vb</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
