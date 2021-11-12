@@ -671,8 +671,8 @@ $(function() {
 		let code = $(this).val();
 
 		let expectedVarsComma = $(this).attr("data-variables");
-		expectedVarsComma = expectedVarsComma.replace(/[_ ]/g,"");
 		if(expectedVarsComma) {
+			expectedVarsComma = expectedVarsComma.replace(/[_ ]/g,"");
 			let vars = expectedVarsComma.split(",");
 			let missing = [];
 			for(let i=0;i<vars.length;i++) {
