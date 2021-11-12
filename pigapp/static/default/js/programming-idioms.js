@@ -1243,6 +1243,17 @@ $(function() {
 	$(".dice").on("click", function() {
 		$(this).addClass("spinning-jolty");
 	});
+
+	// #170 horizontal bar for an empty list of tabs is nor great.
+	// CSS doesn't have a selector for "empty but containing whitespace" so
+	// instead we hide the list after page load...
+	$('.implementations-tabs ul.nav.nav-tabs.language-names').each(function(){
+		let ul = $(this);
+		if(!/[\S]/.test(ul.html())) {
+			console.debug("Hiding empty nav-tabs");
+			ul.hide();
+		}
+	});
 });
 
 function using(what) {
