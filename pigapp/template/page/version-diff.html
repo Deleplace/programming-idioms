@@ -346,6 +346,12 @@
 						<input type="hidden" name="why" value="" />
 						<input type="button" value="Revert v{{.IdiomRight.Version}} and restore v{{.IdiomLeft.Version}}" class="btn btn-danger presubmit" /> 
 					</form>
+					<form method="POST" action="/admin-history-restore" class="idiom-restore-version">
+						<input type="hidden" name="idiomId" value="{{.IdiomLeft.Id}}" />
+						<input type="hidden" name="version" value="{{.IdiomLeft.Version}}" />
+						<input type="hidden" name="why" value="No." />
+						<input type="button" value="Restore: No." class="btn btn-danger presubmit" /> 
+					</form>
 				{{end}}
 			{{end}}
 		</div>

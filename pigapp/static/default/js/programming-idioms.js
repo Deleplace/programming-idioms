@@ -1150,10 +1150,14 @@ $(function() {
 	// Restore a previous version of the Idiom
 	// (only the admin can do this)
 	$("form.idiom-restore-version > input.presubmit").on("click", function(e) {
-		var reason = window.prompt("Why?");
+		var form = $(this).closest("form");
+		var whyPlaceholder = "";
+		if( form.find("input[name=why]").val() ){
+			whyPlaceholder = form.find("input[name=why]").val();
+		}
+		var reason = window.prompt("Why?", whyPlaceholder);
 		if( reason===null )
 	   		return; // Clicked Cancel
-		var form = $(this).closest("form");
 		form.find("input[name=why]").val(reason);
 		form.submit();
 	});
