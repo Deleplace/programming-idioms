@@ -104,12 +104,15 @@ func recommendedDemoSite(lang string) DemoSite {
 	case "dart":
 		ds.Name = "DartPad"
 		ds.URL = "https://dartpad.dev/"
-	case "go":
+	case "go", "golang":
 		ds.Name = "the Go Playground"
 		ds.URL = "https://play.golang.org/"
 	case "rust":
 		ds.Name = "the Rust Playground"
 		ds.URL = "https://play.rust-lang.org/"
+	case "kotlin":
+		ds.Name = "the Kotlin Playground"
+		ds.URL = "https://play.kotlinlang.org"
 	default:
 		// No recommended demo site for this lang
 	}
