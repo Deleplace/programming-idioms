@@ -52,7 +52,7 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 	attributionURL := r.FormValue("impl_attribution_url")
 	demoURL := r.FormValue("impl_demo_url")
 	docURL := r.FormValue("impl_doc_url")
-	editSummary := fmt.Sprintf("Idiom creation by user [%v]", username)
+	editSummary := fmt.Sprintf("Idiom creation by user [%v] with %s implementation", username, PrintNiceLang(language))
 
 	lead = TruncateBytes(lead, 500)
 	keywords = Truncate(keywords, 250)
