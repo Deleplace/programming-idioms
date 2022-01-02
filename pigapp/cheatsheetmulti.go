@@ -120,6 +120,7 @@ func cheatsheetMultiLangs(w http.ResponseWriter, r *http.Request, langs []string
 			PageTitle: pageTitle,
 			Toggles:   toggles,
 			ExtraCss:  []string{hostPrefix() + themeDirectory() + "/css/pages/cheatsheetmulti.css"},
+			ExtraJs:   []string{hostPrefix() + themeDirectory() + "/js/pages/cheatsheetmulti.js"},
 		},
 		UserProfile: readUserProfile(r),
 		Langs:       langs,
