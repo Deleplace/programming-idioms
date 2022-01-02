@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/delay"
 	"google.golang.org/appengine/log"
 )
 
@@ -37,10 +36,10 @@ func adminReindexAjax(w http.ResponseWriter, r *http.Request) error {
 // Number of idioms being process by each single delayed task
 const reindexBatchSize = 5
 
-var reindexDelayer *delay.Function
+var reindexDelayer callable
 
 func init() {
-	reindexDelayer = delay.Func("reindex-idioms", func(ctx context.Context, cursorStr string) error {
+	reindexDelayer = delayFunc("reindex-idioms", func(ctx context.Context, cursorStr string) error {
 		q := datastore.NewQuery("Idiom")
 		if cursorStr != "" {
 			log.Infof(ctx, "Starting at cursor %v", cursorStr)

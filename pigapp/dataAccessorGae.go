@@ -12,7 +12,6 @@ import (
 
 	"google.golang.org/appengine/blobstore"
 	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/delay"
 	"google.golang.org/appengine/log"
 )
 
@@ -186,7 +185,7 @@ func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, 
 // Delayers registered at init time
 
 // TODO take real Idiom as parameter, not a Key or a pointer
-var historyDelayer = delay.Func("save-history-item", func(ctx context.Context, idiomKey *datastore.Key) error {
+var historyDelayer = delayFunc("save-history-item", func(ctx context.Context, idiomKey *datastore.Key) error {
 	var historyItem IdiomHistory
 	// TODO check Memcache first
 	err := datastore.Get(ctx, idiomKey, &historyItem.Idiom)
@@ -225,7 +224,7 @@ var historyDelayer = delay.Func("save-history-item", func(ctx context.Context, i
 	return err
 })
 
-var indexDelayer = delay.Func("index-text-idiom", func(ctx context.Context, idiomKey *datastore.Key) error {
+var indexDelayer = delayFunc("index-text-idiom", func(ctx context.Context, idiomKey *datastore.Key) error {
 	var idiom Idiom
 	// TODO check Memcache first
 	err := datastore.Get(ctx, idiomKey, &idiom)
