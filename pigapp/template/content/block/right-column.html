@@ -11,7 +11,7 @@
 
 		{{/* TODO should check .PageMeta.Toggles.actionIdiomHistory */}}
 		<label>History</label>
-		<ul class="related-idioms">
+		<ul>
 			<li><a href="{{hostPrefix}}/history/{{.Id}}">View revisions</a></li>
 		</ul>
 		
@@ -25,17 +25,17 @@
 			</ul>
 		{{end}} 
 		
-		{{if $favLangs}} 
-			<label>Cheatsheets</label>
-			<ul class="related-idioms">
+		<div class="cheatsheet-links">	
+			<label><a href="/about#about-block-cheatsheets">Cheatsheets</a></label>
+			<ul>
 				{{range $lg := $favLangs}}
 					<li><i class="fas fa-list"></i> <a href="/cheatsheet/{{$lg}}">{{printNiceLang $lg}}</a></li>
 				{{end}} 
 			</ul>
-		{{end}}
+		</div>
 
 		<label>Issues</label>
-		<ul class="related-idioms">
+		<ul>
 			<li><a href="https://github.com/Deleplace/programming-idioms/issues/new?assignees=Deleplace&labels=&template=bug_report.md&title=%5BBUG%5D+" target="_blank">Report a bug</a></li>
 		</ul>
 

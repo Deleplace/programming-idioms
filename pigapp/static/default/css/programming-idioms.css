@@ -398,7 +398,7 @@ button.favorite-language-remove {
 	margin-bottom: 1em;
 }
 
-ul.related-idioms {
+.right_column ul {
 	margin-left: 0.6em;
 	list-style-type: none;
 }

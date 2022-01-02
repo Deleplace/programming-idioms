@@ -47,18 +47,21 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	// #112 Auto add favorite languages
-	// Nah, let's do this in the frontend instead
-	// if implLangInURL := vars["implLang"]; implLangInURL != "" {
-	// 	if favlangs := lookForFavoriteLanguages(r); !StringSliceContainsCaseInsensitive(favlangs, implLangInURL) {
-	// 		log.Infof(ctx, "Adding welcome lang in cookie: %q", implLangInURL)
-	// 		favlangs = append(favlangs, implLangInURL)
-	// 		langsList := strings.Join(favlangs, "_") + "_"
-	// 		setLanguagesCookie(w, langsList)
-	// 	}
-	// }
+	userProfileEmpty := userProfile.Empty()
 
-	if userProfile.Empty() {
+	// #185 Take "Language of current impl" into account for the right bar Cheatsheet links,
+	// even it this language is "not yet" in the user's favorites.
+	implLangInURL := vars["implLang"]
+	if implLangInURL != "" {
+		if !StringSliceContainsCaseInsensitive(userProfile.FavoriteLanguages, implLangInURL) {
+			// userProfile.FavoriteLanguages = append(userProfile.FavoriteLanguages, implLangInURL)
+			// But that would mess up a bit with the favlanag bar, so... let's do this in the frontend instead
+		}
+		// #112 Auto add favorite languages by setting cookie
+		// Nah, let's do this in the frontend instead
+	}
+
+	if userProfileEmpty {
 		//
 		// Zero-preference ≡ anonymous visit ≡ server cache enabled
 		//
@@ -161,7 +164,6 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 	log.Debugf(ctx, "Reorder impls end.")
 
-	implLangInURL := vars["implLang"]
 	if implLangInURL != "" && strings.ToLower(selectedImplLang) != strings.ToLower(implLangInURL) {
 		// Maybe an accident,
 		// or someone is attempting a practical joke forging a funny URL ?

@@ -376,14 +376,24 @@ $(function() {
 	function addFavlang(lg) {
 		let lgDisplay = niceLang(lg);
 		lg = normLang(lg);
-		var li = $('\
-			<li class="active" data-language="' + lg + '"> \
-				<span class="badge badge-success"> \
-					' + lgDisplay + '\
-					<a href="#" class="favorite-language-remove fas fa-times"></a> \
-				</span> \
-			</li>');
+
+		// Favlang bar
+		var li = $(`
+			<li class="active" data-language="${lg}">
+				<span class="badge badge-success">
+					${lgDisplay}
+					<a href="#" class="favorite-language-remove fas fa-times"></a>
+				</span>
+			</li>`);
 		li.appendTo($(".favorite-languages"));
+
+		// Right column cheatsheet links
+		li = $(`<li>
+					<i class="fas fa-list"></i> <a href="/cheatsheet/${lg}">${lgDisplay}</a>
+				</li>`);
+		li.appendTo($(".right_column .cheatsheet-links ul"));
+
+		// Cookie
 		updateFavlangCookie();
 	}
 
