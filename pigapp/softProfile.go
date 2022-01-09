@@ -145,3 +145,27 @@ func handleAuth(w http.ResponseWriter, r *http.Request) error {
 	fmt.Fprintf(w, "Hello, %v!", u)
 	return nil
 }
+
+// issues/183 Create idiom -> add favlang
+func addLangToCookie(w http.ResponseWriter, r *http.Request, lang string) *http.Cookie {
+	// WARNING this takes the request cookie as the source of truth, so we
+	// can't call addLangToCookie more than once per user request.
+	// That would need a different design.
+	lang_ := lang + "_" // The underscore is important
+	var value string
+	if cookie, errkie := r.Cookie("my-languages"); errkie == nil {
+		if strings.Contains(cookie.Value, lang_) {
+			return cookie
+		}
+		value = cookie.Value + lang_
+	} else {
+		value = lang_
+	}
+	newCookie := &http.Cookie{
+		Name:  "my-languages",
+		Value: value,
+		Path:  "/",
+	}
+	http.SetCookie(w, newCookie)
+	return newCookie
+}

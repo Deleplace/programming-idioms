@@ -126,6 +126,8 @@ func newIdiomSave(w http.ResponseWriter, r *http.Request, username string, title
 
 	htmlCacheEvict(ctx, "/about-block-all-idioms")
 
+	addLangToCookie(w, r, language)
+
 	http.Redirect(w, r, NiceIdiomURL(idiom), http.StatusFound)
 	return nil
 }
