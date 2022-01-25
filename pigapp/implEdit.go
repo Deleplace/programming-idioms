@@ -52,6 +52,9 @@ func implEdit(w http.ResponseWriter, r *http.Request) error {
 			PageTitle:             fmt.Sprintf("Editing Idiom %d : %s", idiom.Id, idiom.Title),
 			Toggles:               myToggles,
 			PreventIndexingRobots: true,
+			ExtraCss: []string{
+				hostPrefix() + themeDirectory() + "/css/edit.css",
+			},
 		},
 		UserProfile: readUserProfile(r),
 		Idiom:       idiom,
