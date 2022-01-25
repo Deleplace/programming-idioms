@@ -24,7 +24,9 @@
                     If they're broken, please flag them.
                 </p>
                 
-                <a class="btn block-data-refresh" data-block-endpoint="/backlog/{{.Lang}}/block/curation">🗘</a>
+                <a class="btn block-data-refresh" 
+                   data-block-endpoint="/backlog/{{.Lang}}/block/curation"
+                   title="Other snippets">🗘</a>
                 <div class="block-data-contents">
                     {{template "backlog-block-curation" .}}
                 </div>
@@ -37,7 +39,9 @@
         <div id="docs-demos">
             <h3>Docs & demos</h3>
 
-            <a class="btn block-data-refresh" data-block-endpoint="/backlog/{{.Lang}}/block/docs-demos">🗘</a>
+            <a class="btn block-data-refresh"
+               data-block-endpoint="/backlog/{{.Lang}}/block/docs-demos"
+               title="Other snippets">🗘</a>
             <div class="block-data-contents">
                 {{template "backlog-block-missing-doc" .}}
             
@@ -47,7 +51,9 @@
 
         <div id="missing-impl">
             <h3>Missing implementations</h3>
-            <a class="btn block-data-refresh" data-block-endpoint="/backlog/{{.Lang}}/block/missing-impl">🗘</a>
+            <a class="btn block-data-refresh"
+               data-block-endpoint="/backlog/{{.Lang}}/block/missing-impl"
+               title="Other idioms">🗘</a>
             <div class="block-data-contents">
                 {{template "backlog-block-missing-impl" .}}
             </div>
