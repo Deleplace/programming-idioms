@@ -1039,13 +1039,13 @@ footer a.visited {
 }
 
 .version-diff .idiom-left .touched {
-	background-color: #FD9;
+	/* background-color: #FD9; */
 	padding-left: 3px;
 	padding-right: 3px;
 }
 
 .version-diff .idiom-right .touched {
-	background-color: #FC6;
+	/* background-color: #FC6; */
 	padding-left: 3px;
 	padding-right: 3px;
 }
@@ -1075,13 +1075,13 @@ footer a.visited {
 }
 
 .version-diff .impl-left.touched {
-	background-color: #FD9;
+	/* background-color: #FD9; */
 	padding-left: 3px;
 	padding-right: 3px;
 }
 
 .version-diff .impl-right.touched {
-	background-color: #FC6;
+	/* background-color: #FC6; */
 	padding-left: 3px;
 	padding-right: 3px;
 }

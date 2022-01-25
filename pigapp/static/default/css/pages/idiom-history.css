@@ -1,0 +1,28 @@
+.idiom-left.touched ins,
+.impl-left.touched  ins {
+    display: none;
+}
+
+.idiom-right.touched del,
+.impl-right.touched del {
+    display: none;
+}
+
+.idiom-left .touched ins,
+.impl-left .touched  ins {
+    display: none;
+}
+
+.idiom-right .touched del,
+.impl-right .touched del {
+    display: none;
+}
+
+.touched del {
+    background-color: #FBB;
+}
+
+.touched ins {
+    background-color: #BFB;
+    text-decoration: unset;
+}

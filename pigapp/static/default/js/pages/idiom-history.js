@@ -64,5 +64,40 @@ $(function() {
             });
         return false;
     });
-    
+   
+    // Client-side diffing (pink, green) with htmldiff.js
+    [
+        // Idiom data
+        ".idiom-left .idiom-summary-large h1 .touched",
+        ".idiom-left .idiom-lead-paragraph.touched",
+        ".idiom-left .idiom-lead-paragraph.touched",
+        ".variables .idiom-left .touched span",
+        ".related-url .idiom-left .touched span",
+        ".keywords .idiom-left .touched span",
+
+        // Impl data
+        ".impl-left.impl-code.touched pre",
+        ".impl-left.imports.touched pre",
+        ".impl-left.touched .diff-code-comments",
+        ".doc-url .impl-left .field-value",
+        ".origin-url .impl-left .field-value",
+        ".demo-url .impl-left .field-value"
+
+    ].forEach( selectorLeft => {
+        let selectorRight = selectorLeft
+            .replaceAll("idiom-left", "idiom-right")
+            .replaceAll("impl-left", "impl-right");
+        let leftElem = $(selectorLeft);
+        let rightElem = $(selectorRight);
+        if(leftElem.length>0 && rightElem.length>0) {
+            // E.g.
+            //     left ==  "aa bb"
+            //     right == "bb cc"
+            // =>  delta == "<del>aa bb</del><ins>bb cc</ins>"
+            let delta = htmldiff(leftElem.text(), rightElem.text());
+            leftElem.html(delta);
+            rightElem.html(delta);
+        }
+    })
+
 });

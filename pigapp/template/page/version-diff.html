@@ -83,13 +83,13 @@
 	</div>
 			
 	{{/* IDIOM EXPECTED FORMAL VARIABLES */}}
-	<div class="row-fluid">
+	<div class="row-fluid variables">
 		{{$c := diffClass $left.VariablesComma $right.VariablesComma}}
 		<div class="span6 idiom-left">
 			{{if $left.VariablesComma}}
 				<div class="{{$c}}">
 					<h5>Variables</h5>
-					{{$left.VariablesComma}}
+					<span>{{$left.VariablesComma}}</span>
 				</div>
 			{{end}}
 		</div>
@@ -97,7 +97,7 @@
 			{{if $right.VariablesComma}}
 				<div class="{{$c}}">
 					<h5>Variables</h5>
-					{{$right.VariablesComma}}
+					<span>{{$right.VariablesComma}}</span>
 				</div>
 			{{end}}
 		</div>
@@ -107,12 +107,12 @@
 	{{$c0a := diffClass (join $left.RelatedURLs ",") (join $right.RelatedURLs ",")}}
 	{{$c0b := diffClass (join $left.RelatedURLLabels ",") (join $right.RelatedURLLabels ",")}}
 	{{if or $c0a $c0b}}
-	<div class="row-fluid">
+	<div class="row-fluid related-url">
 		<div class="span6 idiom-left">
 			{{if ge (len $left.RelatedURLs) 1}}
 				<div class="{{$c0a}} {{$c0b}}">
 					<h5>Related URL 1</h5>
-					{{index $left.RelatedURLs 0}}
+					<span>{{index $left.RelatedURLs 0}}</span>
 				</div>
 			{{end}}
 		</div>
@@ -120,17 +120,17 @@
 			{{if ge (len $right.RelatedURLs) 1}}
 				<div class="{{$c0a}} {{$c0b}}">
 					<h5>Related URL 1</h5>
-					{{index $right.RelatedURLs 0}}
+					<span>{{index $right.RelatedURLs 0}}</span>
 				</div>
 			{{end}}
 		</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row-fluid related-url">
 		<div class="span6 idiom-left">
 			{{if ge (len $left.RelatedURLs) 2}}
 				<div class="{{$c0a}} {{$c0b}}">
 					<h5>Related URL 2</h5>
-					{{index $left.RelatedURLs 1}}
+					<span>{{index $left.RelatedURLs 1}}</span>
 				</div>
 			{{end}}
 		</div>
@@ -138,17 +138,17 @@
 			{{if ge (len $right.RelatedURLs) 2}}
 				<div class="{{$c0a}} {{$c0b}}">
 					<h5>Related URL 2</h5>
-					{{index $right.RelatedURLs 1}}
+					<span>{{index $right.RelatedURLs 1}}</span>
 				</div>
 			{{end}}
 		</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row-fluid related-url">
 		<div class="span6 idiom-left">
 			{{if ge (len $left.RelatedURLs) 3}}
 				<div class="{{$c0a}} {{$c0b}}">
 					<h5>Related URL 3</h5>
-					{{index $left.RelatedURLs 2}}
+					<span>{{index $left.RelatedURLs 2}}</span>
 				</div>
 			{{end}}
 		</div>
@@ -156,7 +156,7 @@
 			{{if ge (len $right.RelatedURLs) 3}}
 				<div class="{{$c0a}} {{$c0b}}">
 					<h5>Related URL 3</h5>
-					{{index $right.RelatedURLs 2}}
+					<span>{{index $right.RelatedURLs 2}}</span>
 				</div>
 			{{end}}
 		</div>
@@ -164,13 +164,13 @@
 	{{end}}
 			
 	{{/* IDIOM EXTRA KEYWORDS */}}
-	<div class="row-fluid">
+	<div class="row-fluid keywords">
 		{{$c := diffClass $left.ExtraKeywords $right.ExtraKeywords}}
 		<div class="span6 idiom-left">
 			{{if $left.ExtraKeywords}}
 				<div class="{{$c}}">
 					<h5>Extra Keywords</h5>
-					{{$left.ExtraKeywords}}
+					<span>{{$left.ExtraKeywords}}</span>
 				</div>
 			{{end}}
 		</div>
@@ -178,7 +178,7 @@
 			{{if $right.ExtraKeywords}}
 				<div class="{{$c}}">
 					<h5>Extra Keywords</h5>
-					{{$right.ExtraKeywords}}
+					<span>{{$right.ExtraKeywords}}</span>
 				</div>
 			{{end}}
 		</div>
@@ -272,7 +272,7 @@
 
 		{{/* DOC URL */}}
 		{{if or $left.DocumentationURL $right.DocumentationURL }}
-			<div class="row-fluid">
+			<div class="row-fluid doc-url">
 				{{$c := diffClass $left.DocumentationURL $right.DocumentationURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.DocumentationURL}}
@@ -291,7 +291,7 @@
 
 		{{/* ORIGINAL ATTRIBUTION URL */}}
 		{{if or $left.OriginalAttributionURL $right.OriginalAttributionURL }}
-			<div class="row-fluid">
+			<div class="row-fluid origin-url">
 				{{$c := diffClass $left.OriginalAttributionURL $right.OriginalAttributionURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.OriginalAttributionURL}}
@@ -310,7 +310,7 @@
 
 		{{/* DEMO URL */}}
 		{{if or $left.DemoURL $right.DemoURL }}
-			<div class="row-fluid">
+			<div class="row-fluid demo-url">
 				{{$c := diffClass $left.DemoURL $right.DemoURL}}
 				<div class="span6 impl-left {{$c}}">
 					{{if $left.DemoURL}}
