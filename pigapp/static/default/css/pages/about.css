@@ -2,3 +2,15 @@
     float: right;
     margin-top: 2px;
 }
+
+.pi-backlogs p {
+    margin-bottom: 1em;
+}
+
+.pi-backlogs a.show-languages-pool {
+    cursor: pointer;
+}
+
+.pi-backlogs .videos td {
+    padding: 0.5em;
+}

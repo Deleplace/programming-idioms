@@ -1,20 +1,56 @@
 {{define "block-about-backlogs"}}
 	<div class="pi-backlogs">
 		<h2>Backlogs</h2>
-
-        Backlogs are pages where language communities can explore actionable contribution 
-        opportunities: curation, external links, new implementations.
+		<p>
+			Backlogs are pages where language communities can explore actionable contribution 
+			opportunities: curation, external links, new implementations.
+		</p>
 
 		{{if .UserProfile.FavoriteLanguages}}
-		<ul class="inline">
-			{{range .UserProfile.FavoriteLanguages}}
-				<li><a href="/backlog/{{.}}" class="btn btn-success"><b>{{. | printNiceLang}}</b></i></a></li>
-			{{end}}
-		</ul>
+			<ul class="inline">
+				{{range .UserProfile.FavoriteLanguages}}
+					<li><a href="/backlog/{{.}}" class="btn btn-success"><b>{{. | printNiceLang}}</b></i></a></li>
+				{{end}}
+			</ul>
+
+			<p>
+				To view more backlog pages, please <a class="show-languages-pool">add some favorite languages</a> and refresh the page.
+			</p>
         {{else}}
-            Please add some favorite languages to view their backlog
+			<p>
+				Please <a class="show-languages-pool">add some favorite languages</a> and refresh the page to view their backlog.
+			</p>
             {{/* TODO find a way to refresh immediately if the user does add a favlang */}}
 		{{end}}
 
+		<div class="videos">
+			<h3>Videos</h3>
+			{{/* Hard-coded in HTML, for now. No big deal. */}}
+
+			<table>
+				<tr>
+					<th>
+						2022-01
+					</th>
+					<th>
+						The Kotlin interview
+					</th>
+					<td>
+						<iframe width="187" height="105" src="https://www.youtube-nocookie.com/embed/9H0h4OnSXGA?start=612" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						2021-11
+					</th>
+					<th>
+						The Groovy interview
+					</th>
+					<td>
+						<iframe width="187" height="105" src="https://www.youtube-nocookie.com/embed/y8rfK0MFfmQ?start=240" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 {{end}}

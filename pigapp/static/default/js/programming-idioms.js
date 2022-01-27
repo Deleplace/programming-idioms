@@ -451,7 +451,7 @@ $(function() {
 		return lang;
 	}
 	
-	$('.show-languages-pool').on('click', function(){
+	$(document).on('click', '.show-languages-pool', function(){
 		$('.addible-languages-pool').show(200);
 	});
 	

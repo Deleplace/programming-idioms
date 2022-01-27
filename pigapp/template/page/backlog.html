@@ -9,6 +9,13 @@
         {{if .LanguageLogo}}
             <img src="{{hostPrefix}}{{themeDir}}/img/logos/{{.LanguageLogo}}" class="logo" />
         {{end}}
+        
+        <div class="back-to-backlogs">
+            <a href="/about#about-block-backlogs">
+                &lt; Backlogs
+            </a>
+        </div>
+
         <h2>Community backlog for {{.Lang | printNiceLang}}</h2>
 
         {{if .CurationSuggestions}}
@@ -184,7 +191,7 @@
 {{define "backlog-block-missing-impl"}}
     <div class="pie" style="background-image: conic-gradient(#CC7700, #EECC22 {{.MissingImpl.MissingImplPercent}}, #00DD00 calc({{.MissingImpl.MissingImplPercent}} + 1%), #00AA00);"></div>
     <p>
-        A {{.Lang | printNiceLang}} implementation is missing for {{.MissingImpl.Stats.CountIdiomsMissingImpl}} idioms out of {{.MissingImpl.Stats.CountIdiomsTotal}} idioms
+        A {{.Lang | printNiceLang}} implementation is missing for {{.MissingImpl.Stats.CountIdiomsMissingImpl}} idioms out of {{.MissingImpl.Stats.CountIdiomsTotal}} idioms.
     </p>
 
     {{if .MissingImpl.Stubs}}
