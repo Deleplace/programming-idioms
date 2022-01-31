@@ -1,0 +1,32 @@
+{{define "page-about-feeds"}}
+{{template "prologue"}}  
+{{template "head" .PageMeta}}  
+<body>
+<div class="page-holder">
+	{{template "header-small" .}}
+	<div class="page-content container-fluid">
+
+		<div class="row-fluid">
+			<div class="span8">
+				{{template "language-bar" .}}
+			</div>
+		</div>
+			
+		<div class="row-fluid">
+			<div class="span3">
+				{{template "about-left-menu" "/feeds"}}
+			</div>
+			<div class="span9">
+				<div class="about-central-zone" class="">
+					{{template "block-about-rss"}}
+				</div>
+			</div>
+		</div>
+		
+	</div>
+{{template "footer" .}}
+{{template "include-js" .}}  
+</div>
+</body>
+{{template "close-html"}}
+{{end}}

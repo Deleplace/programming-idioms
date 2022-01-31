@@ -42,13 +42,23 @@ func initRoutes() {
 		handle("/", home)
 		handle("/home", home)
 		handle("/wall", makeWall("<i class=\"icon-wrench icon-2x\"> Coming soon.</i>"))
-		handle("/about", about)
+
 		handle("/idiom/{idiomId}", idiomDetail)
 		handle("/idiom/{idiomId}/impl/{implId}", idiomDetail)
 		handle("/idiom/{idiomId}/{idiomTitle}", idiomDetail)
 		handle("/idiom/{idiomId}/diff/{v1}/{v2}", versionDiff)
 		handle("/idiom/{idiomId}/impl/{implId}/diff/{v1}/{v2}", versionDiff)
 		handle("/idiom/{idiomId}/{idiomTitle}/{implId}/{implLang}", idiomDetail)
+
+		handle("/about", aboutPage("page-about"))
+		handle("/coverage", aboutPage("page-about-language-coverage"))
+		handle("/all-idioms", aboutPage("page-about-all-idioms"))
+		handle("/feeds", aboutPage("page-about-feeds"))
+		handle("/cheatsheets", aboutPage("page-about-cheatsheets"))
+		handle("/backlogs", aboutPage("page-about-backlogs"))
+		handle("/see-also", aboutPage("page-about-see-also"))
+		handle("/contact", aboutPage("page-about-contact"))
+
 		handle("/history/{idiomId}", idiomHistory)
 		handle("/history/{idiomId}/impl/{implId}", implHistory)
 		handle("/revert", revertIdiomVersion)
@@ -61,14 +71,18 @@ func initRoutes() {
 		handle("/search/{q}", search)
 		handle("/list-by-language/{langs}", listByLanguage)
 		handle("/missing-fields/{lang}", missingList)
+
 		handle("/backlog/{lang}", backlogForLanguage)
 		handle("/backlog/{lang}/block/curation", backlogBlockCuration)
 		handle("/backlog/{lang}/block/docs-demos", backlogBlockDocsDemos)
 		handle("/backlog/{lang}/block/missing-impl", backlogBlockMissingImpl)
+
 		handle("/idiom-picture", idiomPicture)
+
 		handle("/rss-recently-created", rssRecentlyCreated)
 		handle("/rss-recently-updated", rssRecentlyUpdated)
 		handle("/rss-recent-changes", rssRecentChanges)
+
 		handle("/my/{nickname}/{langs}", bookmarkableUserURL)
 		handle("/my/{langs}", bookmarkableUserURL)
 		// handle("/cheatsheet/{lang}", cheatsheet)
@@ -78,6 +92,7 @@ func initRoutes() {
 		handleAjax("/supported-languages", supportedLanguages)
 		handleAjax("/ajax-other-implementations", ajaxOtherImplementations)
 		handleAjax("/ajax-impl-flag/{idiomId}/{implId}", ajaxImplFlag)
+
 		if toggles["writable"] {
 			// When not in "read-only" mode
 			handle("/idiom-save", idiomSave)
@@ -122,9 +137,11 @@ func initRoutes() {
 			handleAjax("/admin-flag-resolve", ajaxAdminFlagResolve)
 			handleAjax("/admin-memcache-flush", ajaxAdminMemcacheFlush)
 		}
+
 		handleAjax("/api/idiom/{idiomId}", jsonIdiom)
 		handleAjax("/api/idioms/all", jsonAllIdioms)
 		handleAjax("/api/search/{q}", jsonSearch)
+
 		r.PathPrefix("/using/").HandlerFunc(using)
 
 		handle("/auth", handleAuth)

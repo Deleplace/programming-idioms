@@ -18,6 +18,7 @@ type AboutFacade struct {
 	UserProfile UserProfile
 	AllIdioms   []*Idiom
 	Coverage    CoverageFacade
+	AllLangs    []string
 }
 
 // CoverageFacade is the facade for the Language Cover block of the About page.
@@ -36,24 +37,25 @@ type CoverageFacade struct {
 	LangImplScore map[string]int
 }
 
-func about(w http.ResponseWriter, r *http.Request) error {
-	data := AboutFacade{
-		PageMeta: PageMeta{
-			PageTitle: "About Programming-Idioms",
-			Toggles:   toggles,
-			ExtraCss: []string{
-				hostPrefix() + themeDirectory() + "/css/docs.css",
-				hostPrefix() + themeDirectory() + "/css/pages/about.css",
-			},
-			ExtraJs: []string{hostPrefix() + themeDirectory() + "/js/pages/about.js"},
-		},
-		UserProfile: readUserProfile(r),
-	}
+// aboutPage makes a handler for the full About page, with a specific section
+func aboutPage(templateName string) betterHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
 
-	if err := templates.ExecuteTemplate(w, "page-about", data); err != nil {
-		return PiErrorf(http.StatusInternalServerError, "%v", err)
+		data := AboutFacade{
+			PageMeta: PageMeta{
+				Toggles: toggles,
+				ExtraCss: []string{
+					hostPrefix() + themeDirectory() + "/css/docs.css",
+					hostPrefix() + themeDirectory() + "/css/pages/about.css",
+				},
+				ExtraJs: []string{hostPrefix() + themeDirectory() + "/js/pages/about.js"},
+			},
+			UserProfile: readUserProfile(r),
+			AllLangs:    AllLanguages(),
+		}
+
+		return templates.ExecuteTemplate(w, templateName, data)
 	}
-	return nil
 }
 
 func ajaxAboutProject(w http.ResponseWriter, r *http.Request) error {
@@ -160,21 +162,24 @@ func ajaxAboutRss(w http.ResponseWriter, r *http.Request) error {
 
 type AboutCheatsheetsFacade struct {
 	UserProfile UserProfile
-	Langs       []string
+	AllLangs    []string
 }
 
 func ajaxAboutCheatsheets(w http.ResponseWriter, r *http.Request) error {
 	data := AboutCheatsheetsFacade{
 		UserProfile: readUserProfile(r),
-		Langs:       AllLanguages(),
+		AllLangs:    AllLanguages(),
 	}
 	return templates.ExecuteTemplate(w, "block-about-cheatsheets", data)
 }
 
+type AboutBacklogsFacade struct {
+	UserProfile UserProfile
+}
+
 func ajaxAboutBacklogs(w http.ResponseWriter, r *http.Request) error {
-	data := AboutCheatsheetsFacade{
+	data := AboutBacklogsFacade{
 		UserProfile: readUserProfile(r),
-		Langs:       AllLanguages(),
 	}
 	return templates.ExecuteTemplate(w, "block-about-backlogs", data)
 }

@@ -61,6 +61,7 @@ func initTemplates() (*template.Template, error) {
 	folders := []string{
 		"template",
 		"template/page",
+		"template/page/about",
 		"template/page/admin",
 		"template/page/hybrid",
 		"template/ajax-block",

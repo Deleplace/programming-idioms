@@ -14,7 +14,7 @@
 		{{end}}
 
 		<ul class="inline">
-			{{range .Langs}}
+			{{range .AllLangs}}
 				{{if not (isInStringList . $.UserProfile.FavoriteLanguages)}}
 					<li><a href="/cheatsheet/{{.}}" class="btn btn-primary">{{. | printNiceLang}}</i></a></li> 
 				{{end}}

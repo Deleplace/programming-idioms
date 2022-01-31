@@ -1,25 +1,25 @@
 $(function() {
+	let centralZone = $(".about-central-zone");
 
 	//
 	// Left menu
 	//
 	var loadAboutCentral = function(url, tempo){
 		let fetched = false;
-		let centralZone = $(".about-central-zone");
 		centralZone.fadeOut(tempo,function(){
 			if(fetched)
 				return;
 			centralZone.html(`<img src="/default/img/wheel.svg" class="throbber spinning-jolty2" />`);
 			centralZone.show();
 		});
-		$(".about-left-menu li").removeClass("active");
-		$(".about-left-menu a").each( function(){
-			var dbu = $(this).attr("data-block-url");
-			if( url == dbu ){
-				var li = $(this).parent(); 
-				li.addClass("active");
-			}
-		});
+		// $(".about-left-menu li").removeClass("active");
+		// $(".about-left-menu a").each( function(){
+		// 	var dbu = $(this).attr("data-block-url");
+		// 	if( url == dbu ){
+		// 		var li = $(this).parent(); 
+		// 		li.addClass("active");
+		// 	}
+		// });
         $.get(url,function(data){
 			fetched = true;
             centralZone.fadeOut(10,function(){
@@ -31,10 +31,10 @@ $(function() {
         });
 	}
 	
-	$(".about-left-menu a").on("click", function(){
-		var url = $(this).attr("data-block-url");
-		loadAboutCentral(url, 250);
-	});
+	// $(".about-left-menu a").on("click", function(){
+	// 	var url = $(this).attr("data-block-url");
+	// 	loadAboutCentral(url, 250);
+	// });
 	
 	//
 	// Language coverage
@@ -106,15 +106,39 @@ $(function() {
 		}
 	}, ".fold-unfold")
 	
-	// Bookmarkable anchors
 	if( window.location.hash.indexOf("#about-block-") != -1 ){
-		var ajaxUrl = window.location.hash;
-		ajaxUrl = "/" + ajaxUrl.substr(1);  // Replace first # with /
-		loadAboutCentral(ajaxUrl, 10);
+		// Legacy bookmarkable anchors
+		// 2022-01: instead of loading the block, redirect to the new handler.
+		// This is meant to not break the old URLs in the wild.
+		var h = window.location.hash;
+		console.log("Found legacy bookmarkable anchor: ", h);
+		switch(h) {
+			case "#about-block-language-coverage":
+				window.location = "/coverage";
+				break;
+			case "#about-block-all-idioms":
+				window.location = "/all-idioms";
+				break;
+			case "#about-block-rss":
+				window.location = "/feeds";
+				break;
+			case "#about-block-cheatsheets":
+				window.location = "/cheatsheets";
+				break;
+			case "#about-block-backlogs":
+				window.location = "/backlogs";
+				break;
+			case "#about-block-see-also":
+				window.location = "/see-also";
+				break;
+			case "#about-block-contact":
+				window.location = "/contact";
+				break;
+		}
 	}
 	
 	// This is REDUNDANT CODE copy-pasted from programming-idioms.js
-	// TODO Remove id possible
+	// TODO Remove if possible
 	function initLanguageTypeahead() {
 		$('.language-single-select .typeahead').typeahead({
 			source : function(query, process){
@@ -135,5 +159,14 @@ $(function() {
 				return true;
 			}
 		});
+	}
+
+	// 2022-01: About pages have each their own handler
+	// Slow-ish pages (Language coverage, All idioms) still want to show the page
+	// layout first, and then load the contents dynamically.
+	if( centralZone.attr("data-load-now") ) {
+		let ajaxUrl = centralZone.attr("data-load-now");
+		console.log("Loading central content: ", ajaxUrl);
+		loadAboutCentral(ajaxUrl, 10);
 	}
 });

@@ -58,6 +58,14 @@ func readUserProfile(r *http.Request) UserProfile {
 	return u
 }
 
+func isUserProfileBlank(r *http.Request) bool {
+	u := readUserProfile(r)
+	return u.Nickname == "" &&
+		len(u.FavoriteLanguages) == 0 &&
+		u.SeeNonFavorite &&
+		!u.IsAdmin
+}
+
 func mustUserProfile(r *http.Request, w http.ResponseWriter) (UserProfile, error) {
 	profile := readUserProfile(r)
 	if profile.Nickname == "" {

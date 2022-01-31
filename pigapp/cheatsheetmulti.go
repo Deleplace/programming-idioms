@@ -135,5 +135,5 @@ func cheatsheetMultiLangs(w http.ResponseWriter, r *http.Request, langs []string
 
 // In case someone manually tries to reach /cheatsheet or /cheatsheet/ .
 func cheatsheetPageRedirect(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/about#about-block-cheatsheets", http.StatusFound)
+	http.Redirect(w, r, "/cheatsheets", http.StatusFound)
 }
