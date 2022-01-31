@@ -70,7 +70,6 @@ $(function() {
         // Idiom data
         ".idiom-left .idiom-summary-large h1 .touched",
         ".idiom-left .idiom-lead-paragraph.touched",
-        ".idiom-left .idiom-lead-paragraph.touched",
         ".variables .idiom-left .touched span",
         ".related-url .idiom-left .touched span",
         ".keywords .idiom-left .touched span",
@@ -97,6 +96,8 @@ $(function() {
             let delta = htmldiff(leftElem.text(), rightElem.text());
             leftElem.html(delta);
             rightElem.html(delta);
+            // Note: the diff display is lossy for the Idiom Lead Paragraph,
+            // which uses markup2CSS.
         }
     })
 
