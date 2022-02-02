@@ -53,13 +53,12 @@ $(function() {
 	        },
 	    });
 	});
-	
-	$('.toggles-list button').on("click", function(){
-		var toggleName = $(this).html();
-		// ?? not up-to-date yet
-		var oldValue = $(this).hasClass("active");
-		var	newValue = !oldValue;
 		
+	$('.toggles-list input[type=checkbox]').on("click", function(){
+		var toggleName = $(this).attr('data-toggle-name');
+		var	newValue = $(this).is(':checked');
+		console.log(`Setting toggle ${toggleName} to ${newValue}`)
+
 	    $.ajax({
 	        url: '/admin-set-toggle-ajax',
 	        type: 'POST',
@@ -68,10 +67,10 @@ $(function() {
 	            return myXhr;
 	        },
 	        success: function(response){
-	        	$.fn.pisuccess( "Set toggle " + toggleName + " to " + newValue );
+	        	$.fn.pisuccess( `Set toggle ${toggleName} to ${newValue}` );
 	        },
 	        error: function(xhr, status, e){
-	        	$.fn.pierror( "Set toggle " + toggleName + " to " + newValue + " failed : " + xhr.responseText);
+	        	$.fn.pierror( `Setting toggle ${toggleName} to ${newValue} failed : ${xhr.responseText}`);
 	        },
 	        data: {
 	        	toggle: toggleName,
