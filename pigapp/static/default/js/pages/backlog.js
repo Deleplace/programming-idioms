@@ -77,17 +77,16 @@ $(function() {
         let blockName = parts[4];
         using(`backlog/refresh/${blockName}/${lang}`);
     }); 
-    
 
-    // THIS IS DUPLICATED FROM programming-idioms.js
-    // Duplication is not great but otherwise I get
-    // "ReferenceError: using is not defined"
-    function using(what) {
-        fetch("/using/"+what, {
-            method: "POST",
-            body: JSON.stringify({
-                page: window.location.pathname+window.location.search
-            })
-        });
-    }
+
+
+	//
+	// On page load:
+	//
+    
+	// #187 Auto add favorite language
+	var path = window.location.pathname;
+	lang = path.substring("/backlog/".length);
+	console.log("Adding favlang", lang);
+	addFavlangsInCookie([lang]);
 });
