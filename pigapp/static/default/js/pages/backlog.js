@@ -87,6 +87,77 @@ $(function() {
 	// #187 Auto add favorite language
 	var path = window.location.pathname;
 	lang = path.substring("/backlog/".length);
-	console.log("Adding favlang", lang);
+	console.debug("Adding favlang", lang);
 	addFavlangsInCookie([lang]);
 });
+
+
+
+//
+// ALL CODE BELOW IS DUPLICATED FROM programming-idioms.js
+// Duplication is not great but otherwise I get
+// "ReferenceError: X is not defined"
+// TODO find a more effective code minif+split strategy!
+//
+
+function using(what) {
+	fetch("/using/"+what, {
+		method: "POST",
+		body: JSON.stringify({
+			page: window.location.pathname+window.location.search
+		})
+	});
+}
+
+function normLang(lang){
+	switch(lang.toLowerCase()){
+	case "c++":
+		return "Cpp";
+	case "c#":
+		return "Csharp";
+	case "cs":
+		return "Csharp";
+	case "golang":
+		return "go";
+	case "py":
+		return "Python";
+	case "rs":
+		return "Rust";
+	}
+	return lang;
+}
+
+function capitalizeFirstLetter(string) {
+	// https://stackoverflow.com/a/1026087
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function hasFavlangInCookie(lg) {
+	lg = normLang(lg);
+	let cookielangs = $.cookie("my-languages");
+	if(!cookielangs)
+		return false;
+	let favlangsConcat = cookielangs.toLowerCase();
+	let favlangs = favlangsConcat.split("_");
+	return favlangs.indexOf(lg.toLowerCase()) !== -1;
+}
+
+function addFavlangsInCookie(langs) {
+	var langsConcat = $.cookie("my-languages") || "_";
+	var newLangsConcat = langsConcat;
+	for (var i = 0; i<langs.length; i++) {
+		var lang = langs[i];
+		lang = capitalizeFirstLetter(lang);
+		lang = normLang(lang);
+		if(!hasFavlangInCookie(lang)) {
+			newLangsConcat += lang + "_";
+		}
+	}
+	if(newLangsConcat != langsConcat){
+		$.cookie("my-languages", newLangsConcat,{ expires : 100, path: '/' });
+	}
+}
+
+//
+// END OF CODE DUPLICATED FROM programming-idioms.js
+//
