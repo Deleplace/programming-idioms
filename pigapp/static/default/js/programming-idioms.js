@@ -650,7 +650,7 @@ $(function() {
 			if(missing.length >= 1) {
 				let plural = (missing.length) >= 2 ? "s" : "";
 				let missingBold = missing.map(function(v){return "<span class=\"variable\">" + v + "</span>" });
-				let warning = "The code <i>should</i> contain identifier" + plural + " " + missingBold.join(", ") + ".";
+				let warning = "The code <i>should</i> contain the identifier" + plural + " " + missingBold.join(", ") + ".";
 				warn(warning);
 			}
 		}
