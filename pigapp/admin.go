@@ -55,6 +55,7 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
+	log.Infof(ctx, "Setting toggle %q to %v", name, value)
 	toggles[name] = value
 
 	// Save config in distributed Datastore and Memcached
@@ -65,6 +66,14 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 	})
 	if err != nil {
 		return err
+	}
+
+	// Flush the cache, as some toggles have an big impact on page rendering.
+	err = memcache.Flush(ctx)
+	if err == nil {
+		log.Infof(ctx, "Memcached flushed by toggle set")
+	} else {
+		log.Errorf(ctx, "flushing Memcached: %v", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
