@@ -1462,3 +1462,11 @@ footer a.about-link {
 	width: 3em;
 	height: 3em;
 }
+
+.need-write-enabled {
+	/* 
+		Some widgets to write to the database exist but are hidden by default.
+		At page load, we may consider displaying them.
+	*/
+	visibility: hidden;
+}

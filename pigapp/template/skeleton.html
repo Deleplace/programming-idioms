@@ -121,7 +121,10 @@
 			<script src="{{.}}"></script>
 		{{end}}
 		{{if .PageMeta.Toggles.syntaxColoring}} 
-			<script>$(function() { prettyPrint(); });</script>
+			<script>$(prettyPrint);</script>
+		{{end}}
+		{{if .PageMeta.Toggles.writable}} 
+			<script>$(function(){ $(".need-write-enabled").css('visibility', 'visible'); });</script>
 		{{end}}
 	    {{template "traffic-analyze" .}}
 {{end}}

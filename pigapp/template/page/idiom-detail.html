@@ -56,7 +56,7 @@
 					{{end}}
 				{{end}}
 			</div>
-			{{if .PageMeta.Toggles.implAddition}}
+			{{if and .PageMeta.Toggles.writable .PageMeta.Toggles.implAddition}}
 				{{if or (not .Idiom.Protected) .UserProfile.IsAdmin}}
 					<div class="new-impl-invitation hide-on-mobile">
 						<hr/>

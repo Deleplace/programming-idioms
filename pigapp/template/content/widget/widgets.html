@@ -379,7 +379,7 @@
 {{end}}
 
 {{define "idiom-edit-button"}}
-	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info btn-edit" title="Edit this idiom statement" ><i class="fas fa-edit"></i></a>
+	<a href="{{hostPrefix}}/idiom-edit/{{.Id}}" class="btn btn-info btn-edit need-write-enabled" title="Edit this idiom statement" ><i class="fas fa-edit"></i></a>
 {{end}}
 
 {{define "idiom-delete-button"}}
@@ -387,7 +387,7 @@
 {{end}}
 
 {{define "impl-edit-button"}}
-	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info btn-edit" title="Edit this implementation" ><i class="fas fa-edit"></i></a>
+	<a href="{{hostPrefix}}/impl-edit/{{.Deco.Id}}/{{.Data.Id}}" class="btn btn-info btn-edit need-write-enabled" title="Edit this implementation" ><i class="fas fa-edit"></i></a>
 {{end}}
 
 {{define "impl-flag-button"}}
