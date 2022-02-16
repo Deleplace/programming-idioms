@@ -472,6 +472,14 @@ $(function() {
 		return false;
 	});
 
+	function isIdiomPage() {
+		// Diff pages are not concerned
+		if ( /\/diff\//.test(window.location.pathname) )
+			return false;
+
+		return /^\/idiom\//.test(window.location.pathname);
+	}
+
 	function isIdiomDetailWithLang() {
 		// Diff pages are not concerned
 		if ( /\/diff\//.test(window.location.pathname) )
@@ -538,26 +546,30 @@ $(function() {
 	});
 
 	$("a.copy-code-to-clipboard").on("click", function(){
-		var that = $(this);
-		var impl = that.closest(".implementation");
-		var picode = impl.find(".picode");
+		var button = $(this);
+		var impl = button.closest(".implementation");
+		clipboardCopyCodeOfImpl(button, impl);
+		using("impl/copy-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
+		return false;
+	});
+
+	function clipboardCopyCodeOfImpl(copyButtonElement, implElement) {
+		var picode = implElement.find(".picode");
 		var snippet = picode.find("pre").text();
 		if(!snippet) {
 			alert("Sorry, failed to retrieve the snippet code :(");
 			return;
 		}
-		using("impl/copy-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying to clipboard was successful!');
-			that.html('<i class="fas fa-clipboard-check" title="The snippet code has been copied to clipboard"></i>');
+			copyButtonElement.html('<i class="fas fa-clipboard-check" title="The snippet code has been copied to clipboard"></i>');
 
 			$(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
-			impl.addClass("just-copied-to-clipboard");
+			implElement.addClass("just-copied-to-clipboard");
 		  }, function(err) {
 			alert('Async: Could not copy text: ' + err);
 		  });
-		return false;
-	});
+	}
 
 	$(".impl-external-links .demo a").on("click", function(event) {
 		var impl = $(this).closest(".implementation");
@@ -1076,6 +1088,68 @@ $(function() {
 			ul.hide();
 		}
 	});
+
+	if( isIdiomPage() ) {
+		// #192 Keyboard shortcuts
+		$(document).on("keydown", function(e) {
+			if ( e.target.tagName.toLowerCase() === 'input' ||
+			     e.target.tagName.toLowerCase() === 'textarea' ) { 
+				// Do not mess with the search text box
+				return;
+			}
+			let idiomID = $(".idiom-summary-large").attr("data-idiom-id");
+			// Conventionally, the "current impl" is the top impl in the page.
+			// This does not capture all desired use cases, but probably the
+			// most frequent one.
+			let implID = $("div.implementation").first().attr("data-impl-id");
+			let implLang = $("div.implementation").first().attr("data-impl-lang");
+
+			switch(e.key) {
+				case '?':
+					window.alert(`Keyboard shortcuts:
+    r Go to a random idiom
+    p Go to "previous" idiom
+    n Go to "next" idiom
+    e Edit current implementation
+    x Create a new implementation
+    c Copy snippet code to the clipboard
+    g Grid view
+    ? Show keyboard shortcuts`);
+					break;
+				case 'r':
+					using("keyboard/random-idiom");
+					window.location = "/random-idiom";
+					break;
+				case 'p':
+					using("keyboard/previous-idiom");
+					window.location = `/previous-idiom/${idiomID}`;
+					break;
+				case 'n':
+					using("keyboard/next-idiom");
+					window.location = `/next-idiom/${idiomID}`;
+					break;
+				case 'e':
+					using(`keyboard/impl-edit/${idiomID}/${implID}`);
+					window.location = `/impl-edit/${idiomID}/${implID}`;
+					break;
+				case 'x':
+					using(`keyboard/impl-create/${idiomID}`);
+					window.location = `/impl-create/${idiomID}`;
+					break;
+				case 'c':
+					using(`keyboard/impl/copy-to-clipboard/${idiomID}/${implID}/${implLang}`);
+					let impl = $("div.implementation").first();
+					let copyButton = impl.find("a.copy-code-to-clipboard");
+					clipboardCopyCodeOfImpl(copyButton, impl);
+					break;
+				case 'g':
+					using(`keyboard/grid/${idiomID}`);
+					$(".modal-impl-grid").modal();
+					break;
+			}
+			//e.preventDefault();
+		});
+	}
 });
 
 function using(what) {

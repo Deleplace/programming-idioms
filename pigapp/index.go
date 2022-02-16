@@ -71,6 +71,8 @@ func initRoutes() {
 		handle("/search/{q}", search)
 		handle("/list-by-language/{langs}", listByLanguage)
 		handle("/missing-fields/{lang}", missingList)
+		handle("/next-idiom/{idiomId}", nextIdiom)
+		handle("/previous-idiom/{idiomId}", previousIdiom)
 
 		handle("/backlog/{lang}", backlogForLanguage)
 		handle("/backlog/{lang}/block/curation", backlogBlockCuration)

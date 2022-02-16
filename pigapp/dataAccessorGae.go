@@ -705,3 +705,14 @@ func (a *GaeDatastoreAccessor) getAllIdiomTitles(ctx context.Context) ([]*Idiom,
 	_, err := q.GetAll(ctx, &idioms)
 	return idioms, err
 }
+
+func (a *GaeDatastoreAccessor) getMaxIdiomIDTitle(ctx context.Context) (*Idiom, error) {
+	// Used for #192 Keyboard shortcut 'p'
+	q := datastore.NewQuery("Idiom").Order("-Id").Project("Id", "Title").Limit(1)
+	idioms := make([]*Idiom, 0, 1)
+	_, err := q.GetAll(ctx, &idioms)
+	if err != nil {
+		return nil, err
+	}
+	return idioms[0], err
+}
