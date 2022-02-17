@@ -1090,6 +1090,15 @@ $(function() {
 	});
 
 	if( isIdiomPage() ) {
+		let idiomID = $(".idiom-summary-large").attr("data-idiom-id");
+		// Conventionally, the "current impl" is the top impl in the page.
+		// This does not capture all desired use cases, but probably the
+		// most frequent one.
+		let impl = $("div.implementation").first();
+		let implID = impl.attr("data-impl-id");
+		let implLang = impl.attr("data-impl-lang");
+		let implCopyButton = impl.find("a.copy-code-to-clipboard");
+
 		// #192 Keyboard shortcuts
 		$(document).on("keydown", function(e) {
 			if ( e.target.tagName.toLowerCase() === 'input' ||
@@ -1097,12 +1106,6 @@ $(function() {
 				// Do not mess with the search text box
 				return;
 			}
-			let idiomID = $(".idiom-summary-large").attr("data-idiom-id");
-			// Conventionally, the "current impl" is the top impl in the page.
-			// This does not capture all desired use cases, but probably the
-			// most frequent one.
-			let implID = $("div.implementation").first().attr("data-impl-id");
-			let implLang = $("div.implementation").first().attr("data-impl-lang");
 
 			switch(e.key) {
 				case '?':
@@ -1138,9 +1141,7 @@ $(function() {
 					break;
 				case 'c':
 					using(`keyboard/impl/copy-to-clipboard/${idiomID}/${implID}/${implLang}`);
-					let impl = $("div.implementation").first();
-					let copyButton = impl.find("a.copy-code-to-clipboard");
-					clipboardCopyCodeOfImpl(copyButton, impl);
+					clipboardCopyCodeOfImpl(implCopyButton, impl);
 					break;
 				case 'g':
 					using(`keyboard/grid/${idiomID}`);
@@ -1149,6 +1150,12 @@ $(function() {
 			}
 			//e.preventDefault();
 		});
+
+		// Special tooltips for the very first impl
+		let copyIcon = implCopyButton.find("i");
+		copyIcon.attr("title", copyIcon.attr("title") + " (c)");
+		let editBtn = impl.parent().find("a.btn-edit");
+		editBtn.attr("title", editBtn.attr("title") + " (e)");
 	}
 });
 
