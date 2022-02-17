@@ -1111,17 +1111,27 @@ $(function() {
 				case '?':
 					window.alert(`Keyboard shortcuts:
     r Go to a random idiom
+    s Search
     p Go to "previous" idiom
     n Go to "next" idiom
     e Edit current implementation
-    x Create a new implementation
     c Copy snippet code to the clipboard
+    d Follow demo link
+    i Follow documentation link
+    x Create a new implementation
     g Grid view
+    h History
+    z Cheatsheet
     ? Show keyboard shortcuts`);
 					break;
 				case 'r':
 					using("keyboard/random-idiom");
 					window.location = "/random-idiom";
+					break;
+				case 's':
+					using("keyboard/search");
+					$("form.form-search > input[name=q]").first().focus();
+					e.preventDefault();
 					break;
 				case 'p':
 					using("keyboard/previous-idiom");
@@ -1135,20 +1145,42 @@ $(function() {
 					using(`keyboard/impl-edit/${idiomID}/${implID}`);
 					window.location = `/impl-edit/${idiomID}/${implID}`;
 					break;
-				case 'x':
-					using(`keyboard/impl-create/${idiomID}`);
-					window.location = `/impl-create/${idiomID}`;
-					break;
 				case 'c':
 					using(`keyboard/impl/copy-to-clipboard/${idiomID}/${implID}/${implLang}`);
 					clipboardCopyCodeOfImpl(implCopyButton, impl);
+					break;
+				case 'd':
+					let demoUrl = impl.find("li.demo > a").attr("href");
+					if (demoUrl) {
+						using(`keyboard/impl/demo/${idiomID}/${implID}/${implLang}`);
+						window.open(demoUrl, "_blank");
+					}
+					break;
+				case 'i':
+					let docUrl = impl.find("li.doc > a").attr("href");
+					if (docUrl) {
+						using(`keyboard/impl/doc/${idiomID}/${implID}/${implLang}`);
+						window.open(docUrl, "_blank");
+					}
+					break;
+				case 'x':
+					using(`keyboard/impl-create/${idiomID}`);
+					window.location = `/impl-create/${idiomID}`;
 					break;
 				case 'g':
 					using(`keyboard/grid/${idiomID}`);
 					$(".modal-impl-grid").modal();
 					break;
+				case 'h':
+					window.location = `/history/${idiomID}`;
+					break;
+				case 'z':
+					if(implLang) {
+						using(`keyboard/cheatsheet/${implLang}`);
+						window.location = `/cheatsheet/${implLang}`;
+					}
+					break;
 			}
-			//e.preventDefault();
 		});
 
 		// Special tooltips for the very first impl
@@ -1156,6 +1188,12 @@ $(function() {
 		copyIcon.attr("title", copyIcon.attr("title") + " (c)");
 		let editBtn = impl.parent().find("a.btn-edit");
 		editBtn.attr("title", editBtn.attr("title") + " (e)");
+		let demoLink = impl.find("li.demo > a");
+		if(demoLink)
+			demoLink.attr("title", "Online demo (d)");
+		let docLink = impl.find("li.doc > a");
+		if(docLink)
+			docLink.attr("title", "Documentation page (i)");
 	}
 });
 
