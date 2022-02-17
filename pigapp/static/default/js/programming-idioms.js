@@ -1111,7 +1111,7 @@ $(function() {
 				case '?':
 					window.alert(`Keyboard shortcuts:
     r Go to a random idiom
-    s Search
+    / Search
     p Go to "previous" idiom
     n Go to "next" idiom
     e Edit current implementation
@@ -1128,7 +1128,7 @@ $(function() {
 					using("keyboard/random-idiom");
 					window.location = "/random-idiom";
 					break;
-				case 's':
+				case '/':
 					using("keyboard/search");
 					$("form.form-search > input[name=q]").first().focus();
 					e.preventDefault();
