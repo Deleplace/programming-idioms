@@ -1106,6 +1106,10 @@ $(function() {
 				// Do not mess with the search text box
 				return;
 			}
+			if ( e.ctrlKey || e.altKey || e.metaKey ) {
+				// Do not mess with popular shortcuts like Ctrl+R, etc.
+				return;
+			}
 
 			switch(e.key) {
 				case '?':
