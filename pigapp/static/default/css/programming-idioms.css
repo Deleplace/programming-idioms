@@ -576,7 +576,13 @@ button.favorite-language-remove {
 }
 
 .profile-url {
-	width: 90%;
+	width: 80%;
+	margin-right: 0.6rem;
+}
+
+.profile-take-away a.copy-url-clipboard {
+	vertical-align: text-bottom;
+	font-size: large;
 }
 
 /* Tabbed implementations in Idiom Detail */

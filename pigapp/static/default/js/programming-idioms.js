@@ -226,6 +226,7 @@ $(function() {
 			dt1.append(removeBtn);
 			var dd1 = $("<dd>").text(username());
 			removeBtn.on("click", function(){
+				using("cookie-box/delete-cookie-nickname");
 				$.removeCookie("Nickname", { path: '/' });
 				dlNickname.hide("slow", function(){ dlNickname.remove(); });
 				takeaway.hide("slow", function(){ takeaway.remove(); });
@@ -241,7 +242,8 @@ $(function() {
 		if( langsConcat ){
 			var dt = $("<dt><tt>my-languages</tt></dt>");
 			var removeBtn = $("<button>").text("Delete this cookie");
-			removeBtn.on("click", function(){ 
+			removeBtn.on("click", function(){
+				using("cookie-box/delete-cookie-favlangs");
 				$.removeCookie("my-languages", { path: '/' });
 				dlLangs.hide("slow", function(){ dlLangs.remove(); });
 				updateProfileUrl();
@@ -261,6 +263,17 @@ $(function() {
 		takeaway.append("<p>Copy this URL. Profiles are not stored on server, only in cookies or in this URL.</p>")
 		urlbox = $("<input>").attr("type", "text").addClass("profile-url");
 		takeaway.append(urlbox);
+		let copyProfileLink = $('<a href="#" class="copy-url-clipboard"><i class="far fa-copy" title="Copy to the clipboard"></i></a>');
+		copyProfileLink.on("click", function(){ 
+			using("cookie-box/copy-profile-url");
+			navigator.clipboard.writeText(urlbox.val()).then(function() {
+				console.log('Copying to clipboard was successful!');
+				copyProfileLink.html('<i class="fas fa-clipboard-check" title="The profile link has been copied to clipboard"></i>');
+			  }, function(err) {
+				alert('Async: Could not copy text: ' + err);
+			  });
+		});
+		takeaway.append(copyProfileLink);
 		body.append(takeaway);
 		var fullhost = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
 		var updateProfileUrl = function(){
