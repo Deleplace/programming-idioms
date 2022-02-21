@@ -1113,6 +1113,7 @@ $(function() {
 
 			switch(e.key) {
 				case '?':
+					using(`keyboard/show-keyboard-shortcuts`);
 					$("<div>").addClass("modal").attr("tabindex","-1")
 						.addClass("keyboard-shortcuts")
 						.append(`<div class="modal-header">
@@ -1186,6 +1187,7 @@ $(function() {
 					$(".modal-impl-grid").modal();
 					break;
 				case 'h':
+					using(`keyboard/history/${idiomID}`);
 					window.location = `/history/${idiomID}`;
 					break;
 				case 'z':
