@@ -214,4 +214,22 @@ $(function() {
 	        cache: false
 	    });
 	});
+
+	$(document).on("keydown", function(e) {
+		if ( e.target.tagName.toLowerCase() === 'input' ||
+			 e.target.tagName.toLowerCase() === 'textarea' ) { 
+			// Do not mess with the search text box
+			return;
+		}
+		if ( e.ctrlKey || e.altKey || e.metaKey ) {
+			// Do not mess with popular shortcuts like Ctrl+R, etc.
+			return;
+		}
+
+		switch(e.key) {
+			case 'a':
+				window.open("/admin", "_blank");
+				break;
+		}
+	});
 });
