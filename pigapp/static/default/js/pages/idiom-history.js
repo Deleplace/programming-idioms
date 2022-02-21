@@ -93,7 +93,9 @@ $(function() {
             //     left ==  "aa bb"
             //     right == "bb cc"
             // =>  delta == "<del>aa bb</del><ins>bb cc</ins>"
-            let delta = htmldiff(leftElem.text(), rightElem.text());
+            const left = leftElem.text().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+            const right = rightElem.text().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+            let delta = htmldiff(left, right);
             leftElem.html(delta);
             rightElem.html(delta);
             // Note: the diff display is lossy for the Idiom Lead Paragraph,
