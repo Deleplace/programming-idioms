@@ -407,6 +407,16 @@ button.favorite-language-remove {
 	margin-bottom: 0.4em;
 }
 
+.prev-next-nav {
+	font-weight: bold;
+}
+.prev-next-nav a {
+	margin-right: 0.8em;
+}
+.prev-next-nav a:hover {
+	text-decoration: none;
+}
+
 .right_column #relation-form h4 {
 	margin-top: 3em;
 }

@@ -1089,6 +1089,33 @@ $(function() {
 		}
 	});
 
+	function showKeyboardShortcuts() {
+		$("<div>").addClass("modal").attr("tabindex","-1")
+			.addClass("keyboard-shortcuts")
+			.append(`<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3>Keyboard shortcuts</h3>
+					</div>`)
+			.append(`<div class="modal-body">
+				<dl class="dl-horizontal">
+					<dt>r</dt> <dd>Go to a random idiom</dd>
+					<dt>/</dt> <dd>Search</dd>
+					<dt>p</dt> <dd>Go to "previous" idiom</dd>
+					<dt>n</dt> <dd>Go to "next" idiom</dd>
+					<dt>e</dt> <dd>Edit current implementation</dd>
+					<dt>c</dt> <dd>Copy snippet code to the clipboard</dd>
+					<dt>d</dt> <dd>Follow demo link</dd>
+					<dt>i</dt> <dd>Follow documentation link</dd>
+					<dt>x</dt> <dd>Create a new implementation</dd>
+					<dt>g</dt> <dd>Grid view</dd>
+					<dt>h</dt> <dd>History</dd>
+					<dt>z</dt> <dd>Cheatsheet</dd>
+					<dt>?</dt> <dd>Show keyboard shortcuts</dd>
+				</dl>
+			</div>`)
+			.modal("show");
+	}
+
 	if( isIdiomPage() ) {
 		let idiomID = $(".idiom-summary-large").attr("data-idiom-id");
 		// Conventionally, the "current impl" is the top impl in the page.
@@ -1114,30 +1141,7 @@ $(function() {
 			switch(e.key) {
 				case '?':
 					using(`keyboard/show-keyboard-shortcuts`);
-					$("<div>").addClass("modal").attr("tabindex","-1")
-						.addClass("keyboard-shortcuts")
-						.append(`<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-									<h3>Keyboard shortcuts</h3>
-								</div>`)
-						.append(`<div class="modal-body">
-							<dl class="dl-horizontal">
-								<dt>r</dt> <dd>Go to a random idiom</dd>
-								<dt>/</dt> <dd>Search</dd>
-								<dt>p</dt> <dd>Go to "previous" idiom</dd>
-								<dt>n</dt> <dd>Go to "next" idiom</dd>
-								<dt>e</dt> <dd>Edit current implementation</dd>
-								<dt>c</dt> <dd>Copy snippet code to the clipboard</dd>
-								<dt>d</dt> <dd>Follow demo link</dd>
-								<dt>i</dt> <dd>Follow documentation link</dd>
-								<dt>x</dt> <dd>Create a new implementation</dd>
-								<dt>g</dt> <dd>Grid view</dd>
-								<dt>h</dt> <dd>History</dd>
-								<dt>z</dt> <dd>Cheatsheet</dd>
-								<dt>?</dt> <dd>Show keyboard shortcuts</dd>
-							</dl>
-						</div>`)
-						.modal("show");
+					showKeyboardShortcuts();
 					break;
 				case 'r':
 					using("keyboard/random-idiom");
@@ -1211,6 +1215,11 @@ $(function() {
 		if(docLink)
 			docLink.attr("title", "Documentation page (i)");
 	}
+
+	$("a.show-keyboard-shortcuts").click(function(){
+		using(`/right/show-keyboard-shortcuts`);
+		showKeyboardShortcuts();
+	});
 });
 
 function using(what) {

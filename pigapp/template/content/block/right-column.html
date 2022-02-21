@@ -4,6 +4,11 @@
 	{{$favLangs := .Deco.FavoriteLanguages}}
 	{{with .Data}}
 		{{$idiom := .}}
+		<div class="prev-next-nav">
+			<a href="/previous-idiom/{{.Id}}" title="Previous idiom (p)">&lt;</a>
+			<a href="/next-idiom/{{.Id}}" title="Next idiom (n)">&gt;</a>
+			<a href="#" class="show-keyboard-shortcuts" title="Keyboard shortcuts (?)">⌨</a>
+		</div>
 		<div class="created_by">
 			<label>Idiom created by</label>
 			{{.Author}}
