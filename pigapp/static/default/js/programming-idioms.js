@@ -1107,7 +1107,7 @@ $(function() {
 			.addClass("keyboard-shortcuts")
 			.append(`<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h3>Keyboard shortcuts</h3>
+						<h3>Keyboard shortcuts <span class="keyboard-icon">⌨</span></h3>
 					</div>`)
 			.append(`<div class="modal-body">
 				<dl class="dl-horizontal">

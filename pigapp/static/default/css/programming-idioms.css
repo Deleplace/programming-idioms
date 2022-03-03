@@ -416,6 +416,9 @@ button.favorite-language-remove {
 .prev-next-nav a:hover {
 	text-decoration: none;
 }
+.prev-next-nav .show-keyboard-shortcuts {
+	font-weight: normal;
+}
 
 .right_column #relation-form h4 {
 	margin-top: 3em;
@@ -1485,4 +1488,8 @@ footer a.about-link {
 		At page load, we may consider displaying them.
 	*/
 	visibility: hidden;
+}
+
+.keyboard-shortcuts .modal-header .keyboard-icon {
+	font-weight: normal;
 }
