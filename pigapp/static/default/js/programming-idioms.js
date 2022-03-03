@@ -1210,7 +1210,7 @@ $(function() {
 				case 'z':
 					if(implLang) {
 						using(`keyboard/cheatsheet/${implLang}`);
-						window.location = `/cheatsheet/${implLang}`;
+						window.open(`/cheatsheet/${implLang}`, "_blank");
 					}
 					break;
 			}
