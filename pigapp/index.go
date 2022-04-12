@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -18,7 +19,8 @@ const ThemeVersion = "default"
 
 // ThemeDate is the prefix used for "revving" the static files and enable long-term HTTP cache.
 // It MUST end with underscore _ (see app.yaml)
-const ThemeDate = "20220221b_"
+// #204: $GAE_VERSION automatically changes at each deployment.
+var ThemeDate = os.Getenv("GAE_VERSION") + "_"
 
 var r = mux.NewRouter()
 
