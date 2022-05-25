@@ -1233,6 +1233,21 @@ $(function() {
 		using(`/right/show-keyboard-shortcuts`);
 		showKeyboardShortcuts();
 	});
+
+	// #205: auto-summary when adding a demo URL
+	$("form.form-impl.form-edit input[name=impl_doc_url]").change(function() {
+		let docField = $(this);
+		let summaryField = $("form.form-impl.form-edit input[name=edit_summary]");
+		if( docField.val() && !summaryField.val() )
+			summaryField.val("Added Doc URL");
+	});
+	// #206: auto-summary when adding a demo URL
+	$("form.form-impl.form-edit input[name=impl_demo_url]").change(function() {
+		let demoField = $(this);
+		let summaryField = $("form.form-impl.form-edit input[name=edit_summary]");
+		if( demoField.val() && !summaryField.val() )
+			summaryField.val("Added Demo URL");
+	});
 });
 
 function using(what) {
