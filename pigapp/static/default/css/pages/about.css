@@ -14,3 +14,7 @@
 .pi-backlogs .videos td {
     padding: 0.5em;
 }
+
+.pi-backlogs .videos th.date {
+    font-weight: normal;
+}
