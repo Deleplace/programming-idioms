@@ -11,7 +11,7 @@
 				<form class="form-horizontal form-impl form-edit" action="{{hostPrefix}}/impl-save" method="POST">
 					<fieldset>
 						<div class="control-group">
-							<label class="control-label" for="idiom_id">Idiom</label>
+							<label class="control-label">Idiom</label>
 							<div class="controls">
 								<input type="hidden" name="idiom_id" value="{{.Idiom.Id}}" readonly="readonly" class="input-small" />
 								<span class="idiom_id label label-larger"># {{.Idiom.Id}}</span>
@@ -36,11 +36,11 @@
 					<fieldset>
 						<legend>Implementation</legend>
 						<div class="control-group">
-							<label class="control-label" for="impl_language">Language</label>
+							<label class="control-label" for="impl-language">Language</label>
 							<div class="controls">
 								<input type="hidden" name="impl_id" value="{{.Impl.Id}}" readonly="readonly" class="input-small" />
 								<input type="hidden" name="impl_version" value="{{.Impl.Version}}" readonly="readonly" class="input-small" />
-								<span class="badge badge-success badge-larger">{{printNiceLang .Impl.LanguageName}}</span>
+								<span id="impl-language" class="badge badge-success badge-larger">{{printNiceLang .Impl.LanguageName}}</span>
 							</div>
 						</div>
 						<div class="control-group">
@@ -56,9 +56,10 @@
 							</div>
 						</div>
 						<div class="control-group">
-							<label class="control-label" for="impl_imports">Imports</label>
+							<label class="control-label" for="impl-imports">Imports</label>
 							<div class="controls">
-								<textarea name="impl_imports" rows="2" 
+								<textarea name="impl_imports" rows="2"
+									id="impl-imports"
 									class="input-xlarge imports"
 									placeholder="Import statements (optional)" 
 									spellcheck="false"
@@ -78,9 +79,10 @@
 									</p>
 								</div>
 							</div>
-							<label class="control-label" for="impl_code">Code</label>
+							<label class="control-label" for="impl-code">Code</label>
 							<div class="controls">
 								<textarea name="impl_code" rows="8" class="impl-code input-xxlarge"
+									id="impl-code"
 									data-toggle="popover" title="Explain stuff"
 									data-content="<textarea name='impl_comment' placeholder='Put your comments here
 									(not in the code)' rows='4' maxlength='500'>{{.Impl.AuthorComment}}</textarea><div>To emphasize a name: <span>_x &rarr; <b><i>x</b></i></span></div>"
@@ -93,19 +95,19 @@
 							</div>
 
 						</div>
-						<div class="control-group">
+						<div class="control-group" id="doc-url">
 							<label class="control-label" for="impl_doc_url">Documentation URL</label>
 							<div class="controls">
 								<input type="text" name="impl_doc_url" class="input-xxlarge" maxlength="250"	value="{{.Impl.DocumentationURL}}" />
 							</div>
 						</div>
-						<div class="control-group">
+						<div class="control-group" id="attribution-url">
 							<label class="control-label" for="impl_attribution_url">Original attribution URL</label>
 							<div class="controls">
 								<input type="text" name="impl_attribution_url" class="input-xxlarge" maxlength="250"	value="{{.Impl.OriginalAttributionURL}}" />
 							</div>
 						</div>
-						<div class="control-group">
+						<div class="control-group" id="demo-url">
 							<label class="control-label" for="impl_demo_url">Online runnable demo</label>
 							<div class="controls">
 								<input type="text" name="impl_demo_url" class="input-xxlarge" maxlength="250" value="{{.Impl.DemoURL}}" />

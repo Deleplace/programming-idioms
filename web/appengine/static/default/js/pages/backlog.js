@@ -16,6 +16,22 @@ $(function() {
         window.open(pageURL);
     }); 
 
+    $(document).on("click", ".backlog .impl-actions button.edit-doc-link", function(){
+        let actions = $(this).closest(".impl-actions");
+        let idiomID = actions.attr("data-idiom-id");
+        let implID = actions.attr("data-impl-id");
+        let pageURL = `/impl-edit/${idiomID}/${implID}#doc-url`;
+        window.open(pageURL);
+    }); 
+
+    $(document).on("click", ".backlog .impl-actions button.edit-demo-link", function(){
+        let actions = $(this).closest(".impl-actions");
+        let idiomID = actions.attr("data-idiom-id");
+        let implID = actions.attr("data-impl-id");
+        let pageURL = `/impl-edit/${idiomID}/${implID}#demo-url`;
+        window.open(pageURL);
+    }); 
+
     $(document).on("click", ".backlog .impl-actions button.mark-good", function(){
         // TODO: mark good only if user has a Nickname. Include the Nickname in the "vote" log.
         let actions = $(this).closest(".impl-actions");
