@@ -3,7 +3,21 @@ $(function() {
     $("a.history-copy-imports-to-clipboard").on("click", function(){
         var that = $(this);
         var importsGroup = that.closest(".imports");
-        var snippet = importsGroup.find("pre").text();
+
+        let markup = importsGroup.find("pre").clone();
+
+        if( importsGroup.closest(".impl-left").length > 0 ) {
+            // We're in the LEFT column
+            // INS parts are hidden, we don't want to copy them
+            markup.find("ins").remove();
+        }
+        if( importsGroup.closest(".impl-right").length > 0 ) {
+            // We're in the RIGHT column
+            // DEL parts are hidden, we don't want to copy them
+            markup.find("del").remove();
+        }
+        let snippet = markup.text();
+
         if(!snippet) {
             alert("Sorry, failed to retrieve the imports code :(");
             return;
@@ -24,7 +38,20 @@ $(function() {
     $("a.history-copy-code-to-clipboard").on("click", function(){
         var that = $(this);
         var codeGroup = that.closest(".impl-code");
-        var snippet = codeGroup.find("pre").text();
+
+        let markup = codeGroup.find("pre").clone();
+
+        if( codeGroup.closest(".impl-left").length > 0 ) {
+            // We're in the LEFT column
+            // INS parts are hidden, we don't want to copy them
+            markup.find("ins").remove();
+        }
+        if( codeGroup.closest(".impl-right").length > 0 ) {
+            // We're in the RIGHT column
+            // DEL parts are hidden, we don't want to copy them
+            markup.find("del").remove();
+        }
+        let snippet = markup.text();
         if(!snippet) {
             alert("Sorry, failed to retrieve the imports code :(");
             return;
@@ -46,7 +73,20 @@ $(function() {
     $("a.history-copy-comments-to-clipboard").on("click", function(){
         var that = $(this);
         var commentsGroup = that.closest(".comments");
-        var comment = commentsGroup.find(".diff-code-comments").text();
+
+        let markup = commentsGroup.find(".diff-code-comments").clone();
+        if( commentsGroup.closest(".impl-left").length > 0 ) {
+            // We're in the LEFT column
+            // INS parts are hidden, we don't want to copy them
+            markup.find("ins").remove();
+        }
+        if( commentsGroup.closest(".impl-right").length > 0 ) {
+            // We're in the RIGHT column
+            // DEL parts are hidden, we don't want to copy them
+            markup.find("del").remove();
+        }
+        let comment = markup.text();
+
         if(!comment) {
             alert("Sorry, failed to retrieve the imports code :(");
             return;
