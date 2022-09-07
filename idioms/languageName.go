@@ -20,7 +20,7 @@ func MainStreamLanguages() []string {
 	return mainStreamLangs[:]
 }
 
-var moreLangs = [...]string{"Ada", "Caml", "Clojure", "Cobol", "D", "Dart", "Elixir", "Erlang", "Fortran", "Groovy", "Haskell", "Kotlin", "Lua", "Lisp", "Pascal", "Perl", "Prolog", "Scala", "Scheme", "Smalltalk", "VB"}
+var moreLangs = [...]string{"Ada", "Caml", "Clojure", "Cobol", "D", "Dart", "Elixir", "Erlang", "Fortran", "Groovy", "Haskell", "Kotlin", "Lua", "Lisp", "Pascal", "Perl", "Prolog", "Scala", "Scheme", "Smalltalk", "VB", "TS"}
 
 func MoreLanguages() []string {
 	// These do *not* include the MainStreamLanguages()
@@ -29,6 +29,7 @@ func MoreLanguages() []string {
 
 var synonymLangs = map[string]string{
 	"Javascript":   "JS",
+	"Typescript":   "TS",
 	"Objective C":  "Obj-C",
 	"Visual Basic": "VB",
 }
@@ -111,6 +112,8 @@ func NormLang(lang string) string {
 		return "Csharp"
 	case "javascript":
 		return "JS"
+	case "ts":
+		return "TS"
 	case "golang":
 		return "Go"
 	case "objective c":
@@ -195,6 +198,7 @@ var langsExtraKeywords = map[string][]string{
 	"Go":      []string{"golang"},
 	"Haskell": []string{"hs", "lhs"},
 	"JS":      []string{"javascript"},
+	"TS":      []string{"typescript"},
 	"Obj-C":   []string{"Objective", "Objective-C", "mm"},
 	"Pascal":  []string{"pp", "pas", "inc", "turbopascal"},
 	"Perl":    []string{"pl"},
