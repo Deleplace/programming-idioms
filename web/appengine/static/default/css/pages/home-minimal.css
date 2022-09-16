@@ -66,3 +66,22 @@ footer .about-link {
 footer a.about-link {
     text-decoration: none;
 }
+
+@media (prefers-color-scheme: dark) {
+    /* Dark theme: see issues/114 */
+    body {
+        background-color: #003;
+        color: white;
+    }
+    header, footer {
+        background-color: #336;
+    }
+    a {
+        color: #aac;
+    }
+    input[type=text], button {
+        background-color: black;
+        color: white;
+        border-color: #444;
+    }
+}

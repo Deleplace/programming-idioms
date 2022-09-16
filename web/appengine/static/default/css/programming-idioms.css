@@ -740,6 +740,7 @@ textarea.impl-code{
 	background-color: #F5F5F5;
 }
 .row-fluid .impl-cell pre {
+	margin-top: -0.7em;
 	border-radius: 0px 4px 4px 4px;
 }
 
@@ -1492,4 +1493,115 @@ footer a.about-link {
 
 .keyboard-shortcuts .modal-header .keyboard-icon {
 	font-weight: normal;
+}
+
+
+@media (prefers-color-scheme: dark) {
+    /* Dark theme: see issues/114 */
+    body {
+        background-color: #003;
+        color: white;
+    }
+    header, footer {
+        background-color: #336;
+    }
+    a {
+        color: #bbd;
+    }
+    input[type=text], textarea, button {
+        background-color: black;
+        color: white;
+        border-color: #444;
+    }
+	.idiom-summary-large {
+	  background-color: #222244;
+	}
+	.well {
+		border-color: #446;
+	}
+	.well.language-list {
+		background-color: black;
+	}
+	.idiom-summary-large h1 {
+		color: #CCC;
+	}
+	.idiom-summary-large h1 a {
+		color: #8BF;
+	}
+	.nav-tabs {
+		border-bottom: 1px solid #446;
+	}
+	.nav-tabs .active > a {
+		background-color: black;
+		color: #ddd;
+		border-color: #446 #446 transparent #446;
+	}
+	.nav-tabs > .active > a,
+	.nav-tabs > .active > a:focus,
+	.nav-tabs .ui-state-hover .active > a,
+	.nav-tabs > li > a:hover,
+	.nav-tabs > li > a:focus {
+		background-color: black;
+	}
+	.popover {
+		background-color: #511;
+	}
+	.popover.right .arrow:after {
+		border-right-color: #511;
+	}
+	.impl-external-links .nav-tabs .active > a {
+		background-color: black;
+		color: #ddd;
+		border-color: transparent #446 #446 #446;
+	}
+	hr {
+		border-color: #446;
+	}
+	.badge-non-fav-lang {
+		background-color: #444;
+	}
+	.right_column, .right_column a:link, .right_column a:visited {
+		color: #aaa;
+	}
+	.modal {
+		background-color: black;
+	}
+	.alert-info {
+		background-color: #113;
+		border-color: #333;
+		color: #6BD;
+		text-shadow: none;
+	}
+	.language-bar-hint {
+		color: #AAA;
+	}
+	.well.idiom-summary-medium {
+		background-color: black;
+	}
+	.idiom-summary-medium h1 {
+		color: #99B;
+	}
+	.idiom-summary-medium h1 a {
+		color: #39D;
+	}
+	.btn.show-impl-grid {  
+		color: #ffffff;
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+		background-color: #363636;
+		background-image: linear-gradient(to bottom, #444444, #222222);
+		border-color: #222222 #222222 #000000;
+	}
+	.btn-info {  
+		background-color: #159;
+		background-image: linear-gradient(to bottom, #37A, #159);
+		border-color: #222222 #222222 #000000;
+	}
+	.btn-primary {  
+		background-color: #029;
+		background-image: linear-gradient(to bottom, #06a, #029);
+	}
+	.btn-success {  
+		background-color: #383;
+		background-image: linear-gradient(to bottom, #595, #383);
+	}
 }

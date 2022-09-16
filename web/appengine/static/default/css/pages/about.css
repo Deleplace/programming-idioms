@@ -18,3 +18,38 @@
 .pi-backlogs .videos th.date {
     font-weight: normal;
 }
+
+@media (prefers-color-scheme: dark) {
+    .bs-docs-sidenav {
+        background-color: black;
+    }
+    .nav-list > .active {
+        background-color: #159;
+    }
+    .nav-list > .active > a {
+        background-color: #159;
+    }
+    .label.idiom_id {
+	    background-color: #444;
+    }
+    .language-coverage th[data-lang] span {
+        background-color: #159;
+    }
+    .language-coverage tr.highlight {
+        background-color: #337;
+    }
+
+    .language-coverage .highlight .idiom-title a {
+        color: white;
+    }
+    .language-coverage .highlight {
+        /* For the current column */
+        background-color: #337;
+    }
+    .language-coverage a:hover {
+	    color: #EEF;
+    }
+    .language-coverage a:hover .coverage-fav-lang {
+	    color: #EFE;
+    }
+}

@@ -108,3 +108,12 @@ table.cheatsheet-lines.with-1-langs th.idiom-title-and-lead {
         display: none !important;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    table.cheatsheet-lines th {
+        background-color: inherit;
+    }
+    .page-cheatsheet .guidance {
+        color: #aaa;
+    }
+}
