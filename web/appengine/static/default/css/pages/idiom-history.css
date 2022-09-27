@@ -26,3 +26,40 @@
     background-color: #BFB;
     text-decoration: unset;
 }
+
+
+@media (prefers-color-scheme: dark) {
+    /* Dark theme: see issues/114 */
+
+    .version-diff .diff-code-comments,
+    .version-diff .doc-url .field-value,
+    .version-diff .demo-url .field-value {
+        border: 1px solid #777;
+        background-color: black;
+    }
+
+    .version-diff h5 > a {
+        color: rgb(120, 187, 187);
+    }
+
+    .touched del {
+        background-color: rgb(95, 17, 17);
+    }
+    
+    .touched ins {
+        background-color: rgb(12, 90, 12);
+    }
+
+    .version-diff .impl-left.created {
+        background-color: rgb(54, 168, 54);
+    }
+    .version-diff .impl-right.created {
+        background-color: rgb(12, 90, 12);
+    }
+    .version-diff .impl-left.deleted {
+        background-color: rgb(160, 63, 63);
+    }
+    .version-diff .impl-right.deleted {
+        background-color: rgb(95, 17, 17);
+    }
+}

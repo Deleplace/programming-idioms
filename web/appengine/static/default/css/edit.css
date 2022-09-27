@@ -10,3 +10,53 @@
     margin-bottom: 5px;
     border-radius: 4px;
 }
+
+@media (prefers-color-scheme: dark) {
+    /* Dark theme: see issues/114 */
+
+    .form-impl-creation .controls .idiom-lead-paragraph,
+    .form-edit          .controls .idiom-lead-paragraph {
+        background-color: inherit;
+    }
+
+    .label.idiom_id {
+        background-color: #444;
+    }
+
+    .form-horizontal .idiom_title a:link {
+        color: #bbd;
+    }
+
+    legend {
+        color: #999;
+    }
+
+    .alert.impl-edit-rules {
+        border: 1px solid #8f641b;
+        background-color: #382f04;
+        color: #dbb97f;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .impl-edit-rules a {
+        color: #c98e29;
+    }
+
+    .popover-title {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+    }
+
+    textarea[name=impl_comment] {
+        background-color: rgba(0, 0, 0, 0.7);
+        border-color: rgba(0, 0, 0, 0.9);
+    }
+
+	.btn.btn-impl-edit-preview {  
+		color: #ffffff;
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+		background-color: #363636;
+		background-image: linear-gradient(to bottom, #444444, #222222);
+		border-color: #222222 #222222 #000000;
+	}
+}

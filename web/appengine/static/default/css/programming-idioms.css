@@ -1545,6 +1545,7 @@ footer a.about-link {
 	}
 	.popover {
 		background-color: #511;
+		box-shadow: 0 5px 10px rgba(255, 180, 180, 0.2);
 	}
 	.popover.right .arrow:after {
 		border-right-color: #511;
