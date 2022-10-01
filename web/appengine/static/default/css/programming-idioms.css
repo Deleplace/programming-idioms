@@ -77,10 +77,12 @@ li[aria-selected=false] .badge-lang {
 
 .badge-fav-lang {
 	background-color: #468847;
+	text-shadow: 1px 1px 1px #333;
 }
 
 .badge-non-fav-lang {
 	background-color: #666666;
+	text-shadow: 1px 1px 1px #333;
 }
 
 .selected-impl.badge-lang.badge-non-fav-lang {
@@ -1373,6 +1375,7 @@ header > * {
 header > h1 {
     margin: 0.2rem 0.5rem 0.2rem 0.5rem;
 	max-width: 75vw;
+	text-shadow: 2px 2px 2px black;
 }
 header > h1 > a {
 	color: white;
@@ -1439,10 +1442,12 @@ footer img.coverage {
     width: 2rem;
     height: 2rem;
     max-width: none;
+    box-shadow: 2px 2px 2px black;
 }
 footer .about-link {
     font-weight: bold;
     font-size: xx-large;
+	text-shadow: 2px 2px 2px black;
 }
 footer a.about-link {
     text-decoration: none;
@@ -1527,6 +1532,7 @@ footer a.about-link {
 	}
 	.idiom-summary-large h1 a {
 		color: #8BF;
+		text-shadow: 2px 2px 2px black;
 	}
 	.nav-tabs {
 		border-bottom: 1px solid #446;

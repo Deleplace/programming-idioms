@@ -11,6 +11,7 @@ header > * {
 header > h1 {
     margin: 0.2rem 0.5rem 0.2rem 0.5rem;
 	max-width: 75vw;
+    text-shadow: 2px 2px 2px black;
 }
 h1 > a {
     text-decoration: none;
@@ -58,10 +59,12 @@ footer div {
 footer img.coverage {
     width: 2rem;
     height: 2rem;
+    box-shadow: 2px 2px 2px black;
 }
 footer .about-link {
     font-weight: bold;
     font-size: xx-large;
+    text-shadow: 2px 2px 2px black;
 }
 footer a.about-link {
     text-decoration: none;
@@ -76,6 +79,7 @@ footer a.about-link {
     header, footer {
         background-color: #336;
     }
+
     a {
         color: #aac;
     }
