@@ -172,7 +172,7 @@ h3 a {
 	background-image:linear-gradient(to bottom, #0000aa, #3333dd);
 	background-repeat:repeat-x;
 	*/
-	background-color:#448;
+	background-color: inherit;
 	background-image: none;
 	
 	border-width: 0px;
@@ -1552,6 +1552,7 @@ footer a.about-link {
 	.popover {
 		background-color: #511;
 		box-shadow: 0 5px 10px rgba(255, 180, 180, 0.2);
+		text-shadow: 1px 1px 0px black;
 	}
 	.popover.right .arrow:after {
 		border-right-color: #511;

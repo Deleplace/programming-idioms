@@ -29,8 +29,9 @@ type AdminFacade struct {
 func admin(w http.ResponseWriter, r *http.Request) error {
 	data := &AdminFacade{
 		PageMeta: PageMeta{
-			ExtraJs: []string{hostPrefix() + themeDirectory() + "/js/programming-idioms-admin.js"},
-			Toggles: toggles,
+			ExtraCss: []string{hostPrefix() + themeDirectory() + "/css/admin.css"},
+			ExtraJs:  []string{hostPrefix() + themeDirectory() + "/js/programming-idioms-admin.js"},
+			Toggles:  toggles,
 		},
 	}
 

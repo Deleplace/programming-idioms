@@ -2,6 +2,9 @@
  * Additional CSS for admin pages, that doesn't need to be loaded by regular pages. 
  */
 
+
+/* Flagged contents list page */
+
  .list-flagged-contents table.flagged thead th {
     padding-left: 1em;
     text-align: left;
@@ -85,4 +88,16 @@
 
 .list-flagged-contents table.flagged tr.resolved {
     background-color: #CCC;
+}
+
+/* 
+ * Adjustments for dark theme
+ */
+
+@media (prefers-color-scheme: dark) {
+    /* Dark theme: see issues/114 */
+    legend {
+        color: #AAA;
+        text-shadow: 2px 2px 1px black;
+    }
 }

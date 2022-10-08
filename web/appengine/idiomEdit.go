@@ -34,8 +34,11 @@ func idiomEdit(w http.ResponseWriter, r *http.Request) error {
 
 	data := &IdiomEditFacade{
 		PageMeta: PageMeta{
-			PageTitle:             fmt.Sprintf("Editing Idiom %d : %s", idiom.Id, idiom.Title),
-			Toggles:               myToggles,
+			PageTitle: fmt.Sprintf("Editing Idiom %d : %s", idiom.Id, idiom.Title),
+			Toggles:   myToggles,
+			ExtraCss: []string{
+				hostPrefix() + themeDirectory() + "/css/edit.css",
+			},
 			PreventIndexingRobots: true,
 		},
 		UserProfile: userProfile,
