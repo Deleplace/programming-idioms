@@ -37,13 +37,13 @@ func emphasize(sentence string) string {
 
 // emphasize the "underscored" identifiers
 //
-// _x -> <span class="variable">x</span>
+// _x -> <em>x</em>
 func emphasizeCSS(sentence string) string {
 	// After a word break,
 	// an underscore char,
 	// and then a group of valid identifier chars.
 	re := regexp.MustCompile("\\b_([\\w$]+)")
-	return re.ReplaceAllString(sentence, "<span class=\"variable\">${1}</span>")
+	return re.ReplaceAllString(sentence, "<em>${1}</em>")
 }
 
 // "a\nb" -> "a<br/>b"

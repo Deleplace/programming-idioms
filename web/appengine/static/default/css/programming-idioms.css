@@ -1500,6 +1500,12 @@ footer a.about-link {
 	font-weight: normal;
 }
 
+/* issues/214 <em> for emphasized words */
+em {
+	font-weight: bold;
+	font-style: italic;
+}
+
 
 @media (prefers-color-scheme: dark) {
     /* Dark theme: see issues/114 */

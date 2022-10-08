@@ -674,14 +674,14 @@ $(function() {
 			}
 			if(missing.length >= 1) {
 				let plural = (missing.length) >= 2 ? "s" : "";
-				let missingBold = missing.map(function(v){return "<span class=\"variable\">" + v + "</span>" });
+				let missingBold = missing.map(function(v){return "<em>" + v + "</em>" });
 				let warning = "The code <i>should</i> contain the identifier" + plural + " " + missingBold.join(", ") + ".";
 				warn(warning);
 			}
 		}
 		
 		if( /\bmain\b/.test(code) ) {
-			warn("Are you sure about <span class=\"variable\">main</span>? We usually don't want a whole program.");
+			warn("Are you sure about <em>main</em>? We usually don't want a whole program.");
 		}
 	});
 	
@@ -782,9 +782,9 @@ $(function() {
 	function emphasize(raw){
 		// Emphasize the "underscored" identifier
 		//
-		// _x -> <span class="variable">x</span>
+		// _x -> <em>x</em>
 		//
-		var refined = raw.replace( /\b_([\w$]*)/gm, "<span class=\"variable\">$1</span>");
+		var refined = raw.replace( /\b_([\w$]*)/gm, "<em>$1</em>");
 		refined = refined.replace(/\n/g,"<br/>");
 		return refined;
 	}

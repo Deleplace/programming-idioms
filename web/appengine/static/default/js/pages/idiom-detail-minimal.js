@@ -21,9 +21,9 @@ function elemText(tag, clazz, text) {
 function emphasize(raw){
     // Emphasize the "underscored" identifier
     //
-    // _x -> <span class="variable">x</span>
+    // _x -> <em>x</em>
     //
-    var refined = raw.replace( /\b_([\w$]*)/gm, "<span class=\"variable\">$1</span>");
+    var refined = raw.replace( /\b_([\w$]*)/gm, "<em>$1</em>");
     refined = refined.replace(/\n/g,"<br/>");
     return refined;
 }
