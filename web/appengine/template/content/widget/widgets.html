@@ -163,7 +163,26 @@
 						<p class="idiom-lead-paragraph identifier-emphasize">{{markup2CSS .LeadParagraph}}</p>
 					</div>
 					<div class="span1">
-						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
+						{{if hasSuffix .ImageURL ".webp"}}
+							{{$fallback := replace .ImageURL ".webp" ".png" -1}}
+							{{$dark := replace .ImageURL ".webp" ".dark.webp" -1}}
+							{{$darkfallback := replace .ImageURL ".webp" ".dark.png" -1}}
+							<div class="idiom-picture">
+								<picture>
+									<source srcset="{{$dark}}" media="(prefers-color-scheme: dark)" type="image/webp">
+									<source srcset="{{$darkfallback}}" media="(prefers-color-scheme: dark)" type="image/png">
+									<source srcset="{{.ImageURL}}" type="image/webp">
+									<source srcset="{{$fallback}}" type="image/png">
+									<img src="{{$fallback}}"
+										{{if .ImageWidth}}width="{{.ImageWidth}}"{{end}}
+										{{if .ImageHeight}}height="{{.ImageHeight}}"{{end}}
+										{{if .ImageAlt}}alt="{{.ImageAlt}}"{{end}}
+									/>
+								</picture>
+							</div>
+						{{else if .ImageURL}}
+							<div class="idiom-picture"><img src="{{.ImageURL}}" {{if .ImageAlt}}alt="{{.ImageAlt}}"{{else}}alt="Illustration"{{end}} /></div>
+						{{end}}
 					</div>
 					<div class="span4">
 						<div class="language-list data-nosnippet">
@@ -526,8 +545,12 @@
 {{define "idiom-picture"}}
 	{{if hasSuffix .ImageURL ".webp"}}
 		{{$fallback := replace .ImageURL ".webp" ".png" -1}}
+		{{$dark := replace .ImageURL ".webp" ".dark.webp" -1}}
+		{{$darkfallback := replace .ImageURL ".webp" ".dark.png" -1}}
 		<div class="idiom-picture">
 			<picture>
+				<source srcset="{{$dark}}" media="(prefers-color-scheme: dark)" type="image/webp">
+				<source srcset="{{$darkfallback}}" media="(prefers-color-scheme: dark)" type="image/png">
 				<source srcset="{{.ImageURL}}" type="image/webp">
 				<source srcset="{{$fallback}}" type="image/png">
 				<img src="{{$fallback}}"
