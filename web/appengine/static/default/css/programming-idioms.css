@@ -210,7 +210,7 @@ button.remove-nickname {
 }
 
 a.go-to-admin {
-	border: 2px solid white;
+	border: 1px solid white;
 	margin: 0.5em;
 }
 
@@ -1524,6 +1524,15 @@ em {
         color: white;
         border-color: #444;
     }
+	a.btn, 
+	button,
+	button.btn-primary,
+	button.btn-inverse {
+		text-shadow: 1px 1px 1px black;
+	}
+	.user-info-link {
+		text-shadow: 1px 1px 1px #000B;
+	}
 	.idiom-summary-large {
 	  background-color: #222244;
 	}
@@ -1535,6 +1544,7 @@ em {
 	}
 	.idiom-summary-large h1 {
 		color: #CCC;
+		text-shadow: 1px 1px 1px #000B;
 	}
 	.idiom-summary-large h1 a {
 		color: #8BF;
@@ -1567,6 +1577,7 @@ em {
 		background-color: black;
 		color: #ddd;
 		border-color: transparent #446 #446 #446;
+		text-shadow: 1px 1px 0px #FFF3;
 	}
 	hr {
 		border-color: #446;
