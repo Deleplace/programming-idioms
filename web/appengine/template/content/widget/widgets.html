@@ -360,7 +360,20 @@
 		{{if trim .CodeBlock}}
 			<pre data-toggle="popover" data-content="{{markup2CSS .AuthorComment | html}}" class="prettyprint {{.LanguageName | prettifyCSSClass}}">{{.CodeBlock}}</pre>
 		{{end}}
-		{{if .PictureURL}}
+		{{if hasSuffix .PictureURL ".webp"}}
+			{{$fallback := replace .PictureURL ".webp" ".png" -1}}
+			{{$dark := replace .PictureURL ".webp" ".dark.webp" -1}}
+			{{$darkfallback := replace .PictureURL ".webp" ".dark.png" -1}}
+			<div class="impl-picture">
+				<picture>
+					<source srcset="{{$dark}}" media="(prefers-color-scheme: dark)" type="image/webp">
+					<source srcset="{{$darkfallback}}" media="(prefers-color-scheme: dark)" type="image/png">
+					<source srcset="{{.PictureURL}}" type="image/webp">
+					<source srcset="{{$fallback}}" type="image/png">
+					<img src="{{$fallback}}" alt="Illustration"	/>
+				</picture>
+			</div>
+		{{else if .PictureURL}}
 			<div class="impl-picture"><img src="{{.PictureURL}}" alt="Illustration"/></div>
 		{{end}}
 	</div>
