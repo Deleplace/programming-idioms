@@ -66,7 +66,9 @@
         border-color: rgba(0, 0, 0, 0.9);
     }
 
-	.btn.btn-impl-edit-preview {  
+	.btn.btn-idiom-create-preview,
+	.btn.btn-impl-create-preview,
+    .btn.btn-impl-edit-preview {
 		color: #ffffff;
 		text-shadow: 1px 1px 1px black;
 		background-color: #363636;
@@ -82,4 +84,7 @@
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
     }
     
+	.modal-idiom-preview, .modal-impl-preview {
+		border: solid 1px white;
+	}
 }

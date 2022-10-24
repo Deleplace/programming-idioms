@@ -837,10 +837,10 @@ $(function() {
 			m.find(".lang-tab span.label").html(lang);
 			var imports = $(".form-impl textarea.imports").val();
 			if( imports )
-				m.find(".piimports pre").text( imports ).show();
+				m.find(".piimports pre > code").text( imports ).show();
 			else
-				m.find(".piimports pre").text( imports ).hide();
-			m.find(".picode pre").text( $(".form-impl textarea.impl-code").val() );
+				m.find(".piimports pre > code").text( imports ).hide();
+			m.find(".picode pre > code").text( $(".form-impl textarea.impl-code").val() );
 			var comment = $(".form-impl textarea[name=impl_comment]").val();
 			var escapedComment = $("<div>").text(comment).html();
 			var refinedComment = emphasize(escapedComment);
@@ -891,10 +891,10 @@ $(function() {
 			m.find(".lang-tab span.label").html(lang);
 			var imports = $(".form-idiom-creation textarea.imports").val();
 			if( imports )
-				m.find(".piimports pre").text( imports ).show();
+				m.find(".piimports pre > code").text( imports ).show();
 			else
-				m.find(".piimports pre").text( imports ).hide();
-			m.find(".picode pre").text( $(".form-idiom-creation textarea.impl-code").val() );
+				m.find(".piimports pre > code").text( imports ).hide();
+			m.find(".picode pre > code").text( $(".form-idiom-creation textarea.impl-code").val() );
 			var comment = $(".form-idiom-creation textarea[name=impl_comment]").val();
 			var escapedComment = $("<div>").text(comment).html();
 			var refinedComment = emphasize(escapedComment);

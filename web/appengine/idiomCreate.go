@@ -21,6 +21,9 @@ func idiomCreate(w http.ResponseWriter, r *http.Request) error {
 		PageMeta: PageMeta{
 			PageTitle: "New Idiom",
 			Toggles:   myToggles,
+			ExtraCss: []string{
+				hostPrefix() + themeDirectory() + "/css/edit.css",
+			},
 		},
 		UserProfile: readUserProfile(r),
 		LanguageSingleSelector: LanguageSingleSelector{
