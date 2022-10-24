@@ -724,6 +724,10 @@ textarea.impl-code{
 	border-top: 0px;
 }
 
+.impl-external-links.tabs-below > .nav-tabs > .active > a {
+	border-color: transparent #777 #777 #777;
+}
+
 .impl-external-links a{
 	margin-right: 8px;
 }
@@ -1598,9 +1602,10 @@ em {
 		border-right-color: #511;
 	}
 	.impl-external-links .nav-tabs .active > a {
-		background-color: #303030;
+		background-color: #272727;
 		color: #ddd;
-		border-color: transparent #446 #446 #446;
+		border-color: transparent #777 #777 #777;
+		/* border-width: 0px; */
 		text-shadow: 1px 1px 0px #FFF3;
 	}
 	hr {
