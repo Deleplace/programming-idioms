@@ -625,8 +625,8 @@ li > a.lang-tab {
 	/* border-bottom: 0px; */
     /* border-color: #D7D7D7; */
 	margin-bottom: 0px;
-    padding-top: 0.5em;
-    padding-bottom: 0.2em;
+    padding-top: 0.3em;
+    padding-bottom: 0.4em;
     font-size: 16px;
 }
 
@@ -635,6 +635,7 @@ li > a.lang-tab {
 .picode {
 	margin: 0;
 	padding: 0;
+	margin-top: -3px;
 }
 
 .picode pre {
