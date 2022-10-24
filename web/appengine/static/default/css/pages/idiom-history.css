@@ -13,8 +13,11 @@ pre {
     padding: 0.5em;
 }
 
-.version-diff .doc-url ,
-.version-diff .origin-url ,
+.version-diff .imports,
+.version-diff .code,
+.version-diff .comments,
+.version-diff .doc-url,
+.version-diff .origin-url,
 .version-diff .demo-url {
     padding-top: 0.5em;
 }

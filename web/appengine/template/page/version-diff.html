@@ -213,7 +213,7 @@
 
 		{{/* IMPORTS BLOCK */}}
 		{{if or $left.ImportsBlock $right.ImportsBlock }}
-			<div class="row-fluid">
+			<div class="row-fluid imports">
 				{{$c := diffClass $left.ImportsBlock $right.ImportsBlock}}
 				<div class="span6 impl-left imports {{$c}}">
 					{{if $left.CodeBlock}}
@@ -231,7 +231,7 @@
 		{{end}}
 
 		{{/* CODE BLOCK */}}
-		<div class="row-fluid">
+		<div class="row-fluid code">
 			{{$c := diffClass $left.CodeBlock $right.CodeBlock}}
 			<div class="span6 impl-left impl-code {{$c}}">
 				{{if $left.CodeBlock}}
@@ -249,7 +249,7 @@
 
 		{{/* COMMENTS BUBBLE */}}
 		{{if or $left.AuthorComment $right.AuthorComment }}
-		<div class="row-fluid">
+		<div class="row-fluid comments">
 			{{$c := diffClass $left.AuthorComment $right.AuthorComment}}
 			<div class="span6 impl-left comments {{$c}}">
 				{{if $left.AuthorComment}}
