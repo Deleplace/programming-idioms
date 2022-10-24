@@ -543,7 +543,7 @@ $(function() {
 		var snippet = piimports.find("pre").text();
 		if(!snippet) {
 			alert("Sorry, failed to retrieve the imports code :(");
-			return;
+			return false;
 		}
 		using("impl/copy-imports-to-clipboard/" + impl.attr("data-idiom-id") + "/" + impl.attr("data-impl-id") + "/" + impl.attr("data-impl-lang"));
 		navigator.clipboard.writeText(snippet).then(function() {
@@ -571,7 +571,7 @@ $(function() {
 		var snippet = picode.find("pre").text();
 		if(!snippet) {
 			alert("Sorry, failed to retrieve the snippet code :(");
-			return;
+			return false;
 		}
 		navigator.clipboard.writeText(snippet).then(function() {
 			console.log('Copying to clipboard was successful!');
@@ -613,9 +613,9 @@ $(function() {
 				});
 	});
 
-	$("input[name=impl_language]").on("autocompletechange", function(event,ui) {
-		alert("autocompletechange");
-	 });
+	// $("input[name=impl_language]").on("autocompletechange", function(event,ui) {
+	// 	alert("autocompletechange");
+	//  });
 
 	$("input[name=impl_language]").on("change", function() {
 		let inputField = $(this);
@@ -796,10 +796,10 @@ $(function() {
 			m.find(".lang-tab span.label").html(lang);
 			var imports = $(".form-impl-creation textarea.imports").val();
 			if( imports )
-				m.find(".piimports pre").text( imports ).show();
+				m.find(".piimports pre > code").text( imports ).show();
 			else
-				m.find(".piimports pre").text( imports ).hide();
-			m.find(".picode pre").text( $(".form-impl-creation textarea.impl-code").val() );
+				m.find(".piimports pre > code").text( imports ).hide();
+			m.find(".picode pre > code").text( $(".form-impl-creation textarea.impl-code").val() );
 			var comment = $(".form-impl-creation textarea[name=impl_comment]").val();
 			var escapedComment = $("<div>").text(comment).html();
 			var refinedComment = emphasize(escapedComment);

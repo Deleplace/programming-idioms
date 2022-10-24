@@ -2,7 +2,22 @@ pre {
     margin: 0;
     padding: 0;
     border: 1px solid #777;
-  }
+}
+
+.version-diff .idiom-left,
+.version-diff .idiom-right {
+    padding-top: 0.5em;
+}
+.version-diff .idiom-left .deleted,
+.version-diff .idiom-right .created  {
+    padding: 0.5em;
+}
+
+.version-diff .doc-url ,
+.version-diff .origin-url ,
+.version-diff .demo-url {
+    padding-top: 0.5em;
+}
 
 .idiom-left.touched ins,
 .impl-left.touched  ins {
@@ -58,14 +73,17 @@ pre {
     }
 
     .version-diff .impl-left.created {
-        background-color: rgb(54, 168, 54);
+        background-color: inherit;
     }
+    .version-diff .idiom-right .created,
     .version-diff .impl-right.created {
         background-color: rgb(12, 90, 12);
     }
+    .version-diff .idiom-left .deleted,
     .version-diff .impl-left.deleted {
         background-color: rgb(160, 63, 63);
     }
+    .version-diff .idiom-right .deleted,
     .version-diff .impl-right.deleted {
         background-color: rgb(95, 17, 17);
     }

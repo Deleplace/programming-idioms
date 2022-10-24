@@ -12,7 +12,7 @@ $(function() {
 	    	var confirm = prompt("This is not your localhost. Please enter safeword. The safeword is \"" + expectedSafeWord + "\".", "");
 	    	if( confirm != expectedSafeWord ){
 	    		alert("Aborting!");
-	    		return;
+	    		return false;
 	    	}
 	    }
 	    $.ajax({

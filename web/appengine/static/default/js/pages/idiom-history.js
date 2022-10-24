@@ -20,7 +20,7 @@ $(function() {
 
         if(!snippet) {
             alert("Sorry, failed to retrieve the imports code :(");
-            return;
+            return false;
         }
         //using("TODO");
         navigator.clipboard.writeText(snippet).then(function() {
@@ -53,8 +53,8 @@ $(function() {
         }
         let snippet = markup.text();
         if(!snippet) {
-            alert("Sorry, failed to retrieve the imports code :(");
-            return;
+            alert("Sorry, failed to retrieve the snippet code :(");
+            return false;
         }
         //using("TODO");
         navigator.clipboard.writeText(snippet).then(function() {
@@ -88,14 +88,14 @@ $(function() {
         let comment = markup.text();
 
         if(!comment) {
-            alert("Sorry, failed to retrieve the imports code :(");
-            return;
+            alert("Sorry, failed to retrieve the comments :(");
+            return false;
         }
         comment = comment.trim();
         //using("TODO");
         navigator.clipboard.writeText(comment).then(function() {
             console.log('Copying comments to clipboard was successful!');
-            that.html('<i class="fas fa-clipboard-check" title="The imports code has been copied to clipboard"></i>');
+            that.html('<i class="fas fa-clipboard-check" title="The comments have been copied to the clipboard"></i>');
 
             $(".just-copied-to-clipboard").removeClass("just-copied-to-clipboard");
                 commentsGroup.addClass("just-copied-to-clipboard");

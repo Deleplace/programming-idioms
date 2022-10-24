@@ -11,6 +11,15 @@
     border-radius: 4px;
 }
 
+.dropdown-toggle {
+    margin-top: 2px;
+}
+
+.warning-code-cromulence {
+	/* Hidden at first. Displayed on code change. */
+	display: none;
+}
+
 @media (prefers-color-scheme: dark) {
     /* Dark theme: see issues/114 */
 
@@ -47,6 +56,10 @@
         border-bottom: 1px solid rgba(0, 0, 0, 0.8);
     }
 
+    .dropdown-toggle {
+        filter: invert(1);
+    }
+
     textarea[name=impl_comment] {
         background-color: rgba(0, 0, 0, 0.7);
         border-color: rgba(0, 0, 0, 0.9);
@@ -59,4 +72,20 @@
 		background-image: linear-gradient(to bottom, #444444, #222222);
 		border-color: #222222 #222222 #000000;
 	}
+
+    .contribution-rules-small {  
+        border-color: #0e3d0f;
+        border-width: 2px;
+        background-color: #185619;
+        color: #CCC;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .warning-code-cromulence.alert {
+        border: 1px solid #ffd88f;
+	    background-color: #402500;
+        color: #ffd88f;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+    }
+    
 }

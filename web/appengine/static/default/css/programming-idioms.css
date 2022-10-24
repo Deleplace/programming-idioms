@@ -135,6 +135,11 @@ header .form-search {
   float: right;
   margin: 0;
 }
+.form-search button[type=submit] {
+	/* Text search */
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
 .actions-dropdown {
   /* float: right; */
   padding-right: 8px;
@@ -795,11 +800,6 @@ textarea.impl-code{
 	display: block;
 }
 
-.warning-code-cromulence {
-	/* Hidden at first. Displayed on code change. */
-	display: none;
-}
-
 /* Contribution rules bla bla bla */
 .contribution-rules-small {
   color: #555555;
@@ -1140,12 +1140,14 @@ footer a.visited {
 	background-color: #AFA;
 	padding-left: 3px;
 	padding-right: 3px;
+    padding-bottom: 0.3em;
 }
 
 .version-diff .impl-left.deleted {
 	background-color: #FFD7D7;
 	padding-left: 3px;
 	padding-right: 3px;
+    padding-bottom: 0.3em;
 }
 
 .version-diff .impl-right.deleted {
@@ -1431,7 +1433,8 @@ header .form-search input[name=q] {
 
 header .greetings {
 	margin-left: 1rem;
-	margin-bottom: 0.5rem;
+	margin-top: 0.4rem;
+	margin-bottom: 0.4rem;
 }
 header .greetings a {
 	color: #bbbbbb;
@@ -1548,8 +1551,7 @@ em {
     }
 	a.btn, 
 	button,
-	button.btn-primary,
-	button.btn-inverse {
+	button.btn-primary {
 		text-shadow: 1px 1px 1px black;
 	}
 	.user-info-link {
@@ -1589,14 +1591,14 @@ em {
 	}
 	.popover {
 		background-color: #511;
-		box-shadow: 0 5px 10px rgba(255, 180, 180, 0.2);
+		box-shadow: 0 5px 3px rgba(255, 180, 180, 0.2);
 		text-shadow: 1px 1px 0px black;
 	}
 	.popover.right .arrow:after {
 		border-right-color: #511;
 	}
 	.impl-external-links .nav-tabs .active > a {
-		background-color: #202020;
+		background-color: #303030;
 		color: #ddd;
 		border-color: transparent #446 #446 #446;
 		text-shadow: 1px 1px 0px #FFF3;
@@ -1631,12 +1633,12 @@ em {
 	.idiom-summary-medium h1 a {
 		color: #39D;
 	}
+	button.btn-inverse {
+		/* ? */
+	}
 	.btn.show-impl-grid {  
-		color: #ffffff;
-		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-		background-color: #363636;
-		background-image: linear-gradient(to bottom, #444444, #222222);
-		border-color: #222222 #222222 #000000;
+        filter: invert(1);
+		text-shadow: none;
 	}
 	.btn-info {  
 		background-color: #159;
@@ -1654,5 +1656,14 @@ em {
 	.piimports pre > code,
 	.piimports pre > code.hljs {
 		color: #AAA;
+	}
+	.language-choices {
+		background-color: #202020;
+	}
+	.dropdown-menu {
+		background-color: #202020;
+	}
+	.dropdown-menu > li > a {
+		color: #BBB;
 	}
 }
