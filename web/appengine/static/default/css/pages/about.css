@@ -23,11 +23,9 @@
     .bs-docs-sidenav {
         background-color: black;
     }
-    .nav-list > .active {
-        background-color: #159;
-    }
     .nav-list > .active > a {
         background-color: #159;
+        border: solid 1px #e5e5e5;
     }
     .label.idiom_id {
 	    background-color: #444;
