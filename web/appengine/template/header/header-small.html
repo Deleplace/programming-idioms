@@ -1,7 +1,11 @@
 {{define "header-small"}}
 <header>
 	<a href="/">
-		<img src="{{hostPrefix}}{{themeDir}}/img/wheel.svg" width="48" height="48" class="header_picto" alt="Logo">
+		<picture>
+			<source srcset="{{hostPrefix}}{{themeDir}}/img/wheel.light.svg" media="(prefers-color-scheme: light)" type="image/svg+xml">
+			<source srcset="{{hostPrefix}}{{themeDir}}/img/wheel.dark.svg" media="(prefers-color-scheme: dark)" type="image/svg+xml">
+			<img src="{{hostPrefix}}{{themeDir}}/img/wheel.default.svg" width="48" height="48" class="header_picto" alt="Logo">
+		</picture>
 	</a>
 	<h1><a href="/">Programming-Idioms</a></h1>
 	<a href="/random-idiom" class="random">
