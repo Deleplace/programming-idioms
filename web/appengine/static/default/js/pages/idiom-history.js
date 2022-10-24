@@ -115,8 +115,8 @@ $(function() {
         ".keywords .idiom-left .touched span",
 
         // Impl data
-        ".impl-left.impl-code.touched pre",
-        ".impl-left.imports.touched pre",
+        ".impl-left.impl-code.touched pre > code",
+        ".impl-left.imports.touched pre > code",
         ".impl-left.touched .diff-code-comments",
         ".doc-url .impl-left .field-value",
         ".origin-url .impl-left .field-value",

@@ -1,3 +1,9 @@
+pre {
+    margin: 0;
+    padding: 0;
+    border: 1px solid #777;
+  }
+
 .idiom-left.touched ins,
 .impl-left.touched  ins {
     display: none;
@@ -33,6 +39,7 @@
 
     .version-diff .diff-code-comments,
     .version-diff .doc-url .field-value,
+    .version-diff .origin-url .field-value,
     .version-diff .demo-url .field-value {
         border: 1px solid #777;
         background-color: black;

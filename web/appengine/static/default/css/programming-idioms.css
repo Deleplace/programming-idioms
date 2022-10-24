@@ -606,24 +606,46 @@ li > a.lang-tab {
 }
 
 /* Import statements (boring) are greyed out */
-.piimports pre{
-	color: #444;
+
+.piimports pre {
+	margin: 0;
+	padding: 0;
+	border: 1px solid #777;
 	border-bottom: 0px;
-    border-color: #D7D7D7;
+}
+
+.piimports pre > code,
+.piimports pre > code.hljs {
+	color: #444;
+	/* border-bottom: 0px; */
+    /* border-color: #D7D7D7; */
 	margin-bottom: 0px;
-    padding: 2px 4px 4px 15px;
+    padding-top: 0.5em;
+    padding-bottom: 0.2em;
     font-size: 16px;
 }
 
 /* Code zone (read-only, pretty-printed) */
-pre.prettyprint {
+
+.picode {
+	margin: 0;
+	padding: 0;
+}
+
+.picode pre {
+	margin: 0;
+	padding: 0;
+	border: 1px solid #777;
+}
+
+.picode pre > code {
     padding: 4px 4px 10px 15px;
     border-color: #AAA;
     /*
     width: auto;
     overflow-x: scroll;
     */
-    margin-bottom: 1px;
+    /* margin-bottom: 1px; */
 
     font-size: 16px;
     font-weight: bold;
@@ -1574,7 +1596,7 @@ em {
 		border-right-color: #511;
 	}
 	.impl-external-links .nav-tabs .active > a {
-		background-color: black;
+		background-color: #202020;
 		color: #ddd;
 		border-color: transparent #446 #446 #446;
 		text-shadow: 1px 1px 0px #FFF3;
@@ -1628,5 +1650,9 @@ em {
 	.btn-success {  
 		background-color: #383;
 		background-image: linear-gradient(to bottom, #595, #383);
+	}
+	.piimports pre > code,
+	.piimports pre > code.hljs {
+		color: #AAA;
 	}
 }

@@ -41,6 +41,7 @@
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/bootstrap-combined.no-icons.min.css" />
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/fontawesome-free-5.15.2-web/css/all.programming-idioms.css" />
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/prettify.css" />
+				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/hljs/default_dark_auto.min.css" />
 				<link rel="stylesheet" href="{{hostPrefix}}{{themeDir}}/css/programming-idioms.css" />
 			{{end}}
 		{{end}}
@@ -115,13 +116,14 @@
 				<script src="{{hostPrefix}}{{themeDir}}/js/prettify.js"></script>
 				<script src="{{hostPrefix}}{{themeDir}}/js/prettify-extra-languages.js"></script>
 				<script src="{{hostPrefix}}{{themeDir}}/js/programming-idioms.js"></script>
+				<script src="{{hostPrefix}}{{themeDir}}/js/hljs/highlight.min.js"></script>
 			{{end}}
 	    {{end}}
 		{{range .PageMeta.ExtraJs}}
 			<script src="{{.}}"></script>
 		{{end}}
 		{{if .PageMeta.Toggles.syntaxColoring}} 
-			<script>$(prettyPrint);</script>
+			<script>hljs.highlightAll();</script>
 		{{end}}
 		{{if .PageMeta.Toggles.writable}} 
 			<script>$(function(){ $(".need-write-enabled").css('visibility', 'visible'); });</script>

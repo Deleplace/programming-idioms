@@ -280,11 +280,11 @@
 				</ul>
 			</div>
 			<div class="piimports">
-				<pre></pre>
+				<pre><code></code></pre>
 			</div>
 			<div class="picode">
 				{{/* TODO activate proper syntax color for current language? */}}
-				<pre data-toggle="popover" data-content="" class="prettyprint"></pre>
+				<pre data-toggle="popover" data-content=""><code></code></pre>
 			</div>
 
 			<div class="impl-external-links tabbable tabs-below pull-right">
@@ -348,9 +348,9 @@
 {{end}}
 
 {{define "implementation-code"}}
-	{{with .ImportsBlock}}
+	{{if .ImportsBlock}}
 		<div class="piimports">
-			<pre>{{.}}</pre>
+			<pre><code class="{{.LanguageName | hljsCSSClass}}">{{.ImportsBlock}}</code></pre>
 			<div class="right copy-imports-to-clipboard">
 				<a href="#"><i class="far fa-copy" title="Copy imports to the clipboard"></i></a>
 			</div>
@@ -358,7 +358,7 @@
 	{{end}}
 	<div class="picode">
 		{{if trim .CodeBlock}}
-			<pre data-toggle="popover" data-content="{{markup2CSS .AuthorComment | html}}" class="prettyprint {{.LanguageName | prettifyCSSClass}}">{{.CodeBlock}}</pre>
+			<pre data-toggle="popover" data-content="{{markup2CSS .AuthorComment | html}}"><code class="{{.LanguageName | hljsCSSClass}}">{{.CodeBlock}}</code></pre>
 		{{end}}
 		{{if hasSuffix .PictureURL ".webp"}}
 			{{$fallback := replace .PictureURL ".webp" ".png" -1}}

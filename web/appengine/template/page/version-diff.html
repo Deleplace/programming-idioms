@@ -218,13 +218,13 @@
 				<div class="span6 impl-left imports {{$c}}">
 					{{if $left.CodeBlock}}
 						<h5>Imports <a href="#" class="history-copy-imports-to-clipboard"><i class="far fa-copy" title="Copy imports to the clipboard"></i></a></h5>
-						<pre>{{$left.ImportsBlock}}</pre>
+						<pre><code class="language-plaintext">{{$left.ImportsBlock}}</code></pre>
 					{{end}}
 				</div>
 				<div class="span6 impl-right imports {{$c}}">
 					{{if $right.CodeBlock}}
 						<h5>Imports <a href="#" class="history-copy-imports-to-clipboard"><i class="far fa-copy" title="Copy imports to the clipboard"></i></a></h5>
-						<pre>{{$right.ImportsBlock}}</pre>
+						<pre><code class="language-plaintext">{{$right.ImportsBlock}}</code></pre>
 					{{end}}
 				</div>
 			</div>
@@ -236,13 +236,13 @@
 			<div class="span6 impl-left impl-code {{$c}}">
 				{{if $left.CodeBlock}}
 					<h5>Code <a href="#" class="history-copy-code-to-clipboard"><i class="far fa-copy" title="Copy this snippet to the clipboard"></i></a></h5>
-					<pre>{{$left.CodeBlock}}</pre>
+					<pre><code class="language-plaintext">{{$left.CodeBlock}}</code></pre>
 				{{end}}
 			</div>
 			<div class="span6 impl-right impl-code {{$c}}">
 				{{if $right.CodeBlock}}
 					<h5>Code <a href="#" class="history-copy-code-to-clipboard"><i class="far fa-copy" title="Copy this snippet to the clipboard"></i></a></h5>
-					<pre>{{$right.CodeBlock}}</pre>
+					<pre><code class="language-plaintext">{{$right.CodeBlock}}</code></pre>
 				{{end}}
 			</div>
 		</div>

@@ -23,6 +23,7 @@ func initTemplates() (*template.Template, error) {
 		"printNiceLang":         PrintNiceLang,
 		"printNiceLangs":        PrintNiceLangs,
 		"prettifyCSSClass":      prettifyCSSClass,
+		"hljsCSSClass":          hljsCSSClass,
 		"prettifyExtension":     prettifyExtension,
 		"normLang":              NormLang,
 		"langBadgeClass":        langBadgeClass,
