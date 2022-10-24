@@ -136,3 +136,16 @@ body.backlog {
     transform: rotate(90deg);
     color: #999;
 }
+
+@media (prefers-color-scheme: dark) {
+    /* No real dark mode implemented in the Backlog page, for now */
+    body {
+        color: #333333;
+    }
+    a {
+        color: #006699;
+    }
+    .popover-content {
+        color: white;
+    }
+}

@@ -107,14 +107,14 @@
                                             {{end}}
                                             {{if .ImplImportsBlock}}
                                                 <div class="piimports" style="display: none;">
-                                                    <pre>{{$doc.ImplImportsBlock}}</pre>
+                                                    <pre><code class="language-plaintext">{{$doc.ImplImportsBlock}}</code></pre>
                                                     <div class="right copy-imports-to-clipboard">
                                                         <a href="#"><i class="far fa-copy" title="Copy imports to the clipboard"></i></a>
                                                     </div>
                                                 </div>
                                             {{end}}
                                             <div class="picode">
-                                                <pre>{{$doc.ImplCodeBlock}}</pre>
+                                                <pre><code class="language-plaintext">{{$doc.ImplCodeBlock}}</code></pre>
                                                 <div class="right move-up">
                                                     <a href="#" class="copy-code-to-clipboard"><i class="far fa-copy" title="Copy code to the clipboard"></i></a>
                                                 </div>

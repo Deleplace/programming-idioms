@@ -116,4 +116,12 @@ table.cheatsheet-lines.with-1-langs th.idiom-title-and-lead {
     .page-cheatsheet .guidance {
         color: #aaa;
     }
+    .page-cheatsheet .piimports pre,
+    .page-cheatsheet .picode pre {
+        margin: 0;
+        padding: 0;
+    }
+    .page-cheatsheet .close {
+        color: #aaa;
+    }
 }
