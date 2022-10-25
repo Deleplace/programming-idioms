@@ -1620,6 +1620,7 @@ em {
 	}
 	.modal {
 		background-color: black;
+		border: solid 1px white;
 	}
 	.alert-info {
 		background-color: #113;
