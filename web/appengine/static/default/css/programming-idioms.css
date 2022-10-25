@@ -1660,6 +1660,11 @@ em {
 		background-color: #383;
 		background-image: linear-gradient(to bottom, #595, #383);
 	}
+	pre {
+		/* Avoid FOUC: apply after CSS has loaded, before hljs has kicked in.*/
+		background: #303030;
+		color: white;
+	}
 	.piimports pre > code,
 	.piimports pre > code.hljs {
 		color: #AAA;
