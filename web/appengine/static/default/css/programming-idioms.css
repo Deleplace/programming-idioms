@@ -642,6 +642,7 @@ li > a.lang-tab {
 	margin: 0;
 	padding: 0;
 	border: 1px solid #777;
+	min-width: 28em;
 }
 
 .picode pre > code {
