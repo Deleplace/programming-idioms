@@ -22,6 +22,7 @@ table.cheatsheet-lines.with-1-langs th.idiom-title-and-lead {
 
 .page-cheatsheet.multi .impl-code {
     width: auto;
+    padding-top: 0.4em;
     padding-right: 0.6em;
 }
 
