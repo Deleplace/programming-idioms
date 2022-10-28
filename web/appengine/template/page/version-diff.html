@@ -60,7 +60,7 @@
 					<div class="span10">
 						<h1>Idiom #{{.Id}} <span class="{{if ne .Title $right.Title}}touched{{end}}">{{.Title}}</span></h1>
 						<p class="idiom-lead-paragraph identifier-emphasize  {{if ne .LeadParagraph $right.LeadParagraph}}touched{{end}}">{{markup2CSS .LeadParagraph}}</p>
-						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
+						{{template "idiom-picture" .}}
 					</div>
 				</div>
 			</div>
@@ -74,7 +74,7 @@
 					<div class="span10">
 						<h1>Idiom #{{.Id}} <span class="{{if ne .Title $left.Title}}touched{{end}}">{{.Title}}</span></h1>
 						<p class="idiom-lead-paragraph identifier-emphasize {{if ne .LeadParagraph $left.LeadParagraph}}touched{{end}}">{{markup2CSS .LeadParagraph}}</p>
-						{{if .ImageURL}}<div class="idiom-picture"><img src="{{.ImageURL}}" alt="Illustration"/></div>{{end}}
+						{{template "idiom-picture" .}}
 					</div>
 				</div>
 			</div>
