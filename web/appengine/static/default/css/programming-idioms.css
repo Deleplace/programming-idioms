@@ -1676,4 +1676,8 @@ em {
 	.dropdown-menu > li > a {
 		color: #BBB;
 	}
+	button.close {
+		color: white;
+		opacity: 0.7;
+	}
 }
