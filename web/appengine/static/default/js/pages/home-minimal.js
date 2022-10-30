@@ -46,14 +46,6 @@ function renderFooter() {
 	</div>`);
 }
 
-function highlightDie(){
-    var die = document.querySelector(".die");
-    var src = die.src;
-    var hsrc = src.replace("die.svg", "die_highlight.svg");
-    die.onmouseover=function(){this.src=hsrc;};
-    die.onmouseout=function(){this.src=src;};
-}
-
 function getCookie(name) {
     // From https://gomakethings.com/working-with-cookies-in-vanilla-js/
     var value = "; " + document.cookie;
@@ -67,4 +59,3 @@ function getCookie(name) {
 
 renderHeader();
 renderFooter();
-highlightDie();

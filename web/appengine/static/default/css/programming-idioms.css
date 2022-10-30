@@ -109,6 +109,11 @@ li[aria-selected=false] .badge-lang {
 .voting button {
   font-weight: bolder;
 }
+
+img.highlightable:hover {
+    filter: contrast(1.5) brightness(1.3);
+}
+
 /* Header */
 header.compact{
 	margin-bottom: 10px;
