@@ -315,6 +315,7 @@ header.header-print h1 > a {
 /* Idiom horizontal summary bar */
 
 .language-list {
+	display: block;
 	padding : 6px;
 }
 
