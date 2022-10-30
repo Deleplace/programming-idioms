@@ -65,7 +65,6 @@ func initRoutes() {
 		handle("/history/{idiomId}/impl/{implId}", implHistory)
 		handle("/revert", revertIdiomVersion)
 		handle("/admin-history-restore", restoreIdiomVersion)
-		handle("/all-idioms", allIdioms)
 		handle("/random-idiom/having/{havingLang}", randomIdiomHaving)
 		handle("/random-idiom/not-having/{notHavingLang}", randomIdiomNotHaving)
 		handle("/random-idiom", randomIdiom)
