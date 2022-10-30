@@ -484,7 +484,8 @@
 {{define "modal-impl-preview"}}
 	<div class="modal hide fade modal-impl-preview" tabindex="-1">
 	  <div class="modal-header">
-	    <h3>Preview</h3>
+	  	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	  	<h3>Preview</h3>
 	  </div>
 	  {{template "impl-preview-skeleton"}}
 	</div>
@@ -493,6 +494,7 @@
 {{define "modal-idiom-preview"}}
 	<div class="modal hide fade modal-idiom-preview" tabindex="-1">	
 	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	    <h3>Preview</h3>
 	  </div>
 
