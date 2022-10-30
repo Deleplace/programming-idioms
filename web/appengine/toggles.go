@@ -20,33 +20,13 @@ type ApplicationConfig struct {
 	Toggles Toggles
 }
 
-/* Deprecated
-// Load reads properties into this ApplicationConfig.
-func (ac *ApplicationConfig) Load(ch <-chan datastore.Property) error {
-	ac.Toggles = Toggles{}
-	// Another modeling with less datastore columns: use AppConfigProperty instead
-	for p := range ch {
-		ac.Toggles[p.Name] = (p.Value).(bool)
-	}
-	return nil
-}
-
-// Save writes properties from this ApplicationConfig.
-func (ac *ApplicationConfig) Save(ch chan<- datastore.Property) error {
-	// Another modeling with less datastore columns: use AppConfigProperty instead
-	for n, v := range ac.Toggles {
-		ch <- datastore.Property{Name: n, Value: v, NoIndex: false, Multiple: false}
-	}
-	close(ch)
-	return nil
-}
-*/
-
 // Before first request, toggles are "default" and are not loaded
 // from datastore yet.
 // TODO: use this to estimate config freshness. Maybe use type time.Time instead.
 var configTime = "0" //time.Now().Format("2006-01-02_15-04")
 
+// refreshToggles loads Toggles from the Memcache or Datastore.
+// However this only impacts one GAE instance, not all of the currently running instances :(
 func refreshToggles(ctx context.Context) error {
 	appConfig, err := dao.getAppConfig(ctx)
 	if err == appConfigPropertyNotFound {
@@ -81,7 +61,7 @@ var toggles = Toggles{}
 
 func initToggles() {
 	// These two toggles block everything
-	toggles["online"] = true
+	toggles["online"] = true // This one currently needs to be change in the source code, and redeployed :(
 	toggles["writable"] = true
 
 	// The toggles below require "online"

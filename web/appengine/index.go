@@ -38,9 +38,7 @@ func init() {
 func initRoutes() {
 	if !toggles["online"] {
 		handle("/", makeWall("<i class=\"icon-wrench icon-2x\"> Under maintenance.</i>"))
-		//r.HandleFunc("/", makeWall("<i class=\"icon-wrench icon-2x\"> Coming soon.</i>"))
 	} else {
-		//handle("/", makeWall("<i class=\"icon-wrench icon-2x\"> Coming soon.</i>"))
 		handle("/", home)
 		handle("/home", home)
 		handle("/wall", makeWall("<i class=\"icon-wrench icon-2x\"> Coming soon.</i>"))
