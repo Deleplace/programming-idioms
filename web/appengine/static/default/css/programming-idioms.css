@@ -1589,7 +1589,8 @@ em {
 	.nav-tabs > .active > a:focus,
 	.nav-tabs .ui-state-hover .active > a,
 	.nav-tabs > li > a:hover,
-	.nav-tabs > li > a:focus {
+	.nav-tabs > li > a:focus,
+	.row-fluid .impl-cell .nav-tabs a {
 		background-color: black;
 	}
 	.popover {
@@ -1679,5 +1680,17 @@ em {
 	button.close {
 		color: white;
 		opacity: 0.7;
+	}
+	.implementation.just-copied-to-clipboard .impl-external-links .nav-tabs>.active>a.copy-code-to-clipboard {
+		border-top: none;
+		background-color: #101010;
+		color: #7A7;
+	}
+	.implementation .piimports.just-copied-to-clipboard pre > code,
+	.implementation.just-copied-to-clipboard .picode pre > code {
+		background-color: #101010;
+	}
+	.implementation .piimports.just-copied-to-clipboard a {
+		color: #7A7;
 	}
 }
