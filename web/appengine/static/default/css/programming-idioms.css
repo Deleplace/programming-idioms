@@ -1594,12 +1594,13 @@ em {
 		background-color: black;
 	}
 	.popover {
+		border: 1px solid #FCC9;
 		background-color: #511;
-		box-shadow: 0 5px 3px rgba(255, 180, 180, 0.2);
+		/* box-shadow: 0 5px 3px rgba(255, 180, 180, 0.2); */
 		text-shadow: 1px 1px 0px black;
 	}
 	.popover.right .arrow:after {
-		border-right-color: #511;
+		border-right-color: #FCC9;
 	}
 	.impl-external-links .nav-tabs .active > a {
 		background-color: #272727;
