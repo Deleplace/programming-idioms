@@ -1158,6 +1158,7 @@ $(function() {
 					break;
 				case 'r':
 					using("keyboard/random-idiom");
+					$(".dice").addClass("spinning-jolty");
 					window.location = "/random-idiom";
 					break;
 				case '/':

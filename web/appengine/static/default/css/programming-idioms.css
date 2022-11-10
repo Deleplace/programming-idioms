@@ -1503,6 +1503,7 @@ footer a.about-link {
 	animation-duration: 0.7s; /* Fast */
 	animation-name: spin-jolty;
 	animation-iteration-count: infinite;
+	filter: contrast(1.5) brightness(1.3);
 }
 
 .spinning-jolty2 {
