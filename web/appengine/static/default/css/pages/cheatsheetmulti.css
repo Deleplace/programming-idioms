@@ -125,4 +125,7 @@ table.cheatsheet-lines.with-1-langs th.idiom-title-and-lead {
     .page-cheatsheet .close {
         color: #aaa;
     }
+    table.cheatsheet-lines th img.logo {
+        filter: drop-shadow(1px 1px #DDD);
+    }
 }
