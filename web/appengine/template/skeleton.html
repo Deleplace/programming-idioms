@@ -21,7 +21,9 @@
 		{{if .PageKeywords}}
 			<meta name="keywords" content="{{.PageKeywords}}">
 		{{end}}
-		<link rel="SHORTCUT ICON" href="{{hostPrefix}}{{themeDir}}/img/favicon_32x32.png" />
+		<link rel="icon" href="{{hostPrefix}}{{themeDir}}/img/favicon_576.png" sizes="any">
+		<link rel="apple-touch-icon" href="{{hostPrefix}}{{themeDir}}/img/favicon_576_plain.png"/>
+		<link rel="icon" href="{{hostPrefix}}{{themeDir}}/img/favicon.svg" type="image/svg+xml">
 		<style>
 			{{/* This is minimal CSS code, to display a page slightly less broken before CSS/JS have loaded. issues/219 */}}
 			header>*{display:inline-block;vertical-align:middle;}
