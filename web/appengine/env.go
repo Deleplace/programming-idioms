@@ -1,6 +1,6 @@
 package main
 
-import "google.golang.org/appengine"
+import "google.golang.org/appengine/v2"
 
 // Env encapsulates a Programming-Idioms webapp environment.
 type Env struct {

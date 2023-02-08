@@ -11,9 +11,9 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/memcache"
+	"google.golang.org/appengine/v2/datastore"
+	"google.golang.org/appengine/v2/log"
+	"google.golang.org/appengine/v2/memcache"
 )
 
 // This source file has a lot of duplicated code : "if cached then return else datastore and cache".

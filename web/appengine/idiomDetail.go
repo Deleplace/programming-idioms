@@ -13,7 +13,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 )
 
 // IdiomDetailFacade is the Facade for the Idiom Detail page.

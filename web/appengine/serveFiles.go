@@ -1,8 +1,8 @@
 package main
 
 import (
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/blobstore"
+	"google.golang.org/appengine/v2"
+	"google.golang.org/appengine/v2/blobstore"
 	"net/http"
 )
 

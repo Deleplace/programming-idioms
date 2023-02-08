@@ -9,7 +9,7 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 )
 
 // ApplicationConfig is a global configuration container.

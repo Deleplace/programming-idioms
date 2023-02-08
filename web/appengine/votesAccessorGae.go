@@ -5,7 +5,7 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/v2/datastore"
 )
 
 // GaeVotesAccessor is a votesAccessor designed for the Google App Engine Datastore.

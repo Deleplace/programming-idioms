@@ -6,7 +6,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 	"github.com/gorilla/mux"
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 )
 
 // API JSON endpoints for idioms data.

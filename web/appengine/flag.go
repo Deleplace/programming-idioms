@@ -6,8 +6,8 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 	"github.com/gorilla/mux"
-	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/datastore"
+	"google.golang.org/appengine/v2/log"
 )
 
 // Let visitors "flag" an inappropriate content, i.e. notify admins.

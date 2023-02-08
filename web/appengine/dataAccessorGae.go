@@ -10,9 +10,9 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine/blobstore"
-	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/blobstore"
+	"google.golang.org/appengine/v2/datastore"
+	"google.golang.org/appengine/v2/log"
 )
 
 // GaeDatastoreAccessor is a dataAccessor that works on the Google App Engine Datastore

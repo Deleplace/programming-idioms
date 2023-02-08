@@ -8,9 +8,9 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 
-	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/memcache"
-	"google.golang.org/appengine/user"
+	"google.golang.org/appengine/v2/log"
+	"google.golang.org/appengine/v2/memcache"
+	"google.golang.org/appengine/v2/user"
 )
 
 // IsAdmin determines whether the current user is regarded as Admin by the Google auth provider.

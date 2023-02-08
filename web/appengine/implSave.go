@@ -9,7 +9,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 )
 
 func implSave(w http.ResponseWriter, r *http.Request) error {

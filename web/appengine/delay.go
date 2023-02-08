@@ -7,9 +7,9 @@ import (
 
 	stdlog "log"
 
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/delay"
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2"
+	"google.golang.org/appengine/v2/delay"
+	"google.golang.org/appengine/v2/log"
 )
 
 // 2021-12: delay funcs are no longer executed in local dev env with dev_appserver.py

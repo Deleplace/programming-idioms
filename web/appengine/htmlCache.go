@@ -11,10 +11,10 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine/delay"
-	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/memcache"
-	"google.golang.org/appengine/taskqueue"
+	"google.golang.org/appengine/v2/delay"
+	"google.golang.org/appengine/v2/log"
+	"google.golang.org/appengine/v2/memcache"
+	"google.golang.org/appengine/v2/taskqueue"
 )
 
 // Sometimes we want to saved whole blocks of template-generated HTML

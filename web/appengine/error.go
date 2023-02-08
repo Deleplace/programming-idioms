@@ -6,7 +6,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 )
 
 // PiError is a custom error type, which embeds a HTTP error code.

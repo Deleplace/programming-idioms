@@ -8,8 +8,8 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/datastore"
+	"google.golang.org/appengine/v2/log"
 )
 
 func adminReindexAjax(w http.ResponseWriter, r *http.Request) error {

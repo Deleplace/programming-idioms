@@ -6,7 +6,7 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 	"github.com/gorilla/mux"
-	gaesearch "google.golang.org/appengine/search"
+	gaesearch "google.golang.org/appengine/v2/search"
 )
 
 // LEGACY

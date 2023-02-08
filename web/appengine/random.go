@@ -10,7 +10,7 @@ import (
 	. "github.com/Deleplace/programming-idioms/idioms"
 	"github.com/gorilla/mux"
 
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 )
 
 func randomIdiom(w http.ResponseWriter, r *http.Request) error {

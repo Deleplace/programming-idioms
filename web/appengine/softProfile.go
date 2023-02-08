@@ -9,8 +9,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/user"
+	"google.golang.org/appengine/v2/log"
+	"google.golang.org/appengine/v2/user"
 )
 
 func lookForNickname(r *http.Request) string {

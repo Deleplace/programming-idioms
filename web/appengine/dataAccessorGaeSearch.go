@@ -12,10 +12,10 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
-	gaesearch "google.golang.org/appengine/search"
+	"google.golang.org/appengine/v2"
+	"google.golang.org/appengine/v2/datastore"
+	"google.golang.org/appengine/v2/log"
+	gaesearch "google.golang.org/appengine/v2/search"
 )
 
 // searchableIdiomDoc is the searchable unit for 1 idiom.

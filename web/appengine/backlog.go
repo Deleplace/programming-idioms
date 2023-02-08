@@ -6,7 +6,7 @@ import (
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/idioms"
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 
 	"github.com/gorilla/mux"
 )

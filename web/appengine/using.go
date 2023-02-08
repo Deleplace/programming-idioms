@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 )
 
 // The client is telling the server that it's using a feature

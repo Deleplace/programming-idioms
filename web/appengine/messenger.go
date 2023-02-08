@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/datastore"
+	"google.golang.org/appengine/v2/log"
 )
 
 func userMessageBoxAjax(w http.ResponseWriter, r *http.Request) error {
