@@ -1,4 +1,5 @@
-runtime: go111
+runtime: go119
+app_engine_apis: true
 
 handlers:
 - url: /favicon\.ico
