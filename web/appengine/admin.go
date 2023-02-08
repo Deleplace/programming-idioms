@@ -8,7 +8,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 
-	"google.golang.org/appengine/v2/log"
 	"google.golang.org/appengine/v2/memcache"
 	"google.golang.org/appengine/v2/user"
 )
@@ -56,7 +55,7 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	log.Infof(ctx, "Setting toggle %q to %v", name, value)
+	logf(ctx, "Setting toggle %q to %v", name, value)
 	toggles[name] = value
 
 	// Save config in distributed Datastore and Memcached
@@ -72,9 +71,9 @@ func ajaxSetToggle(w http.ResponseWriter, r *http.Request) error {
 	// Flush the cache, as some toggles have an big impact on page rendering.
 	err = memcache.Flush(ctx)
 	if err == nil {
-		log.Infof(ctx, "Memcached flushed by toggle set")
+		logf(ctx, "Memcached flushed by toggle set")
 	} else {
-		log.Errorf(ctx, "flushing Memcached: %v", err)
+		errf(ctx, "flushing Memcached: %v", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -119,7 +118,7 @@ func sendMessageForUserAjax(w http.ResponseWriter, r *http.Request) error {
 		Message:      r.FormValue("message"),
 		CreationDate: time.Now(),
 	}
-	log.Infof(ctx, "Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
+	logf(ctx, "Saving message for user [%v]: [%v].", msg.Username, Flatten(Shorten(msg.Message, 30)))
 	_, err := dao.saveNewMessage(ctx, &msg)
 	if err != nil {
 		return err
@@ -139,6 +138,6 @@ func ajaxAdminMemcacheFlush(w http.ResponseWriter, r *http.Request) error {
 			"message": "Memcache flushed :)",
 		})
 	}
-	log.Infof(ctx, "Memcached flushed by admin")
+	logf(ctx, "Memcached flushed by admin")
 	return err
 }

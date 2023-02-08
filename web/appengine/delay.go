@@ -9,7 +9,6 @@ import (
 
 	"google.golang.org/appengine/v2"
 	"google.golang.org/appengine/v2/delay"
-	"google.golang.org/appengine/v2/log"
 )
 
 // 2021-12: delay funcs are no longer executed in local dev env with dev_appserver.py
@@ -37,7 +36,7 @@ type notDelayedFunc struct {
 }
 
 func (ndf notDelayedFunc) Call(c context.Context, args ...interface{}) error {
-	log.Infof(c, "Executing immediatly (not delayed): %q", ndf.name)
+	logf(c, "Executing immediatly (not delayed): %q", ndf.name)
 
 	fv := reflect.ValueOf(ndf.f)
 	t := fv.Type()

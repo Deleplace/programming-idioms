@@ -8,8 +8,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/idioms"
 
 	"context"
-
-	"google.golang.org/appengine/v2/log"
 )
 
 // ApplicationConfig is a global configuration container.
@@ -33,30 +31,28 @@ func refreshToggles(ctx context.Context) error {
 		// Nothing in Memcache, nothing in Datastore!
 		// Then, init default (hard-coded) toggle values and persist them.
 		initToggles()
-		log.Infof(ctx, "Saving default Toggles to Datastore...")
+		logf(ctx, "Saving default Toggles to Datastore...")
 		err := dao.saveAppConfig(ctx, ApplicationConfig{Id: 0, Toggles: toggles})
 		if err == nil {
-			log.Infof(ctx, "Default Toggles saved to Datastore.")
+			logf(ctx, "Default Toggles saved to Datastore.")
 			configTime = time.Now().Format("2006-01-02_15-04")
 		}
 		return err
 	}
 	if err != nil {
-		log.Errorf(ctx, "Error while loading ApplicationConfig from datastore: %v", err)
+		errf(ctx, "Error while loading ApplicationConfig from datastore: %v", err)
 		return err
 	}
 	toggles = appConfig.Toggles
 	configTime = time.Now().Format("2006-01-02_15-04")
-	log.Infof(ctx, "Updated Toggles from memcached or datastore\n")
+	logf(ctx, "Updated Toggles from memcached or datastore\n")
 	// _ = appConfig
 
 	return err
 }
 
-//
 // A toggle should always be named after the positive feature it represents,
 // and default value should be true.
-//
 var toggles = Toggles{}
 
 func initToggles() {

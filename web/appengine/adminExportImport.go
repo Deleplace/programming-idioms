@@ -14,8 +14,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/idioms"
 
 	"context"
-
-	"google.golang.org/appengine/v2/log"
 )
 
 func adminExport(w http.ResponseWriter, r *http.Request) error {
@@ -76,7 +74,7 @@ func importFile(ctx context.Context, file multipart.File, fileHeader *multipart.
 	n := 0
 	for _, idiom := range idioms {
 		if fixNewlines(idiom) {
-			log.Infof(ctx, "Fixed newlines in idiom #%d", idiom.Id)
+			logf(ctx, "Fixed newlines in idiom #%d", idiom.Id)
 		}
 		if _, err = dao.saveNewIdiom(ctx, idiom); err != nil {
 			return n, err

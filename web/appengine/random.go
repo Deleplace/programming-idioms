@@ -9,8 +9,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine/v2/log"
 )
 
 func randomIdiom(w http.ResponseWriter, r *http.Request) error {
@@ -23,7 +21,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		// Not found (or Memcache failed)
 		// Let's fetch in the Datastore
-		log.Infof(ctx, "Fetching all idiom titles from Datastore")
+		logf(ctx, "Fetching all idiom titles from Datastore")
 		idiomHeads, err := dao.getAllIdiomTitles(ctx)
 		if err != nil {
 			return err
@@ -34,7 +32,7 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 		}
 		err = dao.cacheValue(ctx, "all-idioms-urls", urls, 24*time.Hour)
 		if err != nil {
-			log.Errorf(ctx, "Failed idioms URLs list in Memcache: %v", err)
+			errf(ctx, "Failed idioms URLs list in Memcache: %v", err)
 		}
 	}
 	if len(urls) == 0 {
@@ -43,12 +41,12 @@ func randomIdiom(w http.ResponseWriter, r *http.Request) error {
 	k := rand.Intn(len(urls))
 	url := urls[k]
 	// Note that we're redirecting to a *relative* URL
-	log.Infof(ctx, "Picked idiom url %s (out of %d)", url, len(urls))
+	logf(ctx, "Picked idiom url %s (out of %d)", url, len(urls))
 
 	// 2018-09 w doesn't seem to implement Pusher :(
 	// if pusher, ok := w.(http.Pusher); ok {
 	// 	if err := pusher.Push(url, nil); err != nil {
-	// 		log.Errorf("Failed to push %s: %v", url, err)
+	// 		errf("Failed to push %s: %v", url, err)
 	// 	}
 	// }
 	// Automagic "Link" header seems fine, thanks to GFE
@@ -73,7 +71,7 @@ func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
 	var url string
 	var err error
 
-	log.Infof(ctx, "Going to a random idiom having lang %v", havingLang)
+	logf(ctx, "Going to a random idiom having lang %v", havingLang)
 	_, idiom, err = dao.randomIdiomHaving(ctx, havingLang)
 	if err != nil {
 		return err
@@ -85,7 +83,7 @@ func randomIdiomHaving(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	log.Infof(ctx, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
+	logf(ctx, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }
@@ -105,14 +103,14 @@ func randomIdiomNotHaving(w http.ResponseWriter, r *http.Request) error {
 	var url string
 	var err error
 
-	log.Infof(ctx, "Going to a random idiom having lang %v", notHavingLang)
+	logf(ctx, "Going to a random idiom having lang %v", notHavingLang)
 	_, idiom, err = dao.randomIdiomNotHaving(ctx, notHavingLang)
 	if err != nil {
 		return err
 	}
 	url = NiceIdiomURL(idiom)
 
-	log.Infof(ctx, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
+	logf(ctx, "Picked idiom #%v: %v", idiom.Id, idiom.Title)
 	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }

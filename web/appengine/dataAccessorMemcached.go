@@ -12,7 +12,6 @@ import (
 	"context"
 
 	"google.golang.org/appengine/v2/datastore"
-	"google.golang.org/appengine/v2/log"
 	"google.golang.org/appengine/v2/memcache"
 )
 
@@ -33,7 +32,7 @@ func (a *MemcacheDatastoreAccessor) cacheValue(ctx context.Context, cacheKey str
 
 	err := enc.Encode(&data)
 	if err != nil {
-		log.Debugf(ctx, "Failed encoding for cache[%v] : %v", cacheKey, err)
+		logf(ctx, "Failed encoding for cache[%v] : %v", cacheKey, err)
 		return err
 	}
 	cacheItem := &memcache.Item{
@@ -44,9 +43,9 @@ func (a *MemcacheDatastoreAccessor) cacheValue(ctx context.Context, cacheKey str
 	// Set the item, unconditionally
 	err = memcache.Set(ctx, cacheItem)
 	if err != nil {
-		log.Debugf(ctx, "Failed setting cache[%v] : %v", cacheKey, err)
+		logf(ctx, "Failed setting cache[%v] : %v", cacheKey, err)
 	} else {
-		// log.Debugf(ctx, "Successfully set cache[%v]", cacheKey)
+		// logf(ctx, "Successfully set cache[%v]", cacheKey)
 	}
 	return err
 }
@@ -65,7 +64,7 @@ func (a *MemcacheDatastoreAccessor) cacheValues(ctx context.Context, cacheKeys [
 		cacheData := data[i]
 		err := enc.Encode(&cacheData)
 		if err != nil {
-			log.Debugf(ctx, "Failed encoding for cache[%v] : %v", cacheKey, err)
+			logf(ctx, "Failed encoding for cache[%v] : %v", cacheKey, err)
 			return err
 		}
 		cacheItem := &memcache.Item{
@@ -79,7 +78,7 @@ func (a *MemcacheDatastoreAccessor) cacheValues(ctx context.Context, cacheKeys [
 	// Set the items, unconditionally, in 1 batch call
 	err := memcache.SetMulti(ctx, items)
 	if err != nil {
-		log.Debugf(ctx, "Failed setting cache items for keys %v: %v", cacheKeys, err)
+		logf(ctx, "Failed setting cache items for keys %v: %v", cacheKeys, err)
 	}
 	return err
 }
@@ -92,7 +91,7 @@ func (a *MemcacheDatastoreAccessor) cacheSameValues(ctx context.Context, cacheKe
 	err := enc.Encode(&data)
 
 	if err != nil {
-		log.Debugf(ctx, "Failed encoding for cache keys [%v] : %v", cacheKeys, err)
+		logf(ctx, "Failed encoding for cache keys [%v] : %v", cacheKeys, err)
 		return err
 	}
 
@@ -109,7 +108,7 @@ func (a *MemcacheDatastoreAccessor) cacheSameValues(ctx context.Context, cacheKe
 	// Set the items, unconditionally, in 1 batch call
 	err = memcache.SetMulti(ctx, items)
 	if err != nil {
-		log.Debugf(ctx, "Failed setting cache items for keys %v: %v", cacheKeys, err)
+		logf(ctx, "Failed setting cache items for keys %v: %v", cacheKeys, err)
 	}
 	return err
 }
@@ -193,7 +192,7 @@ func (a *MemcacheDatastoreAccessor) recacheIdiom(ctx context.Context, datastoreK
 	cacheKey := fmt.Sprintf("getIdiom(%v)", idiom.Id)
 	err := a.cacheKeyValue(ctx, cacheKey, datastoreKey, idiom, 24*time.Hour)
 	if err != nil {
-		log.Errorf(ctx, err.Error())
+		errf(ctx, err.Error())
 		return err
 	}
 
@@ -205,7 +204,7 @@ func (a *MemcacheDatastoreAccessor) recacheIdiom(ctx context.Context, datastoreK
 	}
 	err = a.cacheKeysSameValue(ctx, cacheKeys, datastoreKey, idiom, 24*time.Hour)
 	if err != nil {
-		log.Errorf(ctx, err.Error())
+		errf(ctx, err.Error())
 		return err
 	}
 	// Unfortunately, some previous "getIdiomByImplID(xyz)" might be left uninvalidated.
@@ -228,7 +227,7 @@ func (a *MemcacheDatastoreAccessor) uncacheIdiom(ctx context.Context, idiom *Idi
 
 	err := memcache.DeleteMulti(ctx, cacheKeys)
 	if err != nil {
-		log.Errorf(ctx, err.Error())
+		errf(ctx, err.Error())
 	}
 
 	// Cached HTML pages.
@@ -241,7 +240,7 @@ func (a *MemcacheDatastoreAccessor) getIdiom(ctx context.Context, idiomID int) (
 	cacheKey := fmt.Sprintf("getIdiom(%v)", idiomID)
 	data, cacheerr := a.readCache(ctx, cacheKey)
 	if cacheerr != nil {
-		log.Errorf(ctx, cacheerr.Error())
+		errf(ctx, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
 		return a.GaeDatastoreAccessor.getIdiom(ctx, idiomID)
 	}
@@ -250,7 +249,7 @@ func (a *MemcacheDatastoreAccessor) getIdiom(ctx context.Context, idiomID int) (
 		key, idiom, err := a.GaeDatastoreAccessor.getIdiom(ctx, idiomID)
 		if err == nil {
 			err2 := a.recacheIdiom(ctx, key, idiom, false)
-			logIf(err2, log.Errorf, ctx, "recaching idiom")
+			logIf(err2, errf, ctx, "recaching idiom")
 		}
 		return key, idiom, err
 	}
@@ -265,7 +264,7 @@ func (a *MemcacheDatastoreAccessor) getIdiomByImplID(ctx context.Context, implID
 	cacheKey := fmt.Sprintf("getIdiomByImplID(%v)", implID)
 	data, cacheerr := a.readCache(ctx, cacheKey)
 	if cacheerr != nil {
-		log.Errorf(ctx, cacheerr.Error())
+		errf(ctx, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
 		return a.GaeDatastoreAccessor.getIdiomByImplID(ctx, implID)
 	}
@@ -274,7 +273,7 @@ func (a *MemcacheDatastoreAccessor) getIdiomByImplID(ctx context.Context, implID
 		key, idiom, err := a.GaeDatastoreAccessor.getIdiomByImplID(ctx, implID)
 		if err == nil {
 			err2 := a.cacheKeyValue(ctx, cacheKey, key, idiom, 24*time.Hour)
-			logIf(err2, log.Errorf, ctx, "caching idiom")
+			logIf(err2, errf, ctx, "caching idiom")
 		}
 		return key, idiom, err
 	}
@@ -289,7 +288,7 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(ctx context.Context, idiom *Idi
 	key, err := a.GaeDatastoreAccessor.saveNewIdiom(ctx, idiom)
 	if err == nil {
 		err2 := a.recacheIdiom(ctx, key, idiom, false)
-		logIf(err2, log.Errorf, ctx, "saving new idiom")
+		logIf(err2, errf, ctx, "saving new idiom")
 	}
 	_ = memcache.DeleteMulti(ctx, []string{
 		"about-block-language-coverage",
@@ -304,12 +303,12 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(ctx context.Context, key *
 		htmlUncacheIdiomAndImpls(ctx, oldIdiomValue)
 	}
 
-	log.Infof(ctx, "Saving idiom #%v: %v", idiom.Id, idiom.Title)
+	logf(ctx, "Saving idiom #%v: %v", idiom.Id, idiom.Title)
 	err := a.GaeDatastoreAccessor.saveExistingIdiom(ctx, key, idiom)
 	if err == nil {
-		log.Infof(ctx, "Saved idiom #%v, version %v", idiom.Id, idiom.Version)
+		logf(ctx, "Saved idiom #%v, version %v", idiom.Id, idiom.Version)
 		err2 := a.recacheIdiom(ctx, key, idiom, false)
-		logIf(err2, log.Errorf, ctx, "saving existing idiom")
+		logIf(err2, errf, ctx, "saving existing idiom")
 	}
 	_ = memcache.DeleteMulti(ctx, []string{
 		"about-block-language-coverage",
@@ -321,14 +320,14 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(ctx context.Context, key *
 func (a *MemcacheDatastoreAccessor) stealthIncrementIdiomRating(ctx context.Context, idiomID int, delta int) (*datastore.Key, *Idiom, error) {
 	key, idiom, err := a.GaeDatastoreAccessor.stealthIncrementIdiomRating(ctx, idiomID, delta)
 	err2 := a.recacheIdiom(ctx, key, idiom, true)
-	logIf(err2, log.Errorf, ctx, "updating idiom rating")
+	logIf(err2, errf, ctx, "updating idiom rating")
 	return key, idiom, err
 }
 
 func (a *MemcacheDatastoreAccessor) stealthIncrementImplRating(ctx context.Context, idiomID, implID int, delta int) (key *datastore.Key, idiom *Idiom, newImplRating int, err error) {
 	key, idiom, newImplRating, err = a.GaeDatastoreAccessor.stealthIncrementImplRating(ctx, idiomID, implID, delta)
 	err2 := a.recacheIdiom(ctx, key, idiom, true)
-	logIf(err2, log.Errorf, ctx, "updating impl rating")
+	logIf(err2, errf, ctx, "updating impl rating")
 	return
 }
 
@@ -336,7 +335,7 @@ func (a *MemcacheDatastoreAccessor) getAllIdioms(ctx context.Context, limit int,
 	cacheKey := fmt.Sprintf("getAllIdioms(%v,%v)", limit, order)
 	data, cacheerr := a.readZipCache(ctx, cacheKey)
 	if cacheerr != nil {
-		log.Errorf(ctx, "Reading zip cache for %q: %v", cacheKey, cacheerr)
+		errf(ctx, "Reading zip cache for %q: %v", cacheKey, cacheerr)
 		// Ouch. Well, skip the cache if it's broken
 		return a.GaeDatastoreAccessor.getAllIdioms(ctx, limit, order)
 	}
@@ -345,11 +344,11 @@ func (a *MemcacheDatastoreAccessor) getAllIdioms(ctx context.Context, limit int,
 		keys, idioms, err := a.GaeDatastoreAccessor.getAllIdioms(ctx, limit, order)
 		if err == nil {
 			err2 := a.cacheZipPair(ctx, cacheKey, keys, idioms, 12*time.Hour)
-			logIf(err2, log.Errorf, ctx, "caching all idioms")
+			logIf(err2, errf, ctx, "caching all idioms")
 		}
 		return keys, idioms, err
 	}
-	log.Infof(ctx, "Found %q in cache :)", cacheKey)
+	logf(ctx, "Found %q in cache :)", cacheKey)
 	pair := data.(*pair)
 	keys := pair.First.([]*datastore.Key)
 	idioms := pair.Second.([]*Idiom)
@@ -378,9 +377,9 @@ func (a *MemcacheDatastoreAccessor) deleteIdiom(ctx context.Context, idiomID int
 	_, idiom, err := a.GaeDatastoreAccessor.getIdiom(ctx, idiomID)
 	if err == nil {
 		err2 := a.uncacheIdiom(ctx, idiom)
-		logIf(err2, log.Errorf, ctx, "deleting idiom")
+		logIf(err2, errf, ctx, "deleting idiom")
 	} else {
-		log.Errorf(ctx, "Failed to load idiom %d to uncache: %v", idiomID, err)
+		errf(ctx, "Failed to load idiom %d to uncache: %v", idiomID, err)
 	}
 
 	// Delete in datastore
@@ -392,7 +391,7 @@ func (a *MemcacheDatastoreAccessor) deleteImpl(ctx context.Context, idiomID int,
 	_, idiom, err := a.GaeDatastoreAccessor.getIdiom(ctx, idiomID)
 	if err == nil {
 		err2 := a.uncacheIdiom(ctx, idiom)
-		logIf(err2, log.Errorf, ctx, "deleting impl")
+		logIf(err2, errf, ctx, "deleting impl")
 	}
 
 	// Delete in datastore
@@ -412,10 +411,10 @@ func (a *MemcacheDatastoreAccessor) searchImplIDs(ctx context.Context, words, la
 
 func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(ctx context.Context, langs []string, limit int) ([]*Idiom, error) {
 	cacheKey := fmt.Sprintf("searchIdiomsByLangs(%v,%v)", langs, limit)
-	//log.Debugf(ctx, cacheKey)
+	//logf(ctx, cacheKey)
 	data, cacheerr := a.readCache(ctx, cacheKey)
 	if cacheerr != nil {
-		log.Errorf(ctx, cacheerr.Error())
+		errf(ctx, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
 		return a.GaeDatastoreAccessor.searchIdiomsByLangs(ctx, langs, limit)
 	}
@@ -425,7 +424,7 @@ func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(ctx context.Context, lan
 		if err == nil {
 			// Search results will have a 10mn lag after an idiom/impl creation/update.
 			err2 := a.cacheValue(ctx, cacheKey, idioms, 10*time.Minute)
-			logIf(err2, log.Errorf, ctx, "caching search results by langs")
+			logIf(err2, errf, ctx, "caching search results by langs")
 		}
 		return idioms, err
 	}
@@ -436,10 +435,10 @@ func (a *MemcacheDatastoreAccessor) searchIdiomsByLangs(ctx context.Context, lan
 
 func (a *MemcacheDatastoreAccessor) recentIdioms(ctx context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
 	cacheKey := fmt.Sprintf("recentIdioms(%v,%v,%v)", favoriteLangs, showOther, n)
-	//log.Debugf(ctx, cacheKey)
+	//logf(ctx, cacheKey)
 	data, cacheerr := a.readCache(ctx, cacheKey)
 	if cacheerr != nil {
-		log.Errorf(ctx, cacheerr.Error())
+		errf(ctx, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
 		return a.GaeDatastoreAccessor.recentIdioms(ctx, favoriteLangs, showOther, n)
 	}
@@ -449,7 +448,7 @@ func (a *MemcacheDatastoreAccessor) recentIdioms(ctx context.Context, favoriteLa
 		if err == nil {
 			// "Popular idioms" will have a 10mn lag after an idiom/impl creation.
 			err2 := a.cacheValue(ctx, cacheKey, idioms, 10*time.Minute)
-			logIf(err2, log.Errorf, ctx, "caching recent idioms")
+			logIf(err2, errf, ctx, "caching recent idioms")
 		}
 		return idioms, err
 	}
@@ -460,10 +459,10 @@ func (a *MemcacheDatastoreAccessor) recentIdioms(ctx context.Context, favoriteLa
 
 func (a *MemcacheDatastoreAccessor) popularIdioms(ctx context.Context, favoriteLangs []string, showOther bool, n int) ([]*Idiom, error) {
 	cacheKey := fmt.Sprintf("popularIdioms(%v,%v,%v)", favoriteLangs, showOther, n)
-	//log.Debugf(ctx, cacheKey)
+	//logf(ctx, cacheKey)
 	data, cacheerr := a.readCache(ctx, cacheKey)
 	if cacheerr != nil {
-		log.Errorf(ctx, cacheerr.Error())
+		errf(ctx, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
 		return a.GaeDatastoreAccessor.popularIdioms(ctx, favoriteLangs, showOther, n)
 	}
@@ -473,7 +472,7 @@ func (a *MemcacheDatastoreAccessor) popularIdioms(ctx context.Context, favoriteL
 		if err == nil {
 			// "Popular idioms" will have a 10mn lag after an idiom/impl creation.
 			err2 := a.cacheValue(ctx, cacheKey, idioms, 10*time.Minute)
-			logIf(err2, log.Errorf, ctx, "caching popular idioms")
+			logIf(err2, errf, ctx, "caching popular idioms")
 		}
 		return idioms, err
 	}
@@ -492,7 +491,7 @@ func (a *MemcacheDatastoreAccessor) getAppConfig(ctx context.Context) (Applicati
 	cacheKey := "getAppConfig()"
 	data, cacheerr := a.readCache(ctx, cacheKey)
 	if cacheerr != nil {
-		log.Errorf(ctx, cacheerr.Error())
+		errf(ctx, cacheerr.Error())
 		// Ouch. Well, skip the cache if it's broken
 		return a.GaeDatastoreAccessor.getAppConfig(ctx)
 	}
@@ -500,9 +499,9 @@ func (a *MemcacheDatastoreAccessor) getAppConfig(ctx context.Context) (Applicati
 		// Not in the cache. Then fetch the real datastore data. And cache it.
 		appConfig, err := a.GaeDatastoreAccessor.getAppConfig(ctx)
 		if err == nil {
-			log.Infof(ctx, "Retrieved ApplicationConfig (Toggles) from Datastore")
+			logf(ctx, "Retrieved ApplicationConfig (Toggles) from Datastore")
 			err2 := a.cacheValue(ctx, cacheKey, appConfig, 24*time.Hour)
-			logIf(err2, log.Errorf, ctx, "caching app config")
+			logIf(err2, errf, ctx, "caching app config")
 		}
 		return appConfig, err
 	}
@@ -539,7 +538,7 @@ func (a *MemcacheDatastoreAccessor) revert(ctx context.Context, idiomID int, ver
 		return idiom, err
 	}
 	err2 := a.uncacheIdiom(ctx, idiom)
-	logIf(err2, log.Errorf, ctx, "uncaching idiom")
+	logIf(err2, errf, ctx, "uncaching idiom")
 	return idiom, err
 }
 
@@ -557,7 +556,7 @@ func (a *MemcacheDatastoreAccessor) historyRestore(ctx context.Context, idiomID 
 	}
 
 	errUCI := a.uncacheIdiom(ctx, idiom)
-	logIf(errUCI, log.Errorf, ctx, "uncaching idiom")
+	logIf(errUCI, errf, ctx, "uncaching idiom")
 	return idiom, err
 }
 
@@ -589,7 +588,7 @@ func (a *MemcacheDatastoreAccessor) getMessagesForUser(ctx context.Context, user
 		keys, messages, err := a.GaeDatastoreAccessor.getMessagesForUser(ctx, username)
 		if err == nil {
 			err2 := a.cachePair(ctx, cacheKey, keys, messages, 2*time.Hour)
-			logIf(err2, log.Errorf, ctx, "caching user messages")
+			logIf(err2, errf, ctx, "caching user messages")
 		}
 		return keys, messages, err
 	}
@@ -645,7 +644,7 @@ func (a *MemcacheDatastoreAccessor) cacheZipValue(ctx context.Context, cacheKey 
 
 	err := enc.Encode(&data)
 	if err != nil {
-		log.Debugf(ctx, "Failed encoding for cache[%v] : %v", cacheKey, err)
+		logf(ctx, "Failed encoding for cache[%v] : %v", cacheKey, err)
 		return err
 	}
 
@@ -664,7 +663,7 @@ func (a *MemcacheDatastoreAccessor) cacheZipValue(ctx context.Context, cacheKey 
 	if zipbuffer.Len() > 1*MB {
 		return fmt.Errorf("Not caching %q: %dkB (gzipped) is too large", cacheKey, zipbuffer.Len()/KB)
 	}
-	log.Debugf(ctx, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), buffer.Len(), cacheKey)
+	logf(ctx, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), buffer.Len(), cacheKey)
 
 	cacheItem := &memcache.Item{
 		Key:        cacheKey,
@@ -674,9 +673,9 @@ func (a *MemcacheDatastoreAccessor) cacheZipValue(ctx context.Context, cacheKey 
 	// Set the item, unconditionally
 	err = memcache.Set(ctx, cacheItem)
 	if err != nil {
-		log.Debugf(ctx, "Failed setting cache[%v] : %v", cacheKey, err)
+		logf(ctx, "Failed setting cache[%v] : %v", cacheKey, err)
 	} else {
-		// log.Debugf(ctx, "Successfully set cache[%v]", cacheKey)
+		// logf(ctx, "Successfully set cache[%v]", cacheKey)
 	}
 	return err
 }

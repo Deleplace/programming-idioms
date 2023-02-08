@@ -9,7 +9,6 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"google.golang.org/appengine/v2/log"
 	"google.golang.org/appengine/v2/user"
 )
 
@@ -53,7 +52,7 @@ func readUserProfile(r *http.Request) UserProfile {
 	}
 	if u.Nickname != "" || len(u.FavoriteLanguages) > 0 {
 		ctx := r.Context()
-		log.Infof(ctx, "%v", u)
+		logf(ctx, "%v", u)
 	}
 	return u
 }
@@ -95,7 +94,6 @@ func setLanguagesCookie(w http.ResponseWriter, langs string) http.Cookie {
 	return newCookie
 }
 
-//
 // This URL will display homepage, and set soft profile cookies.
 // That way users may transfer preferences to another browser,
 // by emailing themselves or otherwise copy-pasting the URL.
@@ -103,7 +101,6 @@ func setLanguagesCookie(w http.ResponseWriter, langs string) http.Cookie {
 // "nickname" is optional.
 //
 // "langs" parameter must be an underscore-separated list.
-//
 func bookmarkableUserURL(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
 	userProfile := readUserProfile(r)

@@ -12,7 +12,6 @@ import (
 
 	"google.golang.org/appengine/v2/blobstore"
 	"google.golang.org/appengine/v2/datastore"
-	"google.golang.org/appengine/v2/log"
 )
 
 // GaeDatastoreAccessor is a dataAccessor that works on the Google App Engine Datastore
@@ -120,7 +119,7 @@ func (a *GaeDatastoreAccessor) revert(ctx context.Context, idiomID int, version 
 	if histories[0].Version != version {
 		return nil, PiErrorf(http.StatusBadRequest, "Can't revert idiom %v: last version is not %v", idiomID, version)
 	}
-	log.Infof(ctx, "Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
+	logf(ctx, "Reverting idiom %v from version %v to version %v", idiomID, histories[0].Version, histories[1].Version)
 	idiomKey := newIdiomKey(ctx, idiomID)
 	idiom := &histories[1].Idiom
 	_, err = datastore.Put(ctx, idiomKey, idiom)
@@ -166,7 +165,7 @@ func (a *GaeDatastoreAccessor) historyRestore(ctx context.Context, idiomID int, 
 	}
 	currentVersion := idiom.Version
 	newVersion := idiom.Version + 1
-	log.Infof(ctx, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
+	logf(ctx, "Restoring idiom %v version %v : overwriting version %v, creating new version %v", idiomID, version, currentVersion, newVersion)
 
 	historyIdiom.Version = currentVersion // will be incremented
 	historyIdiom.EditSummary = fmt.Sprintf("Restored version %d: %s", version, why)
@@ -192,26 +191,26 @@ var historyDelayer = delayFunc("save-history-item", func(ctx context.Context, id
 	if err != nil {
 		return err
 	}
-	log.Infof(ctx, "Saving history v%d for idiom %d %q", historyItem.Version, historyItem.Idiom.Id, historyItem.Idiom.Title)
+	logf(ctx, "Saving history v%d for idiom %d %q", historyItem.Version, historyItem.Idiom.Id, historyItem.Idiom.Title)
 
 	if historyItem.Version <= 1 {
 		// This is supposed to be the very first version for this idiom ID.
 		// Unless there is some clutter left from a previously delete idiom?
 		obsoleteVersionKeys, obsoleteVersions, err := dao.getIdiomHistoryList(ctx, historyItem.Idiom.Id)
 		if err != nil {
-			log.Errorf(ctx, "checking for obsolete history versions of idiom %d: %v", historyItem.Idiom.Id, err)
+			errf(ctx, "checking for obsolete history versions of idiom %d: %v", historyItem.Idiom.Id, err)
 		}
 		if len(obsoleteVersionKeys) > 0 {
-			log.Errorf(ctx, "Found %d obsolete history versions for idiom %d. Will delete them now.", len(obsoleteVersions), historyItem.Idiom.Id)
+			errf(ctx, "Found %d obsolete history versions for idiom %d. Will delete them now.", len(obsoleteVersions), historyItem.Idiom.Id)
 			if nk, nv := len(obsoleteVersionKeys), len(obsoleteVersions); nk != nv {
-				log.Errorf(ctx, "Expected same numbers of Keys and Versions, got %d and %d", nk, nv)
+				errf(ctx, "Expected same numbers of Keys and Versions, got %d and %d", nk, nv)
 			}
 			for i, k := range obsoleteVersionKeys {
 				v := obsoleteVersions[i]
-				log.Infof(ctx, "Deleting obsolete history version %d (%v) for idiom %d", v.Version, v.VersionDate, historyItem.Idiom.Id)
+				logf(ctx, "Deleting obsolete history version %d (%v) for idiom %d", v.Version, v.VersionDate, historyItem.Idiom.Id)
 				err := datastore.Delete(ctx, k)
 				if err != nil {
-					log.Errorf(ctx, "deleting obsolete history version %d (%v) for idiom %d: %v", v.Version, v.VersionDate, historyItem.Idiom.Id, err)
+					errf(ctx, "deleting obsolete history version %d (%v) for idiom %d: %v", v.Version, v.VersionDate, historyItem.Idiom.Id, err)
 					// Keep going though
 				}
 			}
@@ -360,7 +359,7 @@ func (a *GaeDatastoreAccessor) deleteIdiom(ctx context.Context, idiomID int, why
 	// Remove from text search indexes
 	err = a.unindex(ctx, idiom)
 	if err != nil {
-		log.Errorf(ctx, "Failed to unindex idiom %d: %v", idiomID, err)
+		errf(ctx, "Failed to unindex idiom %d: %v", idiomID, err)
 	}
 	return datastore.Delete(ctx, key)
 	// The why param is ignored for now, because idiom doesn't exist anymore.
@@ -543,7 +542,7 @@ func (a *GaeDatastoreAccessor) randomIdiomHaving(ctx context.Context, havingLang
 	if err != nil {
 		return nil, nil, err
 	}
-	log.Debugf(ctx, "Found %d idioms having %s", count, havingLang)
+	logf(ctx, "Found %d idioms having %s", count, havingLang)
 	if count == 0 {
 		return nil, nil, fmt.Errorf("No implementations found in language [%s]", havingLang)
 	}
@@ -557,7 +556,7 @@ func (a *GaeDatastoreAccessor) randomIdiomHaving(ctx context.Context, havingLang
 	if len(keys) == 0 {
 		return nil, nil, fmt.Errorf("No idiom found for lang %s :|", havingLang)
 	}
-	log.Debugf(ctx, "Fetched 1 idiom having %s", havingLang)
+	logf(ctx, "Fetched 1 idiom having %s", havingLang)
 	return keys[0], idioms[0], err
 }
 
@@ -682,7 +681,7 @@ func (a *GaeDatastoreAccessor) getMessagesForUser(ctx context.Context, username 
 	}
 	_, err = datastore.PutMulti(ctx, keys, messages)
 	if err != nil {
-		log.Warningf(ctx, "Could not save messages view dates: %v", err)
+		errf(ctx, "Could not save messages view dates: %v", err)
 	}
 
 	return keys, messages, err

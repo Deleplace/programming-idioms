@@ -60,16 +60,16 @@ func initTemplates() (*template.Template, error) {
 	}
 	t = t.Funcs(funcMap)
 	folders := []string{
-		"template",
-		"template/page",
-		"template/page/about",
-		"template/page/admin",
-		"template/page/hybrid",
-		"template/ajax-block",
-		"template/content/widget",
-		"template/content/block",
-		"template/header",
-		"template/footer",
+		"web/appengine/template",
+		"web/appengine/template/page",
+		"web/appengine/template/page/about",
+		"web/appengine/template/page/admin",
+		"web/appengine/template/page/hybrid",
+		"web/appengine/template/ajax-block",
+		"web/appengine/template/content/widget",
+		"web/appengine/template/content/block",
+		"web/appengine/template/header",
+		"web/appengine/template/footer",
 	}
 	for _, f := range folders {
 		t, err = t.ParseGlob(f + "/*.html")

@@ -7,7 +7,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/idioms"
 	"github.com/gorilla/mux"
 	"google.golang.org/appengine/v2/datastore"
-	"google.golang.org/appengine/v2/log"
 )
 
 // Let visitors "flag" an inappropriate content, i.e. notify admins.
@@ -50,7 +49,7 @@ func ajaxImplFlag(w http.ResponseWriter, r *http.Request) error {
 	rationale := r.FormValue("rationale")
 	nickname := lookForNickname(r)
 
-	log.Infof(ctx, "Flagging idiom %v version %v impl %v because: %q", idiomIDStr, idiomVersionStr, implIDStr, rationale)
+	logf(ctx, "Flagging idiom %v version %v impl %v because: %q", idiomIDStr, idiomVersionStr, implIDStr, rationale)
 
 	flag := FlaggedContent{
 		IdiomID:      String2Int(idiomIDStr),
@@ -63,10 +62,10 @@ func ajaxImplFlag(w http.ResponseWriter, r *http.Request) error {
 	ikey := datastore.NewIncompleteKey(ctx, "FlaggedContent", nil)
 	key, err := datastore.Put(ctx, ikey, &flag)
 	if err != nil {
-		log.Errorf(ctx, "saving FlaggedContent: %v", err)
+		errf(ctx, "saving FlaggedContent: %v", err)
 		return PiErrorf(http.StatusInternalServerError, "Could not save flagged content data")
 	}
-	log.Infof(ctx, "Saved content flag %s", key.Encode())
+	logf(ctx, "Saved content flag %s", key.Encode())
 	return nil
 }
 
@@ -113,10 +112,10 @@ func adminListFlaggedContent(w http.ResponseWriter, r *http.Request) error {
 			if found {
 				line.Impl = impl
 			} else {
-				log.Errorf(ctx, "impl %d not found in idiom %d v%d", report.ImplID, idiomHistory.Id, idiomHistory.Version)
+				errf(ctx, "impl %d not found in idiom %d v%d", report.ImplID, idiomHistory.Id, idiomHistory.Version)
 			}
 		} else {
-			log.Errorf(ctx, "loading idiom %d history v%d for impl %d: %v", report.IdiomID, report.IdiomVersion, report.ImplID, err)
+			errf(ctx, "loading idiom %d history v%d for impl %d: %v", report.IdiomID, report.IdiomVersion, report.ImplID, err)
 		}
 
 		table = append(table, line)
@@ -152,17 +151,17 @@ func ajaxAdminFlagResolve(w http.ResponseWriter, r *http.Request) error {
 		return PiErrorf(http.StatusNotFound, "Flagged contents %q no longer exists", flagKeyStr)
 	}
 	if err != nil {
-		log.Errorf(ctx, "retrieving FlaggegContent: %v", err)
+		errf(ctx, "retrieving FlaggegContent: %v", err)
 		return PiErrorf(http.StatusInternalServerError, "Could not retrieve Flagged Contents entry :(")
 	}
 	flag.Resolved = true
 	flag.ResolveDate = time.Now()
 	_, err = datastore.Put(ctx, flagKey, &flag)
 	if err != nil {
-		log.Errorf(ctx, "saving FlaggedContent: %v", err)
+		errf(ctx, "saving FlaggedContent: %v", err)
 		return PiErrorf(http.StatusInternalServerError, "Could not save flagged content data")
 	}
-	log.Infof(ctx, "Saved content flag %s", flagKey.Encode())
+	logf(ctx, "Saved content flag %s", flagKey.Encode())
 
 	return nil
 }

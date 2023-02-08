@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/idioms"
-	"google.golang.org/appengine/v2/log"
 )
 
 func idiomDelete(w http.ResponseWriter, r *http.Request) error {
@@ -52,7 +51,7 @@ func implDelete(w http.ResponseWriter, r *http.Request) error {
 
 	err2 := unindexImpl(ctx, idiomID, implID)
 	if err2 != nil {
-		log.Errorf(ctx, "Unindexing impl %d from idiom %d: %v", implID, idiomID, err2)
+		errf(ctx, "Unindexing impl %d from idiom %d: %v", implID, idiomID, err2)
 		// But keep going
 	}
 

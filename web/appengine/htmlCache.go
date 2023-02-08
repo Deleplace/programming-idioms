@@ -12,7 +12,6 @@ import (
 	"context"
 
 	"google.golang.org/appengine/v2/delay"
-	"google.golang.org/appengine/v2/log"
 	"google.golang.org/appengine/v2/memcache"
 	"google.golang.org/appengine/v2/taskqueue"
 )
@@ -65,15 +64,15 @@ func htmlCacheZipRead(ctx context.Context, key string) []byte {
 	zipbuffer := bytes.NewBuffer(zipdata)
 	zipreader, err := gzip.NewReader(zipbuffer)
 	if err != nil {
-		log.Errorf(ctx, "Reading zip memcached entry %q: %v", key, err)
+		errf(ctx, "Reading zip memcached entry %q: %v", key, err)
 		// Ignore failure
 		return nil
 	}
 	buffer, err := ioutil.ReadAll(zipreader)
 	if err != nil {
-		log.Errorf(ctx, "Reading zip memcached entry %q: %v", key, err)
+		errf(ctx, "Reading zip memcached entry %q: %v", key, err)
 	}
-	log.Debugf(ctx, "Reading %d bytes out of %d gzip bytes for entry %q", len(buffer), len(zipdata), key)
+	logf(ctx, "Reading %d bytes out of %d gzip bytes for entry %q", len(buffer), len(zipdata), key)
 	return buffer
 }
 
@@ -83,12 +82,12 @@ func htmlCacheZipWrite(ctx context.Context, key string, data []byte, duration ti
 	zipwriter := gzip.NewWriter(&zipbuffer)
 	_, err := zipwriter.Write(data)
 	if err != nil {
-		log.Errorf(ctx, "Writing zip memcached entry %q: %v", key, err)
+		errf(ctx, "Writing zip memcached entry %q: %v", key, err)
 		// Ignore failure
 		return
 	}
 	_ = zipwriter.Close()
-	log.Debugf(ctx, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), len(data), key)
+	logf(ctx, "Writing %d gzip bytes out of %d data bytes for entry %q", zipbuffer.Len(), len(data), key)
 	htmlCacheWrite(ctx, key, zipbuffer.Bytes(), duration)
 }
 
@@ -96,7 +95,7 @@ func htmlUncacheIdiomAndImpls(ctx context.Context, idiom *Idiom) {
 	//
 	// There are only two hard things in Computer Science: cache invalidation and naming things.
 	//
-	log.Infof(ctx, "Evicting HTML cached pages for idiom %d %q", idiom.Id, idiom.Title)
+	logf(ctx, "Evicting HTML cached pages for idiom %d %q", idiom.Id, idiom.Title)
 
 	cachekeys := make([]string, 0, 1+len(idiom.Implementations))
 	cachekeys = append(cachekeys, NiceIdiomRelativeURL(idiom))
@@ -105,14 +104,14 @@ func htmlUncacheIdiomAndImpls(ctx context.Context, idiom *Idiom) {
 	}
 	err := memcache.DeleteMulti(ctx, cachekeys)
 	if err != nil {
-		// log.Errorf(ctx, "Uncaching idiom %d: %v", idiom.Id, err)
+		// errf(ctx, "Uncaching idiom %d: %v", idiom.Id, err)
 		// A lot of impl HTML paages won't be in cache, which will cause
 		// en error. Never mind, just ignore.
 	}
 }
 
 func htmlRecacheNowAndTomorrow(ctx context.Context, idiomID int) error {
-	log.Debugf(ctx, "Creating html recache tasks for idiom %d", idiomID)
+	logf(ctx, "Creating html recache tasks for idiom %d", idiomID)
 	// These 2 task submissions may take several 10s of ms,
 	// thus we decide to submit them as a small batch.
 
@@ -137,10 +136,10 @@ var recacheHtmlIdiom, recacheHtmlImpl *delay.Function
 
 func init() {
 	recacheHtmlIdiom = delay.Func("recache-html-idiom", func(ctx context.Context, idiomID int) {
-		log.Infof(ctx, "Start recaching HTML for idiom %d", idiomID)
+		logf(ctx, "Start recaching HTML for idiom %d", idiomID)
 		_, idiom, err := dao.getIdiom(ctx, idiomID)
 		if err != nil {
-			log.Errorf(ctx, "recacheHtmlIdiom: %v", err)
+			errf(ctx, "recacheHtmlIdiom: %v", err)
 			return
 		}
 
@@ -152,7 +151,7 @@ func init() {
 		}
 		err = generateIdiomDetailPage(ctx, &buffer, vars)
 		if err != nil {
-			log.Errorf(ctx, "recacheHtmlIdiom: %v", err)
+			errf(ctx, "recacheHtmlIdiom: %v", err)
 			return
 		}
 		htmlCacheWrite(ctx, path, buffer.Bytes(), 24*time.Hour)
@@ -173,7 +172,7 @@ func init() {
 		implID int,
 		implLang string,
 	) {
-		log.Infof(ctx, "Recaching HTML for %s", implPath)
+		logf(ctx, "Recaching HTML for %s", implPath)
 		// TODO call idiomDetail(fakeWriter, fakeRequest)
 
 		var buffer bytes.Buffer
@@ -185,7 +184,7 @@ func init() {
 		}
 		err := generateIdiomDetailPage(ctx, &buffer, vars)
 		if err != nil {
-			log.Errorf(ctx, "recacheHtmlImpl: %v", err)
+			errf(ctx, "recacheHtmlImpl: %v", err)
 			return
 		}
 		htmlCacheWrite(ctx, implPath, buffer.Bytes(), 24*time.Hour)

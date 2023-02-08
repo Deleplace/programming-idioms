@@ -14,7 +14,6 @@ import (
 
 	"google.golang.org/appengine/v2"
 	"google.golang.org/appengine/v2/datastore"
-	"google.golang.org/appengine/v2/log"
 	gaesearch "google.golang.org/appengine/v2/search"
 )
 
@@ -123,7 +122,7 @@ func (lines cheatSheetLineDocs) Less(i, j int) bool {
 }
 
 func indexIdiomFullText(ctx context.Context, idiom *Idiom, idiomKey *datastore.Key) error {
-	log.Infof(ctx, "Reindex text of idiom %d %q", idiom.Id, idiom.Title)
+	logf(ctx, "Reindex text of idiom %d %q", idiom.Id, idiom.Title)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return err
@@ -148,7 +147,7 @@ func indexIdiomFullText(ctx context.Context, idiom *Idiom, idiomKey *datastore.K
 
 	// Also index each impl, so we know what to highlight.
 	M := len(idiom.Implementations)
-	log.Infof(ctx, "Reindex %d impls of idiom %d", M, idiom.Id)
+	logf(ctx, "Reindex %d impls of idiom %d", M, idiom.Id)
 	indexImpl, err := gaesearch.Open("impls")
 	if err != nil {
 		return err
@@ -171,7 +170,7 @@ func indexIdiomFullText(ctx context.Context, idiom *Idiom, idiomKey *datastore.K
 }
 
 func indexIdiomCheatsheets(ctx context.Context, idiom *Idiom) error {
-	log.Infof(ctx, "Reindex cheatsheet of idiom %d %q", idiom.Id, idiom.Title)
+	logf(ctx, "Reindex cheatsheet of idiom %d %q", idiom.Id, idiom.Title)
 	index, err := gaesearch.Open("cheatsheets")
 	if err != nil {
 		return err
@@ -201,12 +200,12 @@ func indexIdiomCheatsheets(ctx context.Context, idiom *Idiom) error {
 
 	if err != nil {
 		if multierr, ok := err.(appengine.MultiError); ok {
-			log.Warningf(ctx, "PutMulti returned %d errors", len(multierr))
+			errf(ctx, "PutMulti returned %d errors", len(multierr))
 			for i, singleerr := range multierr {
-				log.Warningf(ctx, "  error %d: %v", i, singleerr)
+				errf(ctx, "  error %d: %v", i, singleerr)
 			}
 		} else {
-			log.Warningf(ctx, "Can't convert PutMulti error into []error")
+			errf(ctx, "Can't convert PutMulti error into []error")
 		}
 	}
 
@@ -214,7 +213,7 @@ func indexIdiomCheatsheets(ctx context.Context, idiom *Idiom) error {
 }
 
 func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
-	log.Infof(ctx, "Unindexing everything (from the text search indexes)")
+	logf(ctx, "Unindexing everything (from the text search indexes)")
 	start := time.Now()
 
 	for _, indexName := range []string{
@@ -222,7 +221,7 @@ func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
 		"impls",
 		"cheatsheets",
 	} {
-		log.Infof(ctx, "Unindexing items of [%v]", indexName)
+		logf(ctx, "Unindexing items of [%v]", indexName)
 		index, err := gaesearch.Open(indexName)
 		if err != nil {
 			return err
@@ -235,7 +234,7 @@ func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
 				break
 			}
 			if err != nil {
-				log.Errorf(ctx, "Error getting next indexed object to unindex: %v", err)
+				errf(ctx, "Error getting next indexed object to unindex: %v", err)
 				return err
 			}
 			docIDs = append(docIDs, docID)
@@ -254,12 +253,12 @@ func (a *GaeDatastoreAccessor) unindexAll(ctx context.Context) error {
 		}
 	}
 
-	log.Infof(ctx, "Unindexed everything in %v", time.Since(start))
+	logf(ctx, "Unindexed everything in %v", time.Since(start))
 	return nil
 }
 
 func (a *GaeDatastoreAccessor) unindex(ctx context.Context, idiom *Idiom) error {
-	log.Infof(ctx, "Unindexing idiom %d", idiom.Id)
+	logf(ctx, "Unindexing idiom %d", idiom.Id)
 
 	docID := strconv.Itoa(idiom.Id)
 	index, err := gaesearch.Open("idioms")
@@ -271,12 +270,12 @@ func (a *GaeDatastoreAccessor) unindex(ctx context.Context, idiom *Idiom) error 
 		return err
 	}
 
-	log.Infof(ctx, "Unindexing %d implementations from idiom %d", len(idiom.Implementations), idiom.Id)
+	logf(ctx, "Unindexing %d implementations from idiom %d", len(idiom.Implementations), idiom.Id)
 	for _, impl := range idiom.Implementations {
-		log.Infof(ctx, "Unindexing idiom %d impl %d", idiom.Id, impl.Id)
+		logf(ctx, "Unindexing idiom %d impl %d", idiom.Id, impl.Id)
 		err := unindexImpl(ctx, idiom.Id, impl.Id)
 		if err != nil {
-			log.Errorf(ctx, "Unindexing idiom %d impl %d: %v", idiom.Id, impl.Id, err)
+			errf(ctx, "Unindexing idiom %d impl %d: %v", idiom.Id, impl.Id, err)
 			// Keep going though
 		}
 	}
@@ -328,7 +327,7 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(ctx context.Cont
 	if len(typedLangs) == 1 {
 		// Exactly 1 term is a lang: assume user really wants this lang
 		lang := typedLangs[0]
-		log.Debugf(ctx, "User is looking for results in [%v]", lang)
+		logf(ctx, "User is looking for results in [%v]", lang)
 		// 1) Impls in lang, containing all words
 		implRetriever := func() ([]string, error) {
 			var keystrings []string
@@ -376,7 +375,7 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(ctx context.Cont
 		go func() {
 			keyStrings, err := retriever()
 			if err != nil {
-				log.Errorf(ctx, "problem fetching search results: %v", err)
+				errf(ctx, "problem fetching search results: %v", err)
 				ch <- nil
 			} else {
 				ch <- keyStrings
@@ -397,12 +396,12 @@ harvestloop:
 				idiomKeyStrings = append(idiomKeyStrings, kstr)
 				seenIdiomKeyStrings[kstr] = true
 				if len(idiomKeyStrings) == limit {
-					log.Debugf(ctx, "%d new results, %d dupes, stopping here.", m, dupes)
+					logf(ctx, "%d new results, %d dupes, stopping here.", m, dupes)
 					break harvestloop
 				}
 			}
 		}
-		log.Debugf(ctx, "%d new results, %d dupes.", m, dupes)
+		logf(ctx, "%d new results, %d dupes.", m, dupes)
 	}
 
 	// TODO use favoriteLangs
@@ -501,7 +500,7 @@ func executeImplTextSearchQuery(ctx context.Context, query string, limit int) (i
 }
 
 func executeIdiomKeyTextSearchQuery(ctx context.Context, query string, limit int) (keystrings []string, err error) {
-	// log.Infof(ctx, query)
+	// logf(ctx, query)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return nil, err
@@ -531,12 +530,12 @@ func executeIdiomKeyTextSearchQuery(ctx context.Context, query string, limit int
 		idiomKeyString := newIdiomKey(ctx, idiomID).Encode()
 		idiomKeyStrings = append(idiomKeyStrings, idiomKeyString)
 	}
-	//log.Debugf(ctx, "Query [%v] yields %d results.", query, len(idiomKeyStrings))
+	//logf(ctx, "Query [%v] yields %d results.", query, len(idiomKeyStrings))
 	return idiomKeyStrings, nil
 }
 
 func executeIdiomTextSearchQuery(ctx context.Context, query string, limit int) ([]*Idiom, error) {
-	// log.Infof(ctx, query)
+	// logf(ctx, query)
 	index, err := gaesearch.Open("idioms")
 	if err != nil {
 		return nil, err
@@ -664,7 +663,7 @@ func searchRandomImplsForLang(ctx context.Context, lang string, n int) ([]*Idiom
 		}
 		results = append(results, singleton)
 	}
-	log.Debugf(ctx, "searchRandomImplsForLang handling %d %s impls", len(results), lang)
+	logf(ctx, "searchRandomImplsForLang handling %d %s impls", len(results), lang)
 	rand.Shuffle(len(results), func(i, j int) {
 		results[i], results[j] = results[j], results[i]
 	})
@@ -758,7 +757,7 @@ func searchMissingDocDemoForLang(ctx context.Context, lang string, n int) (bmdd 
 		}
 		if doc.Protected == "true" {
 			// Some idioms e.g. #149 "Rescue the princess" are not open to contributions.
-			log.Infof(ctx, "Skipping protected idiom %s impl %s", doc.IdiomID, doc.ImplID)
+			logf(ctx, "Skipping protected idiom %s impl %s", doc.IdiomID, doc.ImplID)
 			continue
 		}
 		singleton := &IdiomSingleton{
@@ -866,7 +865,7 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi back
 		}
 		haveLang[string(doc.IdiomID)] = true
 	}
-	//log.Infof(ctx, "Found idioms having %s: %v", lang, haveLang)
+	//logf(ctx, "Found idioms having %s: %v", lang, haveLang)
 
 	// 2)
 	idiomIDsWithoutLang := make([]string, 0, 300)
@@ -902,7 +901,7 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi back
 		}
 		idiomIDsWithoutLang = append(idiomIDsWithoutLang, idiomID)
 	}
-	//log.Infof(ctx, "Found idioms without %s: %v", lang, idiomIDsWithoutLang)
+	//logf(ctx, "Found idioms without %s: %v", lang, idiomIDsWithoutLang)
 	bmi.Stats.CountIdiomsMissingImpl = len(idiomIDsWithoutLang)
 	bmi.Stats.CountIdiomsTotal = len(seen)
 
@@ -930,7 +929,7 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi back
 		var doc cheatSheetLineDoc
 		_, err := it.Next(&doc)
 		if err == gaesearch.Done {
-			log.Errorf(ctx, "couldn't find any cheatsheet data for idiom %s ??", idiomID)
+			errf(ctx, "couldn't find any cheatsheet data for idiom %s ??", idiomID)
 			continue
 		}
 		if err != nil {
@@ -942,6 +941,6 @@ func searchMissingImplForLang(ctx context.Context, lang string, n int) (bmi back
 			LeadParagraph: string(doc.IdiomLeadParagraph),
 		}
 	}
-	log.Infof(ctx, "Found idioms without %s: %v", lang, idiomIDsWithoutLang)
+	logf(ctx, "Found idioms without %s: %v", lang, idiomIDsWithoutLang)
 	return bmi, nil
 }

@@ -12,8 +12,6 @@ import (
 	"context"
 
 	"github.com/gorilla/mux"
-
-	"google.golang.org/appengine/v2/log"
 )
 
 // IdiomDetailFacade is the Facade for the Idiom Detail page.
@@ -33,11 +31,11 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 
 	pushResources := func() {
 		if _, err := r.Cookie("v"); err == nil {
-			log.Infof(ctx, "Returning visitor: no resource server push needed.")
+			logf(ctx, "Returning visitor: no resource server push needed.")
 		} else {
 			// TODO enable when page-idiom-detail-minimal is default, and cookie "v" is in use
 			//
-			// log.Infof(ctx, "New visitor: server push resources!")
+			// logf(ctx, "New visitor: server push resources!")
 			// prefix := hostPrefix() + themeDirectory()
 			// var links bytes.Buffer
 			// fmt.Fprintf(&links, "<%s>; rel=preload; as=%s, ", prefix+"/js/pages/idiom-detail-minimal.js", "script")
@@ -69,11 +67,11 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 		path := r.URL.RequestURI()
 		if cachedPage := htmlCacheRead(ctx, path); cachedPage != nil {
 			// Using the whole HTML block from Memcache
-			log.Debugf(ctx, "%s from memcache!", path)
+			logf(ctx, "%s from memcache!", path)
 			_, err := w.Write(cachedPage)
 			return err
 		}
-		log.Debugf(ctx, "%s not in memcache.", path)
+		logf(ctx, "%s not in memcache.", path)
 
 		var buffer bytes.Buffer
 		err := generateIdiomDetailPage(ctx, &buffer, vars)
@@ -149,7 +147,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	includeNonFav := seeNonFavorite(r)
-	log.Debugf(ctx, "Reorder impls start...")
+	logf(ctx, "Reorder impls start...")
 	implFavoriteLanguagesFirstWithOrder(idiom, favlangs, selectedImplLang, includeNonFav)
 
 	// Selected impl as very first element
@@ -162,7 +160,7 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 			break
 		}
 	}
-	log.Debugf(ctx, "Reorder impls end.")
+	logf(ctx, "Reorder impls end.")
 
 	if implLangInURL != "" && strings.ToLower(selectedImplLang) != strings.ToLower(implLangInURL) {
 		// Maybe an accident,
@@ -173,9 +171,9 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if toggles.Any("idiomVotingUp", "implVotingUp") {
-		log.Debugf(ctx, "Decorate with votes start...")
+		logf(ctx, "Decorate with votes start...")
 		daoVotes.decorateIdiom(ctx, idiom, userProfile.Nickname)
-		log.Debugf(ctx, "Decorate with votes end.")
+		logf(ctx, "Decorate with votes end.")
 	}
 
 	pageTitle := idiom.Title
@@ -210,10 +208,10 @@ func idiomDetail(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	pushResources()
-	log.Debugf(ctx, "ExecuteTemplate start...")
+	logf(ctx, "ExecuteTemplate start...")
 	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
 	// err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
-	log.Debugf(ctx, "ExecuteTemplate end.")
+	logf(ctx, "ExecuteTemplate end.")
 	return err
 }
 
@@ -307,10 +305,10 @@ func generateIdiomDetailPage(ctx context.Context, w io.Writer, vars map[string]s
 		SelectedImplLang: selectedImplLang,
 	}
 
-	log.Debugf(ctx, "ExecuteTemplate start...")
+	logf(ctx, "ExecuteTemplate start...")
 	err = templates.ExecuteTemplate(w, "page-idiom-detail", data)
 	// err = templates.ExecuteTemplate(w, "page-idiom-detail-minimal", data)
-	log.Debugf(ctx, "ExecuteTemplate end.")
+	logf(ctx, "ExecuteTemplate end.")
 	return err
 }
 

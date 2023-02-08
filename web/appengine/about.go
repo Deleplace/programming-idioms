@@ -8,8 +8,6 @@ import (
 	. "github.com/Deleplace/programming-idioms/idioms"
 
 	"context"
-
-	"google.golang.org/appengine/v2/log"
 )
 
 // AboutFacade is the Facade for the About page.
@@ -75,17 +73,17 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 
 	if cachedHTML := htmlCacheRead(ctx, "/about-block-all-idioms"); cachedHTML != nil {
 		// Using the whole HTML block from Memcache
-		log.Debugf(ctx, "%s from memcache!", "/about-block-all-idioms")
+		logf(ctx, "%s from memcache!", "/about-block-all-idioms")
 		_, err := w.Write(cachedHTML)
 		return err
 	}
 
-	log.Debugf(ctx, "retrieveAllIdioms start...")
+	logf(ctx, "retrieveAllIdioms start...")
 	allIdioms, err := retrieveAllIdioms(r, false)
 	if err != nil {
 		return err
 	}
-	log.Debugf(ctx, "retrieveAllIdioms end.")
+	logf(ctx, "retrieveAllIdioms end.")
 
 	data := AboutFacade{
 		PageMeta: PageMeta{
@@ -96,9 +94,9 @@ func ajaxAboutAllIdioms(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	var buffer bytes.Buffer
-	log.Debugf(ctx, "block-about-all-idioms templating start...")
+	logf(ctx, "block-about-all-idioms templating start...")
 	err = templates.ExecuteTemplate(&buffer, "block-about-all-idioms", data)
-	log.Debugf(ctx, "block-about-all-idioms templating end.")
+	logf(ctx, "block-about-all-idioms templating end.")
 	if err != nil {
 		return PiErrorf(http.StatusInternalServerError, "%v", err)
 	}
@@ -118,7 +116,7 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 	if len(favlangs) == 0 {
 		if coverageHTML := htmlCacheZipRead(ctx, "about-block-language-coverage"); coverageHTML != nil {
 			// Using the whole HTML block from Memcache
-			log.Debugf(ctx, "block-about-language-coverage from memcache!")
+			logf(ctx, "block-about-language-coverage from memcache!")
 			_, err := w.Write(coverageHTML)
 			return err
 		}
@@ -126,7 +124,7 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 
 	coverage, err := languageCoverage(ctx)
 	if err != nil {
-		log.Errorf(ctx, "Error generating language coverage: %v", err)
+		errf(ctx, "Error generating language coverage: %v", err)
 		return PiErrorf(http.StatusInternalServerError, "Couldn't generate language coverage")
 	}
 	favoritesFirstWithOrder(coverage.Languages, favlangs, coverage.LangImplCount, coverage.LangImplScore)
@@ -140,9 +138,9 @@ func ajaxAboutLanguageCoverage(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	var buffer bytes.Buffer
-	log.Debugf(ctx, "block-about-language-coverage templating start...")
+	logf(ctx, "block-about-language-coverage templating start...")
 	err = templates.ExecuteTemplate(&buffer, "block-about-language-coverage", data)
-	log.Debugf(ctx, "block-about-language-coverage templating end.")
+	logf(ctx, "block-about-language-coverage templating end.")
 	if err != nil {
 		return err
 	}
@@ -188,16 +186,16 @@ func languageCoverage(ctx context.Context) (cover CoverageFacade, err error) {
 	checked := map[int]map[string]int{}
 	langImplCount := map[string]int{}
 	langImplScore := map[string]int{}
-	log.Debugf(ctx, "Loading full idiom list...")
+	logf(ctx, "Loading full idiom list...")
 	_, idioms, err := dao.getAllIdioms(ctx, 799, "-ImplCount") // TODO change 799 ?!
 	if err != nil {
 		return cover, err
 	}
-	log.Debugf(ctx, "Full idiom list loaded.")
+	logf(ctx, "Full idiom list loaded.")
 	idiomIds := make([]int, len(idioms))
 	idiomTitles := make([]string, len(idioms))
 
-	log.Debugf(ctx, "Counting impls of each idiom...")
+	logf(ctx, "Counting impls of each idiom...")
 	for i, idiom := range idioms {
 		idiomIds[i] = idiom.Id
 		idiomTitles[i] = idiom.Title
@@ -223,7 +221,7 @@ func languageCoverage(ctx context.Context) (cover CoverageFacade, err error) {
 			langImplScore[impl.LanguageName] += score
 		}
 	}
-	log.Debugf(ctx, "Impls of each idiom counted.")
+	logf(ctx, "Impls of each idiom counted.")
 
 	cover = CoverageFacade{
 		IdiomIds:      idiomIds,

@@ -6,7 +6,6 @@ import (
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 	"github.com/gorilla/mux"
-	"google.golang.org/appengine/v2/log"
 )
 
 // API JSON endpoints for idioms data.
@@ -57,7 +56,7 @@ func jsonAllIdioms(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 	_, idioms, err := dao.getAllIdioms(ctx, 0, "Id")
 	if err != nil {
-		log.Errorf(ctx, "%v", err)
+		errf(ctx, "%v", err)
 		return PiErrorf(http.StatusInternalServerError, "Could not retrieve idioms.")
 	}
 	// TODO cache the JSON form

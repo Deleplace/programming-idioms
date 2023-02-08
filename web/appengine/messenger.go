@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"google.golang.org/appengine/v2/datastore"
-	"google.golang.org/appengine/v2/log"
 )
 
 func userMessageBoxAjax(w http.ResponseWriter, r *http.Request) error {
@@ -37,7 +36,7 @@ func userMessageBoxAjax(w http.ResponseWriter, r *http.Request) error {
 func dismissUserMessage(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 	keyStr := r.FormValue("key")
-	log.Infof(ctx, "Dismissing user message for key %v", keyStr)
+	logf(ctx, "Dismissing user message for key %v", keyStr)
 	key, err := datastore.DecodeKey(keyStr)
 	if err != nil {
 		return err
