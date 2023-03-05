@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
+	"cloud.google.com/go/datastore"
 	. "github.com/Deleplace/programming-idioms/idioms"
 	"github.com/gorilla/mux"
-	"google.golang.org/appengine/v2/datastore"
 )
 
 // Let visitors "flag" an inappropriate content, i.e. notify admins.
@@ -59,8 +59,8 @@ func ajaxImplFlag(w http.ResponseWriter, r *http.Request) error {
 		Rationale:    rationale,
 		UserNickname: nickname,
 	}
-	ikey := datastore.NewIncompleteKey(ctx, "FlaggedContent", nil)
-	key, err := datastore.Put(ctx, ikey, &flag)
+	ikey := datastore.IncompleteKey("FlaggedContent", nil)
+	key, err := dao.dsClient.Put(ctx, ikey, &flag)
 	if err != nil {
 		errf(ctx, "saving FlaggedContent: %v", err)
 		return PiErrorf(http.StatusInternalServerError, "Could not save flagged content data")
@@ -90,10 +90,10 @@ func adminListFlaggedContent(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 
 	var reports []FlaggedContent
-	keys, err := datastore.NewQuery("FlaggedContent").
+	q := datastore.NewQuery("FlaggedContent").
 		Order("-Timestamp").
-		Limit(100).
-		GetAll(ctx, &reports)
+		Limit(100)
+	keys, err := dao.dsClient.GetAll(ctx, q, &reports)
 	if err != nil {
 		return err
 	}
@@ -146,7 +146,7 @@ func ajaxAdminFlagResolve(w http.ResponseWriter, r *http.Request) error {
 
 	ctx := r.Context()
 	var flag FlaggedContent
-	err = datastore.Get(ctx, flagKey, &flag)
+	err = dao.dsClient.Get(ctx, flagKey, &flag)
 	if err == datastore.ErrNoSuchEntity {
 		return PiErrorf(http.StatusNotFound, "Flagged contents %q no longer exists", flagKeyStr)
 	}
@@ -156,7 +156,7 @@ func ajaxAdminFlagResolve(w http.ResponseWriter, r *http.Request) error {
 	}
 	flag.Resolved = true
 	flag.ResolveDate = time.Now()
-	_, err = datastore.Put(ctx, flagKey, &flag)
+	_, err = dao.dsClient.Put(ctx, flagKey, &flag)
 	if err != nil {
 		errf(ctx, "saving FlaggedContent: %v", err)
 		return PiErrorf(http.StatusInternalServerError, "Could not save flagged content data")

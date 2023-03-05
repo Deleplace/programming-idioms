@@ -12,8 +12,8 @@ import (
 
 	"context"
 
+	"cloud.google.com/go/datastore"
 	"google.golang.org/appengine/v2"
-	"google.golang.org/appengine/v2/datastore"
 	gaesearch "google.golang.org/appengine/v2/search"
 )
 
@@ -418,7 +418,7 @@ harvestloop:
 
 	// Fetch Idioms in a []Idiom
 	buffer := make([]Idiom, len(idiomKeys))
-	err = datastore.GetMulti(ctx, idiomKeys, buffer)
+	err = a.dsClient.GetMulti(ctx, idiomKeys, buffer)
 	// Convert []Idiom to []*Idiom
 	idioms := make([]*Idiom, len(buffer))
 	for i := range buffer {
@@ -567,7 +567,7 @@ func executeIdiomTextSearchQuery(ctx context.Context, query string, limit int) (
 	}
 	// Fetch Idioms in a []Idiom
 	buffer := make([]Idiom, len(idiomKeys))
-	err = datastore.GetMulti(ctx, idiomKeys, buffer)
+	err = dao.dsClient.GetMulti(ctx, idiomKeys, buffer)
 	// Convert []Idiom to []*Idiom
 	idioms := make([]*Idiom, len(buffer))
 	for i := range buffer {
@@ -586,7 +586,7 @@ func (a *GaeDatastoreAccessor) searchIdiomsByLangs(ctx context.Context, langs []
 	}
 	dsq = dsq.Order("-Rating").Limit(limit)
 	hits := make([]*Idiom, 0, 10)
-	if _, err := dsq.GetAll(ctx, &hits); err != nil {
+	if _, err := a.dsClient.GetAll(ctx, dsq, &hits); err != nil {
 		return nil, err
 	}
 	return hits, nil

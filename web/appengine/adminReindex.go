@@ -5,10 +5,11 @@ import (
 	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/idioms"
+	"google.golang.org/api/iterator"
 
 	"context"
 
-	"google.golang.org/appengine/v2/datastore"
+	"cloud.google.com/go/datastore"
 )
 
 func adminReindexAjax(w http.ResponseWriter, r *http.Request) error {
@@ -48,7 +49,7 @@ func init() {
 			}
 			q = q.Start(cursor)
 		}
-		iterator := q.Run(ctx)
+		it := dao.dsClient.Run(ctx, q)
 
 		reindexedIDs := make([]int, 0, reindexBatchSize)
 		defer func() {
@@ -57,8 +58,8 @@ func init() {
 
 		for i := 0; i < reindexBatchSize; i++ {
 			var idiom Idiom
-			key, err := iterator.Next(&idiom)
-			if err == datastore.Done {
+			key, err := it.Next(&idiom)
+			if err == iterator.Done {
 				logf(ctx, "Reindexing completed.")
 				return nil
 			} else if err != nil {
@@ -78,7 +79,7 @@ func init() {
 			reindexedIDs = append(reindexedIDs, idiom.Id)
 		}
 
-		cursor, err := iterator.Cursor()
+		cursor, err := it.Cursor()
 		if err != nil {
 			// ouch :(
 			return err

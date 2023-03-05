@@ -11,7 +11,7 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine/v2/datastore"
+	"cloud.google.com/go/datastore"
 	"google.golang.org/appengine/v2/memcache"
 )
 

@@ -303,11 +303,11 @@ func handleAjax(path string, h betterHandler) {
 		})
 }
 
-var datastoreDao = GaeDatastoreAccessor{}
+var datastoreDao, datastoreDaoErr = NewGaeDatastoreAccessor()
 var memcachedDao = MemcacheDatastoreAccessor{datastoreDao}
 var dao = memcachedDao
 
-var daoVotes = GaeVotesAccessor{}
+var daoVotes, daoVotesErr = NewGaeVotesAccessor()
 
 func parametersMissing(w http.ResponseWriter, r *http.Request, params ...string) error {
 	missing := []string{}

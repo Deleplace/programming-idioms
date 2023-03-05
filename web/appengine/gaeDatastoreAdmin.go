@@ -8,7 +8,7 @@ import (
 
 	"context"
 
-	"google.golang.org/appengine/v2/datastore"
+	"cloud.google.com/go/datastore"
 	"google.golang.org/appengine/v2/memcache"
 )
 
@@ -38,7 +38,8 @@ func adminResaveEntities(w http.ResponseWriter, r *http.Request) error {
 func resaveAllIdiomHistory(ctx context.Context) error {
 	defer memcache.Flush(ctx)
 	saved := 0
-	keys, err := datastore.NewQuery("IdiomHistory").KeysOnly().GetAll(ctx, nil)
+	q := datastore.NewQuery("IdiomHistory").KeysOnly()
+	keys, err := dao.dsClient.GetAll(ctx, q, nil)
 	if err != nil {
 		return err
 	}
@@ -54,11 +55,11 @@ func resaveAllIdiomHistory(ctx context.Context) error {
 			bunch = len(keys)
 		}
 		histories := make([]*IdiomHistory, bunch)
-		err := datastore.GetMulti(ctx, keys[:bunch], histories)
+		err := dao.dsClient.GetMulti(ctx, keys[:bunch], histories)
 		if err != nil {
 			return err
 		}
-		_, err = datastore.PutMulti(ctx, keys[:bunch], histories)
+		_, err = dao.dsClient.PutMulti(ctx, keys[:bunch], histories)
 		if err != nil {
 			return err
 		}
@@ -88,7 +89,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		Filter("Id =", idiomID).
 		Order("VersionDate")
 	histories := make([]*IdiomHistory, 0)
-	historyKeys, err := q.GetAll(ctx, &histories)
+	historyKeys, err := dao.dsClient.GetAll(ctx, q, &histories)
 	if err != nil {
 		return err
 	}
@@ -108,7 +109,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 		if len(historyKeys) < 10 {
 			bunch = len(historyKeys)
 		}
-		_, err = datastore.PutMulti(ctx, historyKeys[:bunch], histories[:bunch])
+		_, err = dao.dsClient.PutMulti(ctx, historyKeys[:bunch], histories[:bunch])
 		if err != nil {
 			return err
 		}
@@ -119,7 +120,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 
 	var idiom Idiom
 	idiomKey := newIdiomKey(ctx, idiomID)
-	err = datastore.Get(ctx, idiomKey, &idiom)
+	err = dao.dsClient.Get(ctx, idiomKey, &idiom)
 	if err != nil {
 		return err
 	}
@@ -128,7 +129,7 @@ func adminRepairHistoryVersions(w http.ResponseWriter, r *http.Request) error {
 	} else {
 		logf(ctx, "\tFixing idiom version %v -> %v", idiom.Version, lastVersion)
 		idiom.Version = lastVersion
-		_, err = datastore.Put(ctx, idiomKey, &idiom)
+		_, err = dao.dsClient.Put(ctx, idiomKey, &idiom)
 		if err != nil {
 			return err
 		}
