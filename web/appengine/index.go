@@ -149,6 +149,10 @@ func initRoutes() {
 		handle("/_ah/login_required", handleAuth)
 	}
 	http.Handle("/", r)
+
+	// 2023-03: for local dev, outside an App Engine runtime
+	fsStaticResources := http.FileServer(http.Dir("./web/appengine/static/default"))
+	http.Handle("/default__/", http.StripPrefix("/default__/", fsStaticResources))
 }
 
 // Request will fail if path parameters are missing
