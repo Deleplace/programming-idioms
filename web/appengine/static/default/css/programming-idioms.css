@@ -1688,7 +1688,9 @@ em {
 		background-color: #101010;
 		color: #7A7;
 	}
+
 	.implementation .piimports.just-copied-to-clipboard pre > code,
+	.implementation.just-copied-to-clipboard .picode pre,
 	.implementation.just-copied-to-clipboard .picode pre > code {
 		background-color: #101010;
 	}
