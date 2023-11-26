@@ -292,7 +292,9 @@ func (a *MemcacheDatastoreAccessor) saveNewIdiom(ctx context.Context, idiom *Idi
 	}
 	_ = memcache.DeleteMulti(ctx, []string{
 		"about-block-language-coverage",
-		"getAllIdioms(399,-ImplCount)",
+		"getAllIdioms(0,Id)",
+		"getAllIdioms(0,-ImplCount)",
+		"/about-block-all-idioms",
 	})
 	return key, err
 }
@@ -312,7 +314,7 @@ func (a *MemcacheDatastoreAccessor) saveExistingIdiom(ctx context.Context, key *
 	}
 	_ = memcache.DeleteMulti(ctx, []string{
 		"about-block-language-coverage",
-		"getAllIdioms(399,-ImplCount)",
+		"getAllIdioms(0,-ImplCount)",
 	})
 	return err
 }

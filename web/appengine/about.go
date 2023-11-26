@@ -187,7 +187,7 @@ func languageCoverage(ctx context.Context) (cover CoverageFacade, err error) {
 	langImplCount := map[string]int{}
 	langImplScore := map[string]int{}
 	logf(ctx, "Loading full idiom list...")
-	_, idioms, err := dao.getAllIdioms(ctx, 799, "-ImplCount") // TODO change 799 ?!
+	_, idioms, err := dao.getAllIdioms(ctx, 0, "-ImplCount")
 	if err != nil {
 		return cover, err
 	}
