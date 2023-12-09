@@ -24,6 +24,8 @@ func markup2CSS(paragraph string) template.HTML {
 	return template.HTML(linebroken)
 }
 
+var reEmphasize = regexp.MustCompile(`\b_([\w$]+)`)
+
 // emphasize the "underscored" identifiers
 //
 // _x -> <b><i>x</i></b>
@@ -31,9 +33,10 @@ func emphasize(sentence string) string {
 	// After a word break,
 	// an underscore char,
 	// and then a group of valid identifier chars.
-	re := regexp.MustCompile("\\b_([\\w$]+)")
-	return re.ReplaceAllString(sentence, "<b><i>${1}</i></b>")
+	return reEmphasize.ReplaceAllString(sentence, "<b><i>${1}</i></b>")
 }
+
+var reEmphasizeCSS = regexp.MustCompile(`\b_([\w$]+)`)
 
 // emphasize the "underscored" identifiers
 //
@@ -42,8 +45,7 @@ func emphasizeCSS(sentence string) string {
 	// After a word break,
 	// an underscore char,
 	// and then a group of valid identifier chars.
-	re := regexp.MustCompile("\\b_([\\w$]+)")
-	return re.ReplaceAllString(sentence, "<em>${1}</em>")
+	return reEmphasizeCSS.ReplaceAllString(sentence, "<em>${1}</em>")
 }
 
 // "a\nb" -> "a<br/>b"
