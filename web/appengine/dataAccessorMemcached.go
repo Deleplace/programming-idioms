@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"encoding/gob"
 	"fmt"
+	"net/http"
 	"time"
 
 	. "github.com/Deleplace/programming-idioms/idioms"
@@ -401,9 +402,9 @@ func (a *MemcacheDatastoreAccessor) deleteImpl(ctx context.Context, idiomID int,
 	return err
 }
 
-func (a *MemcacheDatastoreAccessor) searchIdiomsByWordsWithFavorites(ctx context.Context, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
+func (a *MemcacheDatastoreAccessor) searchIdiomsByWordsWithFavorites(r *http.Request, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
 	// Personalized searches not cached (yet)
-	return a.GaeDatastoreAccessor.searchIdiomsByWordsWithFavorites(ctx, typedWords, typedLangs, favoriteLangs, seeNonFavorite, limit)
+	return a.GaeDatastoreAccessor.searchIdiomsByWordsWithFavorites(r, typedWords, typedLangs, favoriteLangs, seeNonFavorite, limit)
 }
 
 func (a *MemcacheDatastoreAccessor) searchImplIDs(ctx context.Context, words, langs []string) (map[string]bool, error) {

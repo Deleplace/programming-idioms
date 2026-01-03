@@ -10,7 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"context"
+	"google.golang.org/appengine/v2"
 )
 
 //
@@ -61,7 +61,6 @@ func search(w http.ResponseWriter, r *http.Request) error {
 var errEmptyQ = fmt.Errorf("Empty search query")
 
 func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ string, err error) {
-	ctx := r.Context()
 
 	// Maybe someday we find a graceful way to handle "c++", "c#", etc. but...
 	q = strings.Replace(q, "C++", "Cpp", -1)
@@ -96,13 +95,13 @@ func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ strin
 		typedLangsSet[lang] = true
 	}
 
-	matchingPromise := matchingImplPromise(ctx, words, typedLangs)
+	matchingPromise := matchingImplPromise(r, words, typedLangs)
 
 	numberMaxResults := 20
 	// Note that this currently depends on userProfile.FavoriteLanguages
 	// (not the best for caching and for SAP)
 	userProfile := readUserProfile(r)
-	hits, err := dao.searchIdiomsByWordsWithFavorites(ctx, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
+	hits, err := dao.searchIdiomsByWordsWithFavorites(r, words, typedLangs, userProfile.FavoriteLanguages, userProfile.SeeNonFavorite, numberMaxResults)
 	if err != nil {
 		return nil, "", err
 	}
@@ -125,15 +124,16 @@ func findResults(r *http.Request, q string) (results []*Idiom, normalizedQ strin
 	return hits, strings.Join(terms, " "), nil
 }
 
-func matchingImplPromise(ctx context.Context, words, typedLangs []string) chan map[string]bool {
+func matchingImplPromise(r *http.Request, words, typedLangs []string) chan map[string]bool {
 	ch := make(chan map[string]bool)
 	go func() {
+		newCtx := appengine.NewContext(r)
 		// Highlight matching impls :)
-		matchingImplIDs, err := dao.searchImplIDs(ctx, words, typedLangs)
+		matchingImplIDs, err := dao.searchImplIDs(newCtx, words, typedLangs)
 		if err == nil {
 			ch <- matchingImplIDs
 		} else {
-			errf(ctx, "problem fetching impl highlights: %v", err)
+			errf(newCtx, "problem fetching impl highlights: %v", err)
 			ch <- map[string]bool{}
 		}
 		close(ch)

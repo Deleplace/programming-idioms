@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"net/http"
 
 	. "github.com/Deleplace/programming-idioms/idioms"
 
@@ -306,12 +307,13 @@ func unindexImpl(ctx context.Context, idiomID, implID int) error {
 }
 
 // retriever returns a list of Idiom Key strings
-type retriever func() ([]string, error)
+type retriever func(ctx context.Context) ([]string, error)
 
 // searchIdiomsByWordsWithFavorites must return idioms that contain *all* the searched words.
 // If seeNonFavorite==false, it must only return idioms that have at least 1 implementation in 1 of the user favoriteLangs.
 // If seeNonFavorite==true, it must return the same list but extended with idioms that contain all the searched words but no implementation in a user favoriteLang.
-func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(ctx context.Context, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
+func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(r *http.Request, typedWords, typedLangs []string, favoriteLangs []string, seeNonFavorite bool, limit int) ([]*Idiom, error) {
+	ctx := r.Context()
 	terms := append(append([]string(nil), typedWords...), typedLangs...)
 
 	var retrievers []retriever
@@ -319,7 +321,7 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(ctx context.Cont
 	seenIdiomKeyStrings := make(map[string]bool, limit)
 
 	var idiomQueryRetriever = func(q string) retriever {
-		return func() ([]string, error) {
+		return func(ctx context.Context) ([]string, error) {
 			return executeIdiomKeyTextSearchQuery(ctx, q, limit)
 		}
 	}
@@ -329,7 +331,7 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(ctx context.Cont
 		lang := typedLangs[0]
 		logf(ctx, "User is looking for results in [%v]", lang)
 		// 1) Impls in lang, containing all words
-		implRetriever := func() ([]string, error) {
+		implRetriever := func(ctx context.Context) ([]string, error) {
 			var keystrings []string
 			implQuery := "Bulk:(~" + strings.Join(terms, " AND ~") + ") AND Lang:" + lang
 			implIdiomIDs, _, err := executeImplTextSearchQuery(ctx, implQuery, limit)
@@ -373,9 +375,10 @@ func (a *GaeDatastoreAccessor) searchIdiomsByWordsWithFavorites(ctx context.Cont
 		promises[i] = make(chan []string, 1)
 		ch := promises[i]
 		go func() {
-			keyStrings, err := retriever()
+			newCtx := appengine.NewContext(r)
+			keyStrings, err := retriever(newCtx)
 			if err != nil {
-				errf(ctx, "problem fetching search results: %v", err)
+				errf(newCtx, "problem fetching search results: %v", err)
 				ch <- nil
 			} else {
 				ch <- keyStrings
