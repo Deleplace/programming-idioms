@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	cloud.google.com/go/datastore v1.10.0
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	google.golang.org/api v0.103.0
 	google.golang.org/appengine/v2 v2.0.3
 )
